@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.wechat.dao.UserMapper">
+
+
+    <select id="queryUserInfo" resultType="com.dkm.wechat.entity.bo.UserBO" parameterType="String">
+        select a.user_id as 'userId',a.we_chat_open_id as 'weChatOpenId',
+                a.we_chat_nick_name as 'weChatNickName',a.we_chat_head_img_url as 'weChatHeadImgUrl',
+                a.user_id_card as 'userIdCard',a.user_phone as 'userPhone',
+                a.user_is_effective as 'userIsEffective',b.user_info_grade as 'userGrade',
+                b.user_info_gold as 'userGold',b.user_info_packet_balance as 'userPacketBalance',
+                b.user_info_renown as 'userRenown',b.user_info_is_vip as 'userIsVip',a.user_remark as 'userRemark'
+                from tb_user a join tb_user_info b on a.user_id = b.user_id
+                where a.we_chat_open_id = #{wxOpenId}
+    </select>
+
+    <select id="queryUser" resultType="com.dkm.entity.bo.UserInfoBo" parameterType="Long">
+        select * from tb_user a join tb_user_info b on a.user_id = b.user_id where a.user_id = #{id}
+    </select>
+
+</mapper>

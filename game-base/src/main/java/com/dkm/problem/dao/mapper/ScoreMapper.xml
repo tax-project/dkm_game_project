@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.problem.dao.ScoreMapper">
+
+
+    <select id="pageScore" resultType="com.dkm.problem.entity.vo.ScoreListVo">
+        select u.we_chat_nice_name as 'userName',
+            s.price as 'price',DATE_FORMAT(s.createDate, '%Y-%m-%d %H:%i:%s')as 'date'
+            from tb_score s
+            join tb_user u on s.user_id = u.user_id
+            where s.money_id = #{moneyId}
+    </select>
+
+<!--    统计收红包的金额或者答题达人-->
+    <select id="countListMax" resultType="com.dkm.problem.entity.vo.MoneyCountVo">
+        select u.we_chat_nice_name as 'name'
+        <if test="type == 0">
+            ,sum(s.price) as 'number'
+        </if>
+        <if test="type == 1">
+            ,sum(s.score) as 'number'
+        </if>
+        from tb_score s
+        join tb_user u on s.user_id = u.user_id
+        <if test="status == 0">
+            where s.createDate BETWEEN #{startDate} and #{endDate}
+        </if>
+        GROUP BY s.user_id
+        <if test="type == 0">
+            ORDER BY sum(s.price) DESC
+        </if>
+        <if test="type == 1">
+            ORDER BY sum(s.score) DESC
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.problem.dao.MoneyMapper">
+
+    <update id="updateMoney">
+        update tb_money set status = #{status},in_number = in_number + 1
+        where id = #{id}
+    </update>
+
+
+    <select id="countHandOutRedEnvelopes" resultType="com.dkm.problem.entity.vo.MoneyCountVo">
+        SELECT u.we_chat_nice_name as 'name',SUM(m.diamonds) as 'number' from tb_money m
+        join tb_user u on m.user_id = u.user_id
+        <if test="status == 0">
+            where s.createDate BETWEEN #{startDate} and #{endDate}
+        </if>
+        GROUP BY m.user_id
+        ORDER BY SUM(m.diamonds) DESC
+    </select>
+
+</mapper>

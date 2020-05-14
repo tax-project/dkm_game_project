@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.turntable.dao.TurntableItemMapper">
+
+    <select id="luckyDrawItems" resultType="com.dkm.turntable.entity.TurntableItem">
+        select * from tb_turntable_item
+        where turntable_item_id = #{turntableSlotOneId}
+        or turntable_item_id = #{turntableSlotTwoId}
+        or turntable_item_id = #{turntableSlotThreeId}
+        or turntable_item_id = #{turntableSlotFourId}
+        or turntable_item_id = #{turntableSlotFiveId}
+        or turntable_item_id = #{turntableSlotSixId}
+    </select>
+
+</mapper>

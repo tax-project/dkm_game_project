@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.seed.dao.SeedMapper">
+
+    <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.Seed" parameterType="java.lang.Long">
+        select a.seed_name,a.seed_grade,a.seed_growuptime,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
+        tb_seed a,tb_send_user b, tb_plant_unlock c where b.user_id=1 and a.seed_id=b.send_id and a.seed_id=c.seed_id
+    </select>
+
+    <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
+        select a.seed_name,a.seed_grade,a.seed_growuptime,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,a.seed_status,b.plant_time
+        from tb_land_seed b,tb_seed a where a.seed_id=b.seed_id and b.user_id=#{userId}
+    </select>
+
+
+
+    <select id="queryIsById" resultType="com.dkm.seed.entity.vo.SeedUnlock">
+        select user_id from tb_plant_unlock where user_id=#{userId}
+    </select>
+
+    <update id="uploadUnlockMoneyAndPrestige">
+        update tb_user_info set user_info_gold=user_info_gold-#{unlockmoeny},user_info_renown=user_info_renown+#{prestige} where user_id=#{userId}
+    </update>
+
+    <update id="updateSeedPresentUnlock">
+        update tb_plant_unlock set seed_present_unlock=#{seedPresentUnlock} where user_id=#{userId} and seed_id=#{seeId}
+    </update>
+
+    <update id="uploadPresentUnlock" >
+        update tb_seed set seed_present_unlock=seed_present_unlock-1 where seed_id=#{seedId}
+    </update>
+
+    <insert id="addPlant"  parameterType="com.dkm.seed.entity.LandSeed">
+       insert into tb_land_seed(user_id,seed_id,la_id,plant_time)values(#{userId},#{seedId},#{laId},#{plantTime});
+    </insert>
+
+
+    <insert id="insertSeedUnlock" parameterType="com.dkm.seed.entity.vo.SeedUnlock">
+        insert into tb_plant_unlock(pu_id,seed_id,seed_present_unlock,seed_all_unlock,seed_status,user_id)values
+        <foreach collection="list" item="lists" index="index" separator="union all">
+            (#{lists.puId},#{lists.seedId},#{lists.seedPresentUnlock},#{lists.seedAllUnlock},#{lists.seedStatus},#{lists.userId})
+        </foreach>
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.friend.dao.FriendMapper">
+
+    <select id="queryAllFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.vo.FriendAllListVo">
+        <foreach collection="list" item="item" index="index">
+            select user_id as 'toId',we_chat_nick_name as 'nickName',we_chat_head_img_url as 'headUrl'
+            from tb_user where user_id = #{item.fromId}
+        </foreach>
+    </select>
+
+
+
+</mapper>

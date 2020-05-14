@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbDayCheapMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbDayCheap">
+		<id column="cheap_id" property="cheapId" />
+		<result column="good_id" property="goodId" />
+		<result column="cheap_name" property="cheapName" />
+		<result column="cheap_info" property="cheapInfo" />
+		<result column="cheap_money" property="cheapMoney" />
+		<result column="cheap_gold" property="cheapGold" />
+		<result column="cheap_dm" property="cheapDm" />
+	</resultMap>
+
+</mapper>

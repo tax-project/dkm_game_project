@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.blackHouse.dao.TbBlackHouseMapper">
+	<resultMap id="BaseResultMap" type="com.dkm.blackHouse.domain.TbBlackHouse">
+		<id column="black_id" jdbcType="BIGINT" property="blackId" />
+		<result column="from_id" jdbcType="BIGINT" property="fromId" />
+		<result column="to_id" jdbcType="BIGINT" property="toId" />
+		<result column="is_black" jdbcType="INTEGER" property="isBlack" />
+		<result column="time" jdbcType="TIMESTAMP" property="time" />
+	</resultMap>
+	<resultMap id="BaseResultMapvo" type="com.dkm.blackHouse.domain.vo.TbBlackHouseVo">
+		<id column="black_id" jdbcType="BIGINT" property="blackId" />
+		<result column="from_id" jdbcType="BIGINT" property="fromId" />
+		<result column="to_id" jdbcType="BIGINT" property="toId" />
+		<result column="is_black" jdbcType="INTEGER" property="isBlack" />
+		<result column="time" jdbcType="TIMESTAMP" property="time" />
+		<result column="we_chat_nick_name"  property="weChatNickName" />
+		<result column="user_info_grade" jdbcType="INTEGER" property="userInfoGrade" />
+		<result column="user_info_renown" jdbcType="INTEGER" property="userInfoRenown" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		black_id, from_id, to_id, is_black, time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_black_house
+		where black_id = #{blackId,jdbcType=BIGINT}
+	</select>
+	<select id="selectIsBlack" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT  COUNT(*) FROM  tb_black_house bh WHERE  bh.`from_id`=#{fromId,jdbcType=BIGINT} AND bh.`is_black`=0
+	</select>
+	<select id="selectIsBlackTwo" resultMap="BaseResultMapvo">
+		SELECT tu.we_chat_nick_name,tf.user_info_grade,tf.user_info_renown,wh.*FROM tb_user tu,tb_user_info tf,
+		tb_black_house wh WHERE tu.`user_id`=tf.user_id
+		AND tu.`user_id`=#{toId}  AND wh.from_id=#{fromId}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tb_black_house
+		where black_id = #{blackId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insertLand" parameterType="com.dkm.blackHouse.domain.TbBlackHouse">
+		insert into tb_black_house(black_id,from_id,to_id,is_black,time)
+		<foreach collection="list" item="item" index="index" separator="union all">
+			select #{item.blackId},#{item.fromId},#{item.toId},#{item.isBlack},#{item.time}
+		</foreach>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.dkm.blackHouse.domain.TbBlackHouse">
+		update tb_black_house
+		<set>
+			<if test="fromId != null">
+				from_id = #{fromId,jdbcType=BIGINT},
+			</if>
+			<if test="toId != null">
+				to_id = #{toId,jdbcType=BIGINT},
+			</if>
+			<if test="isBlack != null">
+				is_black = #{isBlack,jdbcType=INTEGER},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where black_id = #{blackId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.dkm.blackHouse.domain.TbBlackHouse">
+		update tb_black_house
+		set from_id = #{fromId,jdbcType=BIGINT},
+			to_id = #{toId,jdbcType=BIGINT},
+			is_black = #{isBlack,jdbcType=INTEGER},
+			time = #{time,jdbcType=TIMESTAMP}
+		where black_id = #{blackId,jdbcType=BIGINT}
+	</update>
+
+</mapper>

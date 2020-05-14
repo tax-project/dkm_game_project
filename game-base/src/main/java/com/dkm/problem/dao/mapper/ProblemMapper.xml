@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.problem.dao.ProblemMapper">
+
+
+    <insert id="insertAllProblem" parameterType="com.dkm.problem.entity.vo.ProblemVo">
+        insert into tb_problem(id,problem_subject,problem_answer_a,problem_answer_b,problem_answer_c,problem_answer_d,problem_answer)
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.id},#{item.problemSubject},#{item.problemAnswerA},#{item.problemAnswerB},
+            #{item.problemAnswerC},#{item.problemAnswerD},#{item.problemAnswer}
+        </foreach>
+    </insert>
+
+
+    <update id="updateMuch">
+        update tb_user_info set
+        <if test="date != null">
+            user_info_envelope_time = #{date} and user_info_envelope_much = 1
+        </if>
+        <if test="date == null">
+            user_info_envelope_much = user_info_envelope_much + 1
+        </if>
+        where user_id = #{userId}
+    </update>
+
+</mapper>

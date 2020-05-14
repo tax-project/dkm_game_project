@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbChargeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbCharge">
+		<id column="charge_id" property="chargeId" />
+		<result column="rule_description" property="ruleDescription" />
+		<result column="charge_image" property="chargeImage" />
+		<result column="charge_money" property="chargeMoney" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+		<result column="exp3" property="exp3" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.friend.dao.FriendRequestMapper">
+
+
+    <select id="listAllRequestFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.vo.FriendRequestInfoVo">
+        <foreach collection="list" item="item" index="index">
+            select f.id as 'id',u.nick_name as 'fromNick',u.id as 'fromId',
+            DATE_FORMAT(f.request_time, '%Y-%m-%d %H:%i:%s')as 'requestTime',f.status as 'status',
+            f.request_remark as 'requestRemark'
+            from tb_friend_request f join tb_user u on f.from_id = u.id
+            where f.from_id = #{item.fromId}
+        </foreach>
+    </select>
+
+
+</mapper>

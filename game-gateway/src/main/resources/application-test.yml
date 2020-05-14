@@ -1,0 +1,14 @@
+app:
+  workerId: 1
+  dataCenterId: 2
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://120.25.196.49:10000/eureka
+
+spring:
+  redis:
+    host: 120.25.196.49

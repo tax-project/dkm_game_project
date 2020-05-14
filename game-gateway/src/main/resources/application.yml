@@ -1,0 +1,35 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: game-eureka
+  profiles:
+    active: test
+
+
+zuul:
+  routes:
+    api-user:
+      path: /*/*/game-user/**
+      serviceId: service-user
+      strip-prefix: false
+    api-base:
+      path: /*/*/game-base/**
+      serviceId: service-base
+      strip-prefix: false
+    api-family:
+      path: /*/*/game-family/**
+      serviceId: service-family
+      strip-prefix: false
+    api-resource:
+      path: /*/*/game-resource/**
+      serviceId: service-resource
+      strip-prefix: false
+    api-shop:
+      path: /*/*/game-shop/**
+      serviceId: service-shop
+      strip-prefix: false
+    api-chat:
+      path: /*/*/game-chat/**
+      serviceId: service-chat
+      strip-prefix: false
