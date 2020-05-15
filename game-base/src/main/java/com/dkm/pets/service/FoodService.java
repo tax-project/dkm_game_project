@@ -11,5 +11,10 @@ import java.util.List;
  * @create: 2020-05-15 11:32
  **/
 public interface FoodService {
+    /**
+     * 查询接口
+     * @param userId 用户ID
+     * @return 结果
+     */
     List<BackPackFood> getPackFood(Long userId);
 }
