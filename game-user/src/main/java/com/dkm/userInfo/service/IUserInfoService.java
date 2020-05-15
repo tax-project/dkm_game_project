@@ -1,7 +1,5 @@
 package com.dkm.userInfo.service;
 
-import com.dkm.userInfo.entity.UserInfo;
-
 /**
  * @author qf
  * @date 2020/5/11
@@ -22,4 +20,10 @@ public interface IUserInfoService {
     * @param userId 用户id
     */
    void updateUserInfo (Integer much, Long userId);
+
+   /**
+    * 增加用户金币数
+    * @param goldNumber 金币数
+    */
+   void increaseUserInfoGold(Double goldNumber);
 }
