@@ -5,10 +5,14 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.knapsack.dao.TbBoxMapper;
 import com.dkm.knapsack.domain.TbBox;
+import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbBoxService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -32,5 +36,13 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
         }
+    }
+
+    @Override
+    public List<TbEquipmentVo> selectByBoxId(Long boxId) {
+        if(StringUtils.isEmpty(boxId)){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        return tbBoxMapper.selectByBoxId(boxId);
     }
 }

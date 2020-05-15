@@ -2,6 +2,9 @@ package com.dkm.knapsack.service;
 
 
 import com.dkm.knapsack.domain.TbBox;
+import com.dkm.knapsack.domain.vo.TbEquipmentVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,6 @@ import com.dkm.knapsack.domain.TbBox;
  */
 public interface ITbBoxService{
     void addTbBox(TbBox tbBox);
+
+    List<TbEquipmentVo> selectByBoxId(Long boxId);
 }

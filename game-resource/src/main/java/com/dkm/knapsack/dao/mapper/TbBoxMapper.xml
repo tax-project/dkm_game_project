@@ -9,4 +9,25 @@
 		<result column="box_type" property="boxType" />
 	</resultMap>
 
+	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentVo">
+		<id column="box_id" property="boxId" />
+		<result column="equipment_id" jdbcType="BIGINT" property="equipmentId" />
+		<result column="box_id" jdbcType="BIGINT" property="boxId" />
+		<result column="equipment_level" jdbcType="INTEGER" property="equipmentLevel" />
+		<result column="equipment_image" jdbcType="VARCHAR" property="equipmentImage" />
+		<result column="exp1" jdbcType="VARCHAR" property="exp1" />
+		<result column="exp2" jdbcType="VARCHAR" property="exp2" />
+		<result column="exp3" jdbcType="VARCHAR" property="exp3" />
+		<result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+		<result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+		<result column="box_no" property="boxNo" />
+		<result column="box_type" property="boxType" />
+	</resultMap>
+
+	<select id="selectByBoxId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">
+		SELECT *FROM tb_box tb,tb_equipment te,tb_equipment_details td
+		WHERE tb.`box_id`=te.`box_id` AND te.`equipment_id`=td.`equipment_id` AND tb.`box_id`=#{boxId}
+
+	</select>
 </mapper>

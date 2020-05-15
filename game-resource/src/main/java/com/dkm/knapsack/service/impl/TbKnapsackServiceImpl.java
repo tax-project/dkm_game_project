@@ -6,7 +6,6 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.knapsack.dao.TbKnapsackMapper;
 import com.dkm.knapsack.domain.TbKnapsack;
-import com.dkm.knapsack.domain.TbKnapsackTwo;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;

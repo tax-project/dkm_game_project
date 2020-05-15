@@ -3,6 +3,9 @@ package com.dkm.knapsack.domain.vo;
 
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.math.BigDecimal;
 
 
@@ -64,6 +67,14 @@ public class TbEquipmentVo{
 	 * 红包加速
 	 */
 	private BigDecimal edRedEnvelopeAcceleration;
+	/**
+	 * 箱子编号
+	 */
+	private String boxNo;
+	/**
+	 * 箱子类型 1为普通箱子 2为VIP箱子
+	 */
+	private Integer boxType;
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;

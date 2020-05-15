@@ -1,15 +1,15 @@
 package com.dkm.knapsack.controller;
 
 
-import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
+import java.util.List;
 
 /**
  * <p>
@@ -36,6 +36,7 @@ public class TbEquipmentController {
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "equipmentImage",value = "装备图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "装备编号 1-10之间"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "道具50金币 穿戴品只有5金币"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "1为穿戴品 2为道具"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "edDetailedDescription",value = "详情描述"),
@@ -58,5 +59,38 @@ public class TbEquipmentController {
         message.setMsg("增加成功!");
         message.setNum(1);
         return message;
+    }
+
+   @ApiOperation(value = "根据装备主键查询详情信息",notes = "成功返回数据 返回空则没有数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "edId",value = "装备详情主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "equipmentImage",value = "装备图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp1",value = "装备编号 1-10之间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "道具50金币 穿戴品只有5金币"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "1为穿戴品 2为道具"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "edDetailedDescription",value = "详情描述"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "edEquipmentReputation",value = "装备声望"),
+            @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edRedEnvelopeAcceleration",value = "红包加速")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/selectByEquipmentId")
+    @CrossOrigin
+    //@CheckToken
+    public List<TbEquipmentVo> selectByEquipmentId(Long equipmentId){
+       List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(equipmentId);
+       if(!StringUtils.isEmpty(list)){
+           return list;
+       }else{
+           return null;
+       }
     }
 }
