@@ -49,7 +49,7 @@ public class FriendNotOnlineServiceImpl extends ServiceImpl<FriendNotOnlineMappe
       List<FriendNotOnline> list = baseMapper.selectList(wrapper);
 
 
-      if (list.size() == 0) {
+      if (list == null) {
          return null;
       }
 

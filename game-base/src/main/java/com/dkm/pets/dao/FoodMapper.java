@@ -21,7 +21,7 @@ public interface FoodMapper extends BaseMapper<FoodEntity> {
      * @param userId
      * @return
      */
-    @Select("SELECT fu.id,fu.food_number,fd.food_name,fd.food_url,fd.food_gold FROM (SELECT * FROM tb_food WHERE user_id  = #{userId}) fu LEFT JOIN tb_food_detail fd on fd.food_id = fu.food_id")
+    @Select("SELECT fu.id,fu.food_number,fd.food_name,fd.food_url,fd.food_gold FROM (SELECT * FROM tb_food   WHERE user_id  = #{userId}) fu LEFT JOIN tb_food_detail fd on fd.food_id = fu.food_id")
     List<BackPackFood> getPackFood(@Param("userId") Long userId);
 
     /**

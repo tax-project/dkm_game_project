@@ -1,13 +1,11 @@
 package com.dkm.file.utils;
 
 import io.jsonwebtoken.lang.Assert;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -103,6 +101,22 @@ public class FileUtils {
    }
 
 
+   /**
+    *  File转MultipartFile
+    * @param file
+    * @return
+    */
+   public MultipartFile getMultipartFile (File file) {
+      MultipartFile multipartFile = null;
+      try {
+         InputStream inputStream = new FileInputStream(file);
+         multipartFile = new MockMultipartFile(file.getName(), inputStream);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
+      return multipartFile;
+   }
 
 
 }
