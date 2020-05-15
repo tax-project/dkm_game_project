@@ -23,4 +23,5 @@ public interface ITbEquipmentKnapsackService{
     int selectCountMy(String exp1);
     List<TbEquipmentKnapsackVo> selectAll(String exp1);
     void updateSell(Long tekId);
+    void uodateTekId(Long tekId)
 }

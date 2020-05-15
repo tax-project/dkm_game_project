@@ -154,4 +154,15 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    @Override
+    public void uodateTekId(Long tekId) {
+   /*     if(StringUtils.isEmpty(tekId)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        QueryWrapper<TbEquipment> queryWrapper=new QueryWrapper();
+        queryWrapper.eq("equipment_id",equipmentId);
+        List<TbEquipment> list=tbEquipmentMapper.selectList(queryWrapper);
+    }*/
+
 }

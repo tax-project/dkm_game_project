@@ -185,6 +185,11 @@ public class TbEquipmentKnapsackController {
         System.out.println(tekId);
         tbEquipmentKnapsackService.updateSell(tekId);
     }
+
+    /**
+     * 点击装备 首先查一下有没有相同的装备装上了
+     * @param tekId
+     */
     public void uodateTekId(Long tekId){
 
     }
