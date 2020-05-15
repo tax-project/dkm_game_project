@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.service.IUserInfoService;
@@ -25,6 +27,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Autowired
    private IdGenerator idGenerator;
+   @Autowired
+   private LocalUser localUser;
 
    @Override
    public void insertUserInfo(Long userId) {
@@ -79,5 +83,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       userInfo1.setUserInfoAllEnvelopeMuch(userInfo.getUserInfoAllEnvelopeMuch() + much);
 
       baseMapper.update(userInfo1, wrapper);
+   }
+
+   @Override
+   public void increaseUserInfoGold(Double goldNumber) {
+      UserLoginQuery localUserUser = localUser.getUser();
+      assert localUserUser != null;
+      Long id = localUserUser.getId();
+
+      Integer integer = baseMapper.increaseUserInfoGold(goldNumber, id);
+      if (integer<=0){
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
+      }
    }
 }

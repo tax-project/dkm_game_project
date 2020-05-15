@@ -1,9 +1,12 @@
 package com.dkm.backpack.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dkm.backpack.dao.BackpackMapper;
-import com.dkm.backpack.entity.Backpack;
+import com.dkm.backpack.entity.bo.AddBackpackItemBO;
 import com.dkm.backpack.service.IBackpackService;
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,11 +15,29 @@ import org.springframework.stereotype.Service;
  * @Version: 1.0V
  */
 @Service
-public class BackpackServiceImpl extends ServiceImpl<BackpackMapper, Backpack> implements IBackpackService {
+public class BackpackServiceImpl implements IBackpackService {
 
     private final static String FOOD_TABLE = "";
-    @Override
-    public void addBackpackItem(Long itemId, String itemTableName) {
 
+    @Autowired
+    private LocalUser localUser;
+    @Override
+    public void addBackpackItem(AddBackpackItemBO backpackItemBO) {
+        UserLoginQuery localUserUser = localUser.getUser();
+        assert localUserUser!=null;
+
+        switch (backpackItemBO.getItemNumber()){
+            case 1:
+                //食物
+                break;
+            case 2:
+                //物品
+                break;
+            case 3:
+                //衣服
+                break;
+            default:
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"itemNumber参数越界");
+        }
     }
 }

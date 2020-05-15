@@ -1,18 +1,16 @@
 package com.dkm;
 
 
-import com.dkm.turntable.dao.TurntableMapper;
+import com.dkm.backpack.entity.bo.AddBackpackItemBO;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.HashSet;
 
 @SpringBootTest
 public class GameBaseApplicationTests {
    @Test
-   void contextLoads() {
-
+   public void contextLoads() {
+      AddBackpackItemBO addBackpackItemBO = new AddBackpackItemBO();
+      System.out.println(addBackpackItemBO);
    }
 
 }

@@ -12,9 +12,15 @@ import java.util.List;
  **/
 public interface FoodService {
     /**
+<<<<<<< HEAD
+     * 查询接口
+     * @param userId 用户ID
+     * @return 结果
+=======
      * 背包食物
      * @param userId
      * @return
+>>>>>>> b52471075ea16360371dc94fa5a6df20fc046b9f
      */
     List<BackPackFood> getPackFood(Long userId);
 

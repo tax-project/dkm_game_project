@@ -1,5 +1,7 @@
 package com.dkm.backpack.service;
 
+import com.dkm.backpack.entity.bo.AddBackpackItemBO;
+
 /**
  * @Author: HuangJie
  * @Date: 2020/5/14 15:12
@@ -8,8 +10,7 @@ package com.dkm.backpack.service;
 public interface IBackpackService {
     /**
      * 添加背包物品
-     * @param itemId 物品的ID
-     * @param itemTableName 物品所在表
+     * @param backpackItemBO 需要添加的物品的信息
      */
-    void addBackpackItem(Long itemId, String itemTableName);
+    void addBackpackItem(AddBackpackItemBO backpackItemBO);
 }
