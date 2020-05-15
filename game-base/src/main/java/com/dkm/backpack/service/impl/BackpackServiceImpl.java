@@ -29,11 +29,11 @@ public class BackpackServiceImpl implements IBackpackService {
     private FoodService foodService;
 
     @Override
-    public void allBackpackItem() {
+    public List<BackpackItemVO> allBackpackItem() {
         UserLoginQuery localUserUser = localUser.getUser();
         assert localUserUser!=null;
         Long userId = localUserUser.getId();
-        ArrayList<BackpackItemVO> backpackItemVOS = new ArrayList<>();
+        ArrayList<BackpackItemVO> backpackItems = new ArrayList<>();
 
         List<BackPackFood> packFood = foodService.getPackFood(userId);
         for (BackPackFood backPackFood : packFood){
@@ -44,8 +44,10 @@ public class BackpackServiceImpl implements IBackpackService {
             backpackItemVO.setItemNumber(backPackFood.getFoodNumber());
             backpackItemVO.setItemGold(backPackFood.getFoodGold() );
             backpackItemVO.setItemTableNumber(1);
-            backpackItemVOS.add(backpackItemVO);
+            backpackItems.add(backpackItemVO);
         }
+
+        return backpackItems;
 
     }
 }

@@ -1,5 +1,6 @@
 package com.dkm.backpack.controller;
 
+import com.dkm.backpack.entity.vo.BackpackItemVO;
 import com.dkm.backpack.service.IBackpackService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Author: HuangJie
@@ -25,8 +28,8 @@ public class BackpackController {
     @GetMapping("/add/backpack/item")
     @ApiOperation(value = "获取背包物品",notes = "添加背包物品",produces = "application/json")
     @ApiImplicitParam(name = "token",value = "用户token",dataType = "String",paramType = "header",required = true)
-    public void addBackpackItem(){
-        backpackService.allBackpackItem();
+    public List<BackpackItemVO> addBackpackItem(){
+        return backpackService.allBackpackItem();
     }
 
 }
