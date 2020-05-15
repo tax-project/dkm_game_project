@@ -11,5 +11,16 @@ import java.util.List;
  * @create: 2020-05-15 11:32
  **/
 public interface FoodService {
+    /**
+     * 背包食物
+     * @param userId
+     * @return
+     */
     List<BackPackFood> getPackFood(Long userId);
+
+    /**
+     * 出售食物
+     * @return
+     */
+    Integer sellFood(Integer sellNumber,Long id);
 }

@@ -18,8 +18,23 @@ import java.util.List;
 public class FoodServiceImpl implements FoodService {
     @Resource
     private FoodMapper foodMapper;
+
+    /**
+     * 背包食物
+     * @param userId
+     * @return
+     */
     @Override
     public List<BackPackFood> getPackFood(Long userId) {
         return foodMapper.getPackFood(userId);
+    }
+
+    /**
+     * 出售食物
+     * @return
+     */
+    @Override
+    public Integer sellFood(Integer sellNumber,Long id) {
+        return foodMapper.sellFood(sellNumber,id);
     }
 }

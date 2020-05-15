@@ -7,6 +7,7 @@ package com.dkm.pets.entity.dto;
  * @create: 2020-05-15 11:30
  **/
 public class BackPackFood {
+    private Long id;
     private String foodName;
     private String foodUrl;
     private Integer foodGold;
