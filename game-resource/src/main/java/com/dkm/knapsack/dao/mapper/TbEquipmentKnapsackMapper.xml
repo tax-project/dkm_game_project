@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.knapsack.dao.TbEquipmentKnapsackMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.knapsack.domain.TbEquipmentKnapsack">
+		<id column="tek_id" property="tekId" />
+		<result column="equipment_id" property="equipmentId" />
+		<result column="knapsack_id" property="knapsackId" />
+		<result column="tek_sell" property="tekSell" />
+		<result column="tek_money" property="tekMoney" />
+		<result column="tek_daoju" property="tekDaoju" />
+		<result column="tek_isva" property="tekIsva" />
+	</resultMap>
+
+</mapper>

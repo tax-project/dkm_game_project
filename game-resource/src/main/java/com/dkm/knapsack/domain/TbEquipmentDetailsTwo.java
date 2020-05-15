@@ -15,10 +15,10 @@ import java.math.BigDecimal;
  * </p>
  *
  * @author zy
- * @since 2020-05-14
+ * @since 2020-05-12
  */
 @TableName("tb_equipment_details")
-public class TbEquipmentDetails extends Model<TbEquipmentDetails> {
+public class TbEquipmentDetailsTwo extends Model<TbEquipmentDetailsTwo> {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,19 +32,10 @@ public class TbEquipmentDetails extends Model<TbEquipmentDetails> {
      */
 	@TableField("equipment_id")
 	private Long equipmentId;
-    /**
-     * 详情描述
-     */
 	@TableField("ed_detailed_description")
 	private String edDetailedDescription;
-    /**
-     * 装备声望
-     */
 	@TableField("ed_Equipment_reputation")
 	private Integer edEquipmentReputation;
-    /**
-     * 红包加速
-     */
 	@TableField("ed_Red_envelope_acceleration")
 	private BigDecimal edRedEnvelopeAcceleration;
 
@@ -96,7 +87,7 @@ public class TbEquipmentDetails extends Model<TbEquipmentDetails> {
 
 	@Override
 	public String toString() {
-		return "TbEquipmentDetails{" +
+		return "TbEquipmentDetailsTwo{" +
 			"edId=" + edId +
 			", equipmentId=" + equipmentId +
 			", edDetailedDescription=" + edDetailedDescription +

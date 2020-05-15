@@ -55,7 +55,7 @@ public class TbShopsController {
     })
     @GetMapping("/selectAll")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public List<TbShops> selectAll(){
         List<TbShops> list=tbShopsService.selectAll();
         return list;
@@ -86,7 +86,7 @@ public class TbShopsController {
     @PostMapping("/addTbDayCheap")
     @ResponseBody
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public Message addTbDayCheap(@RequestBody TbShops tbDayCheap){
         Message errorResult=new Message();
         if(StringUtils.isEmpty(tbDayCheap.getShopName()) || StringUtils.isEmpty(tbDayCheap.getShopMoney())

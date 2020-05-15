@@ -55,7 +55,7 @@ public class TbChargeController {
     })
     @PostMapping("/selectAll")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public List<TbCharge> selectAll(){
         List<TbCharge> list=tbChargeService.selectAll();
         return list;
@@ -85,7 +85,7 @@ public class TbChargeController {
     })
     @PostMapping("/addBlackHouse")
     @CrossOrigin
-    @CheckToken
+   // @CheckToken
     public Message addBlackHouse(@RequestBody TbCharge tbCharges){
         Message errorResult=new Message();
         if(StringUtils.isEmpty(tbCharges.getRuleDescription()) || StringUtils.isEmpty(tbCharges.getChargeImage()) || StringUtils.isEmpty(tbCharges.getChargeMoney()) ){

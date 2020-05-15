@@ -3,10 +3,7 @@ package com.dkm.knapsack.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.knapsack.domain.TbEquipment;
-import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>
@@ -14,10 +11,9 @@ import java.util.List;
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
 @Service
 public interface TbEquipmentMapper extends BaseMapper<TbEquipment> {
-    List<TbEquipmentVo> selectByKnapsackId(TbEquipmentVo tbEquipmentVo);
 
 }

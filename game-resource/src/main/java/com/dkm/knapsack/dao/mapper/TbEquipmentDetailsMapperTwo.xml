@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.knapsack.dao.TbEquipmentDetailsMapperTwo">
+  <resultMap id="BaseResultMap" type="com.dkm.knapsack.domain.TbEquipmentDetailsTwo">
+    <id column="ed_id" jdbcType="BIGINT" property="edId" />
+    <result column="equipment_id" jdbcType="BIGINT" property="equipmentId" />
+    <result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+    <result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+    <result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ed_id, equipment_id, ed_detailed_description, ed_Equipment_reputation, ed_Red_envelope_acceleration
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_equipment_details
+    where ed_id = #{edId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_equipment_details
+    where ed_id = #{edId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.dkm.knapsack.domain.TbEquipmentDetailsTwo">
+    insert into tb_equipment_details
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="edId != null">
+        ed_id,
+      </if>
+      <if test="equipmentId != null">
+        equipment_id,
+      </if>
+      <if test="edDetailedDescription != null">
+        ed_detailed_description,
+      </if>
+      <if test="edEquipmentReputation != null">
+        ed_Equipment_reputation,
+      </if>
+      <if test="edRedEnvelopeAcceleration != null">
+        ed_Red_envelope_acceleration,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="edId != null">
+        #{edId,jdbcType=BIGINT},
+      </if>
+      <if test="equipmentId != null">
+        #{equipmentId,jdbcType=BIGINT},
+      </if>
+      <if test="edDetailedDescription != null">
+        #{edDetailedDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="edEquipmentReputation != null">
+        #{edEquipmentReputation,jdbcType=INTEGER},
+      </if>
+      <if test="edRedEnvelopeAcceleration != null">
+        #{edRedEnvelopeAcceleration,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dkm.knapsack.domain.TbEquipmentDetailsTwo">
+    update tb_equipment_details
+    <set>
+      <if test="equipmentId != null">
+        equipment_id = #{equipmentId,jdbcType=BIGINT},
+      </if>
+      <if test="edDetailedDescription != null">
+        ed_detailed_description = #{edDetailedDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="edEquipmentReputation != null">
+        ed_Equipment_reputation = #{edEquipmentReputation,jdbcType=INTEGER},
+      </if>
+      <if test="edRedEnvelopeAcceleration != null">
+        ed_Red_envelope_acceleration = #{edRedEnvelopeAcceleration,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ed_id = #{edId,jdbcType=BIGINT}
+  </update>
+</mapper>

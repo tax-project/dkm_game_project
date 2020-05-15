@@ -1,0 +1,23 @@
+package com.dkm.knapsack.dao;
+
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dkm.knapsack.domain.TbEquipmentTwo;
+import com.dkm.knapsack.domain.vo.TbEquipmentVo;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * <p>
+  * 装备表 Mapper 接口
+ * </p>
+ *
+ * @author zy
+ * @since 2020-05-12
+ */
+@Service
+public interface TbEquipmentMapperTwo extends BaseMapper<TbEquipmentTwo> {
+    List<TbEquipmentVo> selectByKnapsackId(TbEquipmentVo tbEquipmentVo);
+
+}

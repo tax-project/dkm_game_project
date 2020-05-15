@@ -1,37 +1,32 @@
 package com.dkm.knapsack.controller;
 
 
-import com.dkm.constanct.CodeType;
-import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbKnapsack;
+import com.dkm.knapsack.domain.TbKnapsackTwo;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 /**
  * <p>
- * 背包表 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
 @RestController
 @RequestMapping("/dkm/tbKnapsack")
 @ResponseBody
 @Api(description = "背包表的接口文档")
 public class TbKnapsackController {
-
     @Autowired
     ITbKnapsackService tbKnapsackService;
 
@@ -89,7 +84,7 @@ public class TbKnapsackController {
     @PostMapping("/findById")
     @CrossOrigin
     @CheckToken
-	public List<TbKnapsack> findById(TbKnapsack tbKnapsack){
+    public List<TbKnapsack> findById(TbKnapsack tbKnapsack){
         UserLoginQuery user = localUser.getUser();
         tbKnapsack.setUserId(user.getId());
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);

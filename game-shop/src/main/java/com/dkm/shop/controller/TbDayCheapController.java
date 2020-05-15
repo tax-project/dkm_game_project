@@ -47,7 +47,8 @@ public class TbDayCheapController {
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "cheapInfo",value = "特惠内容"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "cheapMoney",value = "特惠价格"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapGold",value = "金币数量"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapDm",value = "钻石数量")
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapDm",value = "钻石数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapFm",value = "蜂蜜数量")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -58,7 +59,7 @@ public class TbDayCheapController {
     })
     @GetMapping("/selectAll")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public List<TbDayCheap> selectAll(){
         List<TbDayCheap> list=tbDayCheapService.selectAll();
         return list;
@@ -76,7 +77,8 @@ public class TbDayCheapController {
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "cheapInfo",value = "特惠内容",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "cheapMoney",value = "特惠价格",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapGold",value = "金币数量",required = true),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapDm",value = "钻石数量",required = true)
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapDm",value = "钻石数量",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "cheapFm",value = "蜂蜜数量",required = true)
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -87,7 +89,7 @@ public class TbDayCheapController {
     })
     @PostMapping("/addTbDayCheap")
     @CrossOrigin
-    @CheckToken
+   // @CheckToken
     public Message addTbDayCheap(@RequestBody TbDayCheap tbDayCheap){
         Message errorResult=new Message();
         if(StringUtils.isEmpty(tbDayCheap.getCheapName()) || StringUtils.isEmpty(tbDayCheap.getCheapId())

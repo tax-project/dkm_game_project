@@ -1,126 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dkm.knapsack.dao.TbEquipmentMapper">
-  <resultMap id="BaseResultMap" type="com.dkm.knapsack.domain.TbEquipment">
-    <id column="equipment_id" jdbcType="BIGINT" property="equipmentId" />
-    <result column="knapsack_id" jdbcType="BIGINT" property="knapsackId" />
-    <result column="box_id" jdbcType="BIGINT" property="boxId" />
-    <result column="equipment_level" jdbcType="INTEGER" property="equipmentLevel" />
-    <result column="equipment_image" jdbcType="VARCHAR" property="equipmentImage" />
-    <result column="exp1" jdbcType="VARCHAR" property="exp1" />
-    <result column="exp2" jdbcType="VARCHAR" property="exp2" />
-    <result column="exp3" jdbcType="VARCHAR" property="exp3" />
-  </resultMap>
-  <resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentVo">
-    <id column="equipment_id" jdbcType="BIGINT" property="equipmentId" />
-    <result column="knapsack_id" jdbcType="BIGINT" property="knapsackId" />
-    <result column="box_id" jdbcType="BIGINT" property="boxId" />
-    <result column="equipment_level" jdbcType="INTEGER" property="equipmentLevel" />
-    <result column="equipment_image" jdbcType="VARCHAR" property="equipmentImage" />
-    <result column="exp1" jdbcType="VARCHAR" property="exp1" />
-    <result column="exp2" jdbcType="VARCHAR" property="exp2" />
-    <result column="exp3" jdbcType="VARCHAR" property="exp3" />
-    <result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
-    <result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
-    <result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    equipment_id, knapsack_id, box_id, equipment_level, equipment_image, exp1, exp2, 
-    exp3
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from tb_equipment
-    where equipment_id = #{equipmentId,jdbcType=BIGINT}
-  </select>
-  <select id="selectByKnapsackId" resultMap="BaseResultMapVo" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentVo">
-    SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.knapsack_id=#{knapsackId} AND te.exp1=#{exp1}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from tb_equipment
-    where equipment_id = #{equipmentId,jdbcType=BIGINT}
-  </delete>
-  <insert id="insertSelective" parameterType="com.dkm.knapsack.domain.TbEquipment">
-    insert into tb_equipment
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="equipmentId != null">
-        equipment_id,
-      </if>
-      <if test="knapsackId != null">
-        knapsack_id,
-      </if>
-      <if test="boxId != null">
-        box_id,
-      </if>
-      <if test="equipmentLevel != null">
-        equipment_level,
-      </if>
-      <if test="equipmentImage != null">
-        equipment_image,
-      </if>
-      <if test="exp1 != null">
-        exp1,
-      </if>
-      <if test="exp2 != null">
-        exp2,
-      </if>
-      <if test="exp3 != null">
-        exp3,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="equipmentId != null">
-        #{equipmentId,jdbcType=BIGINT},
-      </if>
-      <if test="knapsackId != null">
-        #{knapsackId,jdbcType=BIGINT},
-      </if>
-      <if test="boxId != null">
-        #{boxId,jdbcType=BIGINT},
-      </if>
-      <if test="equipmentLevel != null">
-        #{equipmentLevel,jdbcType=INTEGER},
-      </if>
-      <if test="equipmentImage != null">
-        #{equipmentImage,jdbcType=VARCHAR},
-      </if>
-      <if test="exp1 != null">
-        #{exp1,jdbcType=VARCHAR},
-      </if>
-      <if test="exp2 != null">
-        #{exp2,jdbcType=VARCHAR},
-      </if>
-      <if test="exp3 != null">
-        #{exp3,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dkm.knapsack.domain.TbEquipment">
-    update tb_equipment
-    <set>
-      <if test="knapsackId != null">
-        knapsack_id = #{knapsackId,jdbcType=BIGINT},
-      </if>
-      <if test="boxId != null">
-        box_id = #{boxId,jdbcType=BIGINT},
-      </if>
-      <if test="equipmentLevel != null">
-        equipment_level = #{equipmentLevel,jdbcType=INTEGER},
-      </if>
-      <if test="equipmentImage != null">
-        equipment_image = #{equipmentImage,jdbcType=VARCHAR},
-      </if>
-      <if test="exp1 != null">
-        exp1 = #{exp1,jdbcType=VARCHAR},
-      </if>
-      <if test="exp2 != null">
-        exp2 = #{exp2,jdbcType=VARCHAR},
-      </if>
-      <if test="exp3 != null">
-        exp3 = #{exp3,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where equipment_id = #{equipmentId,jdbcType=BIGINT}
-  </update>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.knapsack.domain.TbEquipment">
+		<id column="equipment_id" property="equipmentId" />
+		<result column="box_id" property="boxId" />
+		<result column="equipment_level" property="equipmentLevel" />
+		<result column="equipment_image" property="equipmentImage" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+		<result column="exp3" property="exp3" />
+	</resultMap>
+	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentVo">
+		<id column="equipment_id" jdbcType="BIGINT" property="equipmentId" />
+		<result column="box_id" jdbcType="BIGINT" property="boxId" />
+		<result column="equipment_level" jdbcType="INTEGER" property="equipmentLevel" />
+		<result column="equipment_image" jdbcType="VARCHAR" property="equipmentImage" />
+		<result column="exp1" jdbcType="VARCHAR" property="exp1" />
+		<result column="exp2" jdbcType="VARCHAR" property="exp2" />
+		<result column="exp3" jdbcType="VARCHAR" property="exp3" />
+		<result column="ed_id" jdbcType="BIGINT" property="edId" />
+		<result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+		<result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+	</resultMap>
+	<select id="selectByEquipmentId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">
+		SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.knapsack_id=td.knapsack_id AND te.equipment_id=#{equipmentId}
+	</select>
 </mapper>

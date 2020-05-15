@@ -1,10 +1,7 @@
 package com.dkm.knapsack.service;
 
 
-import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
-
-import java.util.List;
 
 /**
  * <p>
@@ -12,9 +9,8 @@ import java.util.List;
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
-public interface ITbEquipmentService {
-    List<TbEquipmentVo> selectByKnapsackId(TbEquipmentVo tbEquipmentVo);
-    void updateExp1(Long equipmentId);
+public interface ITbEquipmentService{
+	void addTbEquipment(TbEquipmentVo tbEquipmentVo);
 }

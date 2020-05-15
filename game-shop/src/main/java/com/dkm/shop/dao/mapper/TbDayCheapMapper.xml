@@ -11,6 +11,7 @@
 		<result column="cheap_money" property="cheapMoney" />
 		<result column="cheap_gold" property="cheapGold" />
 		<result column="cheap_dm" property="cheapDm" />
+		<result column="cheap_fm" property="cheapFm" />
 	</resultMap>
 
 </mapper>

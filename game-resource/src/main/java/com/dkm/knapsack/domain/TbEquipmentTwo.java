@@ -1,73 +1,49 @@
-package com.dkm.knapsack.domain.vo;
+package com.dkm.knapsack.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
-
-
-import java.math.BigDecimal;
-
+import java.io.Serializable;
 
 /**
  * <p>
- * 装备表和装备详情表的vo
+ * 装备表
  * </p>
  *
  * @author zy
  * @since 2020-05-12
  */
-public class TbEquipmentVo{
+@TableName("tb_equipment")
+public class TbEquipmentTwo extends Model<TbEquipmentTwo> {
 
     private static final long serialVersionUID = 1L;
 
-	/**
-	 * 装备主键
-	 */
+    /**
+     * 装备主键
+     */
+    @TableId("equipment_id")
 	private Long equipmentId;
-	/**
-	 * 宝箱主键
-	 */
+    /**
+     * 宝箱主键
+     */
+	@TableField("box_id")
 	private Long boxId;
-	/**
-	 * 装备等级
-	 */
+    /**
+     * 装备等级
+     */
+	@TableField("equipment_level")
 	private Integer equipmentLevel;
-	/**
-	 * 装备图片
-	 */
+    /**
+     * 装备图片
+     */
+	@TableField("equipment_image")
 	private String equipmentImage;
-	/**
-	 * 拓展字段1
-	 */
 	private String exp1;
-	/**
-	 * 道具50金币 穿戴品只有5金币
-	 */
 	private String exp2;
-	/**
-	 * 1为穿戴品 2为道具
-	 */
 	private String exp3;
 
-	/**
-	 * 装备详情主键
-	 */
-	private Long edId;
-
-	/**
-	 * 详情描述
-	 */
-	private String edDetailedDescription;
-	/**
-	 * 装备声望
-	 */
-	private Integer edEquipmentReputation;
-	/**
-	 * 红包加速
-	 */
-	private BigDecimal edRedEnvelopeAcceleration;
-
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
 
 	public Long getEquipmentId() {
 		return equipmentId;
@@ -76,6 +52,7 @@ public class TbEquipmentVo{
 	public void setEquipmentId(Long equipmentId) {
 		this.equipmentId = equipmentId;
 	}
+
 
 	public Long getBoxId() {
 		return boxId;
@@ -125,36 +102,9 @@ public class TbEquipmentVo{
 		this.exp3 = exp3;
 	}
 
-	public Long getEdId() {
-		return edId;
-	}
-
-	public void setEdId(Long edId) {
-		this.edId = edId;
-	}
-
-	public String getEdDetailedDescription() {
-		return edDetailedDescription;
-	}
-
-	public void setEdDetailedDescription(String edDetailedDescription) {
-		this.edDetailedDescription = edDetailedDescription;
-	}
-
-	public Integer getEdEquipmentReputation() {
-		return edEquipmentReputation;
-	}
-
-	public void setEdEquipmentReputation(Integer edEquipmentReputation) {
-		this.edEquipmentReputation = edEquipmentReputation;
-	}
-
-	public BigDecimal getEdRedEnvelopeAcceleration() {
-		return edRedEnvelopeAcceleration;
-	}
-
-	public void setEdRedEnvelopeAcceleration(BigDecimal edRedEnvelopeAcceleration) {
-		this.edRedEnvelopeAcceleration = edRedEnvelopeAcceleration;
+	@Override
+	protected Serializable pkVal() {
+		return this.equipmentId;
 	}
 
 	@Override

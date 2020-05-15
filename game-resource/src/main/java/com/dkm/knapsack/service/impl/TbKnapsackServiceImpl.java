@@ -6,21 +6,21 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.knapsack.dao.TbKnapsackMapper;
 import com.dkm.knapsack.domain.TbKnapsack;
+import com.dkm.knapsack.domain.TbKnapsackTwo;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * <p>
- * 背包表 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
 @Service
 public class TbKnapsackServiceImpl implements ITbKnapsackService {

@@ -7,14 +7,14 @@ import org.springframework.stereotype.Controller;
 
 /**
  * <p>
- * 装备详情 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author zy
  * @since 2020-05-14
  */
 @Controller
-@RequestMapping("/dkm/tbEquipmentDetails")
-public class TbEquipmentDetailsController {
+@RequestMapping("/dkm/tbEquipmentKnapsack")
+public class TbEquipmentKnapsackController {
 	
 }

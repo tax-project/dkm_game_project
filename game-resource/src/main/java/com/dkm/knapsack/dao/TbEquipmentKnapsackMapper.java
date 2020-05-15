@@ -2,8 +2,7 @@ package com.dkm.knapsack.dao;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dkm.knapsack.domain.TbKnapsack;
-import org.springframework.stereotype.Service;
+import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 
 /**
  * <p>
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
  * @author zy
  * @since 2020-05-14
  */
-@Service
-public interface TbKnapsackMapper extends BaseMapper<TbKnapsack> {
+public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsack> {
 
 }

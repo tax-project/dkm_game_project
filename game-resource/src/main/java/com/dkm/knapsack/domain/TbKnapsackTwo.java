@@ -10,14 +10,14 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 
+ * 背包表
  * </p>
  *
  * @author zy
- * @since 2020-05-14
+ * @since 2020-05-12
  */
 @TableName("tb_knapsack")
-public class TbKnapsack extends Model<TbKnapsack> {
+public class TbKnapsackTwo extends Model<TbKnapsackTwo> {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,23 @@ public class TbKnapsack extends Model<TbKnapsack> {
 	@TableField("knapsack_capacity")
 	private Integer knapsackCapacity;
 
+	/**
+	 * 装备主键
+	 */
+	@TableField("equipment_id")
+	private Long equipmentId;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Long getEquipmentId() {
+		return equipmentId;
+	}
+
+	public void setEquipmentId(Long equipmentId) {
+		this.equipmentId = equipmentId;
+	}
 
 	public Long getKnapsackId() {
 		return knapsackId;
@@ -69,7 +86,7 @@ public class TbKnapsack extends Model<TbKnapsack> {
 
 	@Override
 	public String toString() {
-		return "TbKnapsack{" +
+		return "TbKnapsackTwo{" +
 			"knapsackId=" + knapsackId +
 			", userId=" + userId +
 			", knapsackCapacity=" + knapsackCapacity +

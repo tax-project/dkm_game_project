@@ -1,5 +1,6 @@
 package com.dkm.knapsack.domain;
 
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
 @TableName("tb_equipment")
 public class TbEquipment extends Model<TbEquipment> {
@@ -25,11 +26,6 @@ public class TbEquipment extends Model<TbEquipment> {
      */
     @TableId("equipment_id")
 	private Long equipmentId;
-    /**
-     * 背包主键
-     */
-	@TableField("knapsack_id")
-	private Long knapsackId;
     /**
      * 宝箱主键
      */
@@ -45,8 +41,17 @@ public class TbEquipment extends Model<TbEquipment> {
      */
 	@TableField("equipment_image")
 	private String equipmentImage;
+    /**
+     * 拓展字段1
+     */
 	private String exp1;
+    /**
+     * 道具50金币 穿戴品只有5金币
+     */
 	private String exp2;
+    /**
+     * 1为穿戴品 2为道具
+     */
 	private String exp3;
 
 
@@ -56,14 +61,6 @@ public class TbEquipment extends Model<TbEquipment> {
 
 	public void setEquipmentId(Long equipmentId) {
 		this.equipmentId = equipmentId;
-	}
-
-	public Long getKnapsackId() {
-		return knapsackId;
-	}
-
-	public void setKnapsackId(Long knapsackId) {
-		this.knapsackId = knapsackId;
 	}
 
 	public Long getBoxId() {
@@ -123,7 +120,6 @@ public class TbEquipment extends Model<TbEquipment> {
 	public String toString() {
 		return "TbEquipment{" +
 			"equipmentId=" + equipmentId +
-			", knapsackId=" + knapsackId +
 			", boxId=" + boxId +
 			", equipmentLevel=" + equipmentLevel +
 			", equipmentImage=" + equipmentImage +

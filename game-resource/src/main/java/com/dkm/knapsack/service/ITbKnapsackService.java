@@ -7,14 +7,13 @@ import java.util.List;
 
 /**
  * <p>
- * 背包表 服务类
+ *  服务类
  * </p>
  *
  * @author zy
- * @since 2020-05-12
+ * @since 2020-05-14
  */
-public interface ITbKnapsackService {
-
+public interface ITbKnapsackService{
     void addTbKnapsack(TbKnapsack tbKnapsack);
 
     List<TbKnapsack> findById(TbKnapsack TbKnapsack);

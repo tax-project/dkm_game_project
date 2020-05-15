@@ -52,7 +52,20 @@ public class TbDayCheap extends Model<TbDayCheap> {
 	private Integer cheapGold;
 	@TableField("cheap_dm")
 	private Integer cheapDm;
+	@TableField("cheap_fm")
+	private Integer cheapFm;
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Integer getCheapFm() {
+		return cheapFm;
+	}
+
+	public void setCheapFm(Integer cheapFm) {
+		this.cheapFm = cheapFm;
+	}
 
 	public Long getCheapId() {
 		return cheapId;

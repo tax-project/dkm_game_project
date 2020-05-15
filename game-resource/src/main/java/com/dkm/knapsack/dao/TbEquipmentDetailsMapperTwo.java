@@ -2,7 +2,7 @@ package com.dkm.knapsack.dao;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dkm.knapsack.domain.TbEquipmentDetails;
+import com.dkm.knapsack.domain.TbEquipmentDetailsTwo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author zy
- * @since 2020-05-14
+ * @since 2020-05-12
  */
 @Service
-public interface TbEquipmentDetailsMapper extends BaseMapper<TbEquipmentDetails> {
+public interface TbEquipmentDetailsMapperTwo extends BaseMapper<TbEquipmentDetailsTwo> {
 
 }

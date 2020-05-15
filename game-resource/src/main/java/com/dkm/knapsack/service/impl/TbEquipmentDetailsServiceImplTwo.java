@@ -1,7 +1,7 @@
 package com.dkm.knapsack.service.impl;
 
 
-import com.dkm.knapsack.service.ITbEquipmentDetailsService;
+import com.dkm.knapsack.service.ITbEquipmentDetailsServiceTwo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author zy
- * @since 2020-05-14
+ * @since 2020-05-12
  */
 @Service
-public class TbEquipmentDetailsServiceImpl implements ITbEquipmentDetailsService {
+public class TbEquipmentDetailsServiceImplTwo implements ITbEquipmentDetailsServiceTwo {
 	
 }
