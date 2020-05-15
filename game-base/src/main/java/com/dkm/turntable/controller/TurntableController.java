@@ -8,6 +8,8 @@ import com.dkm.turntable.entity.TurntableItem;
 import com.dkm.turntable.entity.bo.TurntableItemBO;
 import com.dkm.turntable.service.ITurntableService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,8 @@ public class TurntableController {
     private TurntableItemMapper turntableItemMapper;
 
     @GetMapping("/lucky/draw/items")
+    @ApiOperation(value = "转盘物品获取接口",notes = "获得物品信息",produces = "application/json")
+    @ApiImplicitParam(name = "token",value = "用户登录token",dataType = "String",paramType = "body",required = true)
     public List<TurntableItemBO> luckyDrawItems(){
         return turntableService.luckyDrawItems();
     }
