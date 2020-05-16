@@ -27,8 +27,13 @@ public class UserInfoController {
       userInfoService.updateUserInfo(much,userId);
    }
 
-   @PostMapping("/increase/all")
-   public void increaseUserInfoGold(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){
+   @PostMapping("/increase")
+   public void increaseUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){
          userInfoService.increaseUserInfo(increaseUserInfoBO);
+   }
+
+   @PostMapping("/cut")
+   public void cutUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){
+      userInfoService.cutUserInfo(increaseUserInfoBO);
    }
 }

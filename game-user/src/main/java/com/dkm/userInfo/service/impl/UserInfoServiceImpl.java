@@ -92,4 +92,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
          throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
       }
    }
+
+   @Override
+   public void cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
+      Integer integer = baseMapper.cutUserInfo(increaseUserInfoBO);
+      if (integer<=0){
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "减少失败");
+      }
+   }
 }
