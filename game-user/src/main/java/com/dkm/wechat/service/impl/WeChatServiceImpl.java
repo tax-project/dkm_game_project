@@ -99,7 +99,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
 
                 List<FriendNotOnlineVo> list = result.getData();
 
-                if (list != null) {
+                if (list.size() != 0) {
                     //有离线消息,当前该账号未在线，将未在线消息发送给客户端
                     List<Long> longList = new ArrayList<>();
                     for (FriendNotOnlineVo onlineVo : list) {
@@ -195,7 +195,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
 
         List<FriendNotOnlineVo> list = result.getData();
 
-        if (list != null) {
+        if (list.size() != 0) {
             //有离线消息,当前该账号未在线，将未在线消息发送给客户端
             List<Long> longList = new ArrayList<>();
             for (FriendNotOnlineVo onlineVo : list) {

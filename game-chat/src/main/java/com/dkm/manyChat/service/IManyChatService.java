@@ -6,4 +6,6 @@ package com.dkm.manyChat.service;
  * @vesion 1.0
  **/
 public interface IManyChatService {
+
+
 }

@@ -20,6 +20,11 @@ public class ManyChatInfo extends Model<ManyChatInfo> {
    private Long id;
 
    /**
+    *  群聊表id
+    */
+   private Long manyChatId;
+
+   /**
     * 用户id
     */
    private Long userId;
