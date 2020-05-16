@@ -218,6 +218,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         //将设备Id和用户Id存入redis中
         String cid = idGenerator.getUuid();
         redisConfig.setString(userBO.getUserId(),cid);
+
         //生成Token
         String token = createToken.getToken(userBO);
         HashMap<String, Object> resultMap = new HashMap<>(3);
