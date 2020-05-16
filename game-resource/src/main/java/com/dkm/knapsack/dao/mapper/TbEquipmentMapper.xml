@@ -26,6 +26,6 @@
 		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
 	</resultMap>
 	<select id="selectByEquipmentId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">
-		SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.knapsack_id=td.knapsack_id AND te.equipment_id=#{equipmentId}
+		SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.equipment_id=td.equipment_id AND te.equipment_id=#{equipmentId}
 	</select>
 </mapper>
