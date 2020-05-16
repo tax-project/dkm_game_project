@@ -24,8 +24,14 @@ public interface IUserInfoService {
    void updateUserInfo (Integer much, Long userId);
 
    /**
-    * 增加用户金币数
+    * 增加用户金币、钻石、声望
     * @param increaseUserInfoBO 参数对象
     */
    void increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
+
+   /**
+    * 减少用户金币、钻石、声望
+    * @param increaseUserInfoBO 参数对象
+    */
+   void cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
 }

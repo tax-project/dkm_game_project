@@ -20,4 +20,11 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      */
     Integer increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
 
+    /**
+     * 减少用户金币、钻石、声望
+     * @param increaseUserInfoBO 参数对象
+     * @return 是否成功
+     */
+    Integer cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
+
 }

@@ -19,4 +19,21 @@
         where user_id = #{userId}
     </update>
 
+
+    <update id="cutUserInfo" parameterType="com.dkm.userInfo.entity.bo.IncreaseUserInfoBO">
+        update tb_user_info
+        <set>
+            <if test="userInfoGold != null">
+                user_info_gold = user_info_gold - #{userInfoGold} ,
+            </if>
+            <if test="userInfoRenown != null">
+                user_info_renown = user_info_renown - #{userInfoRenown},
+            </if>
+            <if test="userInfoDiamonds != null">
+                user_info_diamonds = user_info_diamonds - #{userInfoDiamonds}
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
 </mapper>
