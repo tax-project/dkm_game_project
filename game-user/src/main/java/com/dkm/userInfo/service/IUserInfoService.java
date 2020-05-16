@@ -1,5 +1,7 @@
 package com.dkm.userInfo.service;
 
+import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+
 /**
  * @author qf
  * @date 2020/5/11
@@ -23,7 +25,7 @@ public interface IUserInfoService {
 
    /**
     * 增加用户金币数
-    * @param goldNumber 金币数
+    * @param increaseUserInfoBO 参数对象
     */
-   void increaseUserInfoGold(Double goldNumber);
+   void increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
 }

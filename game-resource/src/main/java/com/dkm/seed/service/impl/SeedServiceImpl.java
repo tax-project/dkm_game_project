@@ -1,34 +1,28 @@
 package com.dkm.seed.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
-import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
-import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.dao.SeedMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
 import com.dkm.seed.entity.vo.SeedUnlock;
+import com.dkm.seed.entity.vo.SeedVo;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,33 +84,38 @@ public class SeedServiceImpl implements ISeedService {
 
     /**
      * 解锁植物
-     * @param unlockmoeny 解锁金额
-     * @param grade      种子等级
-     * @param seedid     种子id
-     * @param seedPresentUnlock 种子当前解锁进度
+     * unlockmoeny 解锁金额
+     *  grade      种子等级
+     * seedid     种子id
+     * @seedPresentUnlock 种子当前解锁进度
+     * seedPresentAggregate 种子当前解锁进度
      * @return
      */
     @Override
-    public Message unlockplant(Integer unlockmoeny,Integer grade,Integer seedid,Integer seedPresentUnlock) {
+    public Message unlockPlant(SeedVo seedVo) {
         UserLoginQuery user = localUser.getUser();
         //得到用户金币
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
-        if(user1.getUserInfoGold()<unlockmoeny){
+        if(user1.getUserInfoGold()<seedVo.getUnlockMoney()){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
         Message message=new Message();
-        //种子等级除以10 得出声望
-        //等级余10大于0则进一
-        int sum=(int)Math.ceil(grade/10.00);
-        //修改当前种子解锁进度
-        seedMapper.updateSeedPresentUnlock(user.getId(),seedid,seedPresentUnlock);
-        //修改用户的金币和声望
-        int i= seedMapper.uploadUnlockMoneyAndPrestige(unlockmoeny, sum, user.getId());
-        if(i<=0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
+        //如果当前进度等于总进度 则解锁种子 修改种子状态
+        if(seedVo.getSeedPresentUnlock().equals(seedVo.getSeedPresentAggregate())){
+            seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),null,1);
         }
-        message.setMsg("解锁碎片成功");
-        return message;
+            //种子等级除以10 得出声望
+            //等级余10大于0则进一
+            int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
+            //修改当前种子解锁进度
+            seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
+            //修改用户的金币和声望
+            int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), sum, user.getId());
+            if(i<=0){
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
+            }
+            message.setMsg("解锁碎片成功");
+            return message;
     }
     /**
      * 种植种子

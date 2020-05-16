@@ -1,6 +1,7 @@
 package com.dkm.knapsack.domain.vo;
 
 
+
 import java.math.BigDecimal;
 
 /**
@@ -32,7 +33,7 @@ public class TbEquipmentKnapsackVo {
      */
     private Integer tekMoney;
     /**
-     * 1为穿戴品 2为道具
+     * 1为穿戴品 2为道具 3为食物
      */
     private Integer tekDaoju;
     /**
@@ -40,6 +41,14 @@ public class TbEquipmentKnapsackVo {
      */
     private Integer tekIsva;
 
+    /**
+     * 食物主键
+     */
+    private Long foodId;
+    /**
+     * 食物数量
+     */
+    private Integer foodNumber;
     /**
      * 宝箱主键
      */
@@ -83,6 +92,33 @@ public class TbEquipmentKnapsackVo {
      */
     private BigDecimal edRedEnvelopeAcceleration;
 
+    /**
+     * 食物名字
+     */
+    private String foodName;
+    /**
+     * 食物图片地址
+     */
+    private String foodUrl;
+    /**
+     * 售价
+     */
+    private Integer foodGold;
+    public Long getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(Long foodId) {
+        this.foodId = foodId;
+    }
+
+    public Integer getFoodNumber() {
+        return foodNumber;
+    }
+
+    public void setFoodNumber(Integer foodNumber) {
+        this.foodNumber = foodNumber;
+    }
 
     public Long getTekId() {
         return tekId;

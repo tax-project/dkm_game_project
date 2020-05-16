@@ -54,6 +54,15 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectUserId(localUser.getUser().getId());
     }
 
+    /**
+     * 根据当前用户查询食物
+     * @return
+     */
+    @Override
+    public List<TbEquipmentKnapsackVo> selectFoodId() {
+        return tbEquipmentKnapsackMapper.selectFoodId(localUser.getUser().getId());
+    }
+
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
         TbKnapsack tbKnapsack=new TbKnapsack();
@@ -108,32 +117,48 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         queryWrapper.eq("equipment_id",equipmentId);
         List<TbEquipment> list=tbEquipmentMapper.selectList(queryWrapper);
         for (TbEquipment tbEquipment : list) {
-            int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipment.getExp1());
-            if(count>0){
-                //查询为装备上的装备数据
-                List<TbEquipmentVo> list1=tbEquipmentService.selectByEquipmentId(equipmentId);
-                //查询已经装备上了的装备数据
-                List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackMapper.selectAll(tbEquipment.getExp1());
-                map.put("code",3);
-                map.put("msg","此装备已经装备上了");
-                map.put("dataOne",list1);
-                map.put("dataTwo",list2);
-            }else{
-                map.put("code",2);
-                map.put("msg","此装备没有装备上过");
+            //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
+            TbKnapsack tbKnapsack=new TbKnapsack();
+            tbKnapsack.setUserId(localUser.getUser().getId());
+            List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
+            for (TbKnapsack knapsack : list1) {
+                //传入当前用户背包的外键和装备编号
+                TbEquipmentKnapsackVo tbEquipmentKnapsack=new TbEquipmentKnapsackVo();
+                tbEquipmentKnapsack.setExp1(tbEquipment.getExp1());
+                tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
+                int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
+                if(count>0){
+                    //查询为装备上的装备数据
+                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
+                    TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
+                    tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
+                    tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
+                    //查询已经装备上了的装备数据
+                    List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
+                    map.put("code",3);
+                    map.put("msg","此装备已经装备上了");
+                    map.put("dataOne",list3);
+                    map.put("dataTwo",list2);
+                }else{
+                    //查询为装备上的装备数据
+                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
+                    map.put("code",2);
+                    map.put("dataThree",list3);
+                    map.put("msg","此装备没有装备上过");
+                }
             }
         }
         return map;
     }
 
     @Override
-    public int selectCountMy(String exp1) {
-        return tbEquipmentKnapsackMapper.selectCountMy(exp1);
+    public int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
+        return tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsackVo);
     }
 
     @Override
-    public List<TbEquipmentKnapsackVo> selectAll(String exp1) {
-        return tbEquipmentKnapsackMapper.selectAll(exp1);
+    public List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
+        return tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
     }
 
     @Override
@@ -155,14 +180,114 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
     @Override
-    public void uodateTekId(Long tekId) {
-       /* if(StringUtils.isEmpty(tekId)){
+    public void updateTekId(Long tekId) {
+        if(StringUtils.isEmpty(tekId)){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        QueryWrapper<TbEquipment> queryWrapper=new QueryWrapper();
-        queryWrapper.eq("equipment_id",equipmentId);
-        List<TbEquipment> list=tbEquipmentMapper.selectList(queryWrapper);*/
+        //首先根据背包装备表的主键得到装备的外键
+        QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper();
+        queryWrapper.eq("tek_id",tekId);
+        List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+
+        for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
+            //根据装备外键查询出所属的装备编号
+            List<TbEquipmentVo> list1=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
+            for (TbEquipmentVo tbEquipmentVo : list1) {
+                //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
+                TbKnapsack tbKnapsack=new TbKnapsack();
+                tbKnapsack.setUserId(localUser.getUser().getId());
+                List<TbKnapsack> list2=tbKnapsackService.findById(tbKnapsack);
+                for (TbKnapsack knapsack : list2) {
+                    //传入当前用户背包的外键和装备编号
+                    TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
+                    //得到装备所属的编号 然后查询下用户背包是否有此编号装备
+                    tbEquipmentKnapsackVo.setExp1(tbEquipmentVo.getExp1());
+                    //得到当前用户的背包外键
+                    tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
+                    int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsackVo);
+                    //判断此装备已经装备上了要给他替换
+                    if(count>0){
+
+                        TbEquipmentKnapsackVo tbEquipmentKnapsackVoTwo=new TbEquipmentKnapsackVo();
+                        tbEquipmentKnapsackVoTwo.setExp1(tbEquipmentVo.getExp1());
+                        tbEquipmentKnapsackVoTwo.setKnapsackId(knapsack.getKnapsackId());
+                        //查询已经装备上了的装备数据
+                        List<TbEquipmentKnapsackVo> list3=tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVoTwo);
+                        for (TbEquipmentKnapsackVo equipmentKnapsackVo : list3) {
+                            TbEquipmentKnapsack tbEquipmentKnapsack3=new TbEquipmentKnapsack();
+                            tbEquipmentKnapsack3.setTekSell(2);
+                            QueryWrapper queryWrapper2=new QueryWrapper();
+                            queryWrapper2.eq("tek_id",equipmentKnapsackVo.getTekId());
+                            int countTwo=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack3,queryWrapper2);
+
+                            TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                            tbEquipmentKnapsack1.setTekSell(1);
+                            QueryWrapper queryWrapper1=new QueryWrapper();
+                            queryWrapper1.eq("tek_id",tekId);
+                            int countOne=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+
+                            if(countOne<=0 && countTwo<=0){
+                                //如果失败将回滚
+                                throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                            }
+                        }
+                    }else{
+                        TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                        tbEquipmentKnapsack1.setTekSell(1);
+                        QueryWrapper queryWrapper1=new QueryWrapper();
+                        queryWrapper1.eq("tek_id",tekId);
+                        int countOne=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                        if(countOne<=0){
+                            //如果失败将回滚
+                            throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                        }
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    @Override
+    public void updateIsva(Long tekId,Integer foodNumber) {
+        if(StringUtils.isEmpty(tekId) &&StringUtils.isEmpty(foodNumber)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("tek_id",tekId);
+        List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+        for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
+            if(foodNumber>tbEquipmentKnapsack.getFoodNumber()){
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "数量没有那么多了");
+            }else{
+                TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
+                QueryWrapper queryWrapper1=new QueryWrapper();
+                queryWrapper1.eq("tek_id",tekId);
+                int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                if(rows<=0){
+                    //如果失败将回滚
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                }else{
+                    QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
+                    queryWrapper2.eq("tek_id",tekId);
+                    List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
+                    for (TbEquipmentKnapsack equipmentKnapsack : list2) {
+                        if(equipmentKnapsack.getFoodNumber()<=0){
+                            QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
+                            queryWrapper3.eq("tek_id",tekId);
+                            TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
+                            tbEquipmentKnapsack2.setTekIsva(0);
+                            tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
