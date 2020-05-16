@@ -4,7 +4,10 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
+import com.dkm.seed.entity.vo.SeedVo;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,7 +27,7 @@ public interface ISeedService {
      * 解锁植物
      * @return
      */
-    Message unlockplant(Integer unlockmoeny,Integer grade,Integer seedid,Integer seedPresentUnlock);
+    Message unlockPlant(SeedVo seedVo);
     /**
      * 查询已种植的种植
      *

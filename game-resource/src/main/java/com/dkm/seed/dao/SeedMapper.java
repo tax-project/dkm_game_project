@@ -66,7 +66,7 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * @param seedId 种子id
      * @return
      */
-    int updateSeedPresentUnlock(long userId,Integer seedId,Integer seedPresentUnlock);
+    int updateSeedPresentUnlock(long userId,Integer seedId,Integer seedPresentUnlock,Integer seedStatus);
 
     /**
      *
