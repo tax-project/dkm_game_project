@@ -8,6 +8,7 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
 import com.dkm.seed.entity.vo.SeedUnlock;
+import com.dkm.seed.entity.vo.UserInIf;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,4 +75,14 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * @return
      */
     int insertSeedUnlock(List<SeedUnlock> list);
+
+    /**
+     * 修改用户信息
+     */
+    int updateUser(UserInIf userInIf);
+
+    /**
+     * 收取种子后 删除土地种子表中对应的数据
+     */
+    int deleteLandSeed(Long userId);
 }

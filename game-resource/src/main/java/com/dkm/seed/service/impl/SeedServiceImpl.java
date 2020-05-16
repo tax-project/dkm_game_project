@@ -14,6 +14,7 @@ import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
 import com.dkm.seed.entity.vo.SeedUnlock;
 import com.dkm.seed.entity.vo.SeedVo;
+import com.dkm.seed.entity.vo.UserInIf;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,8 @@ public class SeedServiceImpl implements ISeedService {
         return seedMapper.selectById(seeId);
     }
 
+
+
     /**
      * 解锁植物
      * unlockmoeny 解锁金额
@@ -147,7 +150,17 @@ public class SeedServiceImpl implements ISeedService {
         return seeds;
     }
 
-
+    @Override
+    public int updateUser(UserInIf userInIf) {
+        //修改用户信息
+        int i = seedMapper.updateUser(userInIf);
+        if(i<0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取种子异常");
+        }
+        //收取种子后 删除土地种子表中对应的数据
+        int i1 = seedMapper.deleteLandSeed(userInIf.getUserId());
+        return i1;
+    }
 
 
 }

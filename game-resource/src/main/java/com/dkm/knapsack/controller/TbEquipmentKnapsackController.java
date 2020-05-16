@@ -198,7 +198,7 @@ public class TbEquipmentKnapsackController {
     @GetMapping("/updateSell")
     @CrossOrigin
     //@CheckToken
-    public void updateSell(Long tekId){
+    public void updateSell(@RequestParam("tekId") Long tekId){
         System.out.println(tekId);
         tbEquipmentKnapsackService.updateSell(tekId);
     }

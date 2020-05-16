@@ -5,6 +5,7 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
 import com.dkm.seed.entity.vo.SeedVo;
+import com.dkm.seed.entity.vo.UserInIf;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -39,4 +40,9 @@ public interface ISeedService {
      *
      */
     Seed querySeedById(Integer seeId);
+    /**
+     * 修改用户信息
+     */
+    int updateUser(UserInIf userInIf);
+
 }

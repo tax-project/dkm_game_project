@@ -34,6 +34,18 @@
         where user_id=#{userId} and seed_id=#{seeId}
     </update>
 
+    <update id="updateUser">
+        update tb_user_info set
+        <if test="userGold!=null">
+            user_info_gold=#{userGold}
+        </if>
+        <if test="userInfoPacketBalance!=null">
+            user_info_packet_balance=#{userInfoPacketBalance}
+        </if>
+        where user_id=#{userId}
+    </update>
+
+
     <update id="uploadPresentUnlock" >
         update tb_seed set seed_present_unlock=seed_present_unlock-1 where seed_id=#{seedId}
     </update>
@@ -50,5 +62,9 @@
         </foreach>
     </insert>
 
+
+    <delete id="deleteLandSeed">
+        delete from tb_land_seed where user_id=#{userId}
+    </delete>
 
 </mapper>
