@@ -3,8 +3,11 @@ package com.dkm.knapsack.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.knapsack.domain.TbBox;
+import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +19,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface TbBoxMapper extends BaseMapper<TbBox> {
-
+    List<TbEquipmentVo> selectByBoxId(Long boxId);
 }

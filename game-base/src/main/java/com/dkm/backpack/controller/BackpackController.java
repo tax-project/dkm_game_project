@@ -1,12 +1,16 @@
 package com.dkm.backpack.controller;
 
+import com.dkm.backpack.entity.vo.BackpackItemVO;
+import com.dkm.backpack.service.IBackpackService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @Author: HuangJie
@@ -18,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/backpack")
 public class BackpackController {
 
-    @PostMapping("/add/backpack/item")
-    @ApiOperation(value = "添加背包物品",notes = "添加背包物品",produces = "application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "itemId",value = "物品的ID",dataType = "Long",paramType = "body",required = true),
-            @ApiImplicitParam(name = "itemTableName",value = "物品所在表名称",dataType = "String",required = true,paramType = "body")
-    })
-    public void addBackpackItem(){
-        
+    @Autowired
+    private IBackpackService backpackService;
+
+    @GetMapping("/add/backpack/item")
+    @ApiOperation(value = "获取背包物品",notes = "添加背包物品",produces = "application/json")
+    @ApiImplicitParam(name = "token",value = "用户token",dataType = "String",paramType = "header",required = true)
+    public List<BackpackItemVO> addBackpackItem(){
+        return backpackService.allBackpackItem();
     }
 
 }

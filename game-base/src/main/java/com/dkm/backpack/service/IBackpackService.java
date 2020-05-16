@@ -1,5 +1,9 @@
 package com.dkm.backpack.service;
 
+import com.dkm.backpack.entity.vo.BackpackItemVO;
+
+import java.util.List;
+
 /**
  * @Author: HuangJie
  * @Date: 2020/5/14 15:12
@@ -7,9 +11,7 @@ package com.dkm.backpack.service;
  */
 public interface IBackpackService {
     /**
-     * 添加背包物品
-     * @param itemId 物品的ID
-     * @param itemTableName 物品所在表
+     * 获取背包所有物品
      */
-    void addBackpackItem(Long itemId, String itemTableName);
+    List<BackpackItemVO> allBackpackItem();
 }

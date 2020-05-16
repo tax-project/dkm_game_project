@@ -67,7 +67,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     query.setWxNickName(JWT.decode(token).getClaim("wxNickName").asString());
                     query.setWxOpenId(JWT.decode(token).getClaim("wxOpenId").asString());
                     query.setUserLevel(JWT.decode(token).getClaim("userLevel").asInt());
-                    query.setUserLevel(JWT.decode(token).getClaim("userInfoIsVip").asInt());
+                    query.setUserInfoIsVip(JWT.decode(token).getClaim("userInfoIsVip").asInt());
 
                 } catch (JWTDecodeException j) {
                     throw new ApplicationException(CodeType.OVENDU_ERROR,"token错误");

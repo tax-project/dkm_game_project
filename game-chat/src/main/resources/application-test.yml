@@ -30,3 +30,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://120.25.196.49:10000/eureka
+
+file:
+  url: http://120.25.196.49:8304/game-resource/img
+  #  前端地址   二维码地址
+  qrCodeUrl: http://www.baidu.com

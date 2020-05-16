@@ -12,5 +12,46 @@
 		<result column="tek_daoju" property="tekDaoju" />
 		<result column="tek_isva" property="tekIsva" />
 	</resultMap>
+	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo">
+		<id column="tek_id" property="tekId" />
+		<result column="equipment_id" property="equipmentId" />
+		<result column="knapsack_id" property="knapsackId" />
+		<result column="tek_sell" property="tekSell" />
+		<result column="tek_money" property="tekMoney" />
+		<result column="tek_daoju" property="tekDaoju" />
+		<result column="tek_isva" property="tekIsva" />
+		<result column="box_id" property="boxId" />
+		<result column="food_id" property="foodId" />
+		<result column="food_number" property="foodNumber" />
+		<result column="equipment_level" property="equipmentLevel" />
+		<result column="equipment_image" property="equipmentImage" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+		<result column="exp3" property="exp3" />
+		<result column="food_name" property="foodName" />
+		<result column="food_url" property="foodUrl" />
+		<result column="food_gold" property="foodGold" />
+		<result column="ed_id" jdbcType="BIGINT" property="edId" />
+		<result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+		<result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+	</resultMap>
 
+	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
+			tsk.user_id=#{userId} AND tk.tek_isva=1
+	</select>
+	<select id="selectFoodId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT *FROM tb_equipment_knapsack tk,tb_food_detail td,tb_knapsack tdk WHERE
+		tk.food_id=td.food_id AND tdk.user_id=#{userId} AND tk.tek_isva=1
+	</select>
+	<select id="selectCountMy" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM tb_equipment_knapsack tk,tb_equipment te
+		WHERE te.`equipment_id`=tk.equipment_id AND   tk.tek_sell=1  AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
+	</select>
+	<select id="selectAll" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultMap="BaseResultMapVo">
+		SELECT tk.tek_id,td.*,te.* FROM tb_equipment_knapsack tk,tb_equipment te,tb_equipment_details td
+		WHERE te.`equipment_id`=tk.equipment_id AND  tk.tek_sell=1 and te.equipment_id=td.equipment_id AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
+	</select>
 </mapper>

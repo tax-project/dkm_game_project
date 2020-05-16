@@ -99,7 +99,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
 
                 List<FriendNotOnlineVo> list = result.getData();
 
-                if (list.size() != 0) {
+                if (null != list && list.size() != 0) {
                     //有离线消息,当前该账号未在线，将未在线消息发送给客户端
                     List<Long> longList = new ArrayList<>();
                     for (FriendNotOnlineVo onlineVo : list) {
@@ -195,7 +195,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
 
         List<FriendNotOnlineVo> list = result.getData();
 
-        if (list.size() != 0) {
+        if (null != list && list.size() != 0) {
             //有离线消息,当前该账号未在线，将未在线消息发送给客户端
             List<Long> longList = new ArrayList<>();
             for (FriendNotOnlineVo onlineVo : list) {
@@ -218,6 +218,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         //将设备Id和用户Id存入redis中
         String cid = idGenerator.getUuid();
         redisConfig.setString(userBO.getUserId(),cid);
+
         //生成Token
         String token = createToken.getToken(userBO);
         HashMap<String, Object> resultMap = new HashMap<>(3);
