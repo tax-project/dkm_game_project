@@ -6,6 +6,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.pets.entity.dto.PetsDto;
+import com.dkm.pets.entity.vo.FeedPetInfoVo;
 import com.dkm.pets.service.PetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,32 +39,34 @@ public class PetsController  {
     @ApiOperation("获取用户宠物信息")
     @GetMapping("/getPets")
     @CrossOrigin
+    @CheckToken
     public Map<String,Object> getPets(){
-        return petService.getAllPets(123L);
+        return petService.getAllPets(localUser.getUser().getId());
     }
 
     @ApiOperation("喂食宠物")
-    @ApiImplicitParam(name = "petInfo", value = "宠物信息", required = true, dataType = "PetsDto", paramType = "path")
+    @ApiImplicitParam(name = "petInfoVo", value = "宠物信息", required = true, dataType = "FeedPetInfoVo", paramType = "path")
     @PostMapping("/feedPet")
     @CrossOrigin
-    public Map<String,Object> feedPet(@RequestBody PetsDto petInfo){
-        if(petInfo==null||petInfo.getEatFood().size()==0||petInfo.getPId()==null
-            ||petInfo.getEatFood().get(0).getFoodId()==null||petInfo.getEatFood().get(0).getENumber()==null){
+    @CheckToken
+    public void feedPet(@RequestBody FeedPetInfoVo petInfoVo){
+        if(petInfoVo==null||petInfoVo.getPGrade()==null||petInfoVo.getPGrade()<=0||petInfoVo.getPId()==null||petInfoVo.getTekId()==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
         }
-        return petService.feedPet(petInfo,123L);
+        petInfoVo.setUserId(localUser.getUser().getId());
+        petService.feedPet(petInfoVo);
     }
 
     @ApiOperation("宠物升级接口")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "petId", value = "宠物id", required = true, dataType = "Long", paramType = "path"),
-            @ApiImplicitParam(name = "foodId", value = "奶瓶id", required = true, dataType = "Long", paramType = "path")
-    })
-
+    @ApiImplicitParam(name = "petInfoVo", value = "宠物信息", required = true, dataType = "FeedPetInfoVo", paramType = "path")
     @PostMapping("/upLevel")
     @CrossOrigin
     @CheckToken
-    public void upLevel(Long pId,Long foodId){
-
+    public void upLevel(@RequestBody FeedPetInfoVo petInfoVo){
+        if(petInfoVo==null||petInfoVo.getPGrade()==null||petInfoVo.getPGrade()<=0||petInfoVo.getPId()==null||petInfoVo.getTekId()==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
+        }
+        petInfoVo.setUserId(localUser.getUser().getId());
+        petService.petLevelUp(petInfoVo);
     }
 }

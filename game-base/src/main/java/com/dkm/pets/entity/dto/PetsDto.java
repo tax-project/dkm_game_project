@@ -13,11 +13,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PetsDto extends PetUserEntity {
-
-    /**
-     * 所需次数
-     * */
-    private Integer eEatCount;
     /**
      * 宠物名称
      * */
@@ -29,8 +24,7 @@ public class PetsDto extends PetUserEntity {
     /**
      * 喂食进度
      * */
-    private Double perc;
-
+    private Double schedule;
     /**
     * 所需喂食
     * */

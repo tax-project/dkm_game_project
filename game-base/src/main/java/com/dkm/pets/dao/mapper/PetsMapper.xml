@@ -2,27 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.pets.dao.PetsMapper">
-
-    <select id="findById" resultType="com.dkm.pets.entity.dto.PetsDto">
-        SELECT DISTINCT p.*,ROUND(p.p_now_food/pef.e_eat_count*100,2) as perc,pef.e_eat_count FROM
-        ( SELECT a.*,d.pet_name,d.pet_url FROM (SELECT * FROM tb_pet_user WHERE user_id = #{userId}
-        <if test="petId != null">
-            and pet_id = #{petId}
-        </if>
-        ) a
-        LEFT JOIN tb_pet_detail d ON a.pet_id = d.pet_id ) p
-        LEFT JOIN tb_pet_eat_food pef ON pef.e_level = FLOOR( p.p_grade / 3 ) order by p.pet_id
-    </select>
-
-    <update id="updatePetInfo">
-        UPDATE tb_pet_user SET
-        <if test="nowFood != null">
-            p_now_food = #{nowFood}
-        </if>
-        <if test="pGrade != null">
-            p_grade = p_grade + 1
-        </if>
-         WHERE p_id = #{pId}
-    </update>
-
+    <insert id="insertList" parameterType="java.util.List">
+        insert into tb_pet_user (p_id,user_id,p_grade,p_now_food,pet_id) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.pId},
+            #{item.userId},
+            #{item.pGrade},
+            #{item.pNowFood},
+            #{item.petId}
+            )
+        </foreach>
+    </insert>
 </mapper>
