@@ -22,15 +22,4 @@ public class UserLoginQuery {
      * 用户微信昵称
      */
     private String wxNickName;
-
-    /**
-     * 用户等级
-     */
-    private Integer userLevel;
-
-    /**
-     * 0--不是VIP
-     * 1--是VIP
-     */
-    private Integer userInfoIsVip;
 }

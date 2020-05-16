@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.feign.UserFeignClient;
+import org.springframework.stereotype.Component;
 
 /**
  * @author qf

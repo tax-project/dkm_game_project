@@ -21,9 +21,7 @@ public class CreateToken {
       UserLoginQuery query = new UserLoginQuery();
       query.setId(bo.getUserId());
       query.setWxOpenId(bo.getWeChatOpenId());
-      query.setUserLevel(bo.getUserGrade());
       query.setWxNickName(bo.getWeChatNickName());
-      query.setUserInfoIsVip(bo.getUserIsVip());
       //24小时过期时间
       return jwtUtil.createJWT(1000 * 60 * 60 * 24L, query);
    }

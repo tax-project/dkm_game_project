@@ -2,6 +2,9 @@ package com.dkm.turntable.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.turntable.dao.TurntableItemMapper;
@@ -31,16 +34,20 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
     private static final Double LEVEL_MUCH_DOUBLE = 10.0D;
 
     @Autowired
+    private UserFeignClient feignClient;
+
+    @Autowired
     private LocalUser localUser;
     @Autowired
     private TurntableItemMapper turntableItemMapper;
 
     @Override
     public List<TurntableItemBO> luckyDrawItems() {
-        UserLoginQuery userLoginQuery = localUser.getUser();
-        assert userLoginQuery!=null;
+        UserLoginQuery query = localUser.getUser();
+        Result<UserInfoBo> result = feignClient.queryUser(query.getId());
+        UserInfoBo resultData = result.getData();
         //获取用户等级
-        Integer userLevel = userLoginQuery.getUserLevel();
+        Integer userLevel = resultData.getUserInfoGrade();
         //用户等级除10得到当前转盘处于哪一程度
         Integer userCeil = (int)Math.ceil(userLevel / LEVEL_MUCH_DOUBLE);
         //获取转盘表对应级别的6个物品

@@ -66,8 +66,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     query.setId(JWT.decode(token).getClaim("id").asLong());
                     query.setWxNickName(JWT.decode(token).getClaim("wxNickName").asString());
                     query.setWxOpenId(JWT.decode(token).getClaim("wxOpenId").asString());
-                    query.setUserLevel(JWT.decode(token).getClaim("userLevel").asInt());
-                    query.setUserInfoIsVip(JWT.decode(token).getClaim("userInfoIsVip").asInt());
 
                 } catch (JWTDecodeException j) {
                     throw new ApplicationException(CodeType.OVENDU_ERROR,"token错误");
@@ -79,16 +77,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
 
                 //获得解密后claims对象
-                Date date = new Date();
-                Claims jwt = JwtParseUtil.parseJWT(token,query);
-
-                String audience = jwt.getAudience();
-                Long erp = Long.parseLong(audience);
-                Date erpDate = new Date(erp);
+//                Date date = new Date();
+//                Claims jwt = JwtParseUtil.parseJWT(token,query);
+//
+//                String audience = jwt.getAudience();
+//                Long erp = Long.parseLong(audience);
+//                Date erpDate = new Date(erp);
                 //判断token时间是否过期
-                if (erpDate.before(date)) {
-                    throw new ApplicationException(CodeType.OVENDU_ERROR);
-                }
+//                if (erpDate.before(date)) {
+//                    throw new ApplicationException(CodeType.OVENDU_ERROR);
+//                }
 
                 user.setUser(query);
                 return true;

@@ -1,6 +1,7 @@
 package com.dkm.turntable.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.turntable.dao.TurntableItemMapper;
 import com.dkm.turntable.dao.TurntableMapper;
@@ -31,10 +32,6 @@ public class TurntableController {
 
     @Autowired
     private ITurntableService turntableService;
-    @Autowired
-    private TurntableMapper turntableMapper;
-    @Autowired
-    private TurntableItemMapper turntableItemMapper;
 
     @GetMapping("/lucky/draw/items")
     @ApiOperation(value = "转盘物品获取接口",notes = "获得物品信息",produces = "application/json")
@@ -44,19 +41,6 @@ public class TurntableController {
         return turntableService.luckyDrawItems();
     }
 
-    @GetMapping("/test")
-    public void  test(){
-        LambdaQueryWrapper<Turntable> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Turntable::getTurntableUserLevel,1);
-        Turntable turntable = turntableMapper.selectOne(queryWrapper);
-        List<TurntableItem> turntableItems = turntableItemMapper.luckyDrawItems(turntable);
-        System.out.println(turntableItems.stream().map(turntableItem -> {
-            TurntableItemBO turntableItemBO = new TurntableItemBO();
-            turntableItemBO.setTurntableItemName(turntableItem.getTurntableItemName());
-            turntableItemBO.setTurntableItemImageUrl(turntableItem.getTurntableItemImageUrl());
-            turntableItemBO.setTurntableItemRare(turntableItem.getTurntableItemRare());
-            return turntableItemBO;
-        }).collect(Collectors.toList()));
-    }
+
 
 }
