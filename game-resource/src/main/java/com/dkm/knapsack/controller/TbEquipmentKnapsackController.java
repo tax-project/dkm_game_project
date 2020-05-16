@@ -199,7 +199,6 @@ public class TbEquipmentKnapsackController {
     @CrossOrigin
     //@CheckToken
     public void updateSell(@RequestParam("tekId") Long tekId){
-        System.out.println(tekId);
         tbEquipmentKnapsackService.updateSell(tekId);
     }
 

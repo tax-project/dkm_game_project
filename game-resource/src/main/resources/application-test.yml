@@ -18,6 +18,7 @@ spring:
       max-request-size: 100MB
 
 
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -27,3 +28,7 @@ eureka:
 
 file:
   url: http://120.25.196.49:8304/game-resource/img
+feign:
+  hystrix:
+    enabled: true
+

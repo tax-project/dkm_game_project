@@ -190,10 +190,9 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
         }else{
-            List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackMapper.selectUserId(2l);
+            List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackMapper.selectUserId(2L);
             Result<UserInfoBo> result=userFeignClient.queryUser(2L);
             UserInfoBo userInfoBo= result.getData();
-            System.out.println("---+" + userInfoBo);
             for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
                 //得到此装备的声望
                 shengWang=tbEquipmentKnapsackVo.getEdEquipmentReputation();
@@ -207,8 +206,12 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 }else{
                     IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
-                    increaseUserInfoBO.setUserInfoRenown(shengWang);
-                    userFeignClient.cutUserInfo(increaseUserInfoBO);
+                    increaseUserInfoBO.setUserInfoRenown(2);
+                    Result result1 = userFeignClient.cutUserInfo(increaseUserInfoBO);
+
+                    if (result1.getCode() != 0) {
+                        throw new ApplicationException(CodeType.SERVICE_ERROR, result1.getMsg());
+                    }
                 }
             }
         }

@@ -5,12 +5,14 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
+import org.springframework.stereotype.Component;
 
 /**
  * @author qf
  * @date 2020/5/13
  * @vesion 1.0
  **/
+@Component
 public class UserFeignClientFallback implements UserFeignClient {
 
 
