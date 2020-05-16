@@ -56,7 +56,36 @@ public class TbEquipmentKnapsack extends Model<TbEquipmentKnapsack> {
      */
 	@TableField("tek_isva")
 	private Integer tekIsva;
+	/**
+	 * 食物主键
+	 */
+	@TableField("food_id")
+	private Long foodId;
+	/**
+	 * 食物数量
+	 */
+	@TableField("food_number")
+	private Integer foodNumber;
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Long getFoodId() {
+		return foodId;
+	}
+
+	public void setFoodId(Long foodId) {
+		this.foodId = foodId;
+	}
+
+	public Integer getFoodNumber() {
+		return foodNumber;
+	}
+
+	public void setFoodNumber(Integer foodNumber) {
+		this.foodNumber = foodNumber;
+	}
 
 	public Long getTekId() {
 		return tekId;

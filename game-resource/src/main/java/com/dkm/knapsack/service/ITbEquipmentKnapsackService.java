@@ -17,11 +17,16 @@ import java.util.Map;
  */
 public interface ITbEquipmentKnapsackService{
     List<TbEquipmentKnapsackVo> selectUserId();
+    List<TbEquipmentKnapsackVo> selectFoodId();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
     void deleteTbEquipment(Long tekId,Integer tekMoney);
     Map<String,Object> findById(Long equipmentId);
-    int selectCountMy(String exp1);
-    List<TbEquipmentKnapsackVo> selectAll(String exp1);
+    int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
+    List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     void updateSell(Long tekId);
-    void uodateTekId(Long tekId);
+    void updateTekId(Long tekId);
+    /**
+     * 食物和道具试用修改的方法
+     */
+    void updateIsva(Long tekId,Integer foodNumber);
 }
