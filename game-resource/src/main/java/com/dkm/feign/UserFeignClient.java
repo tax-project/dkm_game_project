@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserFeignClient {
 
    /**
-    *  查询所有用户信息
+    *  查询用户所有信息
     * @param id
     * @return
     */

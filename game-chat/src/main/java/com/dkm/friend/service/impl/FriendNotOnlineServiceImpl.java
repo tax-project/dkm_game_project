@@ -49,23 +49,23 @@ public class FriendNotOnlineServiceImpl extends ServiceImpl<FriendNotOnlineMappe
       List<FriendNotOnline> list = baseMapper.selectList(wrapper);
 
 
-      if (null != list && list.size() == 0) {
-         return null;
+      if (null != list && list.size() != 0) {
+         List<FriendNotOnlineVo> result = new ArrayList<>();
+
+         for (FriendNotOnline online : list) {
+            FriendNotOnlineVo vo = new FriendNotOnlineVo();
+            vo.setFromId(online.getFromId());
+            vo.setToId(online.getToId());
+            vo.setContent(online.getContent());
+            vo.setType(online.getType());
+            vo.setCreateDate(DateUtil.formatDateTime(online.getCreateDate()));
+            result.add(vo);
+         }
+
+         return result;
       }
 
-      List<FriendNotOnlineVo> result = new ArrayList<>();
-
-      for (FriendNotOnline online : list) {
-         FriendNotOnlineVo vo = new FriendNotOnlineVo();
-         vo.setFromId(online.getFromId());
-         vo.setToId(online.getToId());
-         vo.setContent(online.getContent());
-         vo.setType(online.getType());
-         vo.setCreateDate(DateUtil.formatDateTime(online.getCreateDate()));
-         result.add(vo);
-      }
-
-      return result;
+     return null;
    }
 
 
