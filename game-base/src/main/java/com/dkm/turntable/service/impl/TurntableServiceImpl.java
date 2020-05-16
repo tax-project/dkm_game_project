@@ -41,10 +41,8 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
         assert userLoginQuery!=null;
         //获取用户等级
         Integer userLevel = userLoginQuery.getUserLevel();
-        System.out.println("token"+userLoginQuery);
         //用户等级除10得到当前转盘处于哪一程度
         Integer userCeil = (int)Math.ceil(userLevel / LEVEL_MUCH_DOUBLE);
-        System.out.println(userCeil);
         //获取转盘表对应级别的6个物品
         LambdaQueryWrapper<Turntable> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Turntable::getTurntableUserLevel,userCeil);
@@ -54,8 +52,6 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
         //把物品属性对象转化成Map对象：id-对象
         Map<Long, TurntableItem> turntableItemMap = turntableItems.stream().collect(Collectors.toMap(TurntableItem::getTurntableItemId, turntableItem -> turntableItem));
         ArrayList<TurntableItemBO> turntableItemBoS = new ArrayList<>();
-        System.out.println(turntableItemMap);
-        System.out.println(turntable);
         turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotOneId(),turntableItemMap));
         turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotTwoId(),turntableItemMap));
         turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotThreeId(),turntableItemMap));

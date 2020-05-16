@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
-import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
+import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -86,12 +86,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    }
 
    @Override
-   public void increaseUserInfoGold(Double goldNumber) {
-      UserLoginQuery localUserUser = localUser.getUser();
-      assert localUserUser != null;
-      Long id = localUserUser.getId();
-
-      Integer integer = baseMapper.increaseUserInfoGold(goldNumber, id);
+   public void increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
+      Integer integer = baseMapper.increaseUserInfo(increaseUserInfoBO);
       if (integer<=0){
          throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
       }
