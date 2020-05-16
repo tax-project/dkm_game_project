@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +29,6 @@ import java.util.stream.Collectors;
 public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable> implements ITurntableService {
 
     private static final Double LEVEL_MUCH_DOUBLE = 10.0D;
-    private static final Integer LEVEL_MUCH_INTEGER = 10;
 
     @Autowired
     private LocalUser localUser;
@@ -46,17 +47,31 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
         LambdaQueryWrapper<Turntable> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Turntable::getTurntableUserLevel,userCeil);
         Turntable turntable = baseMapper.selectOne(queryWrapper);
-
-
+        //把6个物品的ID换成该物品的属性内容
         List<TurntableItem> turntableItems = turntableItemMapper.luckyDrawItems(turntable);
-
-
-        return turntableItems.stream().map(turntableItem -> {
-            TurntableItemBO turntableItemBO = new TurntableItemBO();
-            turntableItemBO.setTurntableItemName(turntableItem.getTurntableItemName());
-            turntableItemBO.setTurntableItemImageUrl(turntableItem.getTurntableItemImageUrl());
-            turntableItemBO.setTurntableItemRare(turntableItem.getTurntableItemRare());
-            return turntableItemBO;
-        }).collect(Collectors.toList());
+        //把物品属性对象转化成Map对象：id-对象
+        Map<Long, TurntableItem> turntableItemMap = turntableItems.stream().collect(Collectors.toMap(TurntableItem::getTurntableItemId, turntableItem -> turntableItem));
+        ArrayList<TurntableItemBO> turntableItemBoS = new ArrayList<>();
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotOneId(),turntableItemMap));
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotTwoId(),turntableItemMap));
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotThreeId(),turntableItemMap));
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotFourId(),turntableItemMap));
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotFiveId(),turntableItemMap));
+        turntableItemBoS.add(exchangeTurntableItemBO(turntable.getTurntableSlotSixId(),turntableItemMap));
+        return turntableItemBoS;
+    }
+    /**
+     * 兑换对象
+     * @param itemId 物品ID
+     * @param turntableItemMap 包含可能出现的物品ID的对象内容
+     * @return 对象
+     */
+    private TurntableItemBO exchangeTurntableItemBO(Long itemId,Map<Long, TurntableItem> turntableItemMap){
+        TurntableItem turntableItem = turntableItemMap.get(itemId);
+        TurntableItemBO turntableItemBO = new TurntableItemBO();
+        turntableItemBO.setTurntableItemName(turntableItem.getTurntableItemName());
+        turntableItemBO.setTurntableItemImageUrl(turntableItem.getTurntableItemImageUrl());
+        turntableItemBO.setTurntableItemRare(turntableItem.getTurntableItemRare());
+        return turntableItemBO;
     }
 }
