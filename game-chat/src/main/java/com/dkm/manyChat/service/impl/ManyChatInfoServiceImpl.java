@@ -1,6 +1,8 @@
 package com.dkm.manyChat.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.manyChat.dao.ManyChatInfoMapper;
 import com.dkm.manyChat.entity.ManyChatInfo;
 import com.dkm.manyChat.entity.vo.ManyChatInfoVo;
@@ -30,6 +32,11 @@ public class ManyChatInfoServiceImpl extends ServiceImpl<ManyChatInfoMapper, Man
    @Override
    public void insertAllUser(List<ManyChatInfoVo> list) {
 
+      Integer integer = baseMapper.insertAllUser(list);
+
+      if (integer <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "建立群聊错误");
+      }
 
    }
 }

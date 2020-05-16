@@ -5,9 +5,13 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
 import com.dkm.file.utils.FileVo;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.manyChat.dao.ManyChatMapper;
 import com.dkm.manyChat.entity.ManyChat;
+import com.dkm.manyChat.entity.vo.ManyChatInfoVo;
 import com.dkm.manyChat.entity.vo.ManyChatVo;
+import com.dkm.manyChat.service.IManyChatInfoService;
 import com.dkm.manyChat.service.IManyChatService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author qf
@@ -36,6 +42,12 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
 
    @Autowired
    private IFileService fileService;
+
+   @Autowired
+   private LocalUser localUser;
+
+   @Autowired
+   private IManyChatInfoService manyChatInfoService;
 
    @Override
    public void insertManyChat(ManyChatVo vo) {
@@ -57,7 +69,25 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
          throw new ApplicationException(CodeType.SERVICE_ERROR, "建立群聊失败");
       }
 
+      List<ManyChatInfoVo> list = new ArrayList<>();
 
+      for (Long userId : vo.getList()) {
+         ManyChatInfoVo infoVo = new ManyChatInfoVo();
+         infoVo.setId(idGenerator.getNumberId());
+         infoVo.setManyChatId(manyChatId);
+         infoVo.setUserId(userId);
+         infoVo.setRoleStatus(2);
+         list.add(infoVo);
+      }
+
+      UserLoginQuery user = localUser.getUser();
+
+      ManyChatInfoVo infoVo = new ManyChatInfoVo();
+      infoVo.setId(idGenerator.getNumberId());
+      infoVo.setManyChatId(manyChatId);
+      infoVo.setUserId(user.getId());
+      infoVo.setRoleStatus(0);
+      list.add(infoVo);
 
 
    }
