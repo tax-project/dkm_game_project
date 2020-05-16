@@ -31,9 +31,12 @@ public class ManyChatInfo extends Model<ManyChatInfo> {
 
 
    /**
-    * 昵称
+    * 角色等级
+    * 0--群主
+    * 1--管理员
+    * 2--普通群员
     */
-   private String manyNickName;
+   private Integer manyRoleStatus;
 
    /**
     * 每个用户在群里的备注
