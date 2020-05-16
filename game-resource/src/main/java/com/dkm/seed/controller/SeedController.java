@@ -3,7 +3,6 @@ package com.dkm.seed.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
@@ -49,20 +48,21 @@ public class SeedController{
      */
     @ApiOperation(value = "解锁植物碎片", notes = "解锁植物碎片")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "unlockmony", value = "购买碎片金额"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "grade ", value = "种子等级"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedid ", value = "种子id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedPresentUnlock ", value = "当前解锁进度")
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "unlockMoney", value = "购买碎片金额"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "grade", value = "种子等级"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedPresentUnlock", value = "当前解锁进度"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedPresentAggregate", value = "当前解锁总进度")
     })
     @PostMapping("/unlockPlant")
     @CrossOrigin
     @CheckToken //自定义注解 判断用户token是否存在
     public Message unlockPlant(SeedVo seedVo){
-         if (seedVo.getGrade() == 0 && seedVo.getGrade() == null  || seedVo.getSeedid()==0&&seedVo.getSeedid()==null
-                 || seedVo.getUnlockmoeny()==0&&seedVo.getUnlockmoeny()==null ||seedVo.getSeedPresentUnlock()==0&&seedVo.getSeedPresentUnlock()==null){
+         if (seedVo.getGrade() == null  || seedVo.getSeedId()==null|| seedVo.getUnlockMoney()==null ||seedVo.getSeedPresentUnlock()==null ||
+                 seedVo.getSeedPresentAggregate()==null){
              throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
          }
-         return iSeedService.unlockplant(seedVo.getUnlockmoeny(),seedVo.getGrade(),seedVo.getSeedid(),seedVo.getSeedPresentUnlock());
+         return iSeedService.unlockPlant(seedVo);
     }
 
 
@@ -71,16 +71,18 @@ public class SeedController{
      */
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedid ", value = "种子id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "grade ", value = "种子等级"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "grade", value = "种子等级"),
     })
     @PostMapping("/plant")
     @CrossOrigin
-    public List<LandSeedVo> plant(@RequestBody  LandSeed landSeed){
+    public List<LandSeedVo> plant(LandSeed landSeed){
         if(landSeed.getSeedId() == 0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
         }
         return iSeedService.queryAlreadyPlantSeed(landSeed);
     }
+
+
 
 }

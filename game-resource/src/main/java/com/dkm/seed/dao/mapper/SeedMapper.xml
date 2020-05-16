@@ -24,7 +24,14 @@
     </update>
 
     <update id="updateSeedPresentUnlock">
-        update tb_plant_unlock set seed_present_unlock=#{seedPresentUnlock} where user_id=#{userId} and seed_id=#{seeId}
+        update tb_plant_unlock set
+        <if test="seedPresentUnlock!=null">
+            seed_present_unlock=#{seedPresentUnlock}
+        </if>
+        <if test="seedStatus!=null">
+            seed_status=#{seedStatus}
+        </if>
+        where user_id=#{userId} and seed_id=#{seeId}
     </update>
 
     <update id="uploadPresentUnlock" >
