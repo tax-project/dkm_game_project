@@ -54,6 +54,18 @@ public class PetServiceImpl implements PetService {
     @Override
     public Map<String,Object> getAllPets(Long userId) {
         Map<String,Object> map = new HashMap<>();
+        //查询食物信息
+        Map<String, Object> returnData = null;
+        try {
+            returnData = resourceFeignClient.selectUserId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ApplicationException(CodeType.DATABASE_ERROR);
+        }
+        if(returnData==null||returnData.get("fail")!=null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+        map.put("foodInfo",returnData.get("dataOne"));
         //获取用户信息
         UserInfo userInfo = petsMapper.findUserInfo(userId);
         map.put("userInfo",userInfo);
@@ -75,18 +87,6 @@ public class PetServiceImpl implements PetService {
             }
             petsMapper.insertList(list);
         }
-        //查询食物信息
-        Map<String, Object> returnData = null;
-        try {
-            returnData = resourceFeignClient.selectUserId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ApplicationException(CodeType.DATABASE_ERROR);
-        }
-        if(returnData==null||returnData.get("fail")!=null){
-            throw new ApplicationException(CodeType.SERVICE_ERROR);
-        }
-        map.put("foodInfo",returnData.get("dataOne"));
         //查询宠物信息
         List<PetsDto> petInfo = petsMapper.findById(userId);
         //食物信息
