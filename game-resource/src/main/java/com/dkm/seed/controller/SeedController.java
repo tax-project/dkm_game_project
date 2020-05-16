@@ -8,12 +8,14 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
 import com.dkm.seed.entity.vo.SeedVo;
+import com.dkm.seed.entity.vo.UserInIf;
 import com.dkm.seed.service.ISeedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,18 +30,19 @@ import java.util.List;
 @Api(tags = "种子api")
 @RestController
 @RequestMapping("/Seed")
-public class SeedController{
+public class SeedController {
     @Autowired
     private ISeedService iSeedService;
 
     /**
      * 根据用户id得到种子（是否解锁）
+     *
      * @return
      */
     @ApiOperation(value = "根据用户id得到种子（是否解锁）", notes = "根据用户id得到种子（是否解锁）")
     @GetMapping("/queryUserIdSeed")
     @CrossOrigin
-    public List<Seed> queryUserIdSeed(){
+    public List<Seed> queryUserIdSeed() {
         return iSeedService.queryUserIdSeed();
     }
 
@@ -57,12 +60,12 @@ public class SeedController{
     @PostMapping("/unlockPlant")
     @CrossOrigin
     @CheckToken //自定义注解 判断用户token是否存在
-    public Message unlockPlant(SeedVo seedVo){
-         if (seedVo.getGrade() == null  || seedVo.getSeedId()==null|| seedVo.getUnlockMoney()==null ||seedVo.getSeedPresentUnlock()==null ||
-                 seedVo.getSeedPresentAggregate()==null){
-             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-         }
-         return iSeedService.unlockPlant(seedVo);
+    public Message unlockPlant(SeedVo seedVo) {
+        if (seedVo.getGrade() == null || seedVo.getSeedId() == null || seedVo.getUnlockMoney() == null || seedVo.getSeedPresentUnlock() == null ||
+                seedVo.getSeedPresentAggregate() == null) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        return iSeedService.unlockPlant(seedVo);
     }
 
 
@@ -76,13 +79,36 @@ public class SeedController{
     })
     @PostMapping("/plant")
     @CrossOrigin
-    public List<LandSeedVo> plant(LandSeed landSeed){
-        if(landSeed.getSeedId() == 0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
+    public List<LandSeedVo> plant(LandSeed landSeed) {
+        if (landSeed.getSeedId() == 0) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
         return iSeedService.queryAlreadyPlantSeed(landSeed);
     }
 
+    /**
+     * 收取种子
+     */
+    @ApiOperation(value = "收取种子", notes = "收取种子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userGold", value = "用户金币"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
+    })
+    @PostMapping("/gather")
+    @CrossOrigin
+    @CheckToken
+    public Message gather(UserInIf userInIf) {
+        if (userInIf.getUserGold() == null  || userInIf.getUserInfoPacketBalance() == null ) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
+        }
+        int i = iSeedService.updateUser(userInIf);
+        Message message=new Message();
+        if(i>0){
+            message.setMsg("修改成功");
+            message.setNum(1);
+        }
+             return message;
+    }
 
 
 }
