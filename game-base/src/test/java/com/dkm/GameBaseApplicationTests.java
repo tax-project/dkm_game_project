@@ -1,7 +1,6 @@
 package com.dkm;
 
 
-import com.dkm.backpack.entity.bo.AddBackpackItemBO;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class GameBaseApplicationTests {
    @Test
    public void contextLoads() {
-      AddBackpackItemBO addBackpackItemBO = new AddBackpackItemBO();
-      System.out.println(addBackpackItemBO);
-   }
 
+   }
 }

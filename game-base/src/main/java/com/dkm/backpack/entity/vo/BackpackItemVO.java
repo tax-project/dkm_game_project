@@ -26,7 +26,11 @@ public class BackpackItemVO {
      */
     private String itemImageUrl;
     /**
+     * 物品所值金币
+     */
+    private Integer itemGold;
+    /**
      * 物品对应的表编号
      */
-    private Integer itemTableName;
+    private Integer itemTableNumber;
 }

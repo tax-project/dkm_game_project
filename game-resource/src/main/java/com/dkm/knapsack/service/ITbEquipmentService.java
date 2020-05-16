@@ -3,6 +3,8 @@ package com.dkm.knapsack.service;
 
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 
+import java.util.List;
+
 /**
  * <p>
  * 装备表 服务类
@@ -13,4 +15,7 @@ import com.dkm.knapsack.domain.vo.TbEquipmentVo;
  */
 public interface ITbEquipmentService{
 	void addTbEquipment(TbEquipmentVo tbEquipmentVo);
+
+	List<TbEquipmentVo> selectByEquipmentId(Long equipmentId);
+
 }

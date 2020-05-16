@@ -5,7 +5,6 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbKnapsack;
-import com.dkm.knapsack.domain.TbKnapsackTwo;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
