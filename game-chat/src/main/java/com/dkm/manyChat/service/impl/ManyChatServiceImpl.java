@@ -89,6 +89,6 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
       infoVo.setRoleStatus(0);
       list.add(infoVo);
 
-
+      manyChatInfoService.insertAllUser(list);
    }
 }
