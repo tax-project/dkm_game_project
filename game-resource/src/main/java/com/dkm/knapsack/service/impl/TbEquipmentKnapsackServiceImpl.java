@@ -196,7 +196,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             for (TbEquipmentVo tbEquipmentVo : list1) {
                 //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
                 TbKnapsack tbKnapsack=new TbKnapsack();
-                tbKnapsack.setUserId(2L);
+                tbKnapsack.setUserId(localUser.getUser().getId());
                 List<TbKnapsack> list2=tbKnapsackService.findById(tbKnapsack);
                 for (TbKnapsack knapsack : list2) {
                     //传入当前用户背包的外键和装备编号
