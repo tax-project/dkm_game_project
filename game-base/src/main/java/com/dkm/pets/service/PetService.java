@@ -1,6 +1,7 @@
 package com.dkm.pets.service;
 
 import com.dkm.pets.entity.dto.PetsDto;
+import com.dkm.pets.entity.vo.FeedPetInfoVo;
 
 import java.util.Map;
 
@@ -17,18 +18,12 @@ public interface PetService {
     Map<String,Object> getAllPets(Long userId);
 
     /**
-     * 更新用户金币、声望
-     * @param petInfo
-     * @param userId
-     * @return
+     * 喂食
      */
-    Map<String,Object> feedPet(PetsDto petInfo, Long userId);
+    void feedPet(FeedPetInfoVo petInfoVo);
 
     /**
-     * 升级宠物
-     * @param pid
-     * @param userId
-     * @return
+     * 升级
      */
-    Map<String,Object> getNeedInfo(Long foodId,Long pid,Long userId);
+    void petLevelUp(FeedPetInfoVo petInfoVo);
 }

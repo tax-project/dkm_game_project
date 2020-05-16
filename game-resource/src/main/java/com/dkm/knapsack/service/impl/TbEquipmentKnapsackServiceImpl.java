@@ -20,9 +20,11 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -38,6 +40,7 @@ import java.util.Map;
  * @since 2020-05-14
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackService {
     @Autowired
     TbEquipmentKnapsackMapper tbEquipmentKnapsackMapper;
@@ -55,7 +58,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     ITbEquipmentService tbEquipmentService;
 
     @Autowired
-    UserFeignClient userFeignClient;
+    private UserFeignClient userFeignClient;
     @Override
     public List<TbEquipmentKnapsackVo> selectUserId() {
         return tbEquipmentKnapsackMapper.selectUserId(localUser.getUser().getId());
@@ -176,42 +179,42 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     @Override
     public void updateSell(Long tekId) {
         Integer shengWang;
-        if(StringUtils.isEmpty(tekId)){
+        if (StringUtils.isEmpty(tekId)) {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-        QueryWrapper queryWrapper=new QueryWrapper();
+        TbEquipmentKnapsack tbEquipmentKnapsack = new TbEquipmentKnapsack();
+        QueryWrapper queryWrapper = new QueryWrapper();
 
         tbEquipmentKnapsack.setTekSell(2);
-        queryWrapper.eq("tek_id",tekId);
-        int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
-        if(rows <= 0){
+        queryWrapper.eq("tek_id", tekId);
+        int rows = tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack, queryWrapper);
+        if (rows <= 0) {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
-        }else{
-            List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackMapper.selectUserId(2L);
-            Result<UserInfoBo> result=userFeignClient.queryUser(2L);
-            UserInfoBo userInfoBo= result.getData();
+        } else {
+            List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
+            Result<UserInfoBo> result = userFeignClient.queryUser(2L);
+            UserInfoBo userInfoBo = result.getData();
             for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
                 //得到此装备的声望
-                shengWang=tbEquipmentKnapsackVo.getEdEquipmentReputation();
+                shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
 
-                if(shengWang > userInfoBo.getUserInfoRenown()){
-                    shengWang=0;
-                    IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                if (shengWang > userInfoBo.getUserInfoRenown()) {
+                    shengWang = 0;
+                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
                     increaseUserInfoBO.setUserInfoRenown(shengWang);
                     userFeignClient.cutUserInfo(increaseUserInfoBO);
-                }else{
-                    IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                } else {
+                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
-                    increaseUserInfoBO.setUserInfoRenown(2);
                     Result result1 = userFeignClient.cutUserInfo(increaseUserInfoBO);
 
                     if (result1.getCode() != 0) {
                         throw new ApplicationException(CodeType.SERVICE_ERROR, result1.getMsg());
                     }
+
                 }
             }
         }

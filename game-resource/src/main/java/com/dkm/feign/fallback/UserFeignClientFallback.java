@@ -30,4 +30,7 @@ public class UserFeignClientFallback implements UserFeignClient {
    public Result cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
       return Result.fail(CodeType.SERVICE_ERROR);
    }
+
+
+
 }
