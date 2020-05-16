@@ -1,6 +1,7 @@
 package com.dkm.manyChat.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
@@ -90,5 +91,6 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
       list.add(infoVo);
 
       manyChatInfoService.insertAllUser(list);
+
    }
 }

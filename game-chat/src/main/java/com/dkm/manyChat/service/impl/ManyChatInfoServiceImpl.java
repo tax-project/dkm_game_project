@@ -1,5 +1,6 @@
 package com.dkm.manyChat.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
@@ -7,6 +8,7 @@ import com.dkm.manyChat.dao.ManyChatInfoMapper;
 import com.dkm.manyChat.entity.ManyChatInfo;
 import com.dkm.manyChat.entity.vo.ManyChatInfoVo;
 import com.dkm.manyChat.service.IManyChatInfoService;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,5 +40,14 @@ public class ManyChatInfoServiceImpl extends ServiceImpl<ManyChatInfoMapper, Man
          throw new ApplicationException(CodeType.SERVICE_ERROR, "建立群聊错误");
       }
 
+   }
+
+   @Override
+   public List<ManyChatInfo> getManyChatInfoList(Long manyChatId) {
+
+      LambdaQueryWrapper<ManyChatInfo> wrapper = new LambdaQueryWrapper<ManyChatInfo>()
+            .eq(ManyChatInfo::getManyChatId,manyChatId);
+
+      return baseMapper.selectList(wrapper);
    }
 }

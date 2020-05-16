@@ -3,6 +3,7 @@ package com.dkm.websocket.mq;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.entity.websocket.MsgInfo;
+import com.dkm.utils.StringUtils;
 import com.dkm.websocket.utils.ChannelManyGroups;
 import com.dkm.websocket.utils.GroupUtils;
 import io.netty.channel.Channel;
@@ -90,13 +91,16 @@ public class RabbitMqListener {
       if (msgInfo.getType() == 4) {
          //群聊消息
          //去redis中取出所有设备ID，找到channel通道的集合
-         List<String> cIdList = redisTemplate.opsForList().range(2 + msgInfo.getFromId(), 0, -1);
-
          List<Channel> channels = new ArrayList<>();
-         for (String cid :cIdList) {
-            Channel channel = groupUtils.getChannel(cid);
-            if (channel != null) {
-               channels.add(channel);
+         //去redis中找设备id
+         for (Long id : msgInfo.getToIdList()) {
+            String cid = (String) redisTemplate.opsForValue().get(id);
+            //将除了自己以外的所有群聊人员都发消息
+            if (StringUtils.isNotBlank(cid) && !cid.equals(msgInfo.getCid())) {
+               Channel channel = groupUtils.getChannel(cid);
+               if (channel != null) {
+                  channels.add(channel);
+               }
             }
          }
 

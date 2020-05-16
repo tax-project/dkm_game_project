@@ -46,9 +46,9 @@ public class MsgInfo {
    private String cid;
 
    /**
-    * 发送Id的集合
+    * 群聊id
     */
-   private List<Long> toIdList;
+   private Long manyChatId;
 
    /**
     * 1--文本
@@ -61,4 +61,9 @@ public class MsgInfo {
     * 发送时间
     */
    private String sendDate;
+
+   /**
+    * 发送Id的集合
+    */
+   private List<Long> toIdList;
 }
