@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.manyChat.dao.ManyChatInfoMapper">
+
+
+    <insert id="insertAllUser" parameterType="com.dkm.manyChat.entity.vo.ManyChatInfoVo">
+        insert into tb_many_chat_info(id,many_chat_id,user_id,many_role_status)
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.id},#{item.manyChatId},#{item.userId},#{item.roleStatus}
+        </foreach>
+    </insert>
+
+
+</mapper>
