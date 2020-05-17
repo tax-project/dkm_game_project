@@ -1,8 +1,12 @@
 package com.dkm.knapsack.controller;
 
 
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.utils.Message;
@@ -32,6 +36,9 @@ import java.util.Map;
 public class TbEquipmentKnapsackController {
 	@Autowired
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
+
+	@Autowired
+	private UserFeignClient userFeignClient;
 
     /**
      * 增加用户装备的接口文档
@@ -259,5 +266,21 @@ public class TbEquipmentKnapsackController {
     //@CheckToken
     public void updateIsva(Long tekId,Integer foodNumber){
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
+    }
+
+    @GetMapping("/feign")
+    public Result testFeign () {
+        Result<UserInfoBo> result = userFeignClient.queryUser(2L);
+        System.out.println(result);
+        if (result.getCode() == 0) {
+            IncreaseUserInfoBO bo = new IncreaseUserInfoBO();
+            bo.setUserId(2L);
+            bo.setUserInfoDiamonds(0);
+            bo.setUserInfoGold(0);
+            bo.setUserInfoRenown(5);
+            return userFeignClient.cutUserInfo(bo);
+        }
+
+        return null;
     }
 }

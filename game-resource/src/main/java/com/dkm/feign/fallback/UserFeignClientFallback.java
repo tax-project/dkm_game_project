@@ -18,17 +18,17 @@ public class UserFeignClientFallback implements UserFeignClient {
 
    @Override
    public Result<UserInfoBo> queryUser(Long id) {
-      return Result.fail(CodeType.SERVICE_ERROR);
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
    @Override
    public Result increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
-      return Result.fail(CodeType.SERVICE_ERROR);
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
    @Override
    public Result cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
-      return Result.fail(CodeType.SERVICE_ERROR);
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
 

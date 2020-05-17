@@ -31,4 +31,15 @@ file:
 feign:
   hystrix:
     enabled: true
+  httpclient:
+    connection-timeout: 10000
+hystrix:
+    metrics:
+      enabled: true
+      polling-interval-ms: 4000
+
+ribbon:
+  eureka:
+    enabled: true
+
 
