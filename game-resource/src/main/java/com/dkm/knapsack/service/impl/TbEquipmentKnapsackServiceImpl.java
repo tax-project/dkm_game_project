@@ -194,26 +194,29 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
         } else {
             List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
+
             Result<UserInfoBo> result = userFeignClient.queryUser(2L);
+            System.out.println(result);
             UserInfoBo userInfoBo = result.getData();
             for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
                 //得到此装备的声望
                 shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
 
-                if (shengWang > userInfoBo.getUserInfoRenown()) {
+                IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+                if (shengWang >= userInfoBo.getUserInfoRenown()) {
                     shengWang = 0;
-                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
-                    increaseUserInfoBO.setUserInfoRenown(shengWang);
+                    increaseUserInfoBO.setUserInfoGold(0);
+                    increaseUserInfoBO.setUserInfoDiamonds(0);
+                    increaseUserInfoBO.setUserInfoRenown(500);
                     userFeignClient.cutUserInfo(increaseUserInfoBO);
                 } else {
-                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
-                    Result result1 = userFeignClient.cutUserInfo(increaseUserInfoBO);
+                    increaseUserInfoBO.setUserInfoGold(0);
+                    increaseUserInfoBO.setUserInfoDiamonds(0);
+                    increaseUserInfoBO.setUserInfoRenown(shengWang);
+                    userFeignClient.cutUserInfo(increaseUserInfoBO);
 
-                    if (result1.getCode() != 0) {
-                        throw new ApplicationException(CodeType.SERVICE_ERROR, result1.getMsg());
-                    }
 
                 }
             }
@@ -329,6 +332,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 }
             }
         }
+    }
+
+    @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId) {
+        return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
 
 }
