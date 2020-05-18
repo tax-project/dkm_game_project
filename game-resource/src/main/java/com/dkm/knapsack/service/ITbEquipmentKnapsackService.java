@@ -29,4 +29,6 @@ public interface ITbEquipmentKnapsackService{
      * 食物和道具试用修改的方法
      */
     void updateIsva(Long tekId,Integer foodNumber);
+
+    List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId);
 }

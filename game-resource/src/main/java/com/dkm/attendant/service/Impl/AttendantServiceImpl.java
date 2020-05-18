@@ -51,7 +51,7 @@ public class AttendantServiceImpl implements IAttendantService {
         UserLoginQuery query = localUser.getUser();
         User user = attendantMapper.queryUserReputationGold(query.getId());
         if(user==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "异常");
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "获取用户声望和金币异常");
         }
         return user;
     }
