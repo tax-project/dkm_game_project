@@ -2,16 +2,15 @@ package com.dkm.entity.bo;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  * @author qf
- * @date 2020/5/13
+ * @date 2020/5/18
  * @vesion 1.0
  **/
 @Data
-public class UserInfoBo {
+public class UserInfoQueryBo {
 
    private Long userId;
 
@@ -125,7 +124,7 @@ public class UserInfoBo {
    /**
     * 红包最后领取时间
     */
-   private LocalDateTime userInfoEnvelopeTime;
+   private String userInfoEnvelopeQueryTime;
 
    /**
     * 可以领红包的总次数

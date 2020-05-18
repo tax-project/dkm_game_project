@@ -133,6 +133,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       money.setOneDiamonds(mNumber);
       money.setCreateDate(LocalDateTime.now());
       money.setStatus(0);
+      money.setInNumber(0);
 
       int insert = baseMapper.insert(money);
 
