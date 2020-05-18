@@ -7,13 +7,16 @@ import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.FriendFeignClient;
 import com.dkm.feign.entity.FriendNotOnlineVo;
 import com.dkm.userInfo.service.IUserInfoService;
+import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ShaUtils;
+import com.dkm.utils.StringUtils;
 import com.dkm.wechat.dao.UserMapper;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserBO;
@@ -235,7 +238,13 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
      * @return 用户所有信息
      */
     @Override
-    public UserInfoBo queryUser(Long id) {
-        return baseMapper.queryUser(id);
+    public UserInfoQueryBo queryUser(Long id) {
+        UserInfoBo bo = baseMapper.queryUser(id);
+        UserInfoQueryBo result = new UserInfoQueryBo();
+        BeanUtils.copyProperties(bo,result);
+        if (bo.getUserInfoEnvelopeTime() != null) {
+            result.setUserInfoEnvelopeQueryTime(DateUtil.formatDate(bo.getUserInfoEnvelopeTime()));
+        }
+        return result;
     }
 }

@@ -11,6 +11,7 @@ import com.dkm.shop.service.TbDayCheapService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.List;
  * @since 2020-05-09
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbDayCheapServiceImpl implements TbDayCheapService {
     @Resource
     TbDayCheapMapper tbDayCheapMapper;
