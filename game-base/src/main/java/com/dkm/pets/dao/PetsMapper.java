@@ -6,6 +6,7 @@ import com.dkm.pets.entity.dto.PetsDto;
 import com.dkm.pets.entity.dto.UserInfo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,6 +32,15 @@ public interface PetsMapper extends BaseMapper<PetUserEntity> {
      */
     @Select("SELECT user_info_grade,user_info_gold,user_info_renown FROM tb_user_info WHERE user_id =#{userId}")
     UserInfo findUserInfo(@Param("userId") Long userId);
+
+    /**
+     * 更新用户声望
+     * @param renown
+     * @param userId
+     * @return
+     */
+    @Update("update tb_user_info set user_info_renown = user_info_renown + #{renown} WHERE user_id = #{userId}")
+    Integer updateUserRenown(@Param("userId") Long userId,@Param("renown") Integer renown);
 
     /**
      * 批量插入宠物数据
