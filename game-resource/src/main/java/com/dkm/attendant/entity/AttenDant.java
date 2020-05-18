@@ -38,7 +38,7 @@ public class AttenDant {
      */
     private long foodId;
     /**
-     *
+     *跟班一天生产的时间
      */
     private String exp1;
     /**
