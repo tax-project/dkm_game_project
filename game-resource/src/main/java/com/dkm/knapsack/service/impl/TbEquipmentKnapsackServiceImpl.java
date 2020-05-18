@@ -21,8 +21,6 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,7 +98,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void deleteTbEquipment(Long tekId,Integer tekMoney) {
-        if(StringUtils.isEmpty(tekId)){
+        if(StringUtils.isEmpty(tekId) && StringUtils.isEmpty(tekMoney)){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
@@ -108,17 +106,33 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         tbEquipmentKnapsack.setTekIsva(0);
         QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.eq("tek_id",tekId);
-        //tekMoney 这里代表用户金币要增加的接口
-
+        //首先根据装备主键id把这个卖掉
         int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
         if(rows <= 0){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "出售失败");
         }else{
+            QueryWrapper queryWrapperOne=new QueryWrapper();
+            queryWrapperOne.eq("tek_id",tekId);
+            List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+            //增加的金币类
             IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
             increaseUserInfoBO.setUserId(localUser.getUser().getId());
             increaseUserInfoBO.setUserInfoGold(tekMoney);
-            userFeignClient.increaseUserInfo(increaseUserInfoBO);
+            increaseUserInfoBO.setUserInfoRenown(0);
+            increaseUserInfoBO.setUserInfoDiamonds(0);
+            for (TbEquipmentKnapsack equipmentKnapsack : list) {
+                //判断这个是装备上的
+                if(equipmentKnapsack.getTekSell()==1){
+                    //删除声望的方法
+                    too(tekId);
+                    //增加金币的方法
+                    userFeignClient.increaseUserInfo(increaseUserInfoBO);
+                }else{
+                    //增加金币的方法
+                    userFeignClient.increaseUserInfo(increaseUserInfoBO);
+                }
+            }
         }
     }
 
@@ -179,7 +193,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void updateSell(Long tekId) {
-        Integer shengWang;
         if (StringUtils.isEmpty(tekId)) {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
@@ -194,6 +207,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
         } else {
+<<<<<<< HEAD
             List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
 
             Result<UserInfoQueryBo> result = userFeignClient.queryUser(2L);
@@ -221,6 +235,9 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
                 }
             }
+=======
+            too(tekId);
+>>>>>>> 6d6c4c4096b25d4f0e6bb1cc1ff5c58354ead15f
         }
     }
 
@@ -230,18 +247,18 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        //首先根据背包装备表的主键得到装备的外键
+        //首先根据用户背包装备表的主键得到装备的外键
         QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper();
         queryWrapper.eq("tek_id",tekId);
         List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
-
+        Long zhuangBei;
         for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
             //根据装备外键查询出所属的装备编号
             List<TbEquipmentVo> list1=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
             for (TbEquipmentVo tbEquipmentVo : list1) {
-                //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
                 TbKnapsack tbKnapsack=new TbKnapsack();
                 tbKnapsack.setUserId(localUser.getUser().getId());
+                //根据当前用户的外键 得到背包的主键 localUser.getUser().getId()
                 List<TbKnapsack> list2=tbKnapsackService.findById(tbKnapsack);
                 for (TbKnapsack knapsack : list2) {
                     //传入当前用户背包的外键和装备编号
@@ -264,6 +281,8 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                             tbEquipmentKnapsack3.setTekSell(2);
                             QueryWrapper queryWrapper2=new QueryWrapper();
                             queryWrapper2.eq("tek_id",equipmentKnapsackVo.getTekId());
+                            //得到装备背包表的主键
+                            zhuangBei=equipmentKnapsackVo.getTekId();
                             int countTwo=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack3,queryWrapper2);
 
                             TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
@@ -271,13 +290,31 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                             QueryWrapper queryWrapper1=new QueryWrapper();
                             queryWrapper1.eq("tek_id",tekId);
                             int countOne=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
-
-                            if(countOne<=0 && countTwo<=0){
+                            //给声望增加
+                            if(countOne<=0){
                                 //如果失败将回滚
                                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                            }else{
+                                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
+                                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                                increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                                increaseUserInfoBO.setUserInfoGold(0);
+                                for (TbEquipmentVo equipmentVo : list5) {
+                                    increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
+                                }
+                                increaseUserInfoBO.setUserInfoDiamonds(0);
+                                Result result=userFeignClient.increaseUserInfo(increaseUserInfoBO);
+                            }
+                            //给装备卸下 给声望减少
+                            if( countTwo<=0){
+                                //如果失败将回滚
+                                throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                            }else{
+                                too(zhuangBei);
                             }
                         }
                     }else{
+                        //判断没有装备到装备上面去进的方法
                         TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
                         tbEquipmentKnapsack1.setTekSell(1);
                         QueryWrapper queryWrapper1=new QueryWrapper();
@@ -286,6 +323,25 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                         if(countOne<=0){
                             //如果失败将回滚
                             throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                        }else{
+                           //给它加声望
+                            QueryWrapper queryWrapperOne=new QueryWrapper();
+                            queryWrapperOne.eq("tek_id",tekId);
+                            List<TbEquipmentKnapsack> listTwo=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+                            //增加的金币类
+                            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                            increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                            increaseUserInfoBO.setUserInfoGold(0);
+                            increaseUserInfoBO.setUserInfoRenown(0);
+                            increaseUserInfoBO.setUserInfoDiamonds(0);
+                            for (TbEquipmentKnapsack equipmentKnapsack : listTwo) {
+                                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(equipmentKnapsack.getEquipmentId());
+                                for (TbEquipmentVo equipmentVo : list5) {
+                                    increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
+                                }
+                            }
+                            //调用增加声望的方法
+                            userFeignClient.increaseUserInfo(increaseUserInfoBO);
                         }
                     }
                 }
@@ -339,5 +395,44 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     public List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId) {
         return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
+    public void too(Long tekId){
+        Integer userInfoRenown;
+        //根据tekId 查到装备的主键
+        QueryWrapper<TbEquipmentKnapsack> queryWrapperOne=new QueryWrapper();
+        queryWrapperOne.eq("tek_id",tekId);
+        List<TbEquipmentKnapsack> listOne=tbEquipmentKnapsackMapper.selectList(queryWrapperOne);
+        Long equipmentId=null;
+        for (TbEquipmentKnapsack equipmentKnapsack : listOne) {
+            equipmentId=equipmentKnapsack.getEquipmentId();
+        }
 
+        List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(equipmentId);
+
+        Result<UserInfoBo> result = userFeignClient.queryUser(localUser.getUser().getId());
+        UserInfoBo userInfoBo = result.getData();
+        for (TbEquipmentVo tbEquipmentVoTwo : list5) {
+            //得到此装备的声望
+            userInfoRenown = tbEquipmentVoTwo.getEdEquipmentReputation();
+
+            IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+
+            if (userInfoRenown > userInfoBo.getUserInfoRenown()) {
+                userInfoRenown = userInfoBo.getUserInfoRenown();
+                increaseUserInfoBO.setUserInfoGold(0);
+                increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                increaseUserInfoBO.setUserInfoDiamonds(0);
+
+                increaseUserInfoBO.setUserInfoRenown(userInfoRenown);
+                userFeignClient.cutUserInfo(increaseUserInfoBO);
+            } else {
+                increaseUserInfoBO.setUserInfoGold(0);
+                increaseUserInfoBO.setUserInfoRenown(userInfoRenown);
+
+                increaseUserInfoBO.setUserId(localUser.getUser().getId());
+
+                increaseUserInfoBO.setUserInfoDiamonds(0);
+                userFeignClient.cutUserInfo(increaseUserInfoBO);
+            }
+        }
+    }
 }
