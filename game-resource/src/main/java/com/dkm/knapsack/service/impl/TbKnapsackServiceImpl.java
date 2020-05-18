@@ -10,6 +10,7 @@ import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * @since 2020-05-14
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbKnapsackServiceImpl implements ITbKnapsackService {
     @Autowired
     private IdGenerator idGenerator;

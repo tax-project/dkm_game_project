@@ -10,6 +10,7 @@ import com.dkm.shop.service.TbShopsService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * @since 2020-05-09
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbShopsServiceImpl implements TbShopsService {
     @Resource
     TbShopsMapper tbShopsMapper;
