@@ -3,22 +3,28 @@ package com.dkm.knapsack.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.knapsack.dao.TbEquipmentKnapsackMapper;
 import com.dkm.knapsack.dao.TbEquipmentMapper;
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.TbKnapsack;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -34,6 +40,7 @@ import java.util.Map;
  * @since 2020-05-14
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackService {
     @Autowired
     TbEquipmentKnapsackMapper tbEquipmentKnapsackMapper;
@@ -49,6 +56,9 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     TbEquipmentMapper tbEquipmentMapper;
     @Autowired
     ITbEquipmentService tbEquipmentService;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
     @Override
     public List<TbEquipmentKnapsackVo> selectUserId() {
         return tbEquipmentKnapsackMapper.selectUserId(localUser.getUser().getId());
@@ -103,6 +113,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         if(rows <= 0){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "出售失败");
+        }else{
+            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+            increaseUserInfoBO.setUserId(localUser.getUser().getId());
+            increaseUserInfoBO.setUserInfoGold(tekMoney);
+            userFeignClient.increaseUserInfo(increaseUserInfoBO);
         }
     }
 
@@ -163,19 +178,45 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void updateSell(Long tekId) {
-        if(StringUtils.isEmpty(tekId)){
+        Integer shengWang;
+        if (StringUtils.isEmpty(tekId)) {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-        QueryWrapper queryWrapper=new QueryWrapper();
+        TbEquipmentKnapsack tbEquipmentKnapsack = new TbEquipmentKnapsack();
+        QueryWrapper queryWrapper = new QueryWrapper();
 
         tbEquipmentKnapsack.setTekSell(2);
-        queryWrapper.eq("tek_id",tekId);
-        int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
-        if(rows <= 0){
+        queryWrapper.eq("tek_id", tekId);
+        int rows = tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack, queryWrapper);
+        if (rows <= 0) {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
+        } else {
+            List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
+            Result<UserInfoBo> result = userFeignClient.queryUser(2L);
+            UserInfoBo userInfoBo = result.getData();
+            for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
+                //得到此装备的声望
+                shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
+
+                if (shengWang > userInfoBo.getUserInfoRenown()) {
+                    shengWang = 0;
+                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+                    increaseUserInfoBO.setUserId(2l);
+                    increaseUserInfoBO.setUserInfoRenown(shengWang);
+                    userFeignClient.cutUserInfo(increaseUserInfoBO);
+                } else {
+                    IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+                    increaseUserInfoBO.setUserId(2l);
+                    Result result1 = userFeignClient.cutUserInfo(increaseUserInfoBO);
+
+                    if (result1.getCode() != 0) {
+                        throw new ApplicationException(CodeType.SERVICE_ERROR, result1.getMsg());
+                    }
+
+                }
+            }
         }
     }
 

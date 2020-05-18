@@ -11,4 +11,6 @@ eureka:
       defaultZone: http://localhost:${server.port}/eureka
   instance:
     prefer-ip-address: true
-  #开启自我保护机制
+  #自我保护机制
+  server:
+    enable-self-preservation: false

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
  * @date 2020/5/13
  * @vesion 1.0
  **/
+@Component
 public class UserFeignClientFallback implements UserFeignClient {
 
 

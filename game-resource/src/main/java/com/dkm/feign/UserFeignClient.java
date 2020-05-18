@@ -3,10 +3,9 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.feign.fallback.UserFeignClientFallback;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author qf
@@ -23,4 +22,18 @@ public interface UserFeignClient {
     */
    @GetMapping("/v1/we/chat/queryUser/{id}")
    Result<UserInfoBo> queryUser(@PathVariable("id") Long id);
+
+   /**
+    * 修改增加用户声望金币
+    * @param increaseUserInfoBO
+    */
+   @PostMapping("/v1/userInfo/increase")
+   Result increaseUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO);
+
+   /**
+    * 修改减少用户声望金币
+    * @param increaseUserInfoBO
+    */
+   @PostMapping("/v1/userInfo/cut")
+   Result cutUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO);
 }

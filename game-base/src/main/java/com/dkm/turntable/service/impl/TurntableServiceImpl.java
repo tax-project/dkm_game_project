@@ -35,7 +35,6 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
 
     @Autowired
     private UserFeignClient feignClient;
-
     @Autowired
     private LocalUser localUser;
     @Autowired

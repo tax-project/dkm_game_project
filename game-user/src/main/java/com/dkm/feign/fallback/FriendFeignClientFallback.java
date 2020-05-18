@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.feign.FriendFeignClient;
 import com.dkm.feign.entity.FriendNotOnlineVo;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 2020/5/14
  * @vesion 1.0
  **/
+@Component
 public class FriendFeignClientFallback implements FriendFeignClient {
 
 
