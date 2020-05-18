@@ -200,7 +200,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 //得到此装备的声望
                 shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
 
-                if (shengWang > userInfoBo.getUserInfoRenown()) {
+                if (shengWang >= userInfoBo.getUserInfoRenown()) {
                     shengWang = 0;
                     IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                     increaseUserInfoBO.setUserId(2l);
