@@ -37,9 +37,6 @@ public class TbEquipmentKnapsackController {
 	@Autowired
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
 
-	@Autowired
-	private UserFeignClient userFeignClient;
-
     /**
      * 增加用户装备的接口文档
      * @param tbEquipmentKnapsack
@@ -105,7 +102,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/selectUserId")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public Map<String,Object> selectUserId(){
         Map<String,Object> map=new HashMap<>();
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
@@ -119,7 +116,42 @@ public class TbEquipmentKnapsackController {
             return map;
         }
     }
+    /**
+     * 查登录用户的装备
+     * @return
+     */
+    @ApiOperation(value = "后端专用",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "用户背包装备主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备的外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekSell",value = "我的装备 1为装备上了 2为背包装备"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekMoney",value = "道具50金币 穿戴品只有5金币"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekDaoju",value = "1为穿戴品 2为道具 3为食物"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekIsva",value = "1为没有被卖 0被卖了"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "knapsackId",value = "背包外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "equipmentImage",value = "装备图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "装备编号 1-10之间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "道具50金币 穿戴品只有5金币"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "1为穿戴品 2为道具"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "edDetailedDescription",value = "详情描述"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "edEquipmentReputation",value = "装备声望"),
+            @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edRedEnvelopeAcceleration",value = "红包加速"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "食物主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodName",value = "食物名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodUrl",value = "食物图片地址"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodGold",value = "食物售价")
+    })
+    @GetMapping("/selectUserIdAndFoodId")
+    @CrossOrigin
+    //@CheckToken
+    public  List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId){
+        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectUserIdAndFoodId(userId);
 
+        return listOne;
+    }
 
     /**
      * 出售装备的接口
@@ -268,19 +300,4 @@ public class TbEquipmentKnapsackController {
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
     }
 
-    @GetMapping("/feign")
-    public Result testFeign () {
-        Result<UserInfoBo> result = userFeignClient.queryUser(2L);
-        System.out.println(result);
-        if (result.getCode() == 0) {
-            IncreaseUserInfoBO bo = new IncreaseUserInfoBO();
-            bo.setUserId(2L);
-            bo.setUserInfoDiamonds(0);
-            bo.setUserInfoGold(0);
-            bo.setUserInfoRenown(5);
-            return userFeignClient.cutUserInfo(bo);
-        }
-
-        return null;
-    }
 }
