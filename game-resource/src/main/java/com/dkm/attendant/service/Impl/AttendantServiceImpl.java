@@ -32,7 +32,7 @@ public class AttendantServiceImpl implements IAttendantService {
     @Autowired
     private LocalUser localUser;
     /**
-     * 获取三个默认的跟班
+     * 获取用户抓到的跟班
      * @return
      */
     @Override
