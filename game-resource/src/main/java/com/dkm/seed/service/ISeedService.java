@@ -45,4 +45,10 @@ public interface ISeedService {
      */
     int updateUser(UserInIf userInIf);
 
+    /**
+     * 根据用户id查询已解锁的种子
+     * @param userId
+     * @return
+     */
+    List<Seed> queryAreUnlocked(Long userId);
 }

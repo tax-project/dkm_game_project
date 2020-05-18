@@ -11,7 +11,6 @@ import lombok.Data;
  * @DATE: 2020/5/11 14:37
  */
 @Data
-@TableName("tb_user_info")
 public class User {
     /**
      * 用户id
@@ -21,6 +20,14 @@ public class User {
      *用户声望
      */
     private Integer userInfoRenown;
+    /**
+     *用户名称
+     */
+    private String weChatNickName;
+    /**
+     *用户头像
+     */
+    private String weChatHeadImgUrl;
     /**
      *用户金币
      */

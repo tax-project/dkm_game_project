@@ -85,4 +85,11 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * 收取种子后 删除土地种子表中对应的数据
      */
     int deleteLandSeed(Long userId);
+
+    /**
+     * 根据用户id查询已解锁的种子
+     * @param userId
+     * @return
+     */
+    List<Seed> queryAreUnlocked(Long userId);
 }
