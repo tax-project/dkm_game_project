@@ -17,8 +17,6 @@ public class GameEurekaApplication extends SpringBootServletInitializer {
       SpringApplication.run(GameEurekaApplication.class, args);
    }
 
-
-
    /**
     * 打包
     * @param builder
