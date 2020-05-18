@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
@@ -43,8 +44,8 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
     @Override
     public List<TurntableItemBO> luckyDrawItems() {
         UserLoginQuery query = localUser.getUser();
-        Result<UserInfoBo> result = feignClient.queryUser(query.getId());
-        UserInfoBo resultData = result.getData();
+        Result<UserInfoQueryBo> result = feignClient.queryUser(query.getId());
+        UserInfoQueryBo resultData = result.getData();
         //获取用户等级
         Integer userLevel = resultData.getUserInfoGrade();
         //用户等级除10得到当前转盘处于哪一程度

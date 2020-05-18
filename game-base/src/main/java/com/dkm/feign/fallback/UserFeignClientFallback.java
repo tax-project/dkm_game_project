@@ -3,6 +3,7 @@ package com.dkm.feign.fallback;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.feign.UserFeignClient;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class UserFeignClientFallback implements UserFeignClient {
 
 
    @Override
-   public Result<UserInfoBo> queryUser(Long id) {
+   public Result<UserInfoQueryBo> queryUser(Long id) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 

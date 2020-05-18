@@ -161,7 +161,7 @@ public class TbEquipmentKnapsackController {
     @ApiOperation(value = "出售装备的接口  input都是需要传递的参数",notes = "成功返回成功")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "用户背包装备主键",required = true),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekMoney",value = "道具50金币 穿戴品只有5金币",required = true),
+            @ApiImplicitParam(paramType = "query",name = "tekMoney",value = "道具50金币 穿戴品只有5金币",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekSell",value = "我的装备 1为装备上了 2为背包装备"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekDaoju",value = "1为穿戴品 2为道具"),

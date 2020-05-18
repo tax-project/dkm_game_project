@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.islogin.CheckToken;
@@ -126,9 +127,9 @@ public class MoneyController {
 
    @GetMapping("/get")
    public Object get () {
-      Result<UserInfoBo> result = feignClient.queryUser(709866088598507520L);
+      Result<UserInfoQueryBo> result = feignClient.queryUser(712030633500774400L);
 
-      System.out.println(result.getData());
+      System.out.println(result);
 
       return result.getData();
    }

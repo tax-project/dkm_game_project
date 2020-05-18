@@ -16,7 +16,7 @@
     <update id="updateMuch">
         update tb_user_info set
         <if test="date != null">
-            user_info_envelope_time = #{date} and user_info_envelope_much = 1
+            user_info_envelope_time = #{date},user_info_envelope_much = 1
         </if>
         <if test="date == null">
             user_info_envelope_much = user_info_envelope_much + 1

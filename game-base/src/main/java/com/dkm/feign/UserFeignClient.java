@@ -2,6 +2,7 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public interface UserFeignClient {
     * @return
     */
    @GetMapping("/v1/we/chat/queryUser/{id}")
-   Result<UserInfoBo> queryUser (@PathVariable("id") Long id);
+   Result<UserInfoQueryBo> queryUser (@PathVariable("id") Long id);
 
    /**
     *  修改用户的每日抢红包的总次数

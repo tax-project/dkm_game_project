@@ -2,6 +2,7 @@ package com.dkm.wechat.service;
 
 
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 
@@ -40,5 +41,5 @@ public interface IWeChatService {
      * @param id 用户id
      * @return 用户所有信息
      */
-    UserInfoBo queryUser (Long id);
+    UserInfoQueryBo queryUser (Long id);
 }
