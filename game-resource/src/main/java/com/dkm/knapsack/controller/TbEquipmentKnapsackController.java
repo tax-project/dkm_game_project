@@ -37,9 +37,6 @@ public class TbEquipmentKnapsackController {
 	@Autowired
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
 
-	@Autowired
-	private UserFeignClient userFeignClient;
-
     /**
      * 增加用户装备的接口文档
      * @param tbEquipmentKnapsack
@@ -268,19 +265,4 @@ public class TbEquipmentKnapsackController {
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
     }
 
-    @GetMapping("/feign")
-    public Result testFeign () {
-        Result<UserInfoBo> result = userFeignClient.queryUser(2L);
-        System.out.println(result);
-        if (result.getCode() == 0) {
-            IncreaseUserInfoBO bo = new IncreaseUserInfoBO();
-            bo.setUserId(2L);
-            bo.setUserInfoDiamonds(0);
-            bo.setUserInfoGold(0);
-            bo.setUserInfoRenown(5);
-            return userFeignClient.cutUserInfo(bo);
-        }
-
-        return null;
-    }
 }
