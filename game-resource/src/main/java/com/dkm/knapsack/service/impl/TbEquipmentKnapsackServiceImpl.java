@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -195,9 +196,9 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         } else {
             List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
 
-            Result<UserInfoBo> result = userFeignClient.queryUser(2L);
+            Result<UserInfoQueryBo> result = userFeignClient.queryUser(2L);
             System.out.println(result);
-            UserInfoBo userInfoBo = result.getData();
+            UserInfoQueryBo userInfoBo = result.getData();
             for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
                 //得到此装备的声望
                 shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();

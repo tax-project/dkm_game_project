@@ -5,6 +5,7 @@ import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -18,6 +19,7 @@ import com.dkm.problem.service.IProblemService;
 import com.dkm.problem.vilidata.RandomData;
 import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,10 +98,17 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper,Problem> imple
 
          //拿到分布式锁
          //先判断该用户是否达到今日红包的上限
-         Result<UserInfoBo> result = userFeignClient.queryUser(user.getId());
-         UserInfoBo data = result.getData();
-         if (!DateUtil.formatDate(LocalDate.now()).equals(DateUtil.formatDate(data.getUserInfoEnvelopeTime()))) {
-            //今天还没有抢过红包
+         Result<UserInfoQueryBo> result = userFeignClient.queryUser(user.getId());
+         if (result.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, result.getMsg());
+         }
+         UserInfoQueryBo data = result.getData();
+         if (data == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "参数查询有误");
+         }
+
+         if (StringUtils.isBlank(data.getUserInfoEnvelopeQueryTime()) || !DateUtil.formatDate(LocalDate.now()).equals(data.getUserInfoEnvelopeQueryTime())) {
+            //今天还没有抢过红包或者从来没抢过红包
             Integer integer = baseMapper.updateMuch(LocalDate.now(), user.getId());
 
             if (integer <= 0) {

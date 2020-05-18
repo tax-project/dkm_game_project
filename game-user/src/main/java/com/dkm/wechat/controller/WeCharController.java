@@ -3,6 +3,7 @@ package com.dkm.wechat.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.StringUtils;
 import com.dkm.wechat.entity.vo.ResultVo;
@@ -86,7 +87,7 @@ public class WeCharController {
 
 
     @GetMapping("/queryUser/{id}")
-    public UserInfoBo queryUser (@PathVariable("id") Long id) {
+    public UserInfoQueryBo queryUser (@PathVariable("id") Long id) {
         if (id == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
