@@ -1,6 +1,9 @@
 package com.dkm.knapsack.controller;
 
 
+
+import com.dkm.jwt.islogin.CheckToken;
+
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.utils.Message;
@@ -25,6 +28,7 @@ import java.util.List;
 public class TbEquipmentController {
     @Autowired
     ITbEquipmentService tbEquipmentService;
+
     /**
      * 装备表和装备详情的增加方法
      * @param tbEquipmentVo
@@ -91,5 +95,25 @@ public class TbEquipmentController {
        }else{
            return null;
        }
+    }
+
+
+
+    @ApiOperation(value = "批量出售的接口文档",notes = "成功返回成功 失败则返回失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键",required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/listEquipmentId")
+    @CrossOrigin
+    @CheckToken
+    public void listEquipmentId(@RequestParam("equipmentId") String equipmentId){
+        tbEquipmentService.listEquipmentId(equipmentId);
     }
 }
