@@ -11,8 +11,8 @@ import java.math.BigDecimal;
  * @date 2020/5/11 17:20
  */
 @Data
-@TableName("tb_mounts_info")
-public class MountsInfoEntity {
+@TableName("tb_mounts_detail")
+public class MountsDetailEntity {
     @TableId
     private Long mountsId;
 
