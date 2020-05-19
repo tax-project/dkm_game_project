@@ -44,4 +44,10 @@
         ORDER BY RAND() LIMIT 20
     </select>
 
+
+    <update id="updateStrength">
+        update tb_user_info set user_info_strength = user_info_strength - #{grade}
+     where user_id = #{userId}
+    </update>
+
 </mapper>

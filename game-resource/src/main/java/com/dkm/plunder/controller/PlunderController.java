@@ -29,14 +29,15 @@ public class PlunderController {
 
    @ApiOperation(value = "增加掠夺表", notes = "增加掠夺表")
    @ApiImplicitParams({
-         @ApiImplicitParam(name = "userId", value = "抢劫的用户id", required = true, dataType = "Long", paramType = "path"),
-         @ApiImplicitParam(name = "goodsId", value = "物品id", required = true, dataType = "Long", paramType = "path")
+         @ApiImplicitParam(name = "userId", value = "被抢人的用户id", required = true, dataType = "Long", paramType = "path"),
+         @ApiImplicitParam(name = "goodsId", value = "物品id", required = true, dataType = "Long", paramType = "path"),
+         @ApiImplicitParam(name = "grade", value = "被抢人的等级", required = true, dataType = "int", paramType = "path")
    })
    @PostMapping("/insertPlunder")
    @CrossOrigin
    @CheckToken
    public void insertPlunder (@RequestBody PlunderVo vo) {
-      if (vo.getGoodsId() == null || vo.getUserId() == null) {
+      if (vo.getGoodsId() == null || vo.getUserId() == null || vo.getGrade() == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
       }
 

@@ -40,5 +40,10 @@ public class UserFeignClientFallback implements UserFeignClient {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
+   @Override
+   public Result updateStrength(Long userId, Integer grade) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
 
 }

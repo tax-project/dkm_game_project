@@ -44,4 +44,11 @@ public interface IUserInfoService {
     * @return 返回掠夺信息结果
     */
    List<UserPlunderBo> listUserPlunder ();
+
+   /**
+    *  掠夺减少体力
+    * @param userId 用户id
+    * @param grade 等级
+    */
+   void updateStrength (Long userId, Integer grade);
 }

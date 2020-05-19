@@ -44,4 +44,9 @@ public class UserInfoController {
    public List<UserPlunderBo> listUserPlunder(){
       return userInfoService.listUserPlunder();
    }
+
+   @GetMapping("/listUserPlunder/{userId}/{grade}")
+   public void updateStrength(@PathVariable("userId") Long userId, @PathVariable("grade") Integer grade){
+      userInfoService.updateStrength(userId,grade);
+   }
 }

@@ -47,6 +47,15 @@ public interface UserFeignClient {
     *  随机返回20条用户信息
     * @return 返回用户信息
     */
-   @GetMapping("/listUserPlunder")
+   @GetMapping("/v1/userInfo/listUserPlunder")
    Result<List<UserPlunderBo>> listUserPlunder();
+
+   /**
+    *  掠夺减少体力
+    * @param userId 用户id
+    * @param grade 等级
+    * @return 返回结果
+    */
+   @GetMapping("/v1/userInfo/listUserPlunder/{userId}/{grade}")
+   Result updateStrength(@PathVariable("userId") Long userId, @PathVariable("grade") Integer grade);
 }

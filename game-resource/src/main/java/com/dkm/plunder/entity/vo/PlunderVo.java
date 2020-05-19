@@ -11,7 +11,7 @@ import lombok.Data;
 public class PlunderVo {
 
    /**
-    * 用户id
+    * 被抢人的用户id
     */
    private Long userId;
 
@@ -19,4 +19,9 @@ public class PlunderVo {
     * 物品id
     */
    private Long goodsId;
+
+   /**
+    * 被抢人的等级
+    */
+   private Integer grade;
 }
