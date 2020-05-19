@@ -207,33 +207,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
         } else {
-            List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
-
-            Result<UserInfoQueryBo> result = userFeignClient.queryUser(2L);
-            System.out.println(result);
-            UserInfoQueryBo userInfoBo = result.getData();
-            for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
-                //得到此装备的声望
-                Integer shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
-
-                IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
-                if (shengWang >= userInfoBo.getUserInfoRenown()) {
-                    shengWang = 0;
-                    increaseUserInfoBO.setUserId(2l);
-                    increaseUserInfoBO.setUserInfoGold(0);
-                    increaseUserInfoBO.setUserInfoDiamonds(0);
-                    increaseUserInfoBO.setUserInfoRenown(500);
-                    userFeignClient.cutUserInfo(increaseUserInfoBO);
-                } else {
-                    increaseUserInfoBO.setUserId(2l);
-                    increaseUserInfoBO.setUserInfoGold(0);
-                    increaseUserInfoBO.setUserInfoDiamonds(0);
-                    increaseUserInfoBO.setUserInfoRenown(shengWang);
-                    userFeignClient.cutUserInfo(increaseUserInfoBO);
-
-
-                }
-            }
             too(tekId);
         }
     }
