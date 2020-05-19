@@ -21,7 +21,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dkm/tbKnapsack")
-@ResponseBody
 @Api(description = "装备表的接口文档")
 public class TbEquipmentController {
     @Autowired

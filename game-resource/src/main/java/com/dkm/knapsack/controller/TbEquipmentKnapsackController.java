@@ -1,21 +1,16 @@
 package com.dkm.knapsack.controller;
 
 
-import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoBo;
-import com.dkm.feign.UserFeignClient;
+
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
-import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +26,6 @@ import java.util.Map;
  */
 @RequestMapping("/dkm/tbEquipmentKnapsack")
 @RestController
-@ResponseBody
 @Api(description = "用户装备的接口文档")
 public class TbEquipmentKnapsackController {
 	@Autowired
