@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.plunder.dao.PlunderGoodsMapper">
+
+
+    <insert id="insertAllPlunderGoods" parameterType="com.dkm.plunder.entity.vo.PlunderGoodsVo">
+        insert into tb_plunder_good (id, plunder_id, good_id)
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select #{item.id},#{item.plunderId},#{item.goodId}
+        </foreach>
+    </insert>
+
+
+
+</mapper>
