@@ -42,6 +42,8 @@ public class PersonalCenterController {
         map.put("equipment",resourceFeignClientFallback.userCenter());
         //黑屋的用户信息对象
         map.put("blackHouse",resourceFeignClientFallback.selectIsBlackTwo());
+        //查询用户解锁的种子
+        map.put("Seed",resourceFeignClientFallback.queryAreUnlocked());
         return map;
     }
 }
