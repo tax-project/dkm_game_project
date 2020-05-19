@@ -83,7 +83,8 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
 
       //修改体力值
-
+      //减少自己的体力  自己抢别人
+      userFeignClient.updateStrength(user.getId(),vo.getGrade());
    }
 
 

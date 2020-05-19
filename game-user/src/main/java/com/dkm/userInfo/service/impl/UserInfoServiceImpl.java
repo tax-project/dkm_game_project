@@ -32,9 +32,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Autowired
    private IdGenerator idGenerator;
 
-   @Autowired
-   private RandomData randomData;
-
    @Override
    public void insertUserInfo(Long userId) {
 
@@ -111,5 +108,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public List<UserPlunderBo> listUserPlunder() {
       return baseMapper.listUserPlunder ();
+   }
+
+   @Override
+   public void updateStrength(Long userId, Integer grade) {
+      Integer integer = baseMapper.updateStrength(userId, grade);
+
+      if (integer <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
    }
 }
