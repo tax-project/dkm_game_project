@@ -207,7 +207,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "卸下失败");
         } else {
-<<<<<<< HEAD
             List<TbEquipmentKnapsackVo> list = tbEquipmentKnapsackMapper.selectUserId(2L);
 
             Result<UserInfoQueryBo> result = userFeignClient.queryUser(2L);
@@ -215,7 +214,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             UserInfoQueryBo userInfoBo = result.getData();
             for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : list) {
                 //得到此装备的声望
-                shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
+                Integer shengWang = tbEquipmentKnapsackVo.getEdEquipmentReputation();
 
                 IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
                 if (shengWang >= userInfoBo.getUserInfoRenown()) {
@@ -235,9 +234,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
                 }
             }
-=======
             too(tekId);
->>>>>>> 6d6c4c4096b25d4f0e6bb1cc1ff5c58354ead15f
         }
     }
 
@@ -408,8 +405,8 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
         List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(equipmentId);
 
-        Result<UserInfoBo> result = userFeignClient.queryUser(localUser.getUser().getId());
-        UserInfoBo userInfoBo = result.getData();
+        Result<UserInfoQueryBo> result = userFeignClient.queryUser(localUser.getUser().getId());
+        UserInfoQueryBo userInfoBo = result.getData();
         for (TbEquipmentVo tbEquipmentVoTwo : list5) {
             //得到此装备的声望
             userInfoRenown = tbEquipmentVoTwo.getEdEquipmentReputation();
