@@ -7,7 +7,19 @@
         select user_info_renown,user_info_gold from tb_user_info where  user_id=#{userId}
     </select>
 
+    <select id="queryRandomUser" resultType="com.dkm.attendant.entity.vo.User">
+        SELECT a.we_chat_nick_name,a.we_chat_head_img_url,b.user_info_renown,a.user_id FROM tb_user a,tb_user_info b
+        where a.user_id=b.user_id ORDER BY RAND() LIMIT 9;
+    </select>
 
+    <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.AttenDant">
+        select at_img,at_name,exp1 from tb_attendant where user_id={userId}
+    </select>
+
+
+    <delete id="dismissal" parameterType="java.lang.Long">
+        delete from tb_attendant where id=#{id}
+    </delete>
 
 
 </mapper>

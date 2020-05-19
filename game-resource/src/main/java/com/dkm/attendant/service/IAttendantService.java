@@ -3,6 +3,7 @@ package com.dkm.attendant.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.User;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface IAttendantService {
     /**
-     * 获取默认的三个跟班
+     *获取用户抓到的跟班信息
      * @return
      */
    List<AttenDant> queryThreeAtt();
@@ -26,4 +27,19 @@ public interface IAttendantService {
      * @return
      */
     User queryUserReputationGold();
+
+    /**
+     * 根据用户id查询食物信息
+     * @return
+     */
+    public  List<TbEquipmentKnapsackVo> selectUserIdAndFood();
+
+    /**
+     * 随机查询用户表20条数
+     */
+    List<User> queryRandomUser();
+    /**
+     * 解雇
+     */
+    int dismissal(Long id);
 }

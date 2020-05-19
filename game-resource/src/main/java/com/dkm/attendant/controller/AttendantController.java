@@ -6,7 +6,10 @@ import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.Land;
+import com.dkm.land.entity.vo.Message;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,10 +35,10 @@ public class AttendantController {
     private IAttendantService iAttendantService;
 
     /**
-     * 获取三个默认的跟班
+     * 获取用户抓到的跟班信息
      * @return
      */
-    @ApiOperation(value = "获取三个默认的跟班", notes = "获取三个默认的跟班")
+    @ApiOperation(value = "获取用户抓到的跟班信息", notes = "获取用户抓到的跟班信息")
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     public List<AttenDant> queryThreeAtt() {
@@ -51,7 +54,58 @@ public class AttendantController {
     @CrossOrigin
     public User queryUserReputationGold(){
         return iAttendantService.queryUserReputationGold();
-
     }
+
+    /**
+     * 根据用户id查询食物
+     * @return
+     */
+    @ApiOperation(value = "根据用户id查询食物",notes = "成功返回数据 反则为空")
+    @GetMapping("/selectUserIdAndFood")
+    @CrossOrigin
+    public  List<TbEquipmentKnapsackVo> selectUserIdAndFood(){
+        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iAttendantService.selectUserIdAndFood();
+        return tbEquipmentKnapsackVos;
+    }
+
+    /**
+     * 随机查询用户表9条数
+     * @return
+     */
+    @ApiOperation(value = "随机查询用户表9条数",notes = "成功返回数据 反则为空")
+    @GetMapping("/queryRandomUser")
+    @CrossOrigin
+    @CheckToken
+    public List<User> queryRandomUser(){
+        return iAttendantService.queryRandomUser();
+    }
+
+    /**
+     *解雇
+     */
+    @ApiOperation(value = "解雇",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "id",value = "跟班id"),
+    })
+    @GetMapping("/dismissal")
+    @CrossOrigin
+    public Message dismissal(Long id){
+        Message message=new Message();
+        if(id==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
+        }
+        int dismissal = iAttendantService.dismissal(id);
+        if(dismissal>0){
+            message.setNum(1);
+            message.setMsg("解雇成功");
+        }else{
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"解雇异常");
+        }
+        return message;
+    }
+    /**
+     * 宠物战斗
+     */
+
 
 }

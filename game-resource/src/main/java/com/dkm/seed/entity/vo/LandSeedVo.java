@@ -1,5 +1,7 @@
 package com.dkm.seed.entity.vo;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
  * @USER: 刘梦祺
  * @DATE: 2020/5/12 16:47
  */
+@Data
 public class LandSeedVo {
     /**
      * 种子id

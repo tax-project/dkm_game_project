@@ -18,14 +18,17 @@ public class EatFoodDto {
      * 食物数量
      */
     private Integer eNumber;
+    /**
+     * 食物数量
+     */
+    private Integer  foodNumber;
 
     /**
      * 食物名称
      * */
     private String foodName;
-
     /**
-     * 食物主键
+     * 食物id
      */
     private Long foodId;
 }
