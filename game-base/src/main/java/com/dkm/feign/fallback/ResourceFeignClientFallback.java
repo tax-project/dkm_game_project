@@ -27,5 +27,10 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 
+    @Override
+    public Result<List<TbEquipmentKnapsackVo>> userCenter() {
+        return Result.fail(CodeType.DATABASE_ERROR);
+    }
+
 
 }

@@ -35,4 +35,11 @@ public interface ResourceFeignClient {
      */
     @GetMapping("/dkm/tbEquipmentKnapsack/selectUserIdAndFoodId")
     Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(@RequestParam("userId") Long userId);
+
+    /**
+     * 根据当前用户查询装备
+     * @return
+     */
+    @GetMapping("/dkm/tbEquipmentKnapsack/userCenter")
+    Result<List<TbEquipmentKnapsackVo>> userCenter();
 }
