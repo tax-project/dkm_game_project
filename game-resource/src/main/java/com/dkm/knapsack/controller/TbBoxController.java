@@ -1,8 +1,7 @@
 package com.dkm.knapsack.controller;
 
 
-import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.jwt.islogin.CheckToken;
+
 import com.dkm.knapsack.domain.TbBox;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbBoxService;
@@ -11,8 +10,6 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
@@ -26,7 +23,6 @@ import java.util.List;
  */
 @RequestMapping("/dkm/tbBox")
 @RestController
-@ResponseBody
 @Api(description = "宝箱表的接口文档")
 public class TbBoxController {
 	@Autowired

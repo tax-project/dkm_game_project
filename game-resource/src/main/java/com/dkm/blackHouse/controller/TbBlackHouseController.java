@@ -124,7 +124,7 @@ public class TbBlackHouseController {
 
     /**
      * 查询用户小黑屋关的人信息
-     * @param tbBlackHouse
+     * @param
      * @return
      */
     @ApiOperation(value = "查询用户小黑屋关的人信息的接口",notes = "成功则返回信息JSON!")
@@ -147,21 +147,19 @@ public class TbBlackHouseController {
     @PostMapping("/selectIsBlackTwo")
     @CrossOrigin
     @CheckToken
-    public TbBlackHouseVo selectIsBlackTwo(@RequestBody TbBlackHouse tbBlackHouse){
-        UserLoginQuery user = localUser.getUser();
-        tbBlackHouse.setFromId(user.getId());
+    public TbBlackHouseVo selectIsBlackTwo(){
 
         //首先根据传过来的登录用户的id查询出被关人的id
-        List<TbBlackHouse> selectById=tbBlackHouseService.selectById(tbBlackHouse.getFromId());
-
+        List<TbBlackHouse> selectById=tbBlackHouseService.selectById();
+        TbBlackHouse tbBlackHouse=new TbBlackHouse();
 
         for (TbBlackHouse blackHouse : selectById) {
 
             if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
                 throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
             }
-
             tbBlackHouse.setToId(blackHouse.getToId());
+            tbBlackHouse.setFromId(blackHouse.getFromId());
         }
         //查询出被关黑屋用户的信息
         TbBlackHouseVo list=tbBlackHouseService.selectIsBlackTwo(tbBlackHouse);

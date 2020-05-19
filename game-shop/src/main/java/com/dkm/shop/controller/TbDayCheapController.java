@@ -1,18 +1,14 @@
 package com.dkm.shop.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dkm.config.RedisConfig;
+
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.shop.dao.TbDayCheapMapper;
-import com.dkm.shop.domain.TbCharge;
+
 import com.dkm.shop.domain.TbDayCheap;
 import com.dkm.shop.service.TbDayCheapService;
 import com.dkm.shop.utils.Message;
 import io.swagger.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +24,6 @@ import java.util.List;
  * @since 2020-05-09
  */
 @RestController
-@ResponseBody
 @RequestMapping("/dkm/tbDayCheap")
 @Api(description = "游戏项目每日特惠表接口文档")
 public class TbDayCheapController {

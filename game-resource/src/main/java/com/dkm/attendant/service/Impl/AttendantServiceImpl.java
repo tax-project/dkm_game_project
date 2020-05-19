@@ -79,8 +79,6 @@ public class AttendantServiceImpl implements IAttendantService {
         UserLoginQuery query = localUser.getUser();
         List<User> users = attendantMapper.queryRandomUser();
         for (int i = 0; i < users.size(); i++) {
-            System.out.println("users.get(i).getUserId() = " + users.get(i).getUserId());
-            System.out.println("query.getId() = " + query.getId());
             if(users.get(i).getUserId()==query.getId()){
                 users.remove(i);
             }
@@ -91,6 +89,20 @@ public class AttendantServiceImpl implements IAttendantService {
     @Override
     public int dismissal(Long id) {
         return attendantMapper.dismissal(id);
+    }
+
+    @Override
+    public List<User> queryUserPetBattle() {
+        //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+
+        return null;
+    }
+
+    @Override
+    public int addGraspFollowing() {
+
+        return 0;
     }
 
 }
