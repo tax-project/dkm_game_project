@@ -47,8 +47,8 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private IdGenerator idGenerator;
 
-    @Autowired
-    private UserFeignClient userFeignClient;
+
+
     /**
      * 根据用户id得到种子（是否解锁）
      */
@@ -160,6 +160,11 @@ public class SeedServiceImpl implements ISeedService {
         //收取种子后 删除土地种子表中对应的数据
         int i1 = seedMapper.deleteLandSeed(userInIf.getUserId());
         return i1;
+    }
+
+    @Override
+    public List<Seed> queryAreUnlocked(Long userId) {
+        return seedMapper.queryAreUnlocked(userId);
     }
 
 

@@ -110,5 +110,21 @@ public class SeedController {
              return message;
     }
 
+    /**
+     * 根据用户id查询已解锁的种子
+     */
+    @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userId", value = "用户Id"),
+    })
+    @PostMapping("/queryAreUnlocked")
+    @CrossOrigin
+    @CheckToken
+    List<Seed> queryAreUnlocked(Long userId){
+        if(userId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
+        }
+        return iSeedService.queryAreUnlocked(userId);
+    }
 
 }
