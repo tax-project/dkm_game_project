@@ -120,13 +120,7 @@ public class AttendantController {
 
         return map;
     }
-    /**
-     * 随机产生物品
-     */
-     public Goods randomlyGeneratedItem(){
 
-         return iGoodsService.queryRandomGoods();
-     }
 
 
 
