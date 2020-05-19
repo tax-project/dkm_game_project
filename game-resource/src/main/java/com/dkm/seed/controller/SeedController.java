@@ -42,6 +42,7 @@ public class SeedController {
     @ApiOperation(value = "根据用户id得到种子（是否解锁）", notes = "根据用户id得到种子（是否解锁）")
     @GetMapping("/queryUserIdSeed")
     @CrossOrigin
+    @CheckToken
     public List<Seed> queryUserIdSeed() {
         return iSeedService.queryUserIdSeed();
     }
@@ -79,6 +80,7 @@ public class SeedController {
     })
     @PostMapping("/plant")
     @CrossOrigin
+    @CheckToken
     public List<LandSeedVo> plant(LandSeed landSeed) {
         if (landSeed.getSeedId() == 0) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");

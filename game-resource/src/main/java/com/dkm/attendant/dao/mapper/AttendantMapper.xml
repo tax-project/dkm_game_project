@@ -13,7 +13,8 @@
     </select>
 
     <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.AttenDant">
-        select at_img,at_name,exp1 from tb_attendant where user_id={userId}
+        select at.id,at.at_name,at.at_img,gs.name,gs.url from tb_user_produce up,tb_produce p,tb_attendant at, tb_goods gs
+        where up.produce_id=p.id and p.attendtant_id=at.id and p.good_id=gs.id and up.user_id=#{userId}
     </select>
 
 

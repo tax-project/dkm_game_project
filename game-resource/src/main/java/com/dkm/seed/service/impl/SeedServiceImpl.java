@@ -64,11 +64,14 @@ public class SeedServiceImpl implements ISeedService {
                throw new ApplicationException(CodeType.PARAMETER_ERROR,"没有种子");
             }
             for (int j = 0; j < attenDants.size(); j++) {
-                seedUnlocks1.get(j).setPuId(idGenerator.getNumberId());
-                seedUnlocks1.get(j).setSeedId(attenDants.get(j).getSeedId());
-                seedUnlocks1.get(j).setUserId(user.getId());
-                seedUnlocks1.get(j).setSeedAllUnlock((attenDants.get(j).getSeedGrade() + 1) * 2);
+                SeedUnlock seedUnlock=new SeedUnlock();
+                seedUnlock.setPuId(idGenerator.getNumberId());
+                seedUnlock.setUserId(user.getId());
+                seedUnlock.setSeedAllUnlock((attenDants.get(j).getSeedGrade() + 1) * 2);
+                seedUnlock.setSeedId(attenDants.get(j).getSeedId());
+                seedUnlocks1.add(seedUnlock);
             }
+            //增加新用户进来和用户对应的种子
             seedMapper.insertSeedUnlock(seedUnlocks1);
         }
         List<Seed> seeds = seedMapper.queryUserIdSeed(user.getId());

@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -105,6 +107,14 @@ public class AttendantController {
     }
     /**
      * 宠物战斗
+     */
+    public Map<String,Object> petBattle(){
+        Map<String,Object> map=new HashMap<>();
+
+        return map;
+    }
+    /**
+     * 随机产生物品
      */
 
 
