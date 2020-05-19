@@ -28,12 +28,15 @@ public class UserInfoController {
    }
 
    @PostMapping("/increase")
+   @CrossOrigin
    public void increaseUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){
          userInfoService.increaseUserInfo(increaseUserInfoBO);
    }
 
    @PostMapping("/cut")
+   @CrossOrigin
    public void cutUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){
       userInfoService.cutUserInfo(increaseUserInfoBO);
    }
+
 }
