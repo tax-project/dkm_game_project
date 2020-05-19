@@ -37,7 +37,7 @@ public class HousekeeperController {
     @PostMapping("/openHousekeeper")
     @CrossOrigin
     @CheckToken
-    public void openHousekeeper(@RequestParam("money") BigDecimal money){
+    public void openHousekeeper(@RequestBody BigDecimal money){
         if(money==null||money.compareTo(BigDecimal.ZERO)<=0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
         }

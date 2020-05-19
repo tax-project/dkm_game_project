@@ -1,9 +1,12 @@
 package com.dkm.userInfo.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
+import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author qf
@@ -26,5 +29,12 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 是否成功
      */
     Integer cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
+
+    /**
+     *  随机返回20条用户信息
+     *  掠夺需要
+     * @return 返回掠夺信息结果
+     */
+    List<UserPlunderBo> listUserPlunder();
 
 }

@@ -15,5 +15,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface TbKnapsackMapper extends BaseMapper<TbKnapsack> {
-
+    int updateByPrimaryKeySelective(TbKnapsack tbKnapsack);
 }

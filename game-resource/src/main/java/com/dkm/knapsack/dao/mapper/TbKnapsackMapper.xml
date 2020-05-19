@@ -48,13 +48,10 @@
 	<update id="updateByPrimaryKeySelective" parameterType="com.dkm.knapsack.domain.TbKnapsack">
 		update tb_knapsack
 		<set>
-			<if test="userId != null">
-				user_id = #{userId,jdbcType=BIGINT},
-			</if>
 			<if test="knapsackCapacity != null">
-				knapsack_capacity = #{knapsackCapacity,jdbcType=INTEGER},
+				knapsack_capacity = knapsack_capacity + #{knapsackCapacity,jdbcType=INTEGER},
 			</if>
 		</set>
-		where knapsack_id = #{knapsackId,jdbcType=BIGINT}
+		where user_id = #{userId,jdbcType=BIGINT}
 	</update>
 </mapper>

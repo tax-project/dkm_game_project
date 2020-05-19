@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.good.dao.GoodMapper">
+
+
+    <select id="queryGoodsList" parameterType="Long" resultType="com.dkm.good.entity.vo.GoodQueryVo">
+        select a.user_id as 'userId', c.id as 'goodId',
+        c.`name` as 'goodName',c.url as 'goodUrl' from tb_user_produce a
+       join tb_produce b on a.produce_id = b.id
+       join tb_goods c on b.good_id = c.id
+       <foreach collection="list" item="item" index="index">
+           where a.user_id = #{item}
+       </foreach>
+    </select>
+
+
+
+</mapper>

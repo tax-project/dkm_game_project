@@ -3,6 +3,7 @@ package com.dkm.userInfo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.userInfo.dao.UserInfoMapper;
@@ -10,10 +11,13 @@ import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
+import com.dkm.vilidata.RandomData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author qf
@@ -27,8 +31,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Autowired
    private IdGenerator idGenerator;
+
    @Autowired
-   private LocalUser localUser;
+   private RandomData randomData;
 
    @Override
    public void insertUserInfo(Long userId) {
@@ -99,5 +104,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       if (integer<=0){
          throw new ApplicationException(CodeType.SERVICE_ERROR, "减少失败");
       }
+   }
+
+
+
+   @Override
+   public List<UserPlunderBo> listUserPlunder() {
+      return baseMapper.listUserPlunder ();
    }
 }

@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VipMapper extends BaseMapper<VipEntity> {
-    @Update("update tb_user set user_isvip = 1 where user_id = #{id}")
+    @Update("update tb_user_info set user_info_is_vip = 1 where user_id = #{id}")
     Integer userAddVip(@Param("id") Long userId);
 }
