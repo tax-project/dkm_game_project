@@ -2,10 +2,13 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
+import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -41,5 +44,8 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/dkm/tbEquipmentKnapsack/userCenter")
-    Result<List<TbEquipmentKnapsackVo>> userCenter();
+    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter();
+
+    @PostMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
+    Result<TbBlackHouseVo> selectIsBlackTwo();
 }

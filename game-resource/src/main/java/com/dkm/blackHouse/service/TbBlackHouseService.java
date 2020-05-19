@@ -24,6 +24,6 @@ public interface TbBlackHouseService  {
 
     TbBlackHouseVo selectIsBlackTwo(TbBlackHouse tbBlackHouse);
 
-    List<TbBlackHouse> selectById(Long fromId);
+    List<TbBlackHouse> selectById();
 
 }
