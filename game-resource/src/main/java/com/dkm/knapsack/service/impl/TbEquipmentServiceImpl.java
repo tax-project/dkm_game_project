@@ -1,11 +1,16 @@
 package com.dkm.knapsack.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
+import com.dkm.jwt.contain.LocalUser;
 import com.dkm.knapsack.dao.TbEquipmentDetailsMapper;
 import com.dkm.knapsack.dao.TbEquipmentMapper;
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentDetails;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.utils.IdGenerator;
@@ -15,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +40,12 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
     TbEquipmentDetailsMapper tbEquipmentDetailsMapper;
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private UserFeignClient userFeignClient;
+    @Autowired
+    ITbEquipmentService tbEquipmentService;
+    @Autowired
+    private LocalUser localUser;
 
     @Override
     public void addTbEquipment(TbEquipmentVo tbEquipmentVo) {
@@ -53,6 +65,35 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
             tbEquipmentDetails.setEquipmentId(tbEquipment.getEquipmentId());
             tbEquipmentDetailsMapper.insert(tbEquipmentDetails);
         }
+    }
+
+    @Override
+    public void listEquipmentId(String equipmentId) {
+        if(StringUtils.isEmpty(equipmentId)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        JSONArray obj = JSON.parseArray(equipmentId);
+        List<Long> sList = new ArrayList<Long>();
+        if (obj.size() > 0) {
+            for (int i = 0; i < obj.size(); i++) {
+                sList.add((Long) obj.get(i));
+            }
+        }
+        //定义一个钱的变量
+        String money = "";
+        for (Long aLong : sList) {
+            List<TbEquipmentVo> selectByEquipmentId=tbEquipmentService.selectByEquipmentId(aLong.longValue());
+            for (TbEquipmentVo tbEquipmentVo : selectByEquipmentId) {
+                money+=tbEquipmentVo.getExp2();
+            }
+        }
+        IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+        increaseUserInfoBO.setUserId(localUser.getUser().getId());
+        increaseUserInfoBO.setUserInfoGold(Integer.valueOf(money));
+        increaseUserInfoBO.setUserInfoRenown(0);
+        increaseUserInfoBO.setUserInfoDiamonds(0);
+        userFeignClient.increaseUserInfo(increaseUserInfoBO);
     }
 
     @Override

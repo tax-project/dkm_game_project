@@ -16,6 +16,8 @@ import java.util.List;
 public interface ITbEquipmentService{
 	void addTbEquipment(TbEquipmentVo tbEquipmentVo);
 
+	void listEquipmentId(String equipmentId);
+
 	List<TbEquipmentVo> selectByEquipmentId(Long equipmentId);
 
 }

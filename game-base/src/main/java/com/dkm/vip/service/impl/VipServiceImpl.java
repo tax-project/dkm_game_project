@@ -18,6 +18,7 @@ import java.math.BigDecimal;
  * @date 2020/5/8 13:39
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class VipServiceImpl implements VipService {
     @Resource
     private VipMapper vipMapper;
@@ -25,23 +26,15 @@ public class VipServiceImpl implements VipService {
     private IdGenerator idGenerator;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean openVip(Long userId,BigDecimal money) {
+    public void openVip(Long userId,BigDecimal money) {
         VipEntity a = new VipEntity();
         a.setVipId(idGenerator.getNumberId());
         a.setVipMoney(money);
         a.setVipName("VIP");
         a.setUserId(userId);
-        try {
-            if(vipMapper.insert(a)==0||vipMapper.userAddVip(userId)==0){
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return  false;
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            throw  new ApplicationException(CodeType.SERVICE_ERROR,"存储出错");
+        if(vipMapper.insert(a)==0||vipMapper.userAddVip(userId)==0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
+
     }
 }
