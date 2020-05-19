@@ -37,13 +37,11 @@ public class PersonalCenterController {
     @CrossOrigin
     //@CheckToken
     public Map<String,Object> selectAll(){
-        System.out.println("===y有东西吗");
         Map<String,Object> map=new HashMap<>();
         //装备的map
         map.put("equipment",resourceFeignClientFallback.userCenter());
-        map.put("selectIsBlackTwo",resourceFeignClientFallback.selectIsBlackTwo());
-        map.put("equipment222",resourceFeignClientFallback.selectUserIdAndFoodId(709866088598507520L));
-        System.out.println("=="+map.get("selectIsBlackTwo"));
+        //黑屋的用户信息对象
+        map.put("blackHouse",resourceFeignClientFallback.selectIsBlackTwo());
         return map;
     }
 }
