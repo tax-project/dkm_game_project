@@ -6,6 +6,7 @@ import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.good.entity.Goods;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.Land;
@@ -116,6 +117,9 @@ public class AttendantController {
     /**
      * 随机产生物品
      */
+     public Goods randomlyGeneratedItem(){
+
+     }
 
 
 }
