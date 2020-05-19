@@ -1,6 +1,11 @@
 package com.dkm.pets.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * @program: game_project
@@ -9,21 +14,29 @@ import lombok.Data;
  * @create: 2020-05-16 21:16
  **/
 @Data
-public class FeedPetInfoVo {
+public class FeedPetInfoVo{
     /**
      * 宠物等级
      */
-    private Long pGrade;
+    public Integer pGrade;
     /**
      * 宠物id
      */
-    private Long pId;
+    public Long pId;
     /**
-     * userid
+     * 蜂蜜背包id
      */
-    private Long userId;
+    public Long beeTekId;
     /**
-     * 背包id
+     * 鱼背包id
      */
-    private Long tekId;
+    public Long fishTekId;
+    /**
+     * 奶瓶背包id
+     */
+    public Long milkTekId;
+    /**
+     * userId
+     */
+    public Long userId;
 }

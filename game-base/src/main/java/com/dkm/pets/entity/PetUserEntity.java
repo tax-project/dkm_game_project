@@ -2,6 +2,7 @@ package com.dkm.pets.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 /**
@@ -16,6 +17,7 @@ public class PetUserEntity {
     /**
      * 用户id
      * */
+    @JsonIgnore
     private Long userId;
     /**
      * 宠物等级

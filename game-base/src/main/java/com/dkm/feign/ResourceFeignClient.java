@@ -2,14 +2,13 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
-import com.dkm.feign.fallback.UserFeignClientFallback;
+import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @program: game_project
@@ -18,7 +17,7 @@ import java.util.Map;
  * @create: 2020-05-16 15:25
  **/
 @Component
-@FeignClient(value = "service-resource", fallback = ResourceFeignClientFallback.class)
+@FeignClient(value = "service-resource",fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
     /**
      * 更新背包
@@ -31,8 +30,9 @@ public interface ResourceFeignClient {
 
     /**
      * 获取背包食物
+     * @param userId
      * @return
      */
-    @GetMapping("/dkm/tbEquipmentKnapsack/selectUserId")
-    Map<String,Object> selectUserId();
+    @GetMapping("/dkm/tbEquipmentKnapsack/selectUserIdAndFoodId")
+    Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(@RequestParam("userId") Long userId);
 }

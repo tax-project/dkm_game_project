@@ -13,6 +13,10 @@
         from tb_land_seed b,tb_seed a where a.seed_id=b.seed_id and b.user_id=#{userId}
     </select>
 
+    <select id="queryAreUnlocked" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
+        select b.seed_name,b.seed_img from tb_plant_unlock a,tb_seed b where a.seed_id=b.seed_id and a.user_id=#{userId} a.seed_status=1
+    </select>
+
 
 
     <select id="queryIsById" resultType="com.dkm.seed.entity.vo.SeedUnlock">

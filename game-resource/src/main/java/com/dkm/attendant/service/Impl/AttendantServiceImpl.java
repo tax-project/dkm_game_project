@@ -10,6 +10,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,16 +33,24 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private LocalUser localUser;
+
+    @Autowired
+    private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
     /**
-     * 获取用户抓到的跟班
+     * 获取用户抓到的跟班信息
      * @return
      */
     @Override
     public List<AttenDant> queryThreeAtt() {
-        QueryWrapper<AttenDant> queryWrapper = new QueryWrapper<>();
-        List<AttenDant> attenDants = attendantMapper.selectList(queryWrapper);
-        return attenDants;
+        //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+        return attendantMapper.queryThreeAtt(query.getId());
     }
+    /**
+     * 解雇
+     */
+
+
     /**
      * 获取用户声望和金币
      * @return
@@ -54,6 +64,33 @@ public class AttendantServiceImpl implements IAttendantService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "获取用户声望和金币异常");
         }
         return user;
+    }
+
+    @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdAndFood() {
+        //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+        return iTbEquipmentKnapsackService.selectUserIdAndFoodId(query.getId());
+    }
+
+    @Override
+    public List<User> queryRandomUser() {
+        //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+        List<User> users = attendantMapper.queryRandomUser();
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println("users.get(i).getUserId() = " + users.get(i).getUserId());
+            System.out.println("query.getId() = " + query.getId());
+            if(users.get(i).getUserId()==query.getId()){
+                users.remove(i);
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public int dismissal(Long id) {
+        return attendantMapper.dismissal(id);
     }
 
 }
