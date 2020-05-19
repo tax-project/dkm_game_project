@@ -1,6 +1,8 @@
 package com.dkm.seed.controller;
 
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
@@ -116,17 +118,23 @@ public class SeedController {
      * 根据用户id查询已解锁的种子
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userId", value = "用户Id"),
-    })
+
     @PostMapping("/queryAreUnlocked")
     @CrossOrigin
     @CheckToken
-    List<Seed> queryAreUnlocked(Long userId){
-        if(userId==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
-        }
-        return iSeedService.queryAreUnlocked(userId);
+    List<Seed> queryAreUnlocked(){
+        return iSeedService.queryAreUnlocked();
+    }
+
+    /**
+     * 根据用户id查询用户所有信息
+     */
+    @ApiOperation(value = "根据用户id查询用户所有信息", notes = "根据用户id查询用户所有信息")
+    @GetMapping("/queryUserAll")
+    @CrossOrigin
+    @CheckToken
+    Result<UserInfoQueryBo> queryUserAll(){
+       return iSeedService.queryUserAll();
     }
 
 }

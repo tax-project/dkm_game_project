@@ -5,8 +5,12 @@ import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.good.entity.Goods;
+import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.Land;
@@ -37,6 +41,8 @@ public class AttendantController {
     @Autowired
     private IAttendantService iAttendantService;
 
+    @Autowired
+    private IGoodsService iGoodsService;
     /**
      * 获取用户抓到的跟班信息
      * @return
@@ -119,7 +125,9 @@ public class AttendantController {
      */
      public Goods randomlyGeneratedItem(){
 
+         return iGoodsService.queryRandomGoods();
      }
+
 
 
 }

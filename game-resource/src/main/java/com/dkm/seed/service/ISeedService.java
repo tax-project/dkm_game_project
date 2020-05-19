@@ -1,5 +1,7 @@
 package com.dkm.seed.service;
 
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
@@ -47,10 +49,14 @@ public interface ISeedService {
 
     /**
      * 根据用户id查询已解锁的种子
-     * @param userId
      * @return
      */
-    List<Seed> queryAreUnlocked(Long userId);
+    List<Seed> queryAreUnlocked();
 
+    /**
+     * 根据用户id查询所有用户信息
+     * @return
+     */
+    Result<UserInfoQueryBo> queryUserAll();
 
 }

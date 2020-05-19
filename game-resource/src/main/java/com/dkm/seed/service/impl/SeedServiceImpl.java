@@ -3,6 +3,8 @@ package com.dkm.seed.service.impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -46,6 +48,10 @@ public class SeedServiceImpl implements ISeedService {
 
     @Autowired
     private IdGenerator idGenerator;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
+
 
 
 
@@ -166,8 +172,17 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public List<Seed> queryAreUnlocked(Long userId) {
-        return seedMapper.queryAreUnlocked(userId);
+    public List<Seed> queryAreUnlocked() {
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+        return seedMapper.queryAreUnlocked(user.getId());
+    }
+
+    @Override
+    public Result<UserInfoQueryBo> queryUserAll() {
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+        return userFeignClient.queryUser(user.getId());
     }
 
 
