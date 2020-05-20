@@ -35,4 +35,17 @@ public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserP
          throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
    }
+
+   @Override
+   public void insertProduce(UserProduceVo vo) {
+      UserProduce userProduce = new UserProduce();
+      userProduce.setUserId(vo.getUserId());
+      userProduce.setProduceId(vo.getProduceId());
+
+      int insert = baseMapper.insert(userProduce);
+
+      if (insert <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
+   }
 }

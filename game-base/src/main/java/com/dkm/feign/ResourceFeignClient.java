@@ -2,6 +2,7 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
+import com.dkm.personalCenter.domain.Seed;
 import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -46,6 +47,17 @@ public interface ResourceFeignClient {
     @GetMapping("/dkm/tbEquipmentKnapsack/userCenter")
     Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter();
 
+    /**
+     * 黑屋的用户信息对象
+     * @return
+     */
     @PostMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
     Result<TbBlackHouseVo> selectIsBlackTwo();
+
+    /**
+     * 查询当前用户已经解锁的种子
+     * @return
+     */
+    @PostMapping("/Seed/queryAreUnlocked")
+    Result<List<Seed>> queryAreUnlocked();
 }

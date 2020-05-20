@@ -9,9 +9,11 @@
         c.`name` as 'goodName',c.url as 'goodUrl' from tb_user_produce a
        join tb_produce b on a.produce_id = b.id
        join tb_goods c on b.good_id = c.id
-       <foreach collection="list" item="item" index="index">
-           where a.user_id = #{item}
-       </foreach>
+       <where>
+           <foreach collection="list" item="item" index="index" separator="or">
+                 a.user_id = #{item}
+           </foreach>
+       </where>
     </select>
 
 

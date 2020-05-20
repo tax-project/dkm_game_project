@@ -16,4 +16,10 @@ public interface IUserProduceService {
     * @param list 用户产出信息
     */
    void insertAllProduceInfo (List<UserProduceVo> list);
+
+   /**
+    *  增加产出信息
+    * @param vo
+    */
+   void insertProduce (UserProduceVo vo);
 }

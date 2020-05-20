@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.vo.User;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * 获取用户声望和金币
      * @return
      */
-    User queryUserReputationGold(long userId);
+    User queryUserReputationGold(Long userId);
     /**
      * 随机查询用户表20条数
      */
@@ -36,8 +37,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
 
     /**
      * 解雇
-     * @param id 跟班id
+     * @param dismissal 跟班id
      * @return
      */
-    int dismissal(Long id);
+    int dismissal(Long dismissal);
+
+    int addGraspFollowing(AttendantUser attendantUser);
 }

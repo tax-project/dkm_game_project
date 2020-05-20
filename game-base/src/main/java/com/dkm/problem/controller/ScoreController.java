@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @author qf
  * @date 2020/5/10
@@ -55,9 +57,9 @@ public class ScoreController {
    @GetMapping("/pageScore")
    @CrossOrigin
    @CheckToken
-   public Page<ScoreListVo> pageScore (@RequestParam("moneyId") Long moneyId,
-                                      @RequestParam("current") Integer current,
-                                      @RequestParam("size") Integer size) {
+   public Map<String, Object> pageScore (@RequestParam("moneyId") Long moneyId,
+                                         @RequestParam("current") Integer current,
+                                         @RequestParam("size") Integer size) {
 
       if (current == null || moneyId == null || size == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");

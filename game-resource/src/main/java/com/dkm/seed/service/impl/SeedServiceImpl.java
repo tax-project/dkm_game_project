@@ -3,6 +3,8 @@ package com.dkm.seed.service.impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -19,6 +21,7 @@ import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -34,6 +37,7 @@ import java.util.List;
  * @DATE: 2020/5/11 16:17
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SeedServiceImpl implements ISeedService {
     @Autowired
     private SeedMapper seedMapper;
@@ -46,6 +50,10 @@ public class SeedServiceImpl implements ISeedService {
 
     @Autowired
     private IdGenerator idGenerator;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
+
 
 
 
@@ -166,8 +174,17 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public List<Seed> queryAreUnlocked(Long userId) {
-        return seedMapper.queryAreUnlocked(userId);
+    public List<Seed> queryAreUnlocked() {
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+        return seedMapper.queryAreUnlocked(user.getId());
+    }
+
+    @Override
+    public Result<UserInfoQueryBo> queryUserAll() {
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+        return userFeignClient.queryUser(user.getId());
     }
 
 

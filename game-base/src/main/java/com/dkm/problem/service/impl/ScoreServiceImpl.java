@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author qf
@@ -75,6 +78,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       score1.setCreateDate(LocalDateTime.now());
       score1.setMoneyId(moneyId);
       score1.setPrice(price);
+      score1.setScore(score);
+
       score1.setUserId(user.getId());
 
       int insert = baseMapper.insert(score1);
@@ -99,8 +104,20 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     * @return
     */
    @Override
-   public Page<ScoreListVo> pageScore(Page<ScoreListVo> page, Long moneyId) {
-      return baseMapper.pageScore(page,moneyId);
+   public Map<String, Object> pageScore(Page<ScoreListVo> page, Long moneyId) {
+      Page<ScoreListVo> listVoPage = baseMapper.pageScore(page, moneyId);
+
+      List<ScoreListVo> list = listVoPage.getRecords();
+
+      Map<String, Object> map = new HashMap<>();
+      map.put("page",listVoPage);
+      map.put("allNumber",list.size());
+
+      Money money = moneyService.queryNumber(moneyId);
+
+      map.put("RedEnvelopes",money.getInNumber());
+
+      return map;
    }
 
    /**
@@ -122,16 +139,16 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       }
 
       //当前时间
-      LocalDate start = LocalDate.now();
-      String startTime = DateUtil.formatDate(start) + " 00:00:00";
+
+      String startTime = DateUtil.formatDate(LocalDate.now()) + " 23:59:59";
 
       //一周前的时间
-      LocalDate end = start.minusDays(7);
+      LocalDate start = (LocalDate.now()).minusDays(7);
 
-      String endTime = DateUtil.formatDate(end) + " 23:59:59";
+      String endTime = DateUtil.formatDate(start) + " 00:00:00";
 
-      LocalDateTime startDate = DateUtil.parseDateTime(startTime);
-      LocalDateTime endDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime startDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime endDate = DateUtil.parseDateTime(startTime);
 
       return baseMapper.countListMax(page,status,type,startDate,endDate);
    }

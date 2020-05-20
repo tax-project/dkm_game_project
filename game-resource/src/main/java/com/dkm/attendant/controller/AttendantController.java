@@ -5,7 +5,12 @@ import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
+import com.dkm.good.entity.Goods;
+import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.Land;
@@ -14,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,11 +37,14 @@ import java.util.Map;
  */
 @Api(tags = "跟班Api")
 @RestController
+@Slf4j
 @RequestMapping("/Attendant")
 public class AttendantController {
     @Autowired
     private IAttendantService iAttendantService;
 
+    @Autowired
+    private IGoodsService iGoodsService;
     /**
      * 获取用户抓到的跟班信息
      * @return
@@ -43,6 +52,7 @@ public class AttendantController {
     @ApiOperation(value = "获取用户抓到的跟班信息", notes = "获取用户抓到的跟班信息")
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
+    @CheckToken
     public List<AttenDant> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
@@ -54,6 +64,7 @@ public class AttendantController {
     @ApiOperation(value = "获取用户声望和金币", notes = "获取用户声望和金币")
     @GetMapping("/queryUserReputationGold")
     @CrossOrigin
+    @CheckToken
     public User queryUserReputationGold(){
         return iAttendantService.queryUserReputationGold();
     }
@@ -91,12 +102,12 @@ public class AttendantController {
     })
     @GetMapping("/dismissal")
     @CrossOrigin
-    public Message dismissal(Long id){
+    public Message dismissal(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
         Message message=new Message();
-        if(id==null){
+        if(caughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
         }
-        int dismissal = iAttendantService.dismissal(id);
+        int dismissal = iAttendantService.dismissal(caughtPeopleId);
         if(dismissal>0){
             message.setNum(1);
             message.setMsg("解雇成功");
@@ -113,9 +124,24 @@ public class AttendantController {
 
         return map;
     }
-    /**
-     * 随机产生物品
-     */
 
+
+    /**
+     * 抓跟班
+     */
+    @ApiOperation(value = "抓跟班",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
+    })
+    @GetMapping("/graspFollowing")
+    @CrossOrigin
+    @CheckToken
+    public void graspFollowing(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+        int i = iAttendantService.addGraspFollowing(caughtPeopleId);
+        if(i<=0){
+            log.info("抓跟班异常");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+    }
 
 }

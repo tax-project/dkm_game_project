@@ -21,6 +21,7 @@
         <if test="type == 1">
             ,sum(s.score) as 'number'
         </if>
+        ,max(DATE_FORMAT(s.create_date, '%Y-%m-%d %H:%i:%s'))as 'date'
         from tb_score s
         join tb_user u on s.user_id = u.user_id
         <if test="status == 0">

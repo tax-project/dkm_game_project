@@ -13,4 +13,6 @@ public class MoneyCountVo {
    private String name;
 
    private Object number;
+
+   private String date;
 }

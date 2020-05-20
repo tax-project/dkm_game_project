@@ -27,7 +27,7 @@
 
 	<select id="selectByBoxId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">
 		SELECT *FROM tb_box tb,tb_equipment te,tb_equipment_details td
-		WHERE tb.`box_id`=te.`box_id` AND te.`equipment_id`=td.`equipment_id` AND tb.`box_id`=#{boxId}
+		WHERE tb.`box_id`=te.`box_id` AND te.`equipment_id`=td.`equipment_id` AND tb.`box_id`=#{boxId} ORDER BY RAND() LIMIT  1
 
 	</select>
 </mapper>
