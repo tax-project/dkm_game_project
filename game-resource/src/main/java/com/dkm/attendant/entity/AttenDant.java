@@ -49,4 +49,9 @@ public class AttenDant {
      *
      */
     private String exp3;
+
+    /**
+     *被抓人id
+     */
+    private Long caughtPeopleId;
 }

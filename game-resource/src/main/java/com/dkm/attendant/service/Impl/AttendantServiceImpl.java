@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
@@ -87,8 +88,8 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public int dismissal(Long id) {
-        return attendantMapper.dismissal(id);
+    public int dismissal(Long dismissal) {
+        return attendantMapper.dismissal(dismissal);
     }
 
     @Override
@@ -100,9 +101,14 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public int addGraspFollowing() {
-
-        return 0;
+    public int addGraspFollowing(Long caughtPeopleId) {
+        AttendantUser attendantUser=new AttendantUser();
+        long a=(long) (Math.random()*(3))+1;
+        attendantUser.setAId(a);
+        attendantUser.setCaughtPeopleId(caughtPeopleId);
+        attendantUser.setUserId(localUser.getUser().getId());
+        int i = attendantMapper.addGraspFollowing(attendantUser);
+        return i;
     }
 
 }

@@ -41,7 +41,7 @@ public interface IAttendantService {
     /**
      * 解雇
      */
-    int dismissal(Long id);
+    int dismissal(Long dismissal);
     /**
      * 宠物战斗，查询用户信息
      */
@@ -49,6 +49,6 @@ public interface IAttendantService {
     /**
      * 抓跟班
      */
-    int addGraspFollowing();
+    int addGraspFollowing(Long caughtPeopleId);
 
 }

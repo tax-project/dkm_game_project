@@ -21,6 +21,7 @@ import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ import java.util.List;
  * @DATE: 2020/5/11 16:17
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SeedServiceImpl implements ISeedService {
     @Autowired
     private SeedMapper seedMapper;
