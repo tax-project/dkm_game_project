@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author qf
@@ -99,8 +102,20 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
     * @return
     */
    @Override
-   public Page<ScoreListVo> pageScore(Page<ScoreListVo> page, Long moneyId) {
-      return baseMapper.pageScore(page,moneyId);
+   public Map<String, Object> pageScore(Page<ScoreListVo> page, Long moneyId) {
+      Page<ScoreListVo> listVoPage = baseMapper.pageScore(page, moneyId);
+
+      List<ScoreListVo> list = listVoPage.getRecords();
+
+      Map<String, Object> map = new HashMap<>();
+      map.put("page",listVoPage);
+      map.put("allNumber",list.size());
+
+      Money money = moneyService.queryNumber(moneyId);
+
+      map.put("RedEnvelopes",money.getInNumber());
+
+      return map;
    }
 
    /**

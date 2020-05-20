@@ -5,6 +5,8 @@ import com.dkm.problem.entity.vo.MoneyCountVo;
 import com.dkm.problem.entity.vo.ScoreListVo;
 import com.dkm.problem.entity.vo.ScoreVo;
 
+import java.util.Map;
+
 /**
  * @author qf
  * @date 2020/5/10
@@ -28,7 +30,7 @@ public interface IScoreService {
     * @param moneyId
     * @return
     */
-   Page<ScoreListVo> pageScore(Page<ScoreListVo> page, Long moneyId);
+   Map<String, Object> pageScore(Page<ScoreListVo> page, Long moneyId);
 
    /**
     *  统计收红包的金额或者答题达人
