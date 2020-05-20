@@ -2,6 +2,7 @@ package com.dkm.knapsack.controller;
 
 
 
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbBox;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.service.ITbBoxService;
@@ -81,9 +82,31 @@ public class TbBoxController {
     })
     @PostMapping("/selectByBoxId")
     @CrossOrigin
-    //@CheckToken
-    public List<TbEquipmentVo> selectByBoxId(Long boxId){
-        List<TbEquipmentVo> list=tbBoxService.selectByBoxId(boxId);
+    @CheckToken
+    public TbEquipmentVo selectByBoxId(Long boxId){
+        TbEquipmentVo list=tbBoxService.selectByBoxId(boxId);
+        if(!StringUtils.isEmpty(list)){
+            return list;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * 查询所有宝箱的方法
+     * @return
+     */
+    @ApiOperation(value = "查询所有宝箱的方法",notes = "成功返回数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子",required = true)
+    })
+    @PostMapping("/selectAll")
+    @CrossOrigin
+    @CheckToken
+    public List<TbBox> selectAll(){
+        List<TbBox> list=tbBoxService.selectAll();
         if(!StringUtils.isEmpty(list)){
             return list;
         }else{

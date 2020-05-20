@@ -19,5 +19,5 @@ import java.util.List;
  */
 @Service
 public interface TbBoxMapper extends BaseMapper<TbBox> {
-    List<TbEquipmentVo> selectByBoxId(Long boxId);
+    TbEquipmentVo selectByBoxId(Long boxId);
 }

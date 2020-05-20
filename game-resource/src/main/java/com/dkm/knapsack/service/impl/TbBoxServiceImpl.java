@@ -1,6 +1,7 @@
 package com.dkm.knapsack.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.knapsack.dao.TbBoxMapper;
@@ -41,10 +42,17 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     }
 
     @Override
-    public List<TbEquipmentVo> selectByBoxId(Long boxId) {
+    public TbEquipmentVo selectByBoxId(Long boxId) {
         if(StringUtils.isEmpty(boxId)){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return tbBoxMapper.selectByBoxId(boxId);
+    }
+
+    @Override
+    public List<TbBox> selectAll() {
+        QueryWrapper<TbBox> queryWrapper=new QueryWrapper();
+        queryWrapper.eq("box_type",1);
+        return tbBoxMapper.selectList(queryWrapper);
     }
 }
