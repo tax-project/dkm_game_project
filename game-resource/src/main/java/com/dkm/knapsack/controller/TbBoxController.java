@@ -124,28 +124,7 @@ public class TbBoxController {
     @CrossOrigin
     @CheckToken
     public List<TbEquipmentVo> selectByBoxIdTwo(String boxId){
-        if( StringUtils.isEmpty(boxId) ){
-            //如果失败将回滚
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-        }
-        JSONArray obj = JSON.parseArray(boxId);
-        List<Long> sList = new ArrayList<Long>();
-
-        if (obj.size() > 0) {
-            for (int i = 0; i < obj.size(); i++) {
-                sList.add((Long) obj.get(i));
-            }
-        }
-        List<TbEquipmentVo> list=new ArrayList<>();
-        for (Long aLong : sList) {
-            TbEquipmentVo tbEquipmentVo=tbBoxService.selectByBoxId(aLong);
-            list.add(tbEquipmentVo);
-        }
-        if(!StringUtils.isEmpty(list)){
-            return list;
-        }else{
-            return null;
-        }
+          return tbBoxService.selectByBoxIdTwo(boxId);
     }
 
     /**
