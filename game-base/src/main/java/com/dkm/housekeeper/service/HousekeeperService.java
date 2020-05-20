@@ -1,8 +1,10 @@
 package com.dkm.housekeeper.service;
 
 import com.dkm.housekeeper.entity.HousekeeperEntity;
+import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,4 +35,11 @@ public interface HousekeeperService {
      * @return
      */
     Map<String,String> updateTime(Long userId);
+
+    /**
+     * 获取宝箱装备
+     * @param userId
+     * @return
+     */
+    List<TbEquipmentVo> getBoxEquipment(Long userId);
 }

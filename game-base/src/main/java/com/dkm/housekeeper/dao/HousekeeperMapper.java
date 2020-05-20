@@ -2,7 +2,10 @@ package com.dkm.housekeeper.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author zhd
@@ -11,4 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HousekeeperMapper extends IBaseMapper<HousekeeperEntity> {
 
+    /**
+     * 获取宝箱id
+     * @return
+     */
+    @Select("select box_id from tb_box")
+    List<Long> getAllBoxId();
 }
