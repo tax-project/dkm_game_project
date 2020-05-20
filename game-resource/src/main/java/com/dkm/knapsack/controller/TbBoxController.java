@@ -2,6 +2,10 @@ package com.dkm.knapsack.controller;
 
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbBox;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,6 +90,57 @@ public class TbBoxController {
     @CheckToken
     public TbEquipmentVo selectByBoxId(Long boxId){
         TbEquipmentVo list=tbBoxService.selectByBoxId(boxId);
+        if(!StringUtils.isEmpty(list)){
+            return list;
+        }else{
+            return null;
+        }
+    }
+
+    @ApiOperation(value = "批量宝箱的主键查询装备 要传json",notes = "成功返回成功 无数据则返回空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "背包主键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "edId",value = "装备详情主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "equipmentImage",value = "装备图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp1",value = "装备编号 1-10之间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "道具50金币 穿戴品只有5金币"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "1为穿戴品 2为道具"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "edDetailedDescription",value = "详情描述"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "edEquipmentReputation",value = "装备声望"),
+            @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edRedEnvelopeAcceleration",value = "红包加速")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/selectByBoxIdTwo")
+    @CrossOrigin
+    @CheckToken
+    public List<TbEquipmentVo> selectByBoxIdTwo(String boxId){
+        if( StringUtils.isEmpty(boxId) ){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        JSONArray obj = JSON.parseArray(boxId);
+        List<Long> sList = new ArrayList<Long>();
+
+        if (obj.size() > 0) {
+            for (int i = 0; i < obj.size(); i++) {
+                sList.add((Long) obj.get(i));
+            }
+        }
+        List<TbEquipmentVo> list=new ArrayList<>();
+        for (Long aLong : sList) {
+            TbEquipmentVo tbEquipmentVo=tbBoxService.selectByBoxId(aLong);
+            list.add(tbEquipmentVo);
+        }
         if(!StringUtils.isEmpty(list)){
             return list;
         }else{
