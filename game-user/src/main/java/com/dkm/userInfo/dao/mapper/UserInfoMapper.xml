@@ -36,4 +36,18 @@
         where user_id = #{userId}
     </update>
 
+
+    <select id="listUserPlunder" resultType="com.dkm.entity.bo.UserPlunderBo">
+        SELECT a.user_id as 'userId',a.we_chat_head_img_url as 'heardUrl',
+        a.we_chat_nick_name as 'userName', b.user_info_grade as 'grade'
+        FROM tb_user a JOIN tb_user_info b on a.user_id = b.user_id
+        ORDER BY RAND() LIMIT 20
+    </select>
+
+
+    <update id="updateStrength">
+        update tb_user_info set user_info_strength = user_info_strength - #{grade}
+     where user_id = #{userId}
+    </update>
+
 </mapper>

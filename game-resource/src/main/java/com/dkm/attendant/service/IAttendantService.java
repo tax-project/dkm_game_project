@@ -42,4 +42,13 @@ public interface IAttendantService {
      * 解雇
      */
     int dismissal(Long id);
+    /**
+     * 宠物战斗，查询用户信息
+     */
+    List<User> queryUserPetBattle();
+    /**
+     * 抓跟班
+     */
+    int addGraspFollowing();
+
 }

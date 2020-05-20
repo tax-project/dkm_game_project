@@ -5,7 +5,7 @@
 
     <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.Seed" parameterType="java.lang.Long">
         select a.seed_name,a.seed_grade,a.seed_growuptime,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
-        tb_seed a,tb_send_user b, tb_plant_unlock c where b.user_id=1 and a.seed_id=b.send_id and a.seed_id=c.seed_id
+        tb_seed a, tb_plant_unlock c where c.user_id=#{userId}  and a.seed_id=c.seed_id
     </select>
 
     <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
@@ -59,10 +59,11 @@
     </insert>
 
 
+
     <insert id="insertSeedUnlock" parameterType="com.dkm.seed.entity.vo.SeedUnlock">
-        insert into tb_plant_unlock(pu_id,seed_id,seed_present_unlock,seed_all_unlock,seed_status,user_id)values
+        insert into tb_plant_unlock(pu_id,seed_id,seed_present_unlock,seed_all_unlock,seed_status,user_id)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            (#{lists.puId},#{lists.seedId},#{lists.seedPresentUnlock},#{lists.seedAllUnlock},#{lists.seedStatus},#{lists.userId})
+            select #{lists.puId},#{lists.seedId},#{lists.seedPresentUnlock},#{lists.seedAllUnlock},#{lists.seedStatus},#{lists.userId}
         </foreach>
     </insert>
 

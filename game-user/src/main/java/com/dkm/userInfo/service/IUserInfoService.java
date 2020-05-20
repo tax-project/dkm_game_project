@@ -1,6 +1,9 @@
 package com.dkm.userInfo.service;
 
+import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+
+import java.util.List;
 
 /**
  * @author qf
@@ -34,4 +37,18 @@ public interface IUserInfoService {
     * @param increaseUserInfoBO 参数对象
     */
    void cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
+
+   /**
+    *  随机返回20条用户信息
+    *  掠夺需要
+    * @return 返回掠夺信息结果
+    */
+   List<UserPlunderBo> listUserPlunder ();
+
+   /**
+    *  掠夺减少体力
+    * @param userId 用户id
+    * @param grade 等级
+    */
+   void updateStrength (Long userId, Integer grade);
 }

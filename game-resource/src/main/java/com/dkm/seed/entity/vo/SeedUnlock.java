@@ -18,8 +18,8 @@ public class SeedUnlock {
     private long puId;
     private long seedId;
     private long userId;
-    private Integer seedPresentUnlock;
+    private Integer seedPresentUnlock=0;
     private Integer seedAllUnlock;
-    private Integer seedStatus;
+    private Integer seedStatus=0;
 
 }

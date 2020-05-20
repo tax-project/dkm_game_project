@@ -4,8 +4,6 @@ package com.dkm.shop.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.httpclient.ErrorResult;
-import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.shop.domain.TbShops;
 import com.dkm.shop.service.TbShopsService;
 import com.dkm.shop.utils.Message;
@@ -26,7 +24,6 @@ import java.util.List;
  */
 @RequestMapping("/dkm/tbShops")
 @RestController
-@ResponseBody
 @Api(description = "游戏项目热销商品的接口文档")
 public class TbShopsController {
 	@Resource

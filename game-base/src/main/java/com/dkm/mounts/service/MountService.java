@@ -1,6 +1,8 @@
 package com.dkm.mounts.service;
 
-import com.dkm.mounts.entity.MountsInfoEntity;
+import com.dkm.mounts.entity.MountsDetailEntity;
+import com.dkm.mounts.entity.dto.MountsDetailDto;
+import com.dkm.mounts.entity.dto.UserInfoDto;
 
 import java.util.List;
 
@@ -13,12 +15,35 @@ public interface MountService {
      * 座驾列表
      * @return
      */
-    List<MountsInfoEntity> getAll();
+    List<MountsDetailDto> getAll(Long userId);
 
     /**
      * 拥有座驾
      * @param userId
      * @return
      */
-    List<MountsInfoEntity> haveMounts(Long userId);
+    List<MountsDetailDto> haveMounts(Long userId);
+
+    /**
+     * 装备座驾
+     * @param id
+     * @param userId
+     */
+    void equipMount(Long id,Long userId);
+
+    /**
+     * 购买座驾
+     * @param mountId
+     * @param userId
+     * @param gold
+     * @param diamond
+     */
+    void buyMount(Long mountId,Long userId,Integer gold,Integer diamond);
+
+    /**
+     * 用户金币 钻石
+     * @param userId
+     * @return
+     */
+    UserInfoDto getUserInfo(Long userId);
 }

@@ -3,6 +3,7 @@ package com.dkm.feign.fallback;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,16 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
     @Override
     public Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(Long userId) {
+        return Result.fail(CodeType.DATABASE_ERROR);
+    }
+
+    @Override
+    public Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter() {
+        return Result.fail(CodeType.DATABASE_ERROR);
+    }
+
+    @Override
+    public Result<TbBlackHouseVo> selectIsBlackTwo() {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 

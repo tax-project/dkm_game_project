@@ -23,7 +23,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dkm/tbKnapsack")
-@ResponseBody
 @Api(description = "背包表的接口文档")
 public class TbKnapsackController {
     @Autowired
@@ -88,5 +87,22 @@ public class TbKnapsackController {
         tbKnapsack.setUserId(user.getId());
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
         return list;
+    }
+
+    /**
+     * 根据当前登录人成vip后修改背包容量
+     * @param tbKnapsack
+     */
+    @ApiOperation(value = "根据当前登录人成vip后修改背包容量",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "knapsackId",value = "背包主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "用户id"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "knapsackCapacity",value = "背包容量 默认 30 VIP容纳60")
+    })
+    @GetMapping("/updateByPrimaryKeySelective")
+    @CrossOrigin
+    @CheckToken
+    public void updateByPrimaryKeySelective(TbKnapsack tbKnapsack){
+        tbKnapsackService.updateByPrimaryKeySelective(tbKnapsack);
     }
 }

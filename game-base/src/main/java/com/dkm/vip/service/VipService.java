@@ -13,7 +13,6 @@ public interface VipService {
     * @param money
     * @return
     */
-   boolean openVip(Long userId, BigDecimal money);
-
+   void openVip(Long userId, BigDecimal money);
 
 }

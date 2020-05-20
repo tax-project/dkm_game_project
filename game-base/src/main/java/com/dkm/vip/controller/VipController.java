@@ -3,6 +3,8 @@ package com.dkm.vip.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.vip.service.VipService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -24,9 +26,10 @@ public class VipController {
     @Resource
     private VipService vipService;
 
+    @Resource
+    private LocalUser localUser;
     /***
      * 开通 vip
-     * @param userId
      * @param money
      * @return
      */
@@ -34,12 +37,11 @@ public class VipController {
     @ApiImplicitParam(name = "money", value = "支付金额", required = true, dataType = "BigDecimal", paramType = "path")
     @PostMapping(value = "/openVip")
     @CrossOrigin
-    public void openVip(Long userId, BigDecimal money){
+    @CheckToken
+    public void openVip(@RequestBody BigDecimal money){
         if(money.compareTo(BigDecimal.ZERO)<=0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数错误");
         }
-        if(!vipService.openVip(userId, money)){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"开通失败");
-        };
+        vipService.openVip(localUser.getUser().getId(), money);
     }
 }

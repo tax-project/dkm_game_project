@@ -14,6 +14,8 @@ import java.util.List;
  * @since 2020-05-14
  */
 public interface ITbKnapsackService{
+    void updateByPrimaryKeySelective(TbKnapsack tbKnapsack);
+
     void addTbKnapsack(TbKnapsack tbKnapsack);
 
     List<TbKnapsack> findById(TbKnapsack TbKnapsack);

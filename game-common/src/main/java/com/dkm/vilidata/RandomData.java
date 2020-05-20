@@ -1,4 +1,4 @@
-package com.dkm.problem.vilidata;
+package com.dkm.vilidata;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;

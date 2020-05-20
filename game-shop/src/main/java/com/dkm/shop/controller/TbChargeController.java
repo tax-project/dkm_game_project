@@ -3,7 +3,6 @@ package com.dkm.shop.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.shop.domain.TbCharge;
 import com.dkm.shop.service.TbChargeService;
 import com.dkm.shop.utils.Message;
@@ -25,7 +24,6 @@ import java.util.List;
  */
 @RequestMapping("/dkm/tbCharge")
 @RestController
-@ResponseBody
 @Api(description = "游戏项目首充豪礼表接口文档")
 public class TbChargeController {
     @Resource

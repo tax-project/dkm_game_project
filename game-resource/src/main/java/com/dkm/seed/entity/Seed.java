@@ -3,6 +3,7 @@ package com.dkm.seed.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -30,7 +31,7 @@ public class Seed {
     /**
      * 种子成熟时间
      */
-    private Long seedGrowuptime;
+    private LocalDateTime seedGrowuptime;
     /**
      *种子产出的金币
      */
