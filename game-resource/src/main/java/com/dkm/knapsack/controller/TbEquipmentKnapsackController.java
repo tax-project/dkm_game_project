@@ -60,6 +60,30 @@ public class TbEquipmentKnapsackController {
     }
 
     /**
+     * 批量增加装备到背包的接口
+     * @param equipmentId 装备主键
+     */
+    @ApiOperation(value = "批量增加装备到背包的接口  input都是需要传递的参数",notes = "成功返回成功")
+    @PostMapping("/addTbEquipmentKnapsackTwo")
+    @CrossOrigin
+    //@CheckToken
+    public void addTbEquipmentKnapsackTwo(String equipmentId){
+        tbEquipmentKnapsackService.addTbEquipmentKnapsackTwo(equipmentId);
+    }
+
+    /**
+     * 查询出当前用户id的背包容量
+     * @return
+     */
+    @ApiOperation(value = "查询出当前用户id的当前背包的容量  input都是需要传递的参数",notes = "成功返回成功")
+    @GetMapping("/selectCount")
+    @CrossOrigin
+    @CheckToken
+    public int selectCount(){
+        return tbEquipmentKnapsackService.selectCount();
+    }
+
+    /**
      * 查登录用户的装备
      * @return
      */
