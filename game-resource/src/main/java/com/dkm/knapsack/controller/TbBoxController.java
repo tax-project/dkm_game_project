@@ -122,8 +122,8 @@ public class TbBoxController {
     })
     @PostMapping("/selectByBoxIdTwo")
     @CrossOrigin
-    @CheckToken
-    public List<TbEquipmentVo> selectByBoxIdTwo(String boxId){
+    //@CheckToken
+    public List<TbEquipmentVo> selectByBoxIdTwo(@RequestBody List<Long> boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }
 

@@ -60,19 +60,12 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     }
 
     @Override
-    public List<TbEquipmentVo> selectByBoxIdTwo(String boxId) {
+    public List<TbEquipmentVo> selectByBoxIdTwo(List<Long> boxId) {
         if( StringUtils.isEmpty(boxId) ){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        JSONArray obj = JSON.parseArray(boxId);
-        List<Long> sList = new ArrayList<Long>();
-
-        if (obj.size() > 0) {
-            for (int i = 0; i < obj.size(); i++) {
-                sList.add((Long) obj.get(i));
-            }
-        }
+        List<Long> sList = boxId;
         List<TbEquipmentVo> list=new ArrayList<>();
         for (Long aLong : sList) {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(aLong);
