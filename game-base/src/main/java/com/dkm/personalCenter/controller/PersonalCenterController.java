@@ -1,5 +1,6 @@
 package com.dkm.personalCenter.controller;
 
+import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -30,7 +31,7 @@ public class PersonalCenterController {
     @Autowired
     LocalUser localUser;
     @Autowired
-    ResourceFeignClientFallback resourceFeignClientFallback;
+    ResourceFeignClient resourceFeignClient;
 
     @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据")
     @GetMapping("/selectAll")
@@ -39,9 +40,11 @@ public class PersonalCenterController {
     public Map<String,Object> selectAll(){
         Map<String,Object> map=new HashMap<>();
         //装备的map
-        map.put("equipment",resourceFeignClientFallback.userCenter());
+        map.put("equipment",resourceFeignClient.userCenter());
         //黑屋的用户信息对象
-        map.put("blackHouse",resourceFeignClientFallback.selectIsBlackTwo());
+        map.put("blackHouse",resourceFeignClient.selectIsBlackTwo());
+        //查询用户解锁的种子
+        map.put("Seed",resourceFeignClient.queryAreUnlocked());
         return map;
     }
 }
