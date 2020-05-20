@@ -108,7 +108,7 @@ public class MoneyController {
          @ApiImplicitParam(name = "size", value = "每页显示条数", required = true, dataType = "int", paramType = "path"),
          @ApiImplicitParam(name = "status", value = "（0--查询一周内数据  1--查询全部数据）", required = true, dataType = "int", paramType = "path")
    })
-   @PostMapping("/countHandOutRedEnvelopes")
+   @GetMapping("/countHandOutRedEnvelopes")
    @CrossOrigin
    @CheckToken
    public Page<MoneyCountVo> countHandOutRedEnvelopes (@RequestParam("current") Integer current,
