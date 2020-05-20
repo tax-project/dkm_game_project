@@ -1,6 +1,8 @@
 package com.dkm.knapsack.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +79,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
         TbKnapsack tbKnapsack=new TbKnapsack();
         tbKnapsack.setUserId(localUser.getUser().getId());
-        tbEquipmentKnapsack.setKnapsackId(idGenerator.getNumberId());
+        tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
 
         if(!StringUtils.isEmpty(list)){
@@ -94,6 +97,45 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
 
 
+    }
+
+    @Override
+    public void addTbEquipmentKnapsackTwo(String equipmentId) {
+        if(StringUtils.isEmpty(equipmentId)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        JSONArray obj = JSON.parseArray(equipmentId);
+        List<Long> sList = new ArrayList<Long>();
+        if (obj.size() > 0) {
+            for (int i = 0; i < obj.size(); i++) {
+                sList.add((Long) obj.get(i));
+            }
+        }
+        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+
+        TbKnapsack tbKnapsack=new TbKnapsack();
+        tbKnapsack.setUserId(localUser.getUser().getId());
+
+        List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
+        //背包主键
+        Long knapsackId=null;
+        if(!StringUtils.isEmpty(list)) {
+            for (TbKnapsack knapsack : list) {
+
+                //传入背包主键
+                knapsackId =knapsack.getKnapsackId();
+            }
+        }
+        for (Long aLong : sList) {
+            tbEquipmentKnapsack.setEquipmentId(aLong);
+            tbEquipmentKnapsack.setTekIsva(1);
+            tbEquipmentKnapsack.setTekDaoju(1);
+            tbEquipmentKnapsack.setTekMoney(5);
+            tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setKnapsackId(knapsackId);
+            tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
+        }
     }
 
     @Override
@@ -365,6 +407,19 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     public List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId) {
         return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
+
+    @Override
+    public int selectCount() {
+        Long knapsackId=null;
+        TbKnapsack tbKnapsack=new TbKnapsack();
+        tbKnapsack.setUserId(localUser.getUser().getId());
+        List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
+        for (TbKnapsack knapsack : list) {
+            knapsackId=knapsack.getKnapsackId();
+        }
+        return tbEquipmentKnapsackMapper.selectCount(knapsackId);
+    }
+
     public void too(Long tekId){
         Integer userInfoRenown;
         //根据tekId 查到装备的主键

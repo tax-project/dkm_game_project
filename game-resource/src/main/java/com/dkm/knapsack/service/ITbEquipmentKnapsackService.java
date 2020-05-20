@@ -19,6 +19,8 @@ public interface ITbEquipmentKnapsackService{
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectFoodId();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
+
+    void addTbEquipmentKnapsackTwo(String equipmentId);
     void deleteTbEquipment(Long tekId,Integer tekMoney);
     Map<String,Object> findById(Long equipmentId);
     int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
@@ -31,4 +33,10 @@ public interface ITbEquipmentKnapsackService{
     void updateIsva(Long tekId,Integer foodNumber);
 
     List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId);
+
+    /**
+     * 查询当前用户的背包容量
+     * @return
+     */
+    int selectCount();
 }
