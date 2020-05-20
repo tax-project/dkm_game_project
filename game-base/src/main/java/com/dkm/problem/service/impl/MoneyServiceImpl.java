@@ -219,17 +219,17 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       }
 
       //当前时间
-      LocalDate start = LocalDate.now();
+      LocalDate end = LocalDate.now();
 
-      String startTime = DateUtil.formatDate(start) + " 00:00:00";
+      String startTime = DateUtil.formatDate(end) + " 23:59:59";
 
       //一周前的时间
-      LocalDate end = start.minusDays(7);
+      LocalDate start = end.minusDays(7);
 
-      String endTime = DateUtil.formatDate(end) + " 23:59:59";
+      String endTime = DateUtil.formatDate(start) + " 00:00:00";
 
-      LocalDateTime startDate = DateUtil.parseDateTime(startTime);
-      LocalDateTime endDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime startDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime endDate = DateUtil.parseDateTime(startTime);
 
       return baseMapper.countHandOutRedEnvelopes(page,status,startDate,endDate);
    }

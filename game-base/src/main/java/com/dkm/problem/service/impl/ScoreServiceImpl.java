@@ -78,6 +78,8 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       score1.setCreateDate(LocalDateTime.now());
       score1.setMoneyId(moneyId);
       score1.setPrice(price);
+      score1.setScore(score);
+
       score1.setUserId(user.getId());
 
       int insert = baseMapper.insert(score1);
@@ -137,16 +139,16 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       }
 
       //当前时间
-      LocalDate start = LocalDate.now();
-      String startTime = DateUtil.formatDate(start) + " 00:00:00";
+
+      String startTime = DateUtil.formatDate(LocalDate.now()) + " 23:59:59";
 
       //一周前的时间
-      LocalDate end = start.minusDays(7);
+      LocalDate start = (LocalDate.now()).minusDays(7);
 
-      String endTime = DateUtil.formatDate(end) + " 23:59:59";
+      String endTime = DateUtil.formatDate(start) + " 00:00:00";
 
-      LocalDateTime startDate = DateUtil.parseDateTime(startTime);
-      LocalDateTime endDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime startDate = DateUtil.parseDateTime(endTime);
+      LocalDateTime endDate = DateUtil.parseDateTime(startTime);
 
       return baseMapper.countListMax(page,status,type,startDate,endDate);
    }
