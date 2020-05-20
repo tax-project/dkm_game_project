@@ -1,5 +1,8 @@
 package com.dkm.produce.service;
 
+import com.dkm.produce.entity.vo.AttendantGoods;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +18,8 @@ public interface IProduceService {
      * @param attendantId
      */
     Map<String,Object> insertProduce (Long attendantId);
+    /**
+     * 根据用户id查询跟班和跟班产生的物品
+     */
+    List<AttendantGoods> queryJoinOutPutGoods();
 }

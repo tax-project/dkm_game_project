@@ -2,7 +2,10 @@ package com.dkm.produce.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.produce.entity.Produce;
+import com.dkm.produce.entity.vo.AttendantGoods;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author 刘梦祺
@@ -12,4 +15,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface ProduceMapper extends IBaseMapper<Produce> {
+    /**
+     * 根据用户id查询跟班和跟班产生的物品
+     */
+    List<AttendantGoods> queryJoinOutPutGoods(Long userId);
 }

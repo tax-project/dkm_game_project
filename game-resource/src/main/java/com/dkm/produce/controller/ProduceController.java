@@ -3,6 +3,7 @@ package com.dkm.produce.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,4 +40,13 @@ public class ProduceController {
         }
         return produceService.insertProduce(attendantId);
     }
+
+    @ApiOperation(value = "根据用户id查询跟班和跟班产生的物品", notes = "根据用户id查询跟班和跟班产生的物品")
+    @GetMapping("/queryJoinOutPutGoods")
+    @CrossOrigin
+    @CheckToken
+    public List<AttendantGoods> queryJoinOutPutGoods(){
+        return produceService.queryJoinOutPutGoods();
+    }
+
 }
