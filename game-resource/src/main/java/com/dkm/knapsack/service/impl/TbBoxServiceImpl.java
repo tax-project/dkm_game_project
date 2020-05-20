@@ -1,6 +1,9 @@
 package com.dkm.knapsack.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.knapsack.dao.TbBoxMapper;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,10 +45,43 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     }
 
     @Override
-    public List<TbEquipmentVo> selectByBoxId(Long boxId) {
+    public TbEquipmentVo selectByBoxId(Long boxId) {
         if(StringUtils.isEmpty(boxId)){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return tbBoxMapper.selectByBoxId(boxId);
+    }
+
+    @Override
+    public List<TbBox> selectAll() {
+        QueryWrapper<TbBox> queryWrapper=new QueryWrapper();
+        queryWrapper.eq("box_type",1);
+        return tbBoxMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<TbEquipmentVo> selectByBoxIdTwo(String boxId) {
+        if( StringUtils.isEmpty(boxId) ){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        JSONArray obj = JSON.parseArray(boxId);
+        List<Long> sList = new ArrayList<Long>();
+
+        if (obj.size() > 0) {
+            for (int i = 0; i < obj.size(); i++) {
+                sList.add((Long) obj.get(i));
+            }
+        }
+        List<TbEquipmentVo> list=new ArrayList<>();
+        for (Long aLong : sList) {
+            TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(aLong);
+            list.add(tbEquipmentVo);
+        }
+        if(!StringUtils.isEmpty(list)){
+            return list;
+        }else{
+            return null;
+        }
     }
 }
