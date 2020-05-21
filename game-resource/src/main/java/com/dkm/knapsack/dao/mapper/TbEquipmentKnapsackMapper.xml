@@ -43,7 +43,7 @@
 			tsk.user_id=#{userId} AND tk.tek_isva=1
 	</select>
 
-	<select id="selectCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+	<select id="selectCountAll" resultType="java.lang.Integer" parameterType="java.lang.Long">
 		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1
 	</select>
 	<select id="selectFoodId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">

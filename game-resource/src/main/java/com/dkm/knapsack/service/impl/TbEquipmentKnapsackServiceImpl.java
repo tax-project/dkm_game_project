@@ -417,7 +417,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         for (TbKnapsack knapsack : list) {
             knapsackId=knapsack.getKnapsackId();
         }
-        return tbEquipmentKnapsackMapper.selectCount(knapsackId);
+        return tbEquipmentKnapsackMapper.selectCountAll(knapsackId);
     }
 
     public void too(Long tekId){
