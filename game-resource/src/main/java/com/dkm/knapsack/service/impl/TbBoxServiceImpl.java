@@ -45,11 +45,11 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     }
 
     @Override
-    public TbEquipmentVo selectByBoxId(Long boxId) {
+    public TbEquipmentVo selectByBoxId(String boxId) {
         if(StringUtils.isEmpty(boxId)){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return tbBoxMapper.selectByBoxId(boxId);
+        return tbBoxMapper.selectByBoxId(Long.valueOf(boxId));
     }
 
     @Override

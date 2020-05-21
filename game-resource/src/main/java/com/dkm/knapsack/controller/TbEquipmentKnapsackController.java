@@ -64,7 +64,7 @@ public class TbEquipmentKnapsackController {
      * @param equipmentId 装备主键
      */
     @ApiOperation(value = "批量增加装备到背包的接口  input都是需要传递的参数",notes = "成功返回成功")
-    @PostMapping("/addTbEquipmentKnapsackTwo")
+    @GetMapping("/addTbEquipmentKnapsackTwo")
     @CrossOrigin
     @CheckToken
     public void addTbEquipmentKnapsackTwo(String equipmentId){
