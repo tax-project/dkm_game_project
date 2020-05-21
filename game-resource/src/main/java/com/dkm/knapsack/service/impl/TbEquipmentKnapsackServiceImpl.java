@@ -11,6 +11,7 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.dao.TbEquipmentKnapsackMapper;
 import com.dkm.knapsack.dao.TbEquipmentMapper;
 import com.dkm.knapsack.domain.TbEquipment;
@@ -417,7 +418,14 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         for (TbKnapsack knapsack : list) {
             knapsackId=knapsack.getKnapsackId();
         }
-        return tbEquipmentKnapsackMapper.selectCountAll(knapsackId);
+        UserLoginQuery user = localUser.getUser();
+        tbKnapsack.setUserId(user.getId());
+        List<TbKnapsack> listTwo=tbKnapsackService.findById(tbKnapsack);
+        int one=0;
+        for (TbKnapsack knapsack : listTwo) {
+            one=knapsack.getKnapsackCapacity()-tbEquipmentKnapsackMapper.selectCountAll(knapsackId);
+        }
+        return one;
     }
 
     public void too(Long tekId){

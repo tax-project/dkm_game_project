@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class AttendantServiceImpl implements IAttendantService {
     public List<AttenDant> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        return attendantMapper.queryThreeAtt(query.getId());
+        return  attendantMapper.queryThreeAtt(query.getId());
     }
     /**
      * 解雇
@@ -71,7 +72,7 @@ public class AttendantServiceImpl implements IAttendantService {
     public List<TbEquipmentKnapsackVo> selectUserIdAndFood() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        return iTbEquipmentKnapsackService.selectUserIdAndFoodId(query.getId());
+        return iTbEquipmentKnapsackService.selectFoodId();
     }
 
     @Override

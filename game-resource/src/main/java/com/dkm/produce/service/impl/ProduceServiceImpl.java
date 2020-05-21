@@ -7,6 +7,7 @@ import com.dkm.good.entity.Goods;
 import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
+import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.plunder.entity.vo.UserProduceVo;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author 刘梦祺
@@ -86,7 +88,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //算出随机生成的数量
         if ("金币".equals(goods.getName())) {
-            number = 2000;
+            Random rand = new Random();
+            int randNum = rand.nextInt(5000)+2000;
+            number = randNum;
         } else {
             //加一个
             number = 1;
@@ -102,5 +106,14 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     @Override
     public List<AttendantGoods> queryJoinOutPutGoods() {
         return produceMapper.queryJoinOutPutGoods(localUser.getUser().getId());
+    }
+
+    @Override
+    public int gatherGoodsProducedMinions() {
+        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+        tbEquipmentKnapsack.setTekDaoju(3);
+        tbEquipmentKnapsack.setTekIsva(1);
+
+        return 0;
     }
 }

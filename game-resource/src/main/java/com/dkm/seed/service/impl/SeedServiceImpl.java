@@ -163,13 +163,21 @@ public class SeedServiceImpl implements ISeedService {
 
     @Override
     public int updateUser(UserInIf userInIf) {
+        //判断当前经验是否等级下一级的等级 如果等于等级加一
+        if(userInIf.getUserInfoNowExperience().equals(userInIf.getUserInfoNextExperience())){
+            //算出下一级的总经验
+            double ripetime = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) *100;
+            Long nextExperience=(long) ripetime;
+            userInIf.setUserInfoNextExperience(nextExperience);
+            userInIf.setUserGold(userInIf.getUserGold()+1);
+        }
         //修改用户信息
         int i = seedMapper.updateUser(userInIf);
-        if(i<0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取种子异常");
-        }
         //收取种子后 删除土地种子表中对应的数据
         int i1 = seedMapper.deleteLandSeed(userInIf.getUserId());
+        if(i1<0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取种子异常");
+        }
         return i1;
     }
 
