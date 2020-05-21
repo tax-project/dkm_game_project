@@ -42,5 +42,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      */
     int dismissal(Long dismissal);
 
+    /**
+     * 抓跟班
+     * @param attendantUser
+     * @return
+     */
     int addGraspFollowing(AttendantUser attendantUser);
 }

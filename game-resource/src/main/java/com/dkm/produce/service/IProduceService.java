@@ -22,4 +22,10 @@ public interface IProduceService {
      * 根据用户id查询跟班和跟班产生的物品
      */
     List<AttendantGoods> queryJoinOutPutGoods();
+
+    /**
+     * 收取
+     * @return
+     */
+    int gatherGoodsProducedMinions();
 }

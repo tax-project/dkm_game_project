@@ -97,12 +97,16 @@ public class SeedController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userGold", value = "用户金币"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "userInfoNowExperience", value = "种子当前经验"),
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
     })
     @PostMapping("/gather")
     @CrossOrigin
     @CheckToken
     public Message gather(UserInIf userInIf) {
-        if (userInIf.getUserGold() == null  || userInIf.getUserInfoPacketBalance() == null ) {
+        if (userInIf.getUserGold() == null  || userInIf.getUserInfoPacketBalance() == null ||
+        userInIf.getUserInfoNextExperience()==null || userInIf.getUserInfoNowExperience()==null || userInIf.getUserInfoGrade()==0) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
         int i = iSeedService.updateUser(userInIf);
