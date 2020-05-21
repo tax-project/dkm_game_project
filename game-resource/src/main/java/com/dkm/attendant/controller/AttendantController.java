@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class AttendantController {
      */
     @ApiOperation(value = "解雇",notes = "成功返回数据 反则为空")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "id",value = "跟班id"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
     })
     @GetMapping("/dismissal")
     @CrossOrigin
@@ -107,8 +108,8 @@ public class AttendantController {
         if(caughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
         }
-        int dismissal = iAttendantService.dismissal(caughtPeopleId);
-        if(dismissal>0){
+        int dismissaMeassg = iAttendantService.dismissal(caughtPeopleId);
+        if(dismissaMeassg>0){
             message.setNum(1);
             message.setMsg("解雇成功");
         }else{
@@ -119,10 +120,18 @@ public class AttendantController {
     /**
      * 宠物战斗
      */
-    public Map<String,Object> petBattle(){
-        Map<String,Object> map=new HashMap<>();
+    @ApiOperation(value = "宠物战斗",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "id",value = "被抓人id"),
+    })
+    @GetMapping("/petBattle")
+    @CrossOrigin
+    public Map<String,Object> petBattle(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+        if(caughtPeopleId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"被抓人Id不能为空");
+        }
 
-        return map;
+        return null;
     }
 
 
@@ -136,12 +145,13 @@ public class AttendantController {
     @GetMapping("/graspFollowing")
     @CrossOrigin
     @CheckToken
-    public void graspFollowing(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
-        int i = iAttendantService.addGraspFollowing(caughtPeopleId);
-        if(i<=0){
+    public Long graspFollowing(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+        Long aLong = iAttendantService.addGraspFollowing(caughtPeopleId);
+        if(aLong<=0){
             log.info("抓跟班异常");
             throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
+        return aLong;
     }
 
 }

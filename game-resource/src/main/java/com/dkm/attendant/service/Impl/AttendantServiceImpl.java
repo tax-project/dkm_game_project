@@ -8,7 +8,10 @@ import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
@@ -17,8 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -38,6 +45,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
     /**
      * 获取用户抓到的跟班信息
      * @return
@@ -46,11 +56,11 @@ public class AttendantServiceImpl implements IAttendantService {
     public List<AttenDant> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        return  attendantMapper.queryThreeAtt(query.getId());
+        List<AttenDant> attenDants = attendantMapper.queryThreeAtt(query.getId());
+
+        return  attenDants;
     }
-    /**
-     * 解雇
-     */
+
 
 
     /**
@@ -87,29 +97,38 @@ public class AttendantServiceImpl implements IAttendantService {
         }
         return users;
     }
-
+    /**
+     * 解雇
+     */
     @Override
-    public int dismissal(Long dismissal) {
-        return attendantMapper.dismissal(dismissal);
+    public int dismissal(Long caughtPeopleId) {
+        return attendantMapper.dismissal(caughtPeopleId);
     }
 
     @Override
-    public List<User> queryUserPetBattle() {
+    public Map<String, Object> petBattle(Long caughtPeopleId) {
+        Map<String,Object> map=new HashMap<>();
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+
+        Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
 
         return null;
     }
 
+
     @Override
-    public int addGraspFollowing(Long caughtPeopleId) {
+    public Long addGraspFollowing(Long caughtPeopleId) {
+        Long second = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        Long s=second+43200;
         AttendantUser attendantUser=new AttendantUser();
         long a=(long) (Math.random()*(3))+1;
         attendantUser.setAId(a);
         attendantUser.setCaughtPeopleId(caughtPeopleId);
         attendantUser.setUserId(localUser.getUser().getId());
-        int i = attendantMapper.addGraspFollowing(attendantUser);
-        return i;
+        attendantMapper.addGraspFollowing(attendantUser);
+        return s;
     }
 
 }
