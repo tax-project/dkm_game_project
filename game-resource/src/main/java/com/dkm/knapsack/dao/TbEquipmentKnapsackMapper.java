@@ -22,5 +22,6 @@ public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsac
     List<TbEquipmentKnapsackVo> selectUserId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
     int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
+    int selectCountAll(Long knapsackId);
     List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
 }
