@@ -46,6 +46,15 @@
         <if test="userInfoPacketBalance!=null">
             user_info_packet_balance=#{userInfoPacketBalance}
         </if>
+        <if test="userInfoNowExperience!=null">
+            user_info_now_experience=#{userInfoNowExperience}
+        </if>
+        <if test="userInfoNextExperience!=null">
+            user_info_next_experience=#{userInfoNextExperience}
+        </if>
+        <if test="userInfoGrade!=null">
+            user_info_grade=#{userInfoGrade}
+        </if>
         where user_id=#{userId}
     </update>
 

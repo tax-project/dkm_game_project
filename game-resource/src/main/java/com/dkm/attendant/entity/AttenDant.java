@@ -40,7 +40,7 @@ public class AttenDant {
     /**
      *跟班一天生产的时间
      */
-    private String exp1;
+    private long exp1;
     /**
      *
      */
