@@ -66,7 +66,7 @@ public class TbKnapsackController {
      * @param tbKnapsack
      * @return
      */
-    @ApiOperation(value = "根据用户id查询背包容量",notes = "成功返回成功")
+    @ApiOperation(value = "根据用户id查询返回背包容量",notes = "成功返回成功")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "knapsackId",value = "背包主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "用户id"),
