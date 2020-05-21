@@ -110,7 +110,7 @@ public class TbEquipmentController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/listEquipmentId")
+    @GetMapping("/listEquipmentId")
     @CrossOrigin
     @CheckToken
     public void listEquipmentId(@RequestParam("equipmentId") String equipmentId){

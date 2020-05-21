@@ -20,7 +20,7 @@ import java.util.List;
  * @create: 2020-05-16 15:25
  **/
 @Component
-@FeignClient(value = "service-resource")
+@FeignClient(value = "service-resource",fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
     /**
      * 更新背包

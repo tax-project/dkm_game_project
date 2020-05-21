@@ -17,7 +17,7 @@ import java.util.List;
 public interface ITbBoxService{
     void addTbBox(TbBox tbBox);
 
-    TbEquipmentVo selectByBoxId(Long boxId);
+    TbEquipmentVo selectByBoxId(String boxId);
 
     List<TbBox> selectAll();
 
