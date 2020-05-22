@@ -78,28 +78,6 @@ public class MoneyController {
    }
 
 
-   @ApiOperation(value = "改变红包状态", notes = "改变红包状态")
-   @ApiImplicitParams({
-         @ApiImplicitParam(name = "id", value = "红包id", required = true, dataType = "Long", paramType = "path"),
-         @ApiImplicitParam(name = "status", value = "状态(0-未开始 1-进行中 2-已完成)", required = true, dataType = "int", paramType = "path")
-   })
-   @PostMapping("/updateMoneyStatus")
-   @CrossOrigin
-   @CheckToken
-   public ResultVo updateMoneyStatus (@RequestParam("id") Long id, @RequestParam("status") Integer status) {
-
-      if (id == null || status == null) {
-         throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-      }
-
-      moneyService.updateMoneyStatus(id,status);
-
-      ResultVo resultVo = new ResultVo();
-      resultVo.setResult("ok");
-
-      return resultVo;
-   }
-
 
 
    @ApiOperation(value = "金主排行榜", notes = "金主排行榜")
