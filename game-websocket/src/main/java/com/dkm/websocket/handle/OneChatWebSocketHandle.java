@@ -27,7 +27,7 @@ public class OneChatWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo>
    protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
       if (msgInfo.getType() == 3) {
          //此消息是一个单聊消息
-         rabbitTemplate.convertAndSend("msg_chat_queue", JSON.toJSONString(msgInfo));
+         rabbitTemplate.convertAndSend("game_msg_chat_queue", JSON.toJSONString(msgInfo));
          log.info("收到一条单聊消息---" + msgInfo);
       } else {
          //不是单聊消息，继续透传

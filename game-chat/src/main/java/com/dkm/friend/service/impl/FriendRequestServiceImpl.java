@@ -77,7 +77,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
       msgInfo.setMsg("收到一条好友申请");
 
       //将好友申请同步发送给好友
-      rabbitTemplate.convertAndSend("msg_fanoutExchange","", JSON.toJSONString(msgInfo));
+      rabbitTemplate.convertAndSend("game_msg_fanoutExchange","", JSON.toJSONString(msgInfo));
 
    }
 
