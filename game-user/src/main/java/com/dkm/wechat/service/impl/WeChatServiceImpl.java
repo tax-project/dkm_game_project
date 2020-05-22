@@ -115,7 +115,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                         msgInfo.setType(onlineVo.getType());
                         //将消息更改成已读
                         longList.add(onlineVo.getToId());
-                        rabbitTemplate.convertAndSend("msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+                        rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
                     }
 
                     //更改数据库的未读状态
@@ -211,7 +211,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                 msgInfo.setType(onlineVo.getType());
                 //将消息更改成已读
                 longList.add(onlineVo.getToId());
-                rabbitTemplate.convertAndSend("msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+                rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
             }
 
             //更改数据库的未读状态
