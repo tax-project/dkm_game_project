@@ -2,6 +2,7 @@ package com.dkm.housekeeper.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.housekeeper.service.HousekeeperService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,5 +71,15 @@ public class HousekeeperController {
         return housekeeperService.updateTime(localUser.getUser().getId());
     }
 
-
+    /**
+     * 获取宝箱装备
+     * @return
+     */
+    @ApiOperation("获取装备")
+    @GetMapping("/getBoxEquipment")
+    @CrossOrigin
+    @CheckToken
+    public List<TbEquipmentVo> getBoxEquipment(){
+         return housekeeperService.getBoxEquipment(localUser.getUser().getId());
+    }
 }

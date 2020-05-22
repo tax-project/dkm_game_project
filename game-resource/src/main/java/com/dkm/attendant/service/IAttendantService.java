@@ -6,7 +6,9 @@ import com.dkm.attendant.entity.vo.User;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -32,7 +34,7 @@ public interface IAttendantService {
      * 根据用户id查询食物信息
      * @return
      */
-    public  List<TbEquipmentKnapsackVo> selectUserIdAndFood();
+     List<TbEquipmentKnapsackVo> selectUserIdAndFood();
 
     /**
      * 随机查询用户表20条数
@@ -41,14 +43,14 @@ public interface IAttendantService {
     /**
      * 解雇
      */
-    int dismissal(Long dismissal);
+    int dismissal(Long caughtPeopleId);
     /**
      * 宠物战斗，查询用户信息
      */
-    List<User> queryUserPetBattle();
+    Map<String,Object> petBattle(Long caughtPeopleId);
     /**
      * 抓跟班
      */
-    int addGraspFollowing(Long caughtPeopleId);
+    Long addGraspFollowing(Long caughtPeopleId);
 
 }

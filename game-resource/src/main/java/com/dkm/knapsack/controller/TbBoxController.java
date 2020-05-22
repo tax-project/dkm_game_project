@@ -85,10 +85,10 @@ public class TbBoxController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/selectByBoxId")
+    @GetMapping("/selectByBoxId")
     @CrossOrigin
     @CheckToken
-    public TbEquipmentVo selectByBoxId(Long boxId){
+    public TbEquipmentVo selectByBoxId(String boxId){
         TbEquipmentVo list=tbBoxService.selectByBoxId(boxId);
         if(!StringUtils.isEmpty(list)){
             return list;
@@ -122,8 +122,8 @@ public class TbBoxController {
     })
     @PostMapping("/selectByBoxIdTwo")
     @CrossOrigin
-    @CheckToken
-    public List<TbEquipmentVo> selectByBoxIdTwo(String boxId){
+    //@CheckToken
+    public List<TbEquipmentVo> selectByBoxIdTwo(@RequestBody List<Long> boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }
 
@@ -137,7 +137,7 @@ public class TbBoxController {
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子",required = true)
     })
-    @PostMapping("/selectAll")
+    @GetMapping("/selectAll")
     @CrossOrigin
     @CheckToken
     public List<TbBox> selectAll(){

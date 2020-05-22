@@ -48,7 +48,7 @@ public class HousekeeperEntity {
     private LocalDateTime endWorkTime;
 
     /**
-     * 下次开工时间
+     * 开工时间
      */
     private LocalDateTime startWorkTime;
 }

@@ -1,10 +1,14 @@
 package com.dkm.housekeeper.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.ResourceFeignClient;
 import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
+import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.housekeeper.service.HousekeeperService;
 import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
@@ -13,7 +17,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +34,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
     private HousekeeperMapper housekeeperMapper;
     @Resource
     private IdGenerator idGenerator;
+    @Resource
+    private ResourceFeignClient resourceFeignClient;
 
     /**
      * 开通、续费
@@ -78,10 +87,11 @@ public class HousekeeperServiceImpl implements HousekeeperService {
                 throw new  ApplicationException(CodeType.SERVICE_ERROR,"管家过期");
             }
             //返回管家时间
-            result.put("reDays",selectOne.getExpireTime().toLocalDate().toEpochDay()-now.toLocalDate().toEpochDay());
+            result.put("status",now.isBefore(selectOne.getEndWorkTime())?1:0);
+            result.put("toDayTime",DateUtil.formatDate(now.toLocalDate()).replace("-","/")+" 12:00:00");
+            result.put("startWorkTime",selectOne.getStartWorkTime()==null?null:DateUtil.formatDate(selectOne.getStartWorkTime()).replace("-","/"));
             result.put("reTime",DateUtil.formatDateTime(selectOne.getExpireTime()).replace("-","/"));
             result.put("endWorkTime",selectOne.getEndWorkTime()==null?null:DateUtil.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
-            result.put("startWorkTime",selectOne.getStartWorkTime()==null?null:DateUtil.formatDateTime(selectOne.getStartWorkTime()).replace("-","/"));
             return result;
         }else {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"未找到数据");
@@ -89,7 +99,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
     }
 
     /**
-     * 管家时间
+     * 管家修改时间
      * @param userId
      * @return
      */
@@ -99,15 +109,41 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         HousekeeperEntity selectOne = housekeeperMapper.selectOne(query.lambda().eq(HousekeeperEntity::getUserId, userId));
         LocalDateTime now = LocalDateTime.now();
         selectOne.setEndWorkTime(now.minusHours(-8));
+        selectOne.setStartWorkTime(now);
         //第二天12点时间
-        selectOne.setStartWorkTime(DateUtil.parseDateTime(DateUtil.formatDate(now.toLocalDate().minusDays(-1))+" 12:00:00"));
         Map<String,String> result = new HashMap<>();
         if(housekeeperMapper.updateById(selectOne)>=0){
             result.put("endWorkTime",DateUtil.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
-            result.put("startWorkTime",DateUtil.formatDateTime(selectOne.getStartWorkTime()).replace("-","/"));
             return result;
         }else {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"操作失败");
         }
     }
+
+    @Override
+    public List<TbEquipmentVo> getBoxEquipment(Long userId){
+        HousekeeperEntity housekeeperEntity = housekeeperMapper.selectOne(new QueryWrapper<HousekeeperEntity>().lambda().eq(HousekeeperEntity::getUserId, userId));
+        if(housekeeperEntity==null||housekeeperEntity.getStartWorkTime()==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"管家没有工作");
+        }
+        List<Long> allBoxId = housekeeperMapper.getAllBoxId();
+        //计算当前时间戳到开始时间戳秒数
+        LocalDateTime now = LocalDateTime.now();
+        if(now.isAfter(housekeeperEntity.getEndWorkTime())){
+            now = housekeeperEntity.getEndWorkTime();
+        }
+        long time =(now.toInstant(ZoneOffset.of("+8")).toEpochMilli()- housekeeperEntity.getStartWorkTime().toInstant(ZoneOffset.of("+8")).toEpochMilli())/1000;
+        //宝箱15分钟开一次 计算次数
+        long count = time / (15 * 60);
+        List<Long> boxId =new ArrayList<>();
+        for (long i = 0; i < count; i++) {
+            boxId.addAll(allBoxId);
+        }
+        Result<List<TbEquipmentVo>> listResult = resourceFeignClient.selectByBoxIdTwo(boxId);
+        if(listResult.getCode()!=0){
+            throw  new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+        return listResult.getData();
+    }
+
 }
