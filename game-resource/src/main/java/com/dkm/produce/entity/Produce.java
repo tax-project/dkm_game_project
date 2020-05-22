@@ -29,4 +29,8 @@ public class Produce extends Model<Produce> {
      * 物品id
      */
     private Long goodId;
+    /**
+     * 数量
+     */
+    private Integer number;
 }

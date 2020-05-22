@@ -40,7 +40,7 @@ public class AttenDant {
     /**
      *跟班一天生产的时间
      */
-    private String exp1;
+    private long exp1;
     /**
      *
      */
@@ -49,4 +49,9 @@ public class AttenDant {
      *
      */
     private String exp3;
+
+    /**
+     *被抓人id
+     */
+    private Long caughtPeopleId;
 }

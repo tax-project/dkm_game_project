@@ -42,9 +42,13 @@
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
 			tsk.user_id=#{userId} AND tk.tek_isva=1
 	</select>
+
+	<select id="selectCountAll" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1
+	</select>
 	<select id="selectFoodId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_equipment_knapsack tk,tb_food_detail td,tb_knapsack tdk WHERE
-		tk.food_id=td.food_id AND tdk.user_id=#{userId} AND tk.tek_isva=1
+		tk.food_id=td.food_id AND tk.knapsack_id=tdk.knapsack_id AND tdk.user_id=#{userId} AND tk.tek_isva=1
 	</select>
 	<select id="selectCountMy" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM tb_equipment_knapsack tk,tb_equipment te

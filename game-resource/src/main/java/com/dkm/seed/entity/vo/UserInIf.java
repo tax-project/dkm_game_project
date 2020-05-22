@@ -22,5 +22,21 @@ public class UserInIf {
      * 用户红包可用余额
      */
     private Double userInfoPacketBalance;
+    /**
+     * 用户当前经验
+     */
+    private Long userInfoNowExperience;
+    /**
+     * 用户下一等级所需经验值
+     */
+    private Long userInfoNextExperience;
+    /**
+     * 种子等级
+     */
+    private Integer seedGrade;
+    /**
+     * 用户等级
+     */
+    private Integer userInfoGrade;
 
 }

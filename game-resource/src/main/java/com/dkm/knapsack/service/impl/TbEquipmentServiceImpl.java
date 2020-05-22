@@ -73,17 +73,18 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        JSONArray obj = JSON.parseArray(equipmentId);
-        List<Long> sList = new ArrayList<Long>();
+        String[] athleteId = equipmentId.split(",");
+      /*  JSONArray obj = JSON.parseArray(equipmentId);
+        List<Integer> sList = new ArrayList<Integer>();
         if (obj.size() > 0) {
             for (int i = 0; i < obj.size(); i++) {
-                sList.add((Long) obj.get(i));
+                sList.add((Integer) obj.get(i));
             }
-        }
+        }*/
         //定义一个钱的变量
         String money = "";
-        for (Long aLong : sList) {
-            List<TbEquipmentVo> selectByEquipmentId=tbEquipmentService.selectByEquipmentId(aLong.longValue());
+        for (String s : athleteId) {
+            List<TbEquipmentVo> selectByEquipmentId=tbEquipmentService.selectByEquipmentId(Long.valueOf(s));
             for (TbEquipmentVo tbEquipmentVo : selectByEquipmentId) {
                 money+=tbEquipmentVo.getExp2();
             }

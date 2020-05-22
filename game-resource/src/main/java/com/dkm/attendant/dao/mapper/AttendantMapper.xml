@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.attendant.dao.AttendantMapper">
 
-    <select id="queryUserReputationGold" resultType="com.dkm.attendant.entity.vo.User" parameterType="java.lang.Integer">
+    <select id="queryUserReputationGold" resultType="com.dkm.attendant.entity.vo.User" parameterType="java.lang.Long">
         select user_info_renown,user_info_gold from tb_user_info where  user_id=#{userId}
     </select>
 
@@ -13,14 +13,17 @@
     </select>
 
     <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.AttenDant">
-        select at.id,at.at_name,at.at_img,gs.name,gs.url from tb_user_produce up,tb_produce p,tb_attendant at, tb_goods gs
-        where up.produce_id=p.id and p.attendtant_id=at.id and p.good_id=gs.id and up.user_id=#{userId}
+        select a.*,au.Caught_people_id from tb_attendant a,tb_attendant_user au where au.user_id=#{userId} and a.id=au.a_id
     </select>
 
 
     <delete id="dismissal" parameterType="java.lang.Long">
-        delete from tb_attendant where id=#{id}
+        delete from tb_attendant_user where Caught_people_id=#{caughtPeopleId}
     </delete>
+
+    <insert id="addGraspFollowing" parameterType="com.dkm.attendant.entity.AttendantUser">
+          insert into tb_attendant_user(a_id,user_id,Caught_people_id)values(#{aId},#{userId},#{caughtPeopleId})
+    </insert>
 
 
 </mapper>

@@ -2,15 +2,14 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
+import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.personalCenter.domain.Seed;
 import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,4 +59,12 @@ public interface ResourceFeignClient {
      */
     @PostMapping("/Seed/queryAreUnlocked")
     Result<List<Seed>> queryAreUnlocked();
+
+    /**
+     * 管家收装备
+     * @param boxId
+     * @return
+     */
+    @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
+    Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 }
