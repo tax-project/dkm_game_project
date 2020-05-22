@@ -29,7 +29,7 @@ import java.util.List;
  **/
 @Component
 @Slf4j
-@RabbitListener(queues = "msg_queue_")
+@RabbitListener(queues = "game_msg_queue_")
 public class RabbitMqListener {
 
    @Autowired
@@ -71,7 +71,7 @@ public class RabbitMqListener {
             //对方未在线，应存入rabbitMQ消息队列中，等待客户端的连接再发送消息
             //存入一个新的队列中
             log.info("未找到对应的channel,有可能是对方未在线,将消息通过mq发送存入数据库");
-            rabbitTemplate.convertAndSend("msg_not_online_queue",msg);
+            rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
          }
 
          //将消息发送给客户端

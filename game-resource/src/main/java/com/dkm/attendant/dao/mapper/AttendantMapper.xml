@@ -13,7 +13,7 @@
     </select>
 
     <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.AttenDant">
-        select a.*,au.Caught_people_id from tb_attendant a,tb_attendant_user au where au.user_id=#{userId} and a.id=au.a_id
+        select a.at_img,a.at_name,au.Caught_people_id,au.exp1 from tb_attendant a,tb_attendant_user au where au.user_id=#{userId} and a.id=au.a_id
     </select>
 
 
@@ -22,7 +22,7 @@
     </delete>
 
     <insert id="addGraspFollowing" parameterType="com.dkm.attendant.entity.AttendantUser">
-          insert into tb_attendant_user(a_id,user_id,Caught_people_id)values(#{aId},#{userId},#{caughtPeopleId})
+          insert into tb_attendant_user(a_id,user_id,Caught_people_id,exp1)values(#{aId},#{userId},#{caughtPeopleId},#{exp1})
     </insert>
 
 

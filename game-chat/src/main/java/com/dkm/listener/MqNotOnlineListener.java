@@ -22,7 +22,7 @@ import java.io.IOException;
  **/
 @Slf4j
 @Component
-@RabbitListener(queues = "msg_not_online_queue")
+@RabbitListener(queues = "game_msg_not_online_queue")
 public class MqNotOnlineListener {
 
    @Autowired
@@ -53,13 +53,14 @@ public class MqNotOnlineListener {
          vo.setType(msg.getType());
 
          friendNotOnlineService.insertNotOnline(vo);
+
+         //确认消息
+         try {
+            channel.basicAck(deliveryTag,true);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
 
-      //确认消息
-      try {
-         channel.basicAck(deliveryTag,true);
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
    }
 }
