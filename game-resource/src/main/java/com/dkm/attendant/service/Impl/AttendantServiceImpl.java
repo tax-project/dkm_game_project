@@ -56,9 +56,7 @@ public class AttendantServiceImpl implements IAttendantService {
     public List<AttenDant> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        List<AttenDant> attenDants = attendantMapper.queryThreeAtt(query.getId());
-
-        return  attenDants;
+        return attendantMapper.queryThreeAtt(query.getId());
     }
 
 
@@ -127,6 +125,7 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUser.setAId(a);
         attendantUser.setCaughtPeopleId(caughtPeopleId);
         attendantUser.setUserId(localUser.getUser().getId());
+        attendantUser.setExp1(System.currentTimeMillis()/1000+43200);
         attendantMapper.addGraspFollowing(attendantUser);
         return s;
     }
