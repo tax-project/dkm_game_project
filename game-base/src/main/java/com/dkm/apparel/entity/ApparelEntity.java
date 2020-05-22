@@ -31,4 +31,8 @@ public class ApparelEntity {
      * 金币
      */
     private Integer apparelGold;
+    /**
+     * 布料
+     */
+    private Integer apparelFabric;
 }

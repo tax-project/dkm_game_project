@@ -15,7 +15,7 @@ public interface ApparelService {
      * 获取所有服饰
      * @return
      */
-    List<ApparelEntity> getAllApparels();
+    List<ApparelEntity> getAllApparels(Integer type);
 
     /**
      * 获取用户服饰
@@ -23,5 +23,11 @@ public interface ApparelService {
      * @return
      */
     List<ApparelEntity> getUserApparel(Long userId);
+
+    /**
+     * 制作服饰
+     * @param apparelId
+     */
+    void doApparel(Long apparelId,Long userId);
 
 }
