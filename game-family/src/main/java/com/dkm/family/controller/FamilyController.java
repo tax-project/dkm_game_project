@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: game_project
@@ -33,5 +34,11 @@ public class FamilyController {
     @CrossOrigin
     public void createFamily(@RequestBody String name){
         familyService.creatFamily(localUser.getUser().getId(),name);
+    }
+
+    @ApiOperation("热门家族")
+    @GetMapping("/hotFamily")
+    public List<Object> hotFamily(){
+        return null;
     }
 }
