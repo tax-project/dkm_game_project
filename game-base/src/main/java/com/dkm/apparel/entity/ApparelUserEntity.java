@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @create: 2020-05-22 10:28
  **/
 @Data
-@TableName("tn_apparel_user")
+@TableName("tb_apparel_user")
 public class ApparelUserEntity {
     @TableId
     private Long apparelUserId;
@@ -29,4 +29,9 @@ public class ApparelUserEntity {
      * 完成时间
      */
     private LocalDateTime apparelCompleteTime;
+
+    /**
+     * 是否装备
+     */
+    private Integer isEquip;
 }

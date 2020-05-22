@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.apparel.dao.ApparelMapper">
+    <select id="getUserApparel" resultType="com.dkm.apparel.entity.dto.ApparelDto">
+        SELECT ad.*,au.apparel_user_id,au.is_equip FROM (SELECT apparel_detail_id,apparel_user_id,is_equip FROM tb_apparel_user WHERE user_id = #{userId} and  now() > apparel_complete_time ) au left JOIN
+        tb_apparel_detail ad on au.apparel_detail_id=ad.apparel_id
+        <if test="type!=0" >
+            where ad.apparel_type=#{type}
+        </if>
+    </select>
+</mapper>
