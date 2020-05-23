@@ -82,16 +82,17 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
             }
         }*/
         //定义一个钱的变量
-        String money = "";
+        Integer money=null;
         for (String s : athleteId) {
             List<TbEquipmentVo> selectByEquipmentId=tbEquipmentService.selectByEquipmentId(Long.valueOf(s));
             for (TbEquipmentVo tbEquipmentVo : selectByEquipmentId) {
-                money+=tbEquipmentVo.getExp2();
+                money+=Integer.valueOf(tbEquipmentVo.getExp2());
             }
         }
+        System.out.println("================="+money);
         IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
         increaseUserInfoBO.setUserId(localUser.getUser().getId());
-        increaseUserInfoBO.setUserInfoGold(Integer.valueOf(money));
+        increaseUserInfoBO.setUserInfoGold(money);
         increaseUserInfoBO.setUserInfoRenown(0);
         increaseUserInfoBO.setUserInfoDiamonds(0);
         userFeignClient.increaseUserInfo(increaseUserInfoBO);
