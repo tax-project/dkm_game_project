@@ -154,4 +154,25 @@ public class AttendantController {
         return aLong;
     }
 
+    /**
+     * 收取
+     */
+    @ApiOperation(value = "收取",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "atuId",value = "id"),
+    })
+    @GetMapping("/gather")
+    @CrossOrigin
+    @CheckToken
+    public Message gather(@RequestParam(value = "atuId") Integer atuId){
+        Message message=new Message();
+        int gather = iAttendantService.gather(atuId);
+        if(gather<0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取失败");
+        }
+        message.setMsg("收取成功");
+        message.setNum(1);
+        return message;
+    }
+
 }

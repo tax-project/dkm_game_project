@@ -13,4 +13,6 @@ public interface FamilyService {
      * @param name
      */
     void creatFamily(Long userId,String name);
+
+    void getHotFamily();
 }

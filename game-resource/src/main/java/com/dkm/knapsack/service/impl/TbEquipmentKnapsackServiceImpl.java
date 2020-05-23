@@ -3,6 +3,7 @@ package com.dkm.knapsack.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
@@ -102,10 +103,19 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void addTbEquipmentKnapsackTwo(String equipmentId) {
+        System.out.println("=========="+equipmentId);
         if(StringUtils.isEmpty(equipmentId)){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
+       /* JSONArray jsonObject=JSON.parseArray(equipmentId);
+        List<Integer> sList = new ArrayList<Integer>();
+        if (jsonObject.size() > 0) {
+            for (int i = 0; i < jsonObject.size(); i++) {
+                sList.add((Integer) jsonObject.get(i));
+            }
+        }*/
+       // System.out.println("==="+equipmentId.length);
         String[] athleteId = equipmentId.split(",");
         TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
 

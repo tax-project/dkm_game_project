@@ -15,9 +15,22 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ApparelDto extends ApparelEntity {
+    /**
+     * apparelUserId
+     */
+    private Long apparelUserId;
 
     /**
      * 完成时间
      */
-    private LocalDateTime apparelCompleteTime;
+    private String apparelCompleteTime;
+
+    /**
+     * 消耗钻石
+     */
+    private Integer diamond;
+    /**
+     * 状态
+     */
+    private Integer isEquip;
 }

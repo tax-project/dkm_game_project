@@ -50,4 +50,9 @@ public class FamilyServiceImpl implements FamilyService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"创建家族失败");
         }
     }
+
+    @Override
+    public void getHotFamily() {
+
+    }
 }
