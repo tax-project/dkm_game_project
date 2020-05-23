@@ -71,7 +71,7 @@ public class TbEquipmentVo{
 	private BigDecimal edDefense;
 
 	/**
-	 * 属性加成
+	 * 属性加成 1就代表有加成 0代表没有加成
 	 */
 	private BigDecimal edAttribute;
 
