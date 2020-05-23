@@ -2,7 +2,7 @@ package com.dkm.skill.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.skill.entity.Skill;
-import com.dkm.skill.entity.Stars;
+import com.dkm.integral.entity.Stars;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.MySkillVo;
 import org.springframework.stereotype.Component;

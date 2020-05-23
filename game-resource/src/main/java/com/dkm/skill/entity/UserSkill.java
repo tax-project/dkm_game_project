@@ -1,6 +1,7 @@
 package com.dkm.skill.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dkm.integral.entity.Stars;
 import lombok.Data;
 
 import java.util.List;

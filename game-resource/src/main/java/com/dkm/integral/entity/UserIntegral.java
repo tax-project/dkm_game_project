@@ -17,10 +17,6 @@ public class UserIntegral {
      */
     private long userId;
     /**
-     * 积分id
-     */
-    private long iId;
-    /**
      * 我的积分
      */
     private Integer iMyIntegral;

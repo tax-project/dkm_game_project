@@ -1,4 +1,4 @@
-package com.dkm.skill.entity;
+package com.dkm.integral.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;

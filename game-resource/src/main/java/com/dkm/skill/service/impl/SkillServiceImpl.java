@@ -5,13 +5,12 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
-import com.dkm.skill.entity.Stars;
+import com.dkm.integral.entity.Stars;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.MySkillVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +43,7 @@ public class SkillServiceImpl implements ISkillService {
     @Override
     public List<MySkillVo> queryMySkill() {
         List<MySkillVo> mySkillVos = skillMapper.queryMySkill(localUser.getUser().getId());
+        //如果没有技能则初始化数据
         if(mySkillVos.size()==0){
             //给技能表初始化
             UserSkill userSkill=new UserSkill();
