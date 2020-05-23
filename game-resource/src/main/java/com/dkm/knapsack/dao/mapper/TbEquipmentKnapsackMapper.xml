@@ -35,6 +35,14 @@
 		<result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
 		<result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
 		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+		<result column="ed_defense" jdbcType="DECIMAL" property="edDefense" />
+		<result column="ed_attribute" jdbcType="DECIMAL" property="edAttribute" />
+		<result column="ed_life" jdbcType="DECIMAL" property="edLife" />
+		<result column="ed_attack" jdbcType="DECIMAL" property="edAttack" />
+		<result column="ed_type" jdbcType="DECIMAL" property="edType" />
+		<result column="ed_typevalue" jdbcType="DECIMAL" property="edTypevalue" />
+		<result column="ed_typeone" jdbcType="DECIMAL" property="edTypeone" />
+		<result column="ed_typeonevalue" jdbcType="DECIMAL" property="edTypeonevalue" />
 	</resultMap>
 
 	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">

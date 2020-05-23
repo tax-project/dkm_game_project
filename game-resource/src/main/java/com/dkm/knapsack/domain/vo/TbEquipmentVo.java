@@ -1,10 +1,6 @@
 package com.dkm.knapsack.domain.vo;
 
-
-
-
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -17,6 +13,7 @@ import java.math.BigDecimal;
  * @author zy
  * @since 2020-05-12
  */
+@Data
 public class TbEquipmentVo{
 
     private static final long serialVersionUID = 1L;
@@ -67,6 +64,52 @@ public class TbEquipmentVo{
 	 * 红包加速
 	 */
 	private BigDecimal edRedEnvelopeAcceleration;
+
+	/**
+	 * 防御才华
+	 */
+	private BigDecimal edDefense;
+
+	/**
+	 * 属性加成
+	 */
+	private BigDecimal edAttribute;
+
+
+	/**
+	 * 装备生命
+	 */
+	private BigDecimal edLife;
+
+
+	/**
+	 * 攻击力
+	 */
+	private BigDecimal edAttack;
+
+
+	/**
+	 * 1 为生命加成 2为才华加成
+	 */
+	private BigDecimal edType;
+
+	/**
+	 * 生命或才华的值
+	 */
+	private BigDecimal edTypevalue;
+
+
+	/**
+	 * 1为踢出群聊 2为胡言乱语闪避
+	 */
+	private BigDecimal edTypeone;
+
+	/**
+	 * 踢出群聊和胡言乱语闪避的值
+	 */
+	private BigDecimal edTypeonevalue;
+
+
 	/**
 	 * 箱子编号
 	 */
@@ -76,108 +119,4 @@ public class TbEquipmentVo{
 	 */
 	private Integer boxType;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
-	public Long getEquipmentId() {
-		return equipmentId;
-	}
-
-	public void setEquipmentId(Long equipmentId) {
-		this.equipmentId = equipmentId;
-	}
-
-	public Long getBoxId() {
-		return boxId;
-	}
-
-	public void setBoxId(Long boxId) {
-		this.boxId = boxId;
-	}
-
-	public Integer getEquipmentLevel() {
-		return equipmentLevel;
-	}
-
-	public void setEquipmentLevel(Integer equipmentLevel) {
-		this.equipmentLevel = equipmentLevel;
-	}
-
-	public String getEquipmentImage() {
-		return equipmentImage;
-	}
-
-	public void setEquipmentImage(String equipmentImage) {
-		this.equipmentImage = equipmentImage;
-	}
-
-	public String getExp1() {
-		return exp1;
-	}
-
-	public void setExp1(String exp1) {
-		this.exp1 = exp1;
-	}
-
-	public String getExp2() {
-		return exp2;
-	}
-
-	public void setExp2(String exp2) {
-		this.exp2 = exp2;
-	}
-
-	public String getExp3() {
-		return exp3;
-	}
-
-	public void setExp3(String exp3) {
-		this.exp3 = exp3;
-	}
-
-	public Long getEdId() {
-		return edId;
-	}
-
-	public void setEdId(Long edId) {
-		this.edId = edId;
-	}
-
-	public String getEdDetailedDescription() {
-		return edDetailedDescription;
-	}
-
-	public void setEdDetailedDescription(String edDetailedDescription) {
-		this.edDetailedDescription = edDetailedDescription;
-	}
-
-	public Integer getEdEquipmentReputation() {
-		return edEquipmentReputation;
-	}
-
-	public void setEdEquipmentReputation(Integer edEquipmentReputation) {
-		this.edEquipmentReputation = edEquipmentReputation;
-	}
-
-	public BigDecimal getEdRedEnvelopeAcceleration() {
-		return edRedEnvelopeAcceleration;
-	}
-
-	public void setEdRedEnvelopeAcceleration(BigDecimal edRedEnvelopeAcceleration) {
-		this.edRedEnvelopeAcceleration = edRedEnvelopeAcceleration;
-	}
-
-	@Override
-	public String toString() {
-		return "TbEquipmentTwo{" +
-			"equipmentId=" + equipmentId +
-			", boxId=" + boxId +
-			", equipmentLevel=" + equipmentLevel +
-			", equipmentImage=" + equipmentImage +
-			", exp1=" + exp1 +
-			", exp2=" + exp2 +
-			", exp3=" + exp3 +
-			"}";
-	}
 }
