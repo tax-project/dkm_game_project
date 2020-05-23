@@ -164,7 +164,7 @@ public class AttendantController {
     @GetMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public Message gather(@RequestParam(value = "aId") Integer atuId){
+    public Message gather(@RequestParam(value = "atuId") Integer atuId){
         Message message=new Message();
         int gather = iAttendantService.gather(atuId);
         if(gather<0){

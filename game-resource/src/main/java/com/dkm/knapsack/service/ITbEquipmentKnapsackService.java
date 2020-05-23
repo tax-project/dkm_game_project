@@ -16,6 +16,8 @@ import java.util.Map;
  * @since 2020-05-14
  */
 public interface ITbEquipmentKnapsackService{
+
+
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectFoodId();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);

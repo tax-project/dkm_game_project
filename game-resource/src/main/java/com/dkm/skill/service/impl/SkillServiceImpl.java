@@ -78,7 +78,7 @@ public class SkillServiceImpl implements ISkillService {
                 throw new ApplicationException(CodeType.PARAMETER_ERROR,"初始化星星异常");
             }
         }
-        return mySkillVos;
+            return mySkillVos;
     }
 
 

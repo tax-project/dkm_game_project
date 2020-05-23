@@ -112,9 +112,14 @@ public class AttendantServiceImpl implements IAttendantService {
         Map<String,Object> map=new HashMap<>();
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
+        //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-
+        //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
+
+
+        map.put("userInfoQueryBoResult",userInfoQueryBoResult);
+        map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId);
 
         return null;
     }
@@ -137,8 +142,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public int gather(Integer autId) {
-        int gather = attendantMapper.gather(autId);
-
+        long exp1 = System.currentTimeMillis() / 1000 + 43200;
+        int gather = attendantMapper.gather(exp1,autId);
         return gather;
     }
 
