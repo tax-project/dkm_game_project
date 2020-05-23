@@ -78,13 +78,14 @@ public class RabbitMqListener {
          if (channel != null) {
             log.info("发送单聊消息:" + msgInfo);
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+
+            try {
+               mqChannel.basicAck(deliveryTag,true);
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
          }
 
-         try {
-            mqChannel.basicAck(deliveryTag,true);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
       }
 
 
@@ -133,14 +134,15 @@ public class RabbitMqListener {
             if (channel != null) {
                log.info("挤下线:" + msgInfo);
                channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+
+               try {
+                  mqChannel.basicAck(deliveryTag,true);
+               } catch (IOException e) {
+                  e.printStackTrace();
+               }
             }
          }
 
-         try {
-            mqChannel.basicAck(deliveryTag,true);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
 
       }
 
