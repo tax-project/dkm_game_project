@@ -16,6 +16,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private LocalUser localUser;
+
+    @Autowired
+    private IdGenerator idGenerator;
 
     @Autowired
     private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
@@ -122,12 +126,20 @@ public class AttendantServiceImpl implements IAttendantService {
         Long s=second+43200;
         AttendantUser attendantUser=new AttendantUser();
         long a=(long) (Math.random()*(3))+1;
+        attendantUser.setAtuId(idGenerator.getNumberId());
         attendantUser.setAId(a);
         attendantUser.setCaughtPeopleId(caughtPeopleId);
         attendantUser.setUserId(localUser.getUser().getId());
         attendantUser.setExp1(System.currentTimeMillis()/1000+43200);
         attendantMapper.addGraspFollowing(attendantUser);
         return s;
+    }
+
+    @Override
+    public int gather(Integer autId) {
+        int gather = attendantMapper.gather(autId);
+
+        return gather;
     }
 
 }

@@ -26,4 +26,8 @@
     </insert>
 
 
+    <update id="gather" parameterType="java.lang.Long">
+        update tb_attendant_user set  exp1=#{exp1} where aut_id=#{autId}
+    </update>
+
 </mapper>

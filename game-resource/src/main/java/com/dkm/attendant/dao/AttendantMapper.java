@@ -48,4 +48,11 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * @return
      */
     int addGraspFollowing(AttendantUser attendantUser);
+    /**
+     * 收取
+     * @param autId
+     * @return
+     */
+    int gather(long autId);
+
 }
