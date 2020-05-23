@@ -1,20 +1,27 @@
-package com.dkm.skill.entity;
+package com.dkm.skill.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.dkm.integral.entity.Stars;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: game_project
  * @DESCRIPTION:
- * @DATE: 2020/5/22 18:24
+ * @DATE: 2020/5/23 20:37
  */
 @Data
-@TableName("tb_user_skill")
-public class UserSkill {
+public class UserSkillVo {
+    /**
+     *技能主键
+     */
+    private long skId;
+    /**
+     *技能名称
+     */
+    private String skName;
+    /**
+     *技能图片
+     */
+    private String skImg;
     /**
      * 主键
      */
@@ -23,10 +30,6 @@ public class UserSkill {
      * 用户id
      */
     private long userId;
-    /**
-     * 技能id
-     */
-    private long skId;
     /**
      * 技能等级
      */
@@ -39,6 +42,4 @@ public class UserSkill {
      * 当前成功率
      */
     private Integer skCurrentSuccessRate;
-
-
 }

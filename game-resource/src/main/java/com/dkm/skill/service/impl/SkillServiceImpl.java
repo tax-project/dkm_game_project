@@ -8,6 +8,7 @@ import com.dkm.skill.entity.Skill;
 import com.dkm.integral.entity.Stars;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.MySkillVo;
+import com.dkm.skill.entity.vo.UserSkillVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -53,6 +56,7 @@ public class SkillServiceImpl implements ISkillService {
             List<Stars> starsList=new ArrayList<>();
             List<Skill> skills = skillMapper.selectList(null);
             for (int i = 1; i <skills.size(); i++) {
+                userSkill.setUsId(idGenerator.getNumberId());
                 userSkill.setUserId(localUser.getUser().getId());
                 userSkill.setSkId(skills.get(i).getSkId());
                 userSkill.setSkCurrentSuccessRate(60);
@@ -79,6 +83,22 @@ public class SkillServiceImpl implements ISkillService {
             }
         }
             return mySkillVos;
+    }
+
+    @Override
+    public Map<String,Object> querySkillsDetails(long usId) {
+        Map<String,Object> map=new HashMap<>();
+        List<UserSkillVo> userSkillVos = skillMapper.querySkillsDetails(localUser.getUser().getId(), usId);
+        if(userSkillVos.size()==0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"查看技能详情异常");
+        }
+        List<Stars> stars = skillMapper.queryUserIdStars(localUser.getUser().getId());
+        if(stars.size()==0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"根据用户id得到星星异常");
+        }
+        map.put("userSkillVos",userSkillVos);
+        map.put("stars",stars);
+        return map;
     }
 
 

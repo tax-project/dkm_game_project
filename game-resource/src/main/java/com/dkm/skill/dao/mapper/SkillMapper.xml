@@ -4,7 +4,7 @@
 <mapper namespace="com.dkm.skill.dao.SkillMapper">
 
     <select id="queryMySkill" parameterType="java.lang.Long">
-        select a.sk_img,b.sk_grade from tb_skill a,tb_user_skill b  where a.sk_id=b.sk_id and b.user_id=#{userId}
+        select a.sk_img,b.sk_grade,a.sk_id from tb_skill a,tb_user_skill b  where a.sk_id=b.sk_id and b.user_id=#{userId}
     </select>
 
     <insert id="addSkill" parameterType="com.dkm.skill.entity.UserSkill">
@@ -21,5 +21,15 @@
             select #{lists.sId},#{lists.userId},#{lists.sStar},#{lists.sImg},#{lists.sCurrentlyHasNum},#{lists.sTotalConsumedQuantity},
         </foreach>
     </insert>
+
+    <select id="querySkillsDetails" resultType="com.dkm.skill.entity.vo.UserSkillVo" parameterType="java.lang.Long">
+        select a.sk_id,a.sk_name,a.sk_img,b.us_id,b.sk_grade,b.sk_degree_proficiency,b.sk_Current_success_rate from tb_skill a,tb_user_skill b
+        where a.sk_id=b.sk_id and b.user_id=#{userId} and b.sk_id=#{skId}
+    </select>
+
+
+    <select id="queryUserIdStars" resultType="com.dkm.skill.entity.Stars" parameterType="java.lang.Long">
+        select s_id,s_star,s_img,s_Currently_has_num,s_Total_consumed_quantity from tb_stars where user_id=#{userId}
+    </select>
 
 </mapper>

@@ -5,6 +5,7 @@ import com.dkm.skill.entity.Skill;
 import com.dkm.integral.entity.Stars;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.MySkillVo;
+import com.dkm.skill.entity.vo.UserSkillVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,5 +33,20 @@ public interface SkillMapper extends BaseMapper<Skill> {
      * 初始星星值
      */
     int addStarts(List<Stars> starsList);
+
+    /**
+     * 查看技能详情
+     * @param userId
+     * @param skId
+     * @return
+     */
+    List<UserSkillVo> querySkillsDetails(long userId,long skId);
+
+    /**
+     * 根据用户查询星星
+     * @param userId
+     * @return
+     */
+    List<Stars> queryUserIdStars(long userId);
 
 }
