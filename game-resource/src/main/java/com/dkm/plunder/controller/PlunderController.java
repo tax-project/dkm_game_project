@@ -2,6 +2,7 @@ package com.dkm.plunder.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.good.entity.vo.GoodQueryVo;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.plunder.entity.vo.PlunderVo;
 import com.dkm.plunder.service.IPlunderService;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,4 +54,16 @@ public class PlunderController {
    public Map<String,Object> queryPlunderList () {
       return plunderService.queryPlunderList();
    }
+
+
+
+
+   @ApiOperation(value = "根据被抢人的用户Id查询所有物品", notes = "根据被抢人的用户Id查询所有物品")
+   @GetMapping("/getGoodByUserId")
+   @CrossOrigin
+   @CheckToken
+   public List<GoodQueryVo> getGoodByUserId (@RequestParam("UserId") Long userId) {
+      return plunderService.getGoodByUserId(userId);
+   }
+
 }

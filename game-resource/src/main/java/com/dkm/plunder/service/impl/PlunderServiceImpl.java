@@ -133,4 +133,9 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       return map;
    }
+
+   @Override
+   public List<GoodQueryVo> getGoodByUserId(Long userId) {
+      return goodsService.getGoodList(userId);
+   }
 }

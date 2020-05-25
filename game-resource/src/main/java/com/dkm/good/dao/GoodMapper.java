@@ -21,4 +21,12 @@ public interface GoodMapper extends IBaseMapper<Goods> {
     * @return 返回所有物品
     */
    List<GoodQueryVo> queryGoodsList(List<Long> list);
+
+
+   /**
+    *  根据用户Id查询所有物品
+    * @param userId
+    * @return
+    */
+   List<GoodQueryVo> getGoodList (Long userId);
 }
