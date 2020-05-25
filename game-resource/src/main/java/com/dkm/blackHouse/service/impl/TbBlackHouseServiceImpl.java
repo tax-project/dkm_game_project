@@ -43,7 +43,7 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     }
 
     @Override
-    public void insertLand(List<TbBlackHouse> tbBlackHouses) {
+    public void insertLand(TbBlackHouse tbBlackHouses) {
         Date date=new Date();
         Date d = new Date();
         Calendar now = Calendar.getInstance();
@@ -52,14 +52,12 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        for (TbBlackHouse list : tbBlackHouses) {
-            list.setTime(date);
-            list.setTimeone(sdf.format(now.getTime()));
-            list.setIsBlack(0);
-            list.setFromId(localUser.getUser().getId());
-            list.setBlackId(idGenerator.getNumberId());
-        }
-        int rows = tbBlackHouseMapper.insertLand(tbBlackHouses);
+        tbBlackHouses.setTime(date);
+        tbBlackHouses.setTimeone(sdf.format(now.getTime()));
+        tbBlackHouses.setIsBlack(0);
+        tbBlackHouses.setFromId(localUser.getUser().getId());
+        tbBlackHouses.setBlackId(idGenerator.getNumberId());
+        int rows = tbBlackHouseMapper.insert(tbBlackHouses);
         if(rows <= 0){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "批量增加失败");

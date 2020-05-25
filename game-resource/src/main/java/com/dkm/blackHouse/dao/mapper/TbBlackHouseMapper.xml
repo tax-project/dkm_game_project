@@ -17,6 +17,7 @@
 		<result column="time" jdbcType="TIMESTAMP" property="time" />
 		<result column="timeone"  property="timeone" />
 		<result column="we_chat_nick_name"  property="weChatNickName" />
+		<result column="we_chat_head_img_url"  property="weChatHeadImgUrl" />
 		<result column="user_info_grade" jdbcType="INTEGER" property="userInfoGrade" />
 		<result column="user_info_renown" jdbcType="INTEGER" property="userInfoRenown" />
 		<result column="user_id" jdbcType="BIGINT" property="userId" />
@@ -34,7 +35,7 @@
 		SELECT  COUNT(*) FROM  tb_black_house bh WHERE  bh.`from_id`=#{fromId,jdbcType=BIGINT} AND bh.`is_black`=0
 	</select>
 	<select id="selectIsBlackTwo" resultMap="BaseResultMapvo">
-		SELECT tu.we_chat_nick_name,tf.user_info_grade,tf.user_info_renown,wh.*FROM tb_user tu,tb_user_info tf,
+		SELECT tu.we_chat_head_img_url,tu.we_chat_nick_name,tf.user_info_grade,tf.user_info_renown,wh.*FROM tb_user tu,tb_user_info tf,
 		tb_black_house wh WHERE tu.`user_id`=tf.user_id
 		AND tu.`user_id`=#{toId}  AND wh.from_id=#{fromId}
 	</select>

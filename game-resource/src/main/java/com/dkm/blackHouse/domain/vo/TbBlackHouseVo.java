@@ -52,6 +52,19 @@ public class TbBlackHouseVo{
 	 */
 	private Long userId;
 
+	/**
+	 * 用户图片
+	 */
+	private String weChatHeadImgUrl;
+
+	public String getWeChatHeadImgUrl() {
+		return weChatHeadImgUrl;
+	}
+
+	public void setWeChatHeadImgUrl(String weChatHeadImgUrl) {
+		this.weChatHeadImgUrl = weChatHeadImgUrl;
+	}
+
 	public String getTimeone() {
 		return timeone;
 	}
