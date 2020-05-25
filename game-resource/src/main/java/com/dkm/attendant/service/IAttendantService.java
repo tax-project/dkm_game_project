@@ -56,7 +56,6 @@ public interface IAttendantService {
 
    /**
     * 收取
-    * @param aId
     * @return
     */
    int gather(Integer autId);

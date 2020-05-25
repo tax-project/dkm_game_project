@@ -18,7 +18,7 @@
     <insert id="addStart" parameterType="com.dkm.integral.entity.Stars">
         insert into tb_plant_unlock(s_id,user_id,s_star,s_img,s_Currently_has_num,s_Total_consumed_quantity)
         <foreach collection="starsList" item="lists" index="index" separator="union all">
-            select #{lists.sId},#{lists.userId},#{lists.sStar},#{lists.sImg},#{lists.sCurrentlyHasNum},#{lists.sTotalConsumedQuantity},
+            select #{lists.sId},#{lists.userId},#{lists.sStar},#{lists.sImg},#{lists.sCurrentlyHasNum},#{lists.sTotalConsumedQuantity}
         </foreach>
     </insert>
 

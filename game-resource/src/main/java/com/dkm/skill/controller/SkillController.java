@@ -44,6 +44,7 @@ public class SkillController {
         return iSkillService.queryMySkill();
     }
 
+
     /**
      * 查看技能详情
      */
@@ -60,7 +61,6 @@ public class SkillController {
         }
         return iSkillService.querySkillsDetails(skId);
     }
-
 
 
 

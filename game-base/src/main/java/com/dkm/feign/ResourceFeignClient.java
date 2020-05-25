@@ -1,12 +1,15 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
+import com.dkm.feign.entity.AttendantGoods;
+import com.dkm.feign.entity.MySkillVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.personalCenter.domain.Seed;
 import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -67,4 +70,16 @@ public interface ResourceFeignClient {
      */
     @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
+
+    /**
+     * 查询我的技能
+     */
+    Result<List<MySkillVo>> queryMySkill();
+
+    /**
+     * 根据用户id查询跟班和跟班产生的物品
+     */
+    Result<List<AttendantGoods>> queryJoinOutPutGoods();
+
+
 }
