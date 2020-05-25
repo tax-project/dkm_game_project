@@ -16,6 +16,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,9 @@ public class AttendantServiceImpl implements IAttendantService {
     private LocalUser localUser;
 
     @Autowired
+    private IdGenerator idGenerator;
+
+    @Autowired
     private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
 
     @Autowired
@@ -56,9 +60,7 @@ public class AttendantServiceImpl implements IAttendantService {
     public List<AttenDant> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        List<AttenDant> attenDants = attendantMapper.queryThreeAtt(query.getId());
-
-        return  attenDants;
+        return attendantMapper.queryThreeAtt(query.getId());
     }
 
 
@@ -110,9 +112,14 @@ public class AttendantServiceImpl implements IAttendantService {
         Map<String,Object> map=new HashMap<>();
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
+        //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-
+        //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
+
+
+        map.put("userInfoQueryBoResult",userInfoQueryBoResult);
+        map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId);
 
         return null;
     }
@@ -124,11 +131,20 @@ public class AttendantServiceImpl implements IAttendantService {
         Long s=second+43200;
         AttendantUser attendantUser=new AttendantUser();
         long a=(long) (Math.random()*(3))+1;
+        attendantUser.setAtuId(idGenerator.getNumberId());
         attendantUser.setAId(a);
         attendantUser.setCaughtPeopleId(caughtPeopleId);
         attendantUser.setUserId(localUser.getUser().getId());
+        attendantUser.setExp1(System.currentTimeMillis()/1000+43200);
         attendantMapper.addGraspFollowing(attendantUser);
         return s;
+    }
+
+    @Override
+    public int gather(Integer autId) {
+        long exp1 = System.currentTimeMillis() / 1000 + 43200;
+        int gather = attendantMapper.gather(exp1,autId);
+        return gather;
     }
 
 }

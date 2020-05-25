@@ -86,4 +86,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodMapper, Goods> implements 
 
       return goods;
    }
+
+   @Override
+   public List<GoodQueryVo> getGoodList(Long userId) {
+      return baseMapper.getGoodList(userId);
+   }
 }

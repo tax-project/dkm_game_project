@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.land.entity.vo.Message;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -52,5 +53,11 @@ public interface IAttendantService {
      * 抓跟班
      */
     Long addGraspFollowing(Long caughtPeopleId);
+
+   /**
+    * 收取
+    * @return
+    */
+   int gather(Integer autId);
 
 }

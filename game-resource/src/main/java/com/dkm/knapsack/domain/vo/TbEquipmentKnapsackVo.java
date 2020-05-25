@@ -96,6 +96,51 @@ public class TbEquipmentKnapsackVo {
     private BigDecimal edRedEnvelopeAcceleration;
 
     /**
+     * 防御才华
+     */
+    private BigDecimal edDefense;
+
+    /**
+     * 属性加成 1就代表有加成 0代表没有加成
+     */
+    private BigDecimal edAttribute;
+
+
+    /**
+     * 装备生命
+     */
+    private BigDecimal edLife;
+
+
+    /**
+     * 攻击力
+     */
+    private BigDecimal edAttack;
+
+
+    /**
+     * 1 为生命加成 2为才华加成
+     */
+    private BigDecimal edType;
+
+    /**
+     * 生命或才华的值
+     */
+    private BigDecimal edTypevalue;
+
+
+    /**
+     * 1为踢出群聊 2为胡言乱语闪避
+     */
+    private BigDecimal edTypeone;
+
+    /**
+     * 踢出群聊和胡言乱语闪避的值
+     */
+    private BigDecimal edTypeonevalue;
+
+
+    /**
      * 食物名字
      */
     private String foodName;

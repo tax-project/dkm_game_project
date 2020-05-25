@@ -1,7 +1,9 @@
 package com.dkm.plunder.service;
 
+import com.dkm.good.entity.vo.GoodQueryVo;
 import com.dkm.plunder.entity.vo.PlunderVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,4 +26,11 @@ public interface IPlunderService {
     * @return 返回列表
     */
    Map<String,Object> queryPlunderList ();
+
+   /**
+    *  根据被抢人的用户Id查询所有物品
+    * @param userId
+    * @return
+    */
+   List<GoodQueryVo> getGoodByUserId (Long userId);
 }

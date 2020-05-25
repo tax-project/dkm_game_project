@@ -15,4 +15,6 @@ public class AttendantUser {
     private Long aId;
     private Long userId;
     private Long caughtPeopleId;
+    private long exp1;
+    private long atuId;
 }
