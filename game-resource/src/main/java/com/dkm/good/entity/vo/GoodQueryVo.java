@@ -29,4 +29,9 @@ public class GoodQueryVo {
     * 物品图片地址
     */
    private String goodUrl;
+
+   /**
+    * 数量
+    */
+   private String number;
 }
