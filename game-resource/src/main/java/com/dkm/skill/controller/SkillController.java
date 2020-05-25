@@ -37,7 +37,7 @@ public class SkillController {
      * 查询我的技能
      */
     @ApiOperation(value = "查询我的技能", notes = "查询我的技能")
-    @PostMapping("/queryMySkill")
+    @GetMapping("/queryMySkill")
     @CrossOrigin
     @CheckToken
     public List<MySkillVo> queryMySkill() {
@@ -52,7 +52,7 @@ public class SkillController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "skId", value = "用户技能主键"),
     })
-    @PostMapping("/querySkillsDetails")
+    @GetMapping("/querySkillsDetails")
     @CrossOrigin
     @CheckToken
     public Map<String,Object> querySkillsDetails(@RequestParam(value = "skId") Long skId){
