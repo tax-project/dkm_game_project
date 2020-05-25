@@ -33,7 +33,8 @@ public class PersonalCenterController {
     @Autowired
     ResourceFeignClient resourceFeignClient;
 
-    @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据")
+    @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据 blackHouse 为黑屋的用户信息对象 Seed为查询用户解锁的种子" +
+            "  queryMySkill 查询我的技能   查询跟班产出的产物 AttendantGoods")
     @GetMapping("/selectAll")
     @CrossOrigin
     //@CheckToken
@@ -45,6 +46,10 @@ public class PersonalCenterController {
         map.put("blackHouse",resourceFeignClient.selectIsBlackTwo());
         //查询用户解锁的种子
         map.put("Seed",resourceFeignClient.queryAreUnlocked());
+        //查询我的技能
+        map.put("queryMySkill",resourceFeignClient.queryMySkill());
+        //查询跟班产出的产物
+        map.put("AttendantGoods",resourceFeignClient.queryJoinOutPutGoods());
         return map;
     }
 }
