@@ -62,7 +62,20 @@ public class SkillController {
         return iSkillService.querySkillsDetails(skId);
     }
 
+    /**
+     * 升级技能
+     */
+    @ApiOperation(value = "升级技能", notes = "升级技能")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "skId", value = "用户技能主键"),
+    })
+    @PostMapping("/upgradeSkill")
+    @CrossOrigin
+    @CheckToken
+   public Message upgradeSkill(){
 
+        return null;
+   }
 
 
 
