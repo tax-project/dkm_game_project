@@ -7,6 +7,8 @@ import com.dkm.problem.entity.vo.MoneyCountVo;
 import com.dkm.problem.entity.vo.MoneyPageVo;
 import com.dkm.problem.entity.vo.MoneyVo;
 
+import java.util.Map;
+
 /**
  * @author qf
  * @date 2020/5/9
@@ -27,7 +29,7 @@ public interface IMoneyService {
     * @param vo
     * @return
     */
-   Page<Money> listAllMoney(MoneyPageVo vo);
+   Map<String, Object> listAllMoney(MoneyPageVo vo);
 
    /**
     * 修改红包状态

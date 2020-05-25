@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -23,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author qf
@@ -154,7 +158,9 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
 
    @Override
-   public Page<Money> listAllMoney(MoneyPageVo vo) {
+   public  Map<String, Object> listAllMoney(MoneyPageVo vo) {
+
+      UserLoginQuery user = localUser.getUser();
 
       Page<Money> page = new Page<>();
       page.setCurrent(vo.getCurrent());
@@ -166,7 +172,35 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
             .eq(Money::getStatus,1);
 
       baseMapper.selectPage(page, wrapper);
-      return page;
+
+      List<Money> list = page.getRecords();
+
+      int peopleNumber = 0;
+      for (Money money : list) {
+         if (money.getStatus() == 1) {
+            peopleNumber += 1;
+         }
+      }
+
+      Map<String, Object> map = new HashMap<>(3);
+      //分页数据
+      map.put("page",page);
+      //正在进行的红包人数
+      map.put("peopleNumber",peopleNumber);
+      //返回当前登录人的今日总共抢红包数和已经抢红包数
+      Result<UserInfoQueryBo> result = userInfoFeignClient.queryUser(user.getId());
+
+      if (result.getCode() != 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
+
+      RedBagVo redBagVo = new RedBagVo();
+      redBagVo.setRedEnvelopesNumber(result.getData().getUserInfoEnvelopeMuch());
+      redBagVo.setAllRedEnvelopesNumber(result.getData().getUserInfoAllEnvelopeMuch());
+
+      map.put("redMuch",redBagVo);
+
+      return map;
    }
 
 

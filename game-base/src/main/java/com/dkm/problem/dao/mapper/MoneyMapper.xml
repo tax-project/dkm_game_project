@@ -17,7 +17,7 @@
             where m.create_date BETWEEN #{startDate} and #{endDate}
         </if>
         GROUP BY m.user_id
-        ORDER BY SUM(m.diamonds) DESC
+        ORDER BY max(DATE_FORMAT(m.create_date, '%Y-%m-%d %H:%i:%s')) DESC
     </select>
 
 </mapper>
