@@ -47,7 +47,8 @@ public class TbBlackHouseController {
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "fromId",value = "关人id"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "toId",value = "被关人id"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "isBlack",value = "是否释放"),
-            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间")
+            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "timeone",value = "被关时间后十五分钟的时间")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -135,7 +136,8 @@ public class TbBlackHouseController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "userInfoGrade",value = "用户等级"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "userInfoRenown",value = "用户声望值"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "被关人id"),
-            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间")
+            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "timeone",value = "被关时间后十五分钟的时间")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),

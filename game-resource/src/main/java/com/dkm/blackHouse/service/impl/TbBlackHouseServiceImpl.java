@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -43,8 +45,16 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     @Override
     public void insertLand(List<TbBlackHouse> tbBlackHouses) {
         Date date=new Date();
+        Date d = new Date();
+        Calendar now = Calendar.getInstance();
+        now.setTime(d);
+        now.set(Calendar.MINUTE, now.get(Calendar.MINUTE) + 15);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         for (TbBlackHouse list : tbBlackHouses) {
             list.setTime(date);
+            list.setTimeone(sdf.format(now.getTime()));
             list.setIsBlack(0);
             list.setFromId(localUser.getUser().getId());
             list.setBlackId(idGenerator.getNumberId());
