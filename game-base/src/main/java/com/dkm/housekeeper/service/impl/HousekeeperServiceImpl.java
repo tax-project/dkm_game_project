@@ -132,7 +132,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         if(now.isAfter(housekeeperEntity.getEndWorkTime())){
             now = housekeeperEntity.getEndWorkTime();
         }
-        long time =(now.toInstant(ZoneOffset.of("+8")).toEpochMilli()- housekeeperEntity.getStartWorkTime().toInstant(ZoneOffset.of("+8")).toEpochMilli())/1000;
+        long time = now.toEpochSecond(ZoneOffset.of("+8"))- housekeeperEntity.getStartWorkTime().toEpochSecond(ZoneOffset.of("+8"));
         //宝箱15分钟开一次 计算次数
         long count = time / (15 * 60);
         List<Long> boxId =new ArrayList<>();
