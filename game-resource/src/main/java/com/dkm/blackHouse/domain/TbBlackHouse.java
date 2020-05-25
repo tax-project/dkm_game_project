@@ -40,7 +40,22 @@ public class TbBlackHouse extends Model<TbBlackHouse> {
      * 被关时间
      */
 	private Date time;
+	/**
+	 * 被关时间十五分钟后的时间
+	 */
+	private String timeone;
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getTimeone() {
+		return timeone;
+	}
+
+	public void setTimeone(String timeone) {
+		this.timeone = timeone;
+	}
 
 	public Long getBlackId() {
 		return blackId;

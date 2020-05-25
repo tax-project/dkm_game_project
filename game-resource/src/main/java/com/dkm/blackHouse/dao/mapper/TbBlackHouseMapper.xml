@@ -7,6 +7,7 @@
 		<result column="to_id" jdbcType="BIGINT" property="toId" />
 		<result column="is_black" jdbcType="INTEGER" property="isBlack" />
 		<result column="time" jdbcType="TIMESTAMP" property="time" />
+		<result column="timeone"  property="timeone" />
 	</resultMap>
 	<resultMap id="BaseResultMapvo" type="com.dkm.blackHouse.domain.vo.TbBlackHouseVo">
 		<id column="black_id" jdbcType="BIGINT" property="blackId" />
@@ -14,6 +15,7 @@
 		<result column="to_id" jdbcType="BIGINT" property="toId" />
 		<result column="is_black" jdbcType="INTEGER" property="isBlack" />
 		<result column="time" jdbcType="TIMESTAMP" property="time" />
+		<result column="timeone"  property="timeone" />
 		<result column="we_chat_nick_name"  property="weChatNickName" />
 		<result column="user_info_grade" jdbcType="INTEGER" property="userInfoGrade" />
 		<result column="user_info_renown" jdbcType="INTEGER" property="userInfoRenown" />
@@ -41,9 +43,9 @@
 		where black_id = #{blackId,jdbcType=BIGINT}
 	</delete>
 	<insert id="insertLand" parameterType="com.dkm.blackHouse.domain.TbBlackHouse">
-		insert into tb_black_house(black_id,from_id,to_id,is_black,time)
+		insert into tb_black_house(black_id,from_id,to_id,is_black,time,timeone)
 		<foreach collection="list" item="item" index="index" separator="union all">
-			select #{item.blackId},#{item.fromId},#{item.toId},#{item.isBlack},#{item.time}
+			select #{item.blackId},#{item.fromId},#{item.toId},#{item.isBlack},#{item.time},#{item.timeone}
 		</foreach>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.dkm.blackHouse.domain.TbBlackHouse">
@@ -61,6 +63,9 @@
 			<if test="time != null">
 				time = #{time,jdbcType=TIMESTAMP},
 			</if>
+			<if test="timeone != null">
+				timeone = #{timeone},
+			</if>
 		</set>
 		where black_id = #{blackId,jdbcType=BIGINT}
 	</update>
@@ -69,7 +74,8 @@
 		set from_id = #{fromId,jdbcType=BIGINT},
 			to_id = #{toId,jdbcType=BIGINT},
 			is_black = #{isBlack,jdbcType=INTEGER},
-			time = #{time,jdbcType=TIMESTAMP}
+			time = #{time,jdbcType=TIMESTAMP},
+			timeone = #{time}
 		where black_id = #{blackId,jdbcType=BIGINT}
 	</update>
 
