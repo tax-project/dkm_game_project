@@ -86,10 +86,21 @@ public class SkillServiceImpl implements ISkillService {
     }
 
     @Override
-    public Map<String,Object> querySkillsDetails(long usId) {
-        Map<String,Object> map=new HashMap<>();
-        List<UserSkillVo> userSkillVos = skillMapper.querySkillsDetails(localUser.getUser().getId(), usId);
-        if(userSkillVos.size()==0){
+    public Map<String,Object> querySkillsDetails(long skId) {
+        Map<String,Object> map=new HashMap<>(16);
+        //声望
+        Integer reputation=0;
+        UserSkillVo userSkillVos = skillMapper.querySkillsDetails(localUser.getUser().getId(), skId);
+            if(userSkillVos.getSkGrad()<20){
+                reputation=400;
+            }
+            if(userSkillVos.getSkGrad()<30){
+                reputation=600;
+            }
+            if(userSkillVos.getSkGrad()>30){
+                reputation=1000;
+            }
+        if(userSkillVos==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"查看技能详情异常");
         }
         List<Stars> stars = skillMapper.queryUserIdStars(localUser.getUser().getId());
@@ -98,6 +109,7 @@ public class SkillServiceImpl implements ISkillService {
         }
         map.put("userSkillVos",userSkillVos);
         map.put("stars",stars);
+        map.put("reputation",reputation);
         return map;
     }
 

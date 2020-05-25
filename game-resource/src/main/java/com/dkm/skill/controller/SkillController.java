@@ -68,11 +68,17 @@ public class SkillController {
     @ApiOperation(value = "升级技能", notes = "升级技能")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "skId", value = "用户技能主键"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "starsType", value = "星星类型"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "sTotalConsumedQuantity", value = "星星消耗数量"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "reputation ", value = "声望"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "skGrad", value = "技能等级")
+
     })
     @PostMapping("/upgradeSkill")
     @CrossOrigin
     @CheckToken
    public Message upgradeSkill(){
+
 
         return null;
    }

@@ -40,7 +40,7 @@ public interface SkillMapper extends BaseMapper<Skill> {
      * @param skId
      * @return
      */
-    List<UserSkillVo> querySkillsDetails(long userId,long skId);
+    UserSkillVo querySkillsDetails(long userId,long skId);
 
     /**
      * 根据用户查询星星
