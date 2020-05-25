@@ -74,11 +74,13 @@ public interface ResourceFeignClient {
     /**
      * 查询我的技能
      */
+    @GetMapping("/queryMySkill")
     Result<List<MySkillVo>> queryMySkill();
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
+    @GetMapping("/queryJoinOutPutGoods")
     Result<List<AttendantGoods>> queryJoinOutPutGoods();
 
 
