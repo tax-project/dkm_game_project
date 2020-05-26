@@ -31,4 +31,12 @@ public interface IGoodsService {
     * @return 返回物品信息
     */
    Goods queryRandomGoods ();
+
+   /**
+    *  根据用户id查询所有物品
+    * @param userId
+    * @return
+    */
+   List<GoodQueryVo> getGoodList (Long userId);
+
 }

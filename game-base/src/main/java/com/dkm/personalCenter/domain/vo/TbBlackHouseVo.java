@@ -47,6 +47,26 @@ public class TbBlackHouseVo {
 	 * 被关黑屋的用户ID
 	 */
 	private Long userId;
+	/**
+	 * 被关时间十五分钟后的时间
+	 */
+	private String timeone;
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getTimeone() {
+		return timeone;
+	}
+
+	public void setTimeone(String timeone) {
+		this.timeone = timeone;
+	}
 
 	public Long userId() {
 		return userId;

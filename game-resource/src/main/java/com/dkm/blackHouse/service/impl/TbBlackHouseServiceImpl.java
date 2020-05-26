@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,15 +43,21 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     }
 
     @Override
-    public void insertLand(List<TbBlackHouse> tbBlackHouses) {
+    public void insertLand(TbBlackHouse tbBlackHouses) {
         Date date=new Date();
-        for (TbBlackHouse list : tbBlackHouses) {
-            list.setTime(date);
-            list.setIsBlack(0);
-            list.setFromId(localUser.getUser().getId());
-            list.setBlackId(idGenerator.getNumberId());
-        }
-        int rows = tbBlackHouseMapper.insertLand(tbBlackHouses);
+        Date d = new Date();
+        Calendar now = Calendar.getInstance();
+        now.setTime(d);
+        now.set(Calendar.MINUTE, now.get(Calendar.MINUTE) + 15);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        tbBlackHouses.setTime(date);
+        tbBlackHouses.setTimeone(sdf.format(now.getTime()));
+        tbBlackHouses.setIsBlack(0);
+        tbBlackHouses.setFromId(localUser.getUser().getId());
+        tbBlackHouses.setBlackId(idGenerator.getNumberId());
+        int rows = tbBlackHouseMapper.insert(tbBlackHouses);
         if(rows <= 0){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "批量增加失败");

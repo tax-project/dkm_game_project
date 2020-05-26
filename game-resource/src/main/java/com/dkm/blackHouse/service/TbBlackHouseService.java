@@ -18,7 +18,7 @@ public interface TbBlackHouseService  {
 
     int selectIsBlack(Long fromId);
 
-    void insertLand(List<TbBlackHouse> tbBlackHouse);
+    void insertLand(TbBlackHouse tbBlackHouse);
 
     void updateIsBlack(TbBlackHouse tbBlackHouse);
 

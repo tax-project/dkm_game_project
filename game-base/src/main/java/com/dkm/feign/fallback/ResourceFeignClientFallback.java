@@ -3,6 +3,8 @@ package com.dkm.feign.fallback;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.entity.AttendantGoods;
+import com.dkm.feign.entity.MySkillVo;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.personalCenter.domain.Seed;
 import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
@@ -47,6 +49,16 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
     @Override
     public Result<List<TbEquipmentVo>> selectByBoxIdTwo(List<Long> boxId) {
+        return Result.fail(CodeType.DATABASE_ERROR);
+    }
+
+    @Override
+    public Result<List<MySkillVo>> queryMySkill() {
+        return Result.fail(CodeType.DATABASE_ERROR);
+    }
+
+    @Override
+    public Result<List<AttendantGoods>> queryJoinOutPutGoods() {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 

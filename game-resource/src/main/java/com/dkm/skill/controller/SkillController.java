@@ -37,12 +37,13 @@ public class SkillController {
      * 查询我的技能
      */
     @ApiOperation(value = "查询我的技能", notes = "查询我的技能")
-    @PostMapping("/queryMySkill")
+    @GetMapping("/queryMySkill")
     @CrossOrigin
     @CheckToken
     public List<MySkillVo> queryMySkill() {
         return iSkillService.queryMySkill();
     }
+
 
     /**
      * 查看技能详情
@@ -51,7 +52,7 @@ public class SkillController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "skId", value = "用户技能主键"),
     })
-    @PostMapping("/querySkillsDetails")
+    @GetMapping("/querySkillsDetails")
     @CrossOrigin
     @CheckToken
     public Map<String,Object> querySkillsDetails(@RequestParam(value = "skId") Long skId){
@@ -61,8 +62,26 @@ public class SkillController {
         return iSkillService.querySkillsDetails(skId);
     }
 
+    /**
+     * 升级技能
+     */
+    @ApiOperation(value = "升级技能", notes = "升级技能")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "skId", value = "用户技能主键"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "starsType", value = "星星类型"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "sTotalConsumedQuantity", value = "星星消耗数量"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "reputation ", value = "声望"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "skGrad", value = "技能等级")
+
+    })
+    @PostMapping("/upgradeSkill")
+    @CrossOrigin
+    @CheckToken
+   public Message upgradeSkill(){
 
 
+        return null;
+   }
 
 
 

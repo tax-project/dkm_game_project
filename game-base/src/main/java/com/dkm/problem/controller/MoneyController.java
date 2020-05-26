@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @author qf
  * @date 2020/5/9
@@ -64,7 +66,7 @@ public class MoneyController {
    @GetMapping("/listAllMoney")
    @CrossOrigin
    @CheckToken
-   public Page<Money> listAllMoney (@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+   public Map<String, Object> listAllMoney (@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
 
       if (current == null || size == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");

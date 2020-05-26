@@ -1,18 +1,20 @@
-package com.dkm.seed.entity.vo;
+package com.dkm.feign.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
  * @author 刘梦祺
- * @PROJECT_NAME: dkm_game
+ * @PROJECT_NAME: game_project
  * @DESCRIPTION:
  * @USER: 刘梦祺
- * @DATE: 2020/5/12 16:47
+ * @DATE: 2020/5/10 11:51
  */
 @Data
-public class LandSeedVo {
+@TableName("tb_seed")
+public class Seed {
     /**
      * 种子id
      */
@@ -28,13 +30,13 @@ public class LandSeedVo {
     /**
      * 种子成熟时间
      */
-    private Long seedGrowuptime;
+    private LocalDateTime seedGrowuptime;
     /**
      *种子产出的金币
      */
     private Integer seedProdgold;
     /**
-     *首次产出的红包
+     *
      */
     private Integer seedProdred;
     /**
@@ -42,19 +44,26 @@ public class LandSeedVo {
      */
     private Integer seedExperience;
     /**
-     *种子总解锁进度值
-     */
-    private Integer seedSumUnlock;
-    /**
-     *当前种子解锁进度
-     */
-    private Integer seedPresentUnlock;
-    /**
      *种子种植金币
      */
     private Integer seedGold;
     /**
-     *种子成熟时间
+     *
      */
-    private LocalDateTime plantTime;
+    private String exp1;
+    /**
+     *
+     */
+    private String exp2;
+    /**
+     *
+     */
+    private String exp3;
+    /**
+     *种子图片
+     */
+    private String seedImg;
+
+
+
 }
