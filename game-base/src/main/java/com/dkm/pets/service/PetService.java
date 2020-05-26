@@ -3,6 +3,7 @@ package com.dkm.pets.service;
 import com.dkm.pets.entity.dto.PetsDto;
 import com.dkm.pets.entity.vo.FeedPetInfoVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,4 +27,11 @@ public interface PetService {
      * 升级
      */
     void petLevelUp(FeedPetInfoVo petInfoVo);
+
+    /**
+     * 获取宠物（内部）
+     * @param userId
+     * @return
+     */
+    List<PetsDto> getPetInfo(Long userId);
 }

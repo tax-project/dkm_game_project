@@ -202,4 +202,9 @@ public class PetServiceImpl implements PetService {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "升级失败");
         }
     }
+
+    @Override
+    public List<PetsDto> getPetInfo(Long userId) {
+        return petsMapper.findById(userId);
+    }
 }

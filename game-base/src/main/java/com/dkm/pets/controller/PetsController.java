@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,5 +80,15 @@ public class PetsController  {
         }
         petInfoVo.setUserId(localUser.getUser().getId());
         petService.petLevelUp(petInfoVo);
+    }
+
+    /**
+     * 战斗获取宠物信息（内部）
+     * @param userId
+     */
+    @GetMapping("/getPetInfo")
+    @CrossOrigin
+    public List<PetsDto> getPetInfo(@RequestParam Long userId){
+        return petService.getPetInfo(userId);
     }
 }
