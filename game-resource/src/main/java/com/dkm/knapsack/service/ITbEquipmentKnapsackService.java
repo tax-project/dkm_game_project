@@ -19,6 +19,7 @@ public interface ITbEquipmentKnapsackService{
 
 
     List<TbEquipmentKnapsackVo> selectUserId();
+    List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodId();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
 

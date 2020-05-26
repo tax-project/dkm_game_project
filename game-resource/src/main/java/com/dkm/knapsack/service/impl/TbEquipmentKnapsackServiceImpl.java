@@ -68,6 +68,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectUserId(localUser.getUser().getId());
     }
 
+    @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId) {
+        return tbEquipmentKnapsackMapper.selectUserId(userId);
+    }
+
     /**
      * 根据当前用户查询食物
      * @return
