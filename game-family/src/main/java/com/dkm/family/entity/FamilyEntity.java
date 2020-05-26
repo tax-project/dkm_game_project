@@ -41,4 +41,8 @@ public class FamilyEntity {
      * 家族欢迎词
      */
     private String familyWelcomeWords;
+    /**
+     * 加入方式
+     */
+    private Integer familyJoin;
 }
