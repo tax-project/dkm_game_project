@@ -54,7 +54,7 @@ public class TbEquipmentKnapsackController {
     })
     @PostMapping("/addTbEquipmentKnapsack")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public void addTbEquipmentKnapsack(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
         tbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
     }
@@ -182,7 +182,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/selectUserIdAndFoodId")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public  List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId){
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectUserIdAndFoodId(userId);
 
@@ -214,7 +214,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/deleteTbEquipment")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public void deleteTbEquipment(Long tekId,Integer tekMoney){
         tbEquipmentKnapsackService.deleteTbEquipment(tekId,tekMoney);
     }
@@ -254,7 +254,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/findById")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public Map<String,Object> findById(Long equipmentId){
         Map<String,Object> map=tbEquipmentKnapsackService.findById(equipmentId);
         return map;
@@ -280,7 +280,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/updateSell")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public void updateSell(@RequestParam("tekId") Long tekId){
         tbEquipmentKnapsackService.updateSell(tekId);
     }
@@ -309,7 +309,7 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/updateTekId")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public void updateTekId(Long tekId){
         tbEquipmentKnapsackService.updateTekId(tekId);
     }
@@ -339,14 +339,14 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/updateIsva")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public void updateIsva(Long tekId,Integer foodNumber){
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
     }
 
     @ApiOperation(value = "后台专用接口",notes = "成功返回成功")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     @GetMapping("/userCenter")
     public List<TbEquipmentKnapsackVo> userCenter(){
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();

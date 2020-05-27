@@ -54,7 +54,7 @@ public class TbBoxController {
     })
     @PostMapping("/addTbBox")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public Message addTbBox(@RequestBody TbBox tbBox){
         Message message=new Message();
         tbBoxService.addTbBox(tbBox);
@@ -138,7 +138,7 @@ public class TbBoxController {
     })
     @PostMapping("/selectByBoxIdTwo")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public List<TbEquipmentVo> selectByBoxIdTwo(@RequestBody List<Long> boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }

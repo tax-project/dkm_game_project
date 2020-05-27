@@ -63,7 +63,7 @@ public class TbEquipmentController {
     })
     @PostMapping("/addTbEquipment")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public Message addTbEquipment(@RequestBody TbEquipmentVo tbEquipmentVo){
         Message message=new Message();
         tbEquipmentService.addTbEquipment(tbEquipmentVo);
@@ -103,7 +103,7 @@ public class TbEquipmentController {
     })
     @PostMapping("/selectByEquipmentId")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public List<TbEquipmentVo> selectByEquipmentId(Long equipmentId){
        List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(equipmentId);
        if(!StringUtils.isEmpty(list)){
