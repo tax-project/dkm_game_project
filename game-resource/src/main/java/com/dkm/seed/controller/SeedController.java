@@ -63,7 +63,7 @@ public class SeedController {
     @PostMapping("/unlockPlant")
     @CrossOrigin
     @CheckToken //自定义注解 判断用户token是否存在
-    public Message unlockPlant(SeedVo seedVo) {
+    public Message unlockPlant(@RequestBody SeedVo seedVo) {
         if (seedVo.getGrade() == null || seedVo.getSeedId() == null || seedVo.getUnlockMoney() == null || seedVo.getSeedPresentUnlock() == null ||
                 seedVo.getSeedPresentAggregate() == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
@@ -83,7 +83,7 @@ public class SeedController {
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
-    public List<LandSeedVo> plant(LandSeed landSeed) {
+    public List<LandSeedVo> plant(@RequestBody LandSeed landSeed) {
         if (landSeed.getSeedId() == 0) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
@@ -104,7 +104,7 @@ public class SeedController {
     @PostMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public Message gather(UserInIf userInIf) {
+    public Message gather(@RequestBody UserInIf userInIf) {
         if (userInIf.getUserGold() == null  || userInIf.getUserInfoPacketBalance() == null ||
         userInIf.getUserInfoNextExperience()==null || userInIf.getUserInfoNowExperience()==null || userInIf.getUserInfoGrade()==0) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");

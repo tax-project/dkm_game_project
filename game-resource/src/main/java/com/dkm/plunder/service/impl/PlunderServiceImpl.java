@@ -7,7 +7,6 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
-import com.dkm.good.entity.Goods;
 import com.dkm.good.entity.vo.GoodQueryVo;
 import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.contain.LocalUser;
@@ -15,7 +14,6 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.plunder.dao.PlunderMapper;
 import com.dkm.plunder.entity.Plunder;
 import com.dkm.plunder.entity.vo.PlunderGoodsVo;
-import com.dkm.plunder.entity.vo.PlunderResultVo;
 import com.dkm.plunder.entity.vo.PlunderVo;
 import com.dkm.plunder.service.IPlunderGoodsService;
 import com.dkm.plunder.service.IPlunderService;
@@ -113,11 +111,10 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       List<GoodQueryVo> goodsList = goodsService.queryGoodsList(longList);
 
-      Map<String,Object> map = new HashMap<>();
+      Map<String,Object> map = new HashMap<>(4);
 
       map.put("userInfo",list);
       map.put("goodInfo",goodsList);
-
 
       //查询用户信息
       Result<UserInfoQueryBo> queryUser = userFeignClient.queryUser(user.getId());

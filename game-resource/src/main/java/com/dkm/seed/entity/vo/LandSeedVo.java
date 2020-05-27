@@ -34,7 +34,7 @@ public class LandSeedVo {
      */
     private Integer seedProdgold;
     /**
-     *
+     *首次产出的红包
      */
     private Integer seedProdred;
     /**

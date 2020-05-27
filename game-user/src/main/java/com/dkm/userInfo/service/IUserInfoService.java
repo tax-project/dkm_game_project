@@ -1,5 +1,6 @@
 package com.dkm.userInfo.service;
 
+import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 
@@ -51,4 +52,12 @@ public interface IUserInfoService {
     * @param grade 等级
     */
    void updateStrength (Long userId, Integer grade);
+
+   /**
+    *  技能升级
+    *  消耗金币增加声望
+    *  技能模块
+    * @param bo 参数
+    */
+   void updateInfo (UserInfoSkillBo bo);
 }

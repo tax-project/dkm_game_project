@@ -47,7 +47,8 @@ public class TbBlackHouseController {
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "fromId",value = "关人id"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "toId",value = "被关人id"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "isBlack",value = "是否释放"),
-            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间")
+            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "timeone",value = "被关时间后十五分钟的时间")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -71,7 +72,6 @@ public class TbBlackHouseController {
 
     /**
      * 抓人进小黑屋的接口
-     * @param tbBlackHouse
      */
     @ApiOperation(value = "抓人进小黑屋的接口",notes = "成功则返回操作成功!")
     @ApiImplicitParams({
@@ -85,13 +85,15 @@ public class TbBlackHouseController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/addBlackHouse")
+    @GetMapping("/addBlackHouse/{toId}")
     @CrossOrigin
     @CheckToken
-    public void addBlackHouse(@RequestBody List<TbBlackHouse> tbBlackHouse){
-        if(tbBlackHouse.size()==0){
+    public void addBlackHouse(@PathVariable("toId") String toId){
+        if(StringUtils.isEmpty(toId)){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
+        TbBlackHouse tbBlackHouse=new TbBlackHouse();
+        tbBlackHouse.setToId(Long.valueOf(toId));
         tbBlackHouseService.insertLand(tbBlackHouse);
     }
 
@@ -116,7 +118,7 @@ public class TbBlackHouseController {
     @CrossOrigin
     @CheckToken
     public void updateIsBlack(@RequestBody TbBlackHouse tbBlackHouse){
-        if( StringUtils.isEmpty(tbBlackHouse.getToId()) || StringUtils.isEmpty(tbBlackHouse.getFromId()) ){
+        if( StringUtils.isEmpty(tbBlackHouse.getToId()) ){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         tbBlackHouseService.updateIsBlack(tbBlackHouse);
@@ -133,9 +135,11 @@ public class TbBlackHouseController {
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "toId",value = "被关人id"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "weChatNickName",value = "微信用户呢称"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "userInfoGrade",value = "用户等级"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "weChatHeadImgUrl",value = "用户图片"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "userInfoRenown",value = "用户声望值"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "被关人id"),
-            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间")
+            @ApiImplicitParam(paramType = "query",dataType = "Date",name = "time",value = "被关时间"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "timeone",value = "被关时间后十五分钟的时间")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),

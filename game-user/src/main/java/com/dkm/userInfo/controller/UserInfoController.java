@@ -1,6 +1,7 @@
 package com.dkm.userInfo.controller;
 
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
@@ -50,5 +51,10 @@ public class UserInfoController {
    @GetMapping("/listUserPlunder/{userId}/{grade}")
    public void updateStrength(@PathVariable("userId") Long userId, @PathVariable("grade") Integer grade){
       userInfoService.updateStrength(userId,grade);
+   }
+
+   @PostMapping("/updateInfo")
+   public void updateInfo(@RequestBody UserInfoSkillBo bo){
+      userInfoService.updateInfo(bo);
    }
 }
