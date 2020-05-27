@@ -83,7 +83,7 @@ public class SeedController {
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
-    public List<LandSeedVo> plant(LandSeed landSeed) {
+    public List<LandSeedVo> plant(@RequestBody LandSeed landSeed) {
         if (landSeed.getSeedId() == 0) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }

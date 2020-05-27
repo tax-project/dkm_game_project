@@ -3,6 +3,7 @@ package com.dkm.userInfo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
@@ -113,6 +114,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public void updateStrength(Long userId, Integer grade) {
       Integer integer = baseMapper.updateStrength(userId, grade);
+
+      if (integer <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
+   }
+
+   @Override
+   public void updateInfo(UserInfoSkillBo bo) {
+      Integer integer = baseMapper.updateInfo(bo);
 
       if (integer <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR);

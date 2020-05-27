@@ -1,6 +1,7 @@
 package com.dkm.userInfo.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
+import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
@@ -45,5 +46,14 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 返回结果
      */
     Integer updateStrength(@Param("userId") Long userId, @Param("grade") Integer grade);
+
+    /**
+     *  升级技能
+     *  减少消耗的金币
+     *  增加声望
+     * @param bo 用户id 金币  声望
+     * @return 返回结果
+     */
+    Integer updateInfo(UserInfoSkillBo bo);
 
 }
