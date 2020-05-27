@@ -118,7 +118,7 @@ public class TbBlackHouseController {
     @CrossOrigin
     @CheckToken
     public void updateIsBlack(@RequestBody TbBlackHouse tbBlackHouse){
-        if( StringUtils.isEmpty(tbBlackHouse.getToId()) || StringUtils.isEmpty(tbBlackHouse.getFromId()) ){
+        if( StringUtils.isEmpty(tbBlackHouse.getToId()) ){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         tbBlackHouseService.updateIsBlack(tbBlackHouse);
