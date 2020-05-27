@@ -1,7 +1,7 @@
 package com.dkm.skill.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
-import com.dkm.skill.entity.Skill;
+import com.dkm.skill.entity.UserSkill;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component;
  * @vesion 1.0
  **/
 @Component
-public interface SkillMapper extends IBaseMapper<Skill> {
+public interface UserSkillMapper extends IBaseMapper<UserSkill> {
 }

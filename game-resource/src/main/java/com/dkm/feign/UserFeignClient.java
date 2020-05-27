@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.feign.entity.PetsDto;
 import com.dkm.feign.fallback.UserFeignClientFallback;
@@ -59,6 +60,16 @@ public interface UserFeignClient {
     */
    @GetMapping("/v1/userInfo/listUserPlunder/{userId}/{grade}")
    Result updateStrength(@PathVariable("userId") Long userId, @PathVariable("grade") Integer grade);
+
+   /**
+    *  技能升级
+    *  消耗金币增加声望
+    *  技能模块
+    * @param bo 参数
+    * @return 返回结果
+    */
+   @PostMapping("/v1/userInfo/updateInfo")
+   Result updateInfo(@RequestBody UserInfoSkillBo bo);
    /**
     * 战斗获取宠物信息（内部）
     * @param userId

@@ -1,28 +1,33 @@
 package com.dkm.skill.service;
 
-import com.dkm.skill.entity.vo.MySkillVo;
-import com.dkm.skill.entity.vo.UserSkillVo;
+import com.dkm.skill.entity.Skill;
+import com.dkm.skill.entity.vo.SkillInsertVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author 刘梦祺
- * @PROJECT_NAME: game_project
- * @DESCRIPTION:
- * @DATE: 2020/5/22 18:40
- */
+ * @author qf
+ * @date 2020/5/27
+ * @vesion 1.0
+ **/
 public interface ISkillService {
-    /**
-     * 查询我的技能
-     * @return
-     */
-    List<MySkillVo> queryMySkill();
 
-    /**
-     * 查看技能详情
-     * @param skId
-     * @return
-     */
-    Map<String,Object> querySkillsDetails(long skId);
+   /**
+    *  系统增加技能
+    * @param vo 技能的参数
+    */
+   void insertSkill (SkillInsertVo vo);
+
+   /**
+    * 根据Id查询
+    * @param skillId
+    * @return
+    */
+   Skill queryById (Long skillId);
+
+   /**
+    *  展示所有技能
+    * @return 返回结果
+    */
+   List<Skill> listAllSkill ();
 }

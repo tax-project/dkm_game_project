@@ -8,10 +8,8 @@ import lombok.Data;
  * @vesion 1.0
  **/
 @Data
-public class UserSkillVo {
+public class UserSkillUpGradeVo {
 
-   /**
-    * 技能id
-    */
-   private Long skId;
+   private Long id;
+
 }

@@ -1,10 +1,6 @@
-package com.dkm.skill.entity;
+package com.dkm.skill.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 /**
  * @author qf
@@ -12,22 +8,19 @@ import lombok.experimental.Accessors;
  * @vesion 1.0
  **/
 @Data
-@TableName("tb_user_skill")
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-public class UserSkill extends Model<UserSkill> {
+public class UserSkillResultVo {
+
+   /**
+    * 技能名字
+    */
+   private String skName;
+
+   /**
+    * 技能图片
+    */
+   private String skImg;
 
    private Long id;
-
-   /**
-    * 用户id
-    */
-   private Long userId;
-
-   /**
-    * 技能id
-    */
-   private Long skId;
 
    /**
     * 等级
@@ -37,7 +30,7 @@ public class UserSkill extends Model<UserSkill> {
    /**
     * 当前技能升级成功率
     */
-   private Integer skCurrentSuccessRate;
+   private String skCurrentSuccessRate;
 
    /**
     * 当前声望累计达到总声望

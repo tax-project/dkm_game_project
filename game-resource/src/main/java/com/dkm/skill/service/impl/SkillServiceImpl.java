@@ -1,119 +1,56 @@
 package com.dkm.skill.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.jwt.contain.LocalUser;
 import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
-import com.dkm.integral.entity.Stars;
-import com.dkm.skill.entity.UserSkill;
-import com.dkm.skill.entity.vo.MySkillVo;
-import com.dkm.skill.entity.vo.UserSkillVo;
+import com.dkm.skill.entity.vo.SkillInsertVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.utils.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * @author 刘梦祺
- * @PROJECT_NAME: game_project
- * @DESCRIPTION:
- * @DATE: 2020/5/22 18:41
- */
+ * @author qf
+ * @date 2020/5/27
+ * @vesion 1.0
+ **/
 @Service
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
-public class SkillServiceImpl implements ISkillService {
-
-    @Autowired
-    private SkillMapper skillMapper;
+public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements ISkillService {
 
    @Autowired
-   private LocalUser localUser;
+   private IdGenerator idGenerator;
 
-    @Autowired
-    private IdGenerator idGenerator;
+   @Override
+   public void insertSkill(SkillInsertVo vo) {
+      Skill skill = new Skill();
 
-    /**
-     * 查询我的技能
-     * @return
-     */
-    @Override
-    public List<MySkillVo> queryMySkill() {
-        List<MySkillVo> mySkillVos = skillMapper.queryMySkill(localUser.getUser().getId());
-        //如果没有技能则初始化数据
-        if(mySkillVos.size()==0){
-            //给技能表初始化
-            UserSkill userSkill=new UserSkill();
-            //技能
-            List<UserSkill> list=new ArrayList<>();
-            //星星
-            List<Stars> starsList=new ArrayList<>();
-            List<Skill> skills = skillMapper.selectList(null);
-            for (int i = 1; i <skills.size(); i++) {
-                userSkill.setUsId(idGenerator.getNumberId());
-                userSkill.setUserId(localUser.getUser().getId());
-                userSkill.setSkId(skills.get(i).getSkId());
-                userSkill.setSkCurrentSuccessRate(60);
-                userSkill.setSkDegreeProficiency("1");
-                userSkill.setSkGrad(1);
-                list.add(userSkill);
-            }
-            for (int i = 0; i < 2; i++) {
-                Stars stars=new Stars();
-                stars.setSId(idGenerator.getNumberId());
-                stars.setSId(localUser.getUser().getId());
-                stars.setSStar(i);
-                stars.setSTotalConsumedQuantity(2);
-                stars.setSCurrentlyHasNum(0);
-                starsList.add(stars);
-            }
-            int i = skillMapper.addSkill(list);
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR,"初始化技能异常");
-            }
-            int i1 = skillMapper.addStarts(starsList);
-            if(i1<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR,"初始化星星异常");
-            }
-        }
-            return mySkillVos;
-    }
+      BeanUtils.copyProperties(vo, skill);
 
-    @Override
-    public Map<String,Object> querySkillsDetails(long skId) {
-        Map<String,Object> map=new HashMap<>(16);
-        //声望
-        Integer reputation=0;
-        UserSkillVo userSkillVos = skillMapper.querySkillsDetails(localUser.getUser().getId(), skId);
-            if(userSkillVos.getSkGrad()<20){
-                reputation=400;
-            }
-            if(userSkillVos.getSkGrad()<30){
-                reputation=600;
-            }
-            if(userSkillVos.getSkGrad()>30){
-                reputation=1000;
-            }
-        if(userSkillVos==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"查看技能详情异常");
-        }
-        List<Stars> stars = skillMapper.queryUserIdStars(localUser.getUser().getId());
-        if(stars.size()==0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"根据用户id得到星星异常");
-        }
-        map.put("userSkillVos",userSkillVos);
-        map.put("stars",stars);
-        map.put("reputation",reputation);
-        return map;
-    }
+      skill.setId(idGenerator.getNumberId());
 
+      int insert = baseMapper.insert(skill);
 
+      if (insert <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
+      }
+   }
 
+   @Override
+   public Skill queryById(Long skillId) {
+      return baseMapper.selectById(skillId);
+   }
 
+   @Override
+   public List<Skill> listAllSkill() {
+      return baseMapper.selectList(null);
+   }
 }

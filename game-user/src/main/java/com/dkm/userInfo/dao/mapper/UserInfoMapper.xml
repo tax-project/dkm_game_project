@@ -50,4 +50,14 @@
      where user_id = #{userId}
     </update>
 
+
+    <update id="updateInfo" parameterType="com.dkm.entity.bo.UserInfoSkillBo">
+        update tb_user_info
+        <set>
+            user_info_gold = user_info_gold - #{gold},
+            user_info_renown = user_info_renown + #{prestige}
+        </set>
+        where user_id = #{userId}
+    </update>
+
 </mapper>
