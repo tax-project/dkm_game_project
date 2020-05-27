@@ -4,6 +4,7 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.feign.entity.PetsDto;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -58,4 +59,10 @@ public interface UserFeignClient {
     */
    @GetMapping("/v1/userInfo/listUserPlunder/{userId}/{grade}")
    Result updateStrength(@PathVariable("userId") Long userId, @PathVariable("grade") Integer grade);
+   /**
+    * 战斗获取宠物信息（内部）
+    * @param userId
+    */
+   @GetMapping("/getPetInfo")
+   Result<List<PetsDto>> getPetInfo(@RequestParam Long userId);
 }

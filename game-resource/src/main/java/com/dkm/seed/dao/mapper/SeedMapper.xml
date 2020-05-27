@@ -14,7 +14,7 @@
     </select>
 
     <select id="queryAreUnlocked" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
-        select b.seed_name,b.seed_img from tb_plant_unlock a,tb_seed b where a.seed_id=b.seed_id and a.user_id=#{userId} a.seed_status=1
+        select b.seed_name,b.seed_img from tb_plant_unlock a,tb_seed b where a.seed_id=b.seed_id and a.user_id=#{userId} and a.seed_status=1
     </select>
 
 

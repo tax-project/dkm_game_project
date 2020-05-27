@@ -6,6 +6,7 @@ import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.entity.PetsDto;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,11 @@ public class UserFeignClientFallback implements UserFeignClient {
 
    @Override
    public Result updateStrength(Long userId, Integer grade) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result<List<PetsDto>> getPetInfo(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
