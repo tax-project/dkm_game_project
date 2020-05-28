@@ -136,4 +136,16 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         return produceMapper.queryJoinOutPutGoods(userId);
     }
 
+    @Override
+    public List<AttendantGoods> queryOutput() {
+        UserLoginQuery user = localUser.getUser();
+        return produceMapper.queryJoinOutPutGoods(user.getId());
+    }
+
+    @Override
+    public int deleteOutGoodNumber(Long id) {
+        return produceMapper.deleteById(id);
+    }
+
+
 }

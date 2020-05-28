@@ -3,13 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.seed.dao.SeedMapper">
 
-    <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.Seed" parameterType="java.lang.Long">
-        select a.seed_name,a.seed_grade,a.seed_growuptime,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
+    <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.vo.SeedPlantUnlock" parameterType="java.lang.Long">
+        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
         tb_seed a, tb_plant_unlock c where c.user_id=#{userId}  and a.seed_id=c.seed_id
     </select>
 
     <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
-        select a.seed_name,a.seed_grade,a.seed_growuptime,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,a.seed_status,b.plant_time
+        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,a.seed_status,b.plant_time
         from tb_land_seed b,tb_seed a where a.seed_id=b.seed_id and b.user_id=#{userId}
     </select>
 
