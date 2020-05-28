@@ -62,7 +62,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @PostMapping("/Seed/queryAreUnlocked")
-    Result<List<Seed>> queryAreUnlocked();
+    Result<List<Seed>> queryAreUnlocked(Long userId);
 
     /**
      * 管家收装备
@@ -82,7 +82,7 @@ public interface ResourceFeignClient {
      * 根据用户id查询跟班和跟班产生的物品
      */
     @GetMapping("/Attendant/queryJoinOutPutGoods")
-    Result<List<AttendantGoods>> queryJoinOutPutGoods();
+    Result<List<AttendantGoods>> queryJoinOutPutGoods(Long userId);
 
 
 }

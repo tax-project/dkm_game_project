@@ -182,10 +182,9 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public List<Seed> queryAreUnlocked() {
+    public List<Seed> queryAreUnlocked(Long userId) {
         //得到用户token信息
-        UserLoginQuery user = localUser.getUser();
-        return seedMapper.queryAreUnlocked(user.getId());
+        return seedMapper.queryAreUnlocked(userId);
     }
 
     @Override
