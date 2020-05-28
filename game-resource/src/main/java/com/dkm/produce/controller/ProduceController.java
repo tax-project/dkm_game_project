@@ -44,7 +44,7 @@ public class ProduceController {
     @ApiOperation(value = "根据用户id查询跟班和跟班产生的物品", notes = "根据用户id查询跟班和跟班产生的物品")
     @GetMapping("/queryJoinOutPutGoods")
     @CrossOrigin
-    public List<AttendantGoods> queryJoinOutPutGoods(@RequestParam("attendantId") Long userId){
+    public List<AttendantGoods> queryJoinOutPutGoods(@RequestParam(value = "userId") Long userId){
         return produceService.queryJoinOutPutGoods(userId);
     }
 
