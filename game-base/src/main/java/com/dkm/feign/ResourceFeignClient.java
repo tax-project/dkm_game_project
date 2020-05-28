@@ -53,7 +53,7 @@ public interface ResourceFeignClient {
      * 黑屋的用户信息对象
      * @return
      */
-    @PostMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
+    @GetMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
     Result<TbBlackHouseVo> selectIsBlackTwo();
 
     /**
