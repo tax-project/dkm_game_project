@@ -150,7 +150,7 @@ public class TbBlackHouseController {
     })
     @GetMapping("/selectIsBlackTwo")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public TbBlackHouseVo selectIsBlackTwo(){
 
         //首先根据传过来的登录用户的id查询出被关人的id
