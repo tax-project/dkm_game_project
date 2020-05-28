@@ -51,7 +51,7 @@ public interface ISeedService {
      * 根据用户id查询已解锁的种子
      * @return
      */
-    List<Seed> queryAreUnlocked();
+    List<Seed> queryAreUnlocked(Long userId);
 
     /**
      * 根据用户id查询所有用户信息

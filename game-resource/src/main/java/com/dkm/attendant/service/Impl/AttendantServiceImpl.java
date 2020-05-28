@@ -337,6 +337,8 @@ public class AttendantServiceImpl implements IAttendantService {
             //我先动手
             while (true) {
                 Integer other = allOtherHealth - myCapabilities;
+                //得到被攻击后的血量    在赋值给总血量
+                allOtherHealth=other;
                 myMuch += 1;
                 if (other <= 0) {
                     //我方赢了
@@ -346,6 +348,8 @@ public class AttendantServiceImpl implements IAttendantService {
                     return vo;
                 }
                 Integer my = allMyHealth - otherForce;
+                //得到被攻击后的血量    在赋值给总血量
+                allMyHealth=my;
                 otherMuch += 1;
                 if (my <= 0) {
                     //对方赢了
@@ -362,6 +366,8 @@ public class AttendantServiceImpl implements IAttendantService {
         //对面先动手
         while (true) {
             Integer my = allMyHealth - otherForce;
+            //得到被攻击后的血量    在赋值给总血量
+            allMyHealth=my;
             otherMuch += 1;
             if (my <= 0) {
                 //对方赢了
@@ -371,6 +377,8 @@ public class AttendantServiceImpl implements IAttendantService {
                 return vo;
             }
             Integer other = allOtherHealth - myCapabilities;
+            //得到被攻击后的血量    在赋值给总血量
+            allOtherHealth=other;
             myMuch += 1;
             if (other <= 0) {
                 //我方赢了

@@ -132,16 +132,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public List<AttendantGoods> queryJoinOutPutGoods() {
-        return produceMapper.queryJoinOutPutGoods(localUser.getUser().getId());
+    public List<AttendantGoods> queryJoinOutPutGoods(Long userId) {
+        return produceMapper.queryJoinOutPutGoods(userId);
     }
 
-    @Override
-    public int gatherGoodsProducedMinions() {
-        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-        tbEquipmentKnapsack.setTekDaoju(3);
-        tbEquipmentKnapsack.setTekIsva(1);
-
-        return 0;
-    }
 }

@@ -148,9 +148,9 @@ public class TbBlackHouseController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/selectIsBlackTwo")
+    @GetMapping("/selectIsBlackTwo")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public TbBlackHouseVo selectIsBlackTwo(){
 
         //首先根据传过来的登录用户的id查询出被关人的id

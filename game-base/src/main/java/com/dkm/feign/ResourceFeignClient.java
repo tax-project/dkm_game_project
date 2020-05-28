@@ -4,6 +4,7 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
+import com.dkm.feign.entity.Skill;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.jwt.islogin.CheckToken;
@@ -54,7 +55,7 @@ public interface ResourceFeignClient {
      * 黑屋的用户信息对象
      * @return
      */
-    @PostMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
+    @GetMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
     Result<TbBlackHouseVo> selectIsBlackTwo();
 
     /**
@@ -62,7 +63,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @PostMapping("/Seed/queryAreUnlocked")
-    Result<List<Seed>> queryAreUnlocked();
+    Result<List<Seed>> queryAreUnlocked(Long userId);
 
     /**
      * 管家收装备
@@ -75,14 +76,14 @@ public interface ResourceFeignClient {
     /**
      * 查询我的技能
      */
-    @GetMapping("/queryMySkill")
-    Result<List<MySkillVo>> queryMySkill();
+    @GetMapping("/v1/skill/listAllSkill")
+    Result<List<Skill>>  listAllSkill();
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
-    @GetMapping("/queryJoinOutPutGoods")
-    Result<List<AttendantGoods>> queryJoinOutPutGoods();
+    @GetMapping("/Attendant/queryJoinOutPutGoods")
+    Result<List<AttendantGoods>> queryJoinOutPutGoods(Long userId);
 
 
     /**
