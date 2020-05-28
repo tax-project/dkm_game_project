@@ -1,7 +1,6 @@
 package com.dkm.personalCenter.controller;
 
 import com.dkm.feign.ResourceFeignClient;
-import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.jwt.contain.LocalUser;
@@ -35,26 +34,26 @@ public class PersonalCenterController {
     @Autowired
     ResourceFeignClient resourceFeignClient;
     @Autowired
-    UserFeignClient userFeignClient;
+    UserFeignClientFallback userFeignClientFallback;
     @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据 blackHouse 为黑屋的用户信息对象 Seed为查询用户解锁的种子" +
             "  queryMySkill 查询我的技能  AttendantGoods 查询跟班产出的产物  queryUser 为用户总体力和当前体力")
     @GetMapping("/selectAll")
     @CrossOrigin
-    @CheckToken
+    //@CheckToken
     public Map<String,Object> selectAll(){
         Map<String,Object> map=new HashMap<>();
         //装备的map
-        map.put("equipment",resourceFeignClient.userCenter());
+        map.put("equipment",resourceFeignClient.userCenter(localUser.getUser().getId()));
         //黑屋的用户信息对象
-        map.put("blackHouse",resourceFeignClient.selectIsBlackTwo());
+        map.put("blackHouse",resourceFeignClient.selectIsBlackTwo(localUser.getUser().getId()));
         //查询用户解锁的种子
-        map.put("Seed",resourceFeignClient.queryAreUnlocked());
+        map.put("Seed",resourceFeignClient.queryAreUnlocked(localUser.getUser().getId()));
         //查询我的技能
-        map.put("queryMySkill",resourceFeignClient.queryMySkill());
+        map.put("queryMySkill",resourceFeignClient.listAllSkill());
         //查询跟班产出的产物
-        map.put("AttendantGoods",resourceFeignClient.queryJoinOutPutGoods());
+        map.put("AttendantGoods",resourceFeignClient.queryJoinOutPutGoods(localUser.getUser().getId()));
         //查询出用户的总体力和当前体力
-        map.put("queryUser",userFeignClient.queryUser(localUser.getUser().getId()));
+        map.put("queryUser",userFeignClientFallback.queryUser(localUser.getUser().getId()));
         return map;
     }
 }

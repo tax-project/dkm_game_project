@@ -25,12 +25,12 @@ import java.util.List;
 public class ResourceFeignClientFallback implements ResourceFeignClient {
     @Override
     public Result updateIsva(Long tekId, Integer foodNumber) {
-        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+        return Result.fail(CodeType.SERVICE_ERROR);
     }
 
     @Override
     public Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(Long userId) {
-        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+        return Result.fail(CodeType.DATABASE_ERROR);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
     @Override
     public Result<List<TbEquipmentVo>> selectByBoxIdTwo(List<Long> boxId) {
-        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+        return Result.fail(CodeType.DATABASE_ERROR);
     }
 
     @Override

@@ -353,4 +353,13 @@ public class TbEquipmentKnapsackController {
         return list;
     }
 
+    @ApiOperation(value = "个人中心专用接口",notes = "成功返回成功")
+    @CrossOrigin
+    // @CheckToken
+    @GetMapping("/userCenterTwo/{userId}")
+    public List<TbEquipmentKnapsackVo> userCenterTwo(@PathVariable("userId") Long userId){
+        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserIdTwo(userId);
+        return list;
+    }
+
 }
