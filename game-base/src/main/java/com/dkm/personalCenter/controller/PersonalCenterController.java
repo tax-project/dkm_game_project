@@ -39,7 +39,7 @@ public class PersonalCenterController {
             "  queryMySkill 查询我的技能  AttendantGoods 查询跟班产出的产物  queryUser 为用户总体力和当前体力")
     @GetMapping("/selectAll")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public Map<String,Object> selectAll(){
         Map<String,Object> map=new HashMap<>();
         //装备的map
