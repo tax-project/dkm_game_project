@@ -1,6 +1,7 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
@@ -82,6 +83,16 @@ public interface ResourceFeignClient {
      */
     @GetMapping("/queryJoinOutPutGoods")
     Result<List<AttendantGoods>> queryJoinOutPutGoods();
+
+
+    /**
+     * qf
+     *  根据用户id查询所有技能信息
+     * @param userId 用户id
+     * @return 返回技能图片和等级
+     */
+    @GetMapping("/v1/skill/queryAllSkillByUserId/{userId}")
+    Result<List<SkillBo>> queryAllSkillByUserId (@PathVariable("userId") Long userId);
 
 
 }
