@@ -1,5 +1,6 @@
 package com.dkm.skill.controller;
 
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillInsertVo;
 import com.dkm.skill.service.ISkillService;
@@ -35,5 +36,11 @@ public class SkillController {
    @GetMapping("/listAllSkill")
    public List<Skill> listAllSkill () {
       return skillService.listAllSkill();
+   }
+
+
+   @GetMapping("/queryAllSkillByUserId/{userId}")
+   public List<SkillBo> queryAllSkillByUserId (@PathVariable("userId") Long userId) {
+      return skillService.queryAllSkillByUserId(userId);
    }
 }

@@ -2,6 +2,7 @@ package com.dkm.feign.fallback;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
@@ -34,17 +35,17 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
     @Override
     public Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter() {
-        return Result.fail(CodeType.DATABASE_ERROR);
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
     @Override
     public Result<TbBlackHouseVo> selectIsBlackTwo() {
-        return Result.fail(CodeType.DATABASE_ERROR);
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
     @Override
     public  Result<List<Seed>> queryAreUnlocked() {
-        return Result.fail(CodeType.DATABASE_ERROR);
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
     @Override
@@ -54,12 +55,17 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
     @Override
     public Result<List<MySkillVo>> queryMySkill() {
-        return Result.fail(CodeType.DATABASE_ERROR);
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
     @Override
     public Result<List<AttendantGoods>> queryJoinOutPutGoods() {
-        return Result.fail(CodeType.DATABASE_ERROR);
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+    }
+
+    @Override
+    public Result<List<SkillBo>> queryAllSkillByUserId(Long userId) {
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
 

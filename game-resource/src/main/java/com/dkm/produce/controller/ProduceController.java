@@ -45,17 +45,11 @@ public class ProduceController {
     @GetMapping("/queryJoinOutPutGoods")
     @CrossOrigin
     @CheckToken
-    public List<AttendantGoods> queryJoinOutPutGoods(){
-        return produceService.queryJoinOutPutGoods();
+    public List<AttendantGoods> queryJoinOutPutGoods(Long userId){
+        return produceService.queryJoinOutPutGoods(userId);
     }
 
-    @ApiOperation(value = "收取跟班产出的物品", notes = "收取跟班产出的物品")
-    @GetMapping("/gatherGoodsProducedMinions")
-    @CrossOrigin
-    @CheckToken
-    public void gatherGoodsProducedMinions(@RequestParam("outputItems") String outputItems){
 
-    }
 
 
 

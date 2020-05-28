@@ -26,4 +26,5 @@ public interface TbBlackHouseService  {
 
     List<TbBlackHouse> selectById();
 
+    List<TbBlackHouse> selectById(Long userId);
 }

@@ -1,5 +1,6 @@
 package com.dkm.skill.service;
 
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillInsertVo;
 
@@ -30,4 +31,12 @@ public interface ISkillService {
     * @return 返回结果
     */
    List<Skill> listAllSkill ();
+
+   /**
+    *  根据用户id查询所有技能信息
+    * @param userId 用户Id
+    * @return 返回技能图片 和等级
+    */
+   List<SkillBo> queryAllSkillByUserId (Long userId);
+
 }
