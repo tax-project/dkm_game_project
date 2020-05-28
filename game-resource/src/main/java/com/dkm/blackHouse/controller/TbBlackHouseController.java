@@ -148,7 +148,7 @@ public class TbBlackHouseController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/selectIsBlackTwo")
+    @GetMapping("/selectIsBlackTwo")
     @CrossOrigin
     @CheckToken
     public TbBlackHouseVo selectIsBlackTwo(){
