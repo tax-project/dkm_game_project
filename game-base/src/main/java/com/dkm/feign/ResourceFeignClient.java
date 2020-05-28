@@ -49,7 +49,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/dkm/tbEquipmentKnapsack/userCenterTwo/{userId}")
-    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter(@PathVariable("userId") Long userId);
+    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenterTwo(@PathVariable("userId") Long userId);
 
     /**
      * 黑屋的用户信息对象
@@ -73,11 +73,6 @@ public interface ResourceFeignClient {
     @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 
-    /**
-     * 查询我的技能
-     */
-    @GetMapping("/v1/skill/listAllSkill")
-    Result<List<Skill>>  listAllSkill();
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
