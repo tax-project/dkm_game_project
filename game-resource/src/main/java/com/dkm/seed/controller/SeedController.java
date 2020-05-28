@@ -123,9 +123,7 @@ public class SeedController {
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
     @GetMapping("/queryAreUnlocked")
-    @CrossOrigin
-    @CheckToken
-    List<Seed> queryAreUnlocked(Long userId){
+    public List<Seed> queryAreUnlocked(@RequestParam(value = "userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
 
@@ -136,7 +134,7 @@ public class SeedController {
     @GetMapping("/queryUserAll")
     @CrossOrigin
     @CheckToken
-    Result<UserInfoQueryBo> queryUserAll(){
+    public Result<UserInfoQueryBo> queryUserAll(){
        return iSeedService.queryUserAll();
     }
 
