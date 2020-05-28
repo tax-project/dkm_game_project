@@ -346,7 +346,7 @@ public class TbEquipmentKnapsackController {
 
     @ApiOperation(value = "后台专用接口",notes = "成功返回成功")
     @CrossOrigin
-    @CheckToken
+   // @CheckToken
     @GetMapping("/userCenter")
     public List<TbEquipmentKnapsackVo> userCenter(){
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
