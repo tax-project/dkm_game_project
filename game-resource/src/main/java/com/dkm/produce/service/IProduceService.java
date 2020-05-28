@@ -23,9 +23,5 @@ public interface IProduceService {
      */
     List<AttendantGoods> queryJoinOutPutGoods();
 
-    /**
-     * 收取
-     * @return
-     */
-    int gatherGoodsProducedMinions();
+
 }

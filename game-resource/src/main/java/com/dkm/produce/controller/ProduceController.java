@@ -49,13 +49,7 @@ public class ProduceController {
         return produceService.queryJoinOutPutGoods();
     }
 
-    @ApiOperation(value = "收取跟班产出的物品", notes = "收取跟班产出的物品")
-    @GetMapping("/gatherGoodsProducedMinions")
-    @CrossOrigin
-    @CheckToken
-    public void gatherGoodsProducedMinions(@RequestParam("outputItems") String outputItems){
 
-    }
 
 
 

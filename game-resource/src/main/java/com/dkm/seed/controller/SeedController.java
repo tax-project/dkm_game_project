@@ -122,7 +122,7 @@ public class SeedController {
      * 根据用户id查询已解锁的种子
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
-    @PostMapping("/queryAreUnlocked")
+    @GetMapping("/queryAreUnlocked")
     @CrossOrigin
     @CheckToken
     List<Seed> queryAreUnlocked(){

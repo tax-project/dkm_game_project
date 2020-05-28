@@ -379,6 +379,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 vo.setResult(0);
                 return vo;
             }
+            getResult(allMyHealth,allOtherHealth,myCapabilities,otherForce,status);
         }
 
     }
