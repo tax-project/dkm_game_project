@@ -91,7 +91,13 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         return tbBlackHouseMapper.selectList(queryWrapper);
     }
 
-
+    @Override
+    public List<TbBlackHouse> selectById(Long userId) {
+        QueryWrapper<TbBlackHouse> queryWrapper=new QueryWrapper();
+        queryWrapper.eq("from_id",userId);
+        queryWrapper.eq("is_black",0);
+        return tbBlackHouseMapper.selectList(queryWrapper);
+    }
 
 
 }

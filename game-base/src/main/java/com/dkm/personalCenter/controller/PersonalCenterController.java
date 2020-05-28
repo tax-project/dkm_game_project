@@ -44,15 +44,15 @@ public class PersonalCenterController {
     public Map<String,Object> selectAll(){
         Map<String,Object> map=new HashMap<>();
         //装备的map
-        map.put("equipment",resourceFeignClient.userCenter());
+        map.put("equipment",resourceFeignClient.userCenterTwo(localUser.getUser().getId()));
         //黑屋的用户信息对象
-        map.put("blackHouse",resourceFeignClient.selectIsBlackTwo());
+        map.put("blackHouse",resourceFeignClient.selectIsBlackTwo(localUser.getUser().getId()));
         //查询用户解锁的种子
-        map.put("Seed",resourceFeignClient.queryAreUnlocked());
+        map.put("Seed",resourceFeignClient.queryAreUnlocked(localUser.getUser().getId()));
         //查询我的技能
-        map.put("queryMySkill",resourceFeignClient.queryMySkill());
+        map.put("queryMySkill",resourceFeignClient.queryAllSkillByUserId(localUser.getUser().getId()));
         //查询跟班产出的产物
-        map.put("AttendantGoods",resourceFeignClient.queryJoinOutPutGoods());
+        map.put("AttendantGoods",resourceFeignClient.queryJoinOutPutGoods(localUser.getUser().getId()));
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(localUser.getUser().getId()));
         return map;

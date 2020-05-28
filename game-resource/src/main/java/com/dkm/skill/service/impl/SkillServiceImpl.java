@@ -2,6 +2,7 @@ package com.dkm.skill.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
@@ -52,5 +53,11 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Override
    public List<Skill> listAllSkill() {
       return baseMapper.selectList(null);
+   }
+
+
+   @Override
+   public List<SkillBo> queryAllSkillByUserId(Long userId) {
+      return baseMapper.queryAllSkillByUserId (userId);
    }
 }

@@ -1,6 +1,7 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
+import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
 import com.dkm.feign.entity.Skill;
@@ -47,15 +48,15 @@ public interface ResourceFeignClient {
      * 根据当前用户查询装备
      * @return
      */
-    @GetMapping("/dkm/tbEquipmentKnapsack/userCenter")
-    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter();
+    @GetMapping("/dkm/tbEquipmentKnapsack/userCenterTwo/{userId}")
+    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenterTwo(@PathVariable("userId") Long userId);
 
     /**
      * 黑屋的用户信息对象
      * @return
      */
-    @GetMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
-    Result<TbBlackHouseVo> selectIsBlackTwo();
+    @GetMapping("/dkm/tbBlackHouse/selectIsBlackThree/{userId}")
+    Result<TbBlackHouseVo> selectIsBlackTwo(@PathVariable("userId") Long userId);
 
     /**
      * 查询当前用户已经解锁的种子
@@ -72,17 +73,22 @@ public interface ResourceFeignClient {
     @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 
-    /**
-     * 查询我的技能
-     */
-    @GetMapping("/v1/skill/listAllSkill")
-    Result<List<Skill>>  listAllSkill();
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
     @GetMapping("/Attendant/queryJoinOutPutGoods")
     Result<List<AttendantGoods>> queryJoinOutPutGoods(@RequestParam("userId")Long userId);
+
+
+    /**
+     * qf
+     *  根据用户id查询所有技能信息
+     * @param userId 用户id
+     * @return 返回技能图片和等级
+     */
+    @GetMapping("/v1/skill/queryAllSkillByUserId/{userId}")
+    Result<List<SkillBo>> queryAllSkillByUserId (@PathVariable("userId") Long userId);
 
 
 }
