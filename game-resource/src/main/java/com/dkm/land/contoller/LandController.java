@@ -36,7 +36,6 @@ public class LandController {
         message.setMsg("成功");
         return  message;
     }
-
     /**
      * 根据用户id查询土地
      * @return
