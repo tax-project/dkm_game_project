@@ -45,7 +45,7 @@ public class ProduceController {
     @GetMapping("/queryJoinOutPutGoods")
     @CrossOrigin
     @CheckToken
-    public List<AttendantGoods> queryJoinOutPutGoods(Long userId){
+    public List<AttendantGoods> queryJoinOutPutGoods(@RequestParam("attendantId") Long userId){
         return produceService.queryJoinOutPutGoods(userId);
     }
 

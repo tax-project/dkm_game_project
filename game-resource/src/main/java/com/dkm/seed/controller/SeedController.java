@@ -125,7 +125,7 @@ public class SeedController {
     @GetMapping("/queryAreUnlocked")
     @CrossOrigin
     @CheckToken
-    List<Seed> queryAreUnlocked(Long userId){
+    List<Seed> queryAreUnlocked(@RequestParam(value = "userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
 
