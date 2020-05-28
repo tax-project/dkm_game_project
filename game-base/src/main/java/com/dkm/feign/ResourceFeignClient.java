@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
+import com.dkm.feign.entity.Skill;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.jwt.islogin.CheckToken;
@@ -75,7 +76,7 @@ public interface ResourceFeignClient {
      * 查询我的技能
      */
     @GetMapping("/v1/skill/listAllSkill")
-    Result<List<MySkillVo>> queryMySkill();
+    Result<List<Skill>>  listAllSkill();
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
