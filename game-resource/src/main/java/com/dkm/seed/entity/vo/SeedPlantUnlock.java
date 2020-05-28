@@ -1,21 +1,17 @@
-package com.dkm.seed.entity;
+package com.dkm.seed.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: game_project
  * @DESCRIPTION:
- * @USER: 刘梦祺
- * @DATE: 2020/5/10 11:51
+ * @DATE: 2020/5/28 19:55
  */
 @Data
-@TableName("tb_seed")
-public class Seed {
+public class SeedPlantUnlock {
     /**
      * 种子id
      */
@@ -53,9 +49,9 @@ public class Seed {
      */
     private String exp1;
     /**
-     *种子解锁金币
+     *
      */
-    private Integer exp2;
+    private String exp2;
     /**
      *
      */
@@ -64,7 +60,16 @@ public class Seed {
      *种子图片
      */
     private String seedImg;
-
-
-
+    /**
+     * 当前解锁进度
+     */
+    private Integer seedPresentUnlock=0;
+    /**
+     *总解锁进度
+     */
+    private Integer seedAllUnlock;
+    /**
+     *状态 0未解锁 1解锁
+     */
+    private Integer seedStatus=0;
 }

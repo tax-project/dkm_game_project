@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.produce.dao.ProduceMapper">
 
-    <select id="queryUserReputationGold" resultType="com.dkm.attendant.entity.vo.User" parameterType="java.lang.Integer">
-        select c.at_img,COUNT(d.name) as sum from tb_produce a,tb_user_produce b,tb_attendant c,tb_goods d
+    <select id="queryJoinOutPutGoods" resultType="com.dkm.produce.entity.vo.AttendantGoods" parameterType="java.lang.Long">
+        select a.id,a.good_id,a.number,d.name,d,url c.at_img,COUNT(d.name) as sum from tb_produce a,tb_user_produce b,tb_attendant c,tb_goods d
         where b.produce_id=a.id and a.attendant_id=c.id and a.good_id=d.id and b.user_id=#{userId} GROUP BY a.id
     </select>
 

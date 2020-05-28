@@ -34,4 +34,9 @@ public class AttendantGoods {
      * 物品图片地址
      */
     private String url;
+
+   /**
+    * 数量
+    */
+   private Integer number;
 }

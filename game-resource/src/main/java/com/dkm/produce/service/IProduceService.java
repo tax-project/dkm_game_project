@@ -23,5 +23,13 @@ public interface IProduceService {
      */
     List<AttendantGoods> queryJoinOutPutGoods(Long userId);
 
+    List<AttendantGoods> queryOutput();
 
+    /**
+     * 修该掠夺赢了之后
+     * 修改产出输方产出的物品
+     * @param id  产出id
+     * @return
+     */
+   int deleteOutGoodNumber(Long id);
 }

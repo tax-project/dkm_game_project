@@ -49,6 +49,31 @@ public class ProduceController {
     }
 
 
+    @ApiOperation(value = "查询用户产出的物品", notes = "查询用户产出的物品")
+    @GetMapping("/queryOutput")
+    public List<AttendantGoods> queryOutput(){
+        return produceService.queryOutput();
+    }
+
+    /**
+     * 修该掠夺赢了之后
+     * 修改产出输方产出的物品
+     * @param id  产出id
+     * @return
+     */
+    @ApiOperation(value = "修该掠夺赢了之后修改产出输方产出的物品", notes = "修该掠夺赢了之后修改产出输方产出的物品")
+    @GetMapping("/deleteOutGoodNumber")
+    @CrossOrigin
+    public int deleteOutGoodNumber(Long id){
+        if(id==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
+        return produceService.deleteOutGoodNumber(id);
+    }
+
+
+
+
 
 
 
