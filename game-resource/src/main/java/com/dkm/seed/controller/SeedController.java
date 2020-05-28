@@ -123,7 +123,6 @@ public class SeedController {
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
     @GetMapping("/queryAreUnlocked")
-    @CrossOrigin
     List<Seed> queryAreUnlocked(@RequestParam(value = "userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
