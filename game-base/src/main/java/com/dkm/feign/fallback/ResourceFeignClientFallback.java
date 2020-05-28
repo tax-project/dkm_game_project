@@ -5,6 +5,7 @@ import com.dkm.data.Result;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.MySkillVo;
+import com.dkm.feign.entity.Skill;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.personalCenter.domain.Seed;
 import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
@@ -33,17 +34,17 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
     }
 
     @Override
-    public Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter() {
+    public Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 
     @Override
-    public Result<TbBlackHouseVo> selectIsBlackTwo() {
+    public Result<TbBlackHouseVo> selectIsBlackTwo(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 
     @Override
-    public  Result<List<Seed>> queryAreUnlocked() {
+    public  Result<List<Seed>> queryAreUnlocked(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 
@@ -53,12 +54,14 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
     }
 
     @Override
-    public Result<List<MySkillVo>> queryMySkill() {
+    public Result<List<Skill>> listAllSkill() {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 
+
+
     @Override
-    public Result<List<AttendantGoods>> queryJoinOutPutGoods() {
+    public Result<List<AttendantGoods>> queryJoinOutPutGoods(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);
     }
 

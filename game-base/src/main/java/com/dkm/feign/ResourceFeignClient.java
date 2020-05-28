@@ -47,15 +47,15 @@ public interface ResourceFeignClient {
      * 根据当前用户查询装备
      * @return
      */
-    @GetMapping("/dkm/tbEquipmentKnapsack/userCenter")
-    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter();
+    @GetMapping("/dkm/tbEquipmentKnapsack/userCenterTwo/{userId}")
+    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenter(@PathVariable("userId") Long userId);
 
     /**
      * 黑屋的用户信息对象
      * @return
      */
-    @GetMapping("/dkm/tbBlackHouse/selectIsBlackTwo")
-    Result<TbBlackHouseVo> selectIsBlackTwo();
+    @GetMapping("/dkm/tbBlackHouse/selectIsBlackThree/{userId}")
+    Result<TbBlackHouseVo> selectIsBlackTwo(@PathVariable("userId") Long userId);
 
     /**
      * 查询当前用户已经解锁的种子
