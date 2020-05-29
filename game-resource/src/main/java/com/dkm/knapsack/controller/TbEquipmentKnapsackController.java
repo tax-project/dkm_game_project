@@ -182,7 +182,6 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/selectUserIdAndFoodId")
     @CrossOrigin
-    @CheckToken
     public  List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId){
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectUserIdAndFoodId(userId);
 
