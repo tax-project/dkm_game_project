@@ -2,6 +2,7 @@ package com.dkm.land.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.land.entity.Land;
+import com.dkm.land.entity.vo.UserLandUnlock;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,11 +24,11 @@ public interface LandMapper extends IBaseMapper<Land> {
      */
     int insertLand(List<Land> list);
 
-    /**
-     * 根据用户id查询土地
-     * @param userId
-     * @return List<Land>
-     */
-    List<Land> queryLand(long userId);
+    List<UserLandUnlock> queryUserByIdLand(Long userId);
+
+    List<UserLandUnlock> addLand(List<UserLandUnlock> list);
+
+    List<UserLandUnlock> queryUnlockLand(Long userId);
+
 
 }

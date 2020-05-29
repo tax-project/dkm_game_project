@@ -6,6 +6,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.land.dao.LandMapper;
 import com.dkm.land.entity.Land;
+import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.land.service.ILandService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,13 +52,27 @@ public class LandServiceImpl implements ILandService {
         }
     }
     /**
-     * 根据用户id查询土地
+     * 查询土地
      * @return List<Land>
      */
     @Override
-    public List<Land> queryLandId() {
-        //得到用户登录的token信息
-        UserLoginQuery query = localUser.getUser();
-        return landMapper.queryLand(query.getId());
+    public List<UserLandUnlock> queryUserByIdLand() {
+        List<UserLandUnlock> userLandUnlocks = landMapper.queryUserByIdLand(localUser.getUser().getId());
+        if(userLandUnlocks.size()==0){
+            List<UserLandUnlock> list=new ArrayList<>();
+            for (int i = 1; i <=10; i++) {
+                UserLandUnlock userLandUnlock=new UserLandUnlock();
+                userLandUnlock.setLaNo(i);
+                if(i==2){
+                    userLandUnlock.setLaStatus(1);
+                }
+                userLandUnlock.setLaStatus(0);
+                userLandUnlock.setUserId(localUser.getUser().getId());
+                list.add(userLandUnlock);
+            }
+            landMapper.addLand(userLandUnlocks);
+        }
+        List<UserLandUnlock> userLandUnlocka = landMapper.queryUserByIdLand(localUser.getUser().getId());
+        return userLandUnlocka;
     }
 }

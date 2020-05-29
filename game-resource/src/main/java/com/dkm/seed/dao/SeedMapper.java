@@ -44,7 +44,7 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * 种植植物
      *
      */
-    int addPlant(LandSeed landSeed);
+    int addPlant(List<LandSeed> list);
 
     /**
      * 查询已种植的植物
