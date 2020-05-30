@@ -1,6 +1,7 @@
 package com.dkm.gift.service;
 
 import com.dkm.gift.entity.GiftEntity;
+import com.dkm.gift.entity.vo.SendGiftVo;
 
 import java.util.List;
 
@@ -18,4 +19,10 @@ public interface GiftService {
      */
     List<GiftEntity> getAllGift(Integer type);
 
+
+    /**
+     * 送礼
+     * @param sendGiftVo
+     */
+    void sendGift(SendGiftVo sendGiftVo);
 }
