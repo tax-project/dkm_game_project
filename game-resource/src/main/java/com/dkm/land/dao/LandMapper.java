@@ -26,7 +26,12 @@ public interface LandMapper extends IBaseMapper<Land> {
 
     List<UserLandUnlock> queryUserByIdLand(Long userId);
 
-    List<UserLandUnlock> addLand(List<UserLandUnlock> list);
+    /**
+     * 批量增加用户拥有土地
+     * @param list
+     * @return
+     */
+    int addLand(List<UserLandUnlock> list);
 
     List<UserLandUnlock> queryUnlockLand(Long userId);
 

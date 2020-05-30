@@ -63,15 +63,17 @@ public class LandServiceImpl implements ILandService {
             for (int i = 1; i <=10; i++) {
                 UserLandUnlock userLandUnlock=new UserLandUnlock();
                 userLandUnlock.setLaNo(i);
-                if(i==2){
+                if(i==1){
                     userLandUnlock.setLaStatus(1);
+                }else{
+                    userLandUnlock.setLaStatus(0);
                 }
-                userLandUnlock.setLaStatus(0);
                 userLandUnlock.setUserId(localUser.getUser().getId());
                 list.add(userLandUnlock);
             }
-            landMapper.addLand(userLandUnlocks);
+            landMapper.addLand(list);
         }
+        //根据用户id查询解锁的土地
         List<UserLandUnlock> userLandUnlocka = landMapper.queryUserByIdLand(localUser.getUser().getId());
         return userLandUnlocka;
     }

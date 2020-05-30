@@ -44,6 +44,7 @@ public class LandController {
     @ApiOperation(value = "查询所有土地", notes = "如果查询成功返回list集合，失败返回为null")
     @GetMapping("/queryUserByIdLand")
     @CrossOrigin
+    @CheckToken
     public List<UserLandUnlock> queryUserByIdLand() {
         return iLandService.queryUserByIdLand();
     }

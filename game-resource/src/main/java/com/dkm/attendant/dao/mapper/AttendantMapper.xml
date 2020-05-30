@@ -4,7 +4,7 @@
 <mapper namespace="com.dkm.attendant.dao.AttendantMapper">
 
     <select id="queryUserReputationGold" resultType="com.dkm.attendant.entity.vo.User" parameterType="java.lang.Long">
-        select user_info_renown,user_info_gold from tb_user_info where  user_id=#{userId}
+        select user_info_renown,user_info_gold from tb_user_info where user_id=#{userId}
     </select>
 
     <select id="queryRandomUser" resultType="com.dkm.attendant.entity.vo.User">
@@ -22,7 +22,7 @@
     </delete>
 
     <insert id="addGraspFollowing" parameterType="com.dkm.attendant.entity.AttendantUser">
-          insert into tb_attendant_user(a_id,user_id,Caught_people_id,exp1)values(#{aId},#{userId},#{caughtPeopleId},#{exp1})
+          insert into tb_attendant_user(a_id,user_id,Caught_people_id,exp1,atu_id)values(#{aId},#{userId},#{caughtPeopleId},#{exp1},#{atuId})
     </insert>
 
 

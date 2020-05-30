@@ -65,9 +65,9 @@
 
 
     <insert id="addPlant" parameterType="com.dkm.seed.entity.LandSeed">
-        insert into tb_land_seed(user_id,seed_id,la_id,plant_time)
+        insert into tb_land_seed(le_id,user_id,seed_id,la_no,plant_time)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            select #{lists.userId},#{lists.seedId},#{lists.laId},#{lists.plantTime}
+            select #{lists.leId},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime}
         </foreach>
     </insert>
 

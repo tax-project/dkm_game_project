@@ -20,7 +20,7 @@ public class LandSeed {
   private long leId;
   private long userId;
   private long seedId;
-  private long laId;
+  private long laNo;
   private long grade;
   private LocalDateTime plantTime;
 

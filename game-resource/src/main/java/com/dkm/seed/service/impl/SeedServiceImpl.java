@@ -157,6 +157,7 @@ public class SeedServiceImpl implements ISeedService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
 
+
         //根据用户查询解锁的土地
         List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
@@ -168,6 +169,7 @@ public class SeedServiceImpl implements ISeedService {
         increaseUserInfoBO.setUserInfoGold(gold);
         //减少金币
         Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
+
         //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
         double ripetime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
         //将秒数转换成整数类型
@@ -181,9 +183,14 @@ public class SeedServiceImpl implements ISeedService {
             LandSeed landSeed=new LandSeed();
             //生成主键id
             landSeed.setLeId(idGenerator.getNumberId());
+            //土地编号
+            landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+            //种子id
+            landSeed.setSeedId(seedPlantVo.getSeedId());
             //根据token得到用户id
             landSeed.setUserId(user.getId());
             //结束时间
+            System.out.println("time2 = " + time2);
             landSeed.setPlantTime(time2);
             list.add(landSeed);
         }
@@ -192,8 +199,6 @@ public class SeedServiceImpl implements ISeedService {
         if(i<=0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"种植异常");
         }
-        //查询种植的植物
-        List<LandSeedVo> seeds = seedMapper.queryAlreadyPlantSd(user.getId());
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -137,9 +138,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public List<AttendantGoods> queryOutput() {
+    public List<UserAttendantGoods> queryOutput() {
         UserLoginQuery user = localUser.getUser();
-        return produceMapper.queryJoinOutPutGoods(user.getId());
+        return produceMapper.queryOutput(user.getId());
     }
 
     @Override
