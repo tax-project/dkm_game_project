@@ -3,16 +3,15 @@ package com.dkm.gift.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.gift.entity.GiftEntity;
+import com.dkm.gift.entity.vo.SendGiftVo;
 import com.dkm.gift.service.GiftService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,4 +45,24 @@ public class GiftController {
         return giftService.getAllGift(type);
     }
 
+
+    @ApiOperation("送礼")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "receiveId",value = "接收人userId",required = true,paramType = "Long",dataType = "path"),
+            @ApiImplicitParam(name = "gold",value = "消耗金币",required = false,paramType = "int",dataType = "path"),
+            @ApiImplicitParam(name = "diamond",value = "消耗钻石",required = false,paramType = "int",dataType = "path"),
+            @ApiImplicitParam(name = "charm",value = "魅力值",required = true,paramType = "int",dataType = "path")
+    })
+    @PostMapping("/sendGift")
+    @CrossOrigin
+    @CheckToken
+    public void getGift(@RequestBody SendGiftVo sendGiftVo){
+        if(sendGiftVo==null||sendGiftVo.getReceiveId()==null
+                ||(sendGiftVo.getDiamond().equals(sendGiftVo.getGold()))
+                ||sendGiftVo.getDiamond()<0||sendGiftVo.getGold()<0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        sendGiftVo.setSendId(localUser.getUser().getId());
+        giftService.sendGift(sendGiftVo);
+    }
 }
