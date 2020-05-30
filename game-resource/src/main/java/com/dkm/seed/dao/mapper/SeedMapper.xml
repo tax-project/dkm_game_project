@@ -8,8 +8,8 @@
         tb_seed a, tb_plant_unlock c where c.user_id=#{userId}  and a.seed_id=c.seed_id
     </select>
 
-    <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
-        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,b.plant_time
+    <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandYesVo" parameterType="java.lang.Long">
+        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img
         from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId}
     </select>
 
@@ -65,9 +65,9 @@
 
 
     <insert id="addPlant" parameterType="com.dkm.seed.entity.LandSeed">
-        insert into tb_land_seed(le_id,user_id,seed_id,la_no,plant_time)
+        insert into tb_land_seed(le_id,user_id,seed_id,la_no)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            select #{lists.leId},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime}
+            select #{lists.leId},#{lists.userId},#{lists.seedId},#{lists.laNo}
         </foreach>
     </insert>
 

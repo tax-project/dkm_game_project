@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -36,7 +37,7 @@ public interface ISeedService {
      * 种植
      *
      */
-    void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo);
+    Map<String,Object> queryAlreadyPlantSeed(SeedPlantVo seedPlantVo);
 
     /**
      * 根据种子查询种子
@@ -63,6 +64,6 @@ public interface ISeedService {
     /**
      * 查询已经种植的种子
      */
-    List<LandSeedVo> queryAlreadyPlantSd();
+    Map<String,Object> queryAlreadyPlantSd();
 
 }

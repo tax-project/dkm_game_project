@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -83,11 +84,11 @@ public class SeedController {
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
-    public void plant(@RequestBody SeedPlantVo seedPlantVo) {
+    public Map<String,Object> plant(@RequestBody SeedPlantVo seedPlantVo) {
         if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
-         iSeedService.queryAlreadyPlantSeed(seedPlantVo);
+         return iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 
 
@@ -98,7 +99,7 @@ public class SeedController {
     @GetMapping("/queryAlreadyPlantSd")
     @CrossOrigin
     @CheckToken
-    public List<LandSeedVo> queryAlreadyPlantSd(){
+    public  Map<String,Object> queryAlreadyPlantSd(){
         return iSeedService.queryAlreadyPlantSd();
     }
 
