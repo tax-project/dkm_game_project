@@ -5,6 +5,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.Message;
+import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.land.service.ILandService;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +38,14 @@ public class LandController {
         return  message;
     }
     /**
-     * 根据用户id查询土地
+     *查询所有土地
      * @return
      */
-    @ApiOperation(value = "根据用户id查询土地", notes = "如果查询成功返回list集合，失败返回为null")
-    @GetMapping("/queryLandId")
+    @ApiOperation(value = "查询所有土地", notes = "如果查询成功返回list集合，失败返回为null")
+    @GetMapping("/queryUserByIdLand")
     @CrossOrigin
-    public List<Land> queryLandId() {
-        return iLandService.queryLandId();
+    @CheckToken
+    public List<UserLandUnlock> queryUserByIdLand() {
+        return iLandService.queryUserByIdLand();
     }
 }

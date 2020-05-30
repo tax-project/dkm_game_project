@@ -1,6 +1,7 @@
 package com.dkm.land.service;
 
 import com.dkm.land.entity.Land;
+import com.dkm.land.entity.vo.UserLandUnlock;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public interface ILandService {
      * 根据用户id查询土地
      * @return List<Land>
      */
-    List<Land> queryLandId();
+    List<UserLandUnlock> queryUserByIdLand();
 }

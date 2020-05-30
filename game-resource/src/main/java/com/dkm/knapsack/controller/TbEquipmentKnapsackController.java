@@ -182,7 +182,6 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/selectUserIdAndFoodId")
     @CrossOrigin
-    @CheckToken
     public  List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId){
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectUserIdAndFoodId(userId);
 
@@ -339,7 +338,6 @@ public class TbEquipmentKnapsackController {
     })
     @GetMapping("/updateIsva")
     @CrossOrigin
-    @CheckToken
     public void updateIsva(Long tekId,Integer foodNumber){
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
     }

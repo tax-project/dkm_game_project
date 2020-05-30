@@ -9,6 +9,11 @@
     </select>
 
 
+    <select id="queryOutput" resultType="com.dkm.produce.entity.vo.UserAttendantGoods" parameterType="java.lang.Long">
+        select a.number,c.name,c.url,d.at_name,d.at_img from  tb_produce a,tb_user_produce b,tb_goods c,tb_attendant d
+        where a.id=b.produce_id and a.good_id=c.id and a.attendant_id=d.id and b.user_id=#{userId};
+    </select>
+
 
 
 </mapper>
