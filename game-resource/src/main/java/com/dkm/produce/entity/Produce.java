@@ -17,7 +17,9 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_produce")
 public class Produce extends Model<Produce> {
-
+    /**
+     * 产出id
+     */
     private Long id;
 
     /**

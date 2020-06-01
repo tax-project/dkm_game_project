@@ -6,9 +6,7 @@ import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +39,7 @@ public class PersonalCenterController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> selectAll(){
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>(6);
         //装备的map
         map.put("equipment",resourceFeignClient.userCenterTwo(localUser.getUser().getId()));
         //黑屋的用户信息对象

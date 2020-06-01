@@ -1,6 +1,7 @@
 package com.dkm.produce.service;
 
 import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.UserAttendantGoods;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,13 @@ public interface IProduceService {
      */
     List<AttendantGoods> queryJoinOutPutGoods(Long userId);
 
+    List<UserAttendantGoods> queryOutput();
 
+    /**
+     * 修该掠夺赢了之后
+     * 修改产出输方产出的物品
+     * @param id  产出id
+     * @return
+     */
+   int deleteOutGoodNumber(Long id);
 }

@@ -53,9 +53,9 @@ public class Seed {
      */
     private String exp1;
     /**
-     *
+     *种子解锁金币
      */
-    private String exp2;
+    private Integer exp2;
     /**
      *
      */

@@ -62,7 +62,7 @@ public class PetServiceImpl implements PetService {
         //查询食物信息
         Result<List<TbEquipmentKnapsackVo>> listResult = resourceFeignClient.selectUserIdAndFoodId(userId);
         if (listResult.getCode() != 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR);
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"获取不到食物信息");
         }
         //食物信息
         if(foodDetailEntities==null){

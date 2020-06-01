@@ -7,6 +7,7 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
+import com.dkm.seed.entity.vo.LandYesVo;
 import com.dkm.seed.entity.vo.SeedUnlock;
 import com.dkm.seed.entity.vo.UserInIf;
 import org.apache.ibatis.annotations.Param;
@@ -44,13 +45,13 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * 种植植物
      *
      */
-    int addPlant(LandSeed landSeed);
+    int addPlant(List<LandSeed> list);
 
     /**
      * 查询已种植的植物
      *
      */
-    List<LandSeedVo> queryAlreadyPlantSd(long userId);
+    List<LandYesVo> queryAlreadyPlantSd(long userId);
 
 
 

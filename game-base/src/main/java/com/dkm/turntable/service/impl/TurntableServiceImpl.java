@@ -3,7 +3,6 @@ package com.dkm.turntable.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -17,7 +16,6 @@ import com.dkm.turntable.service.ITurntableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,9 @@ public class TurntableServiceImpl extends ServiceImpl<TurntableMapper,Turntable>
     @Override
     public List<TurntableItemBO> luckyDrawItems() {
         UserLoginQuery query = localUser.getUser();
+        System.out.println(query);
         Result<UserInfoQueryBo> result = feignClient.queryUser(query.getId());
+        System.out.println(result);
         UserInfoQueryBo resultData = result.getData();
         //获取用户等级
         Integer userLevel = resultData.getUserInfoGrade();

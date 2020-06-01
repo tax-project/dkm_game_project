@@ -2,7 +2,6 @@ package com.dkm.wechat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.constanct.CodeType;
-import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.StringUtils;
@@ -11,7 +10,10 @@ import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 import com.dkm.wechat.service.IWeChatService;
 import com.dkm.wechat.util.BodyUtils;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,6 +95,5 @@ public class WeCharController {
         }
         return weChatService.queryUser(id);
     }
-
 
 }
