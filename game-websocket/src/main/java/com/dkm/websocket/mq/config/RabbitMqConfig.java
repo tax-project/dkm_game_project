@@ -1,4 +1,4 @@
-package com.dkm.websocket.mq;
+package com.dkm.websocket.mq.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -16,21 +16,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitMqConfig {
 
+   /**
+    *  接收通讯服务器的消息队列
+    * @return
+    */
    @Bean
    public Queue getQueue () {
       return new Queue ("game_msg_queue_");
    }
 
-   @Bean
-   public Queue getWebQueue () {
-      return new Queue("game_msg_chat_queue");
-   }
-
-   @Bean
-   public Queue getNotOnlineQueue () {
-      return new Queue("game_msg_not_online_queue");
-   }
-
+   /**
+    *  交换机
+    * @return
+    */
    @Bean
    public FanoutExchange getFanoutExchange () {
       return new FanoutExchange("game_msg_fanoutExchange");
@@ -40,4 +38,5 @@ public class RabbitMqConfig {
    public Binding getBinding (Queue getQueue, FanoutExchange getFanoutExchange) {
       return BindingBuilder.bind(getQueue).to(getFanoutExchange);
    }
+
 }

@@ -20,7 +20,6 @@ import java.util.List;
  * @author: zhd
  * @create: 2020-05-16 15:25
  **/
-@Component
 @FeignClient(value = "service-resource",fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
     /**
