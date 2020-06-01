@@ -19,6 +19,12 @@ import lombok.experimental.Accessors;
 public class UserProduce extends Model<UserProduce> {
 
    /**
+    *  自增主键
+    *  其他表不需要用
+    */
+   private Integer id;
+
+   /**
     * 用户id
     */
    private Long userId;
