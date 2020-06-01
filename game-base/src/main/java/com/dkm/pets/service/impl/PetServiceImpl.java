@@ -48,7 +48,7 @@ public class PetServiceImpl implements PetService {
     @Resource
     private ResourceFeignClient resourceFeignClient;
 
-    private List<FoodDetailEntity> foodDetailEntities;
+    private static List<FoodDetailEntity> foodDetailEntities;
 
     /**
      * 获取宠物页面所需信息
