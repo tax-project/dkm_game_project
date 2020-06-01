@@ -95,6 +95,19 @@ public class SeedServiceImpl implements ISeedService {
             seedMapper.insertSeedUnlock(seedUnlocks1);
         }
         List<Seed> seeds = seedMapper.queryUserIdSeed(user.getId());
+
+
+        for (int i = 0; i < seeds.size(); i++) {
+            //种植所获得的经验
+            double experience = Math.pow(seeds.get(i).getSeedGrade(), 2 / 5.0) * 100;
+            Integer experienceInteger = Integer.valueOf((int) experience);
+
+            //种植一次所获得的金币
+            double userGold  = Math.pow(seeds.get(i).getSeedGrade(), 2)*50 +2000;
+            Integer userGoldInteger = Integer.valueOf((int) userGold);
+            //double userGold  = Math.pow(userInIf.getSeedGrade(), 2)*50 +2000;
+            //seeds.get(i).setSeedGold();
+        }
         return seeds;
     }
     /**
@@ -145,11 +158,10 @@ public class SeedServiceImpl implements ISeedService {
     }
     /**
      * 种植种子
-     * 查询已种植的种植
      *
      */
     @Override
-    public Map<String,Object> queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
+    public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
         Map<String,Object> map=new HashMap<>();
         List<LandSeed> list=new ArrayList<>();
         //得到用户token信息
@@ -172,7 +184,14 @@ public class SeedServiceImpl implements ISeedService {
         //减少金币
         Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
 
-
+        //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
+        double ripetime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
+        //将秒数转换成整数类型
+        Integer integer = Integer.valueOf((int) ripetime);
+        //得到时间戳
+        Long timestamp = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        //得到时间戳转换成时间格式，最后得到种子成熟的时间
+        LocalDateTime time2 =LocalDateTime.ofEpochSecond(timestamp/1000+integer,0,ZoneOffset.ofHours(8));
         //循环用户解锁土地，解锁多少多少土地 种植多少种子
         for (int i = 0; i < userLandUnlocks.size(); i++) {
             LandSeed landSeed=new LandSeed();
@@ -185,6 +204,7 @@ public class SeedServiceImpl implements ISeedService {
             //根据token得到用户id
             landSeed.setUserId(user.getId());
             //结束时间
+            landSeed.setPlantTime(time2);
             list.add(landSeed);
         }
         //增加要种植种子的信息和用户信息
@@ -192,31 +212,42 @@ public class SeedServiceImpl implements ISeedService {
         if(i<=0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"种植异常");
         }
-        //种植所获得的经验
-        double experience = Math.pow(seedPlantVo.getSeedGrade(), 2 / 5.0) * 100;
-        Integer experienceInteger = Integer.valueOf((int) experience);
-        //种植一次所获得的金币
-        double userGold  = Math.pow(seedPlantVo.getSeedGrade(), 2 * 50) +500;
-        Integer userGoldInteger = Integer.valueOf((int) userGold);
-        map.put("experienceInteger",experienceInteger);
-        map.put("userGoldInteger",userGoldInteger);
-        return map;
+
     }
 
     @Override
     public int updateUser(UserInIf userInIf) {
+        //种植所获得的经验
+        double experience = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) * 100;
+        Integer experienceInteger = Integer.valueOf((int) experience);
+
+        //种植一次所获得的金币
+        double userGold  = Math.pow(userInIf.getSeedGrade(), 2)*50 +2000;
+        Integer userGoldInteger = Integer.valueOf((int) userGold);
+
+        System.out.println("userGoldInteger =金币 " + userGoldInteger);
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
         //判断当前经验是否等级下一级的等级 如果等于等级加一
         if(userInIf.getUserInfoNowExperience().equals(userInIf.getUserInfoNextExperience())){
             //算出下一级的总经验
             double ripetime = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) *100;
-            Long nextExperience=(long) ripetime;
+            Integer nextExperience = Integer.valueOf((int) ripetime);
             userInIf.setUserInfoNextExperience(nextExperience);
             userInIf.setUserGold(userInIf.getUserGold()+1);
         }
+        userInIf.setUserGold(userGoldInteger);
+        userInIf.setUserInfoNextExperience(experienceInteger);
+        userInIf.setUserId(user.getId());
         //修改用户信息
         int i = seedMapper.updateUser(userInIf);
-        //收取种子后 删除土地种子表中对应的数据
-        int i1 = seedMapper.deleteLandSeed(userInIf.getUserId());
+        if(i<=0){
+            log.info("收取时，修改用户信息失败");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+
+        //收取种子后 删除当前用户土地种子的数据
+        int i1 = seedMapper.deleteLandSeed(user.getId());
         if(i1<0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取种子异常");
         }
@@ -245,17 +276,13 @@ public class SeedServiceImpl implements ISeedService {
         if(landYesVos.size()==0){
                 return null;
         }else{
-            //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
-            double ripetime = Math.pow(landYesVos.get(0).getSeedGrade(), 3 / 2.0) * 20 + 60;
-            //将秒数转换成整数类型
-            Integer integer = Integer.valueOf((int) ripetime);
-            //得到时间戳
-            Long timestamp = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-            //得到时间戳转换成时间格式，最后得到种子成熟的时间
-            LocalDateTime time2 =LocalDateTime.ofEpochSecond(timestamp/1000+integer,0,ZoneOffset.ofHours(8));
-            long l = time2.toEpochSecond(ZoneOffset.of("+8"));
+            for (int i = 0; i < landYesVos.size(); i++) {
+                //种植结束时间
+                long l1 = landYesVos.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"));
+                landYesVos.get(i).setTime(l1);
+            }
+
             map.put("landSeedVos",landYesVos);
-            map.put("time",l);
         }
 
         return map;

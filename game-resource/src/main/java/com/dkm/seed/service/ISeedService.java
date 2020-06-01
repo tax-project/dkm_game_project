@@ -37,7 +37,7 @@ public interface ISeedService {
      * 种植
      *
      */
-    Map<String,Object> queryAlreadyPlantSeed(SeedPlantVo seedPlantVo);
+    void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo);
 
     /**
      * 根据种子查询种子

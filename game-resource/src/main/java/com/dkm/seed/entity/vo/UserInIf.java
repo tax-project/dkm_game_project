@@ -25,11 +25,11 @@ public class UserInIf {
     /**
      * 用户当前经验
      */
-    private Long userInfoNowExperience;
+    private Integer userInfoNowExperience;
     /**
      * 用户下一等级所需经验值
      */
-    private Long userInfoNextExperience;
+    private Integer userInfoNextExperience;
     /**
      * 种子等级
      */

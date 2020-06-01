@@ -41,5 +41,10 @@ public class LandYesVo {
      * 种子图片
      */
     private String seedImg;
+    /**
+     * 种子种植结束时间
+     */
+    private LocalDateTime plantTime;
 
+    private Long time;
 }

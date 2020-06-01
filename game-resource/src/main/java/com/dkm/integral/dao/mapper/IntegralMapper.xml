@@ -17,13 +17,15 @@
 
 
     <update id="updateUserStarsNumber">
-        update tb_stars set
-        <if test="sTotalConsumedQuantity!=null">
-            s_Total_consumed_quantity=#{sTotalConsumedQuantity}
-        </if>
-        <if test="sCurrentlyHasNum!=null">
-            s_Currently_has_num=s_Currently_has_num+#{sCurrentlyHasNum}
-        </if>
+        update tb_stars
+        <set>
+            <if test="sTotalConsumedQuantity!=null">
+                s_Total_consumed_quantity=#{sTotalConsumedQuantity}
+            </if>
+            <if test="sCurrentlyHasNum!=null">
+                s_Currently_has_num=s_Currently_has_num+#{sCurrentlyHasNum}
+            </if>
+        </set>
            where user_id=#{userId} and s_star=#{sStar}
     </update>
 
