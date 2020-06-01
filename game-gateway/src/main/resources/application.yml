@@ -6,10 +6,6 @@ spring:
     name: game-gateway
   profiles:
     active: local
-eureka:
-  client:
-    service-url:
-      defaultZone: http://192.168.10.133:10000/eureka
 
 zuul:
   routes:
