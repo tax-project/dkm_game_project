@@ -55,6 +55,9 @@ public class WebSocketServer implements CommandLineRunner {
    private ManyChatWebSocketHandle manyChatWebSocketHandle;
 
    @Autowired
+   private FamilyWebSocketHandle familyWebSocketHandle;
+
+   @Autowired
    private FileWebSocketHandle fileWebSocketHandle;
 
    private ChannelFuture init() {
@@ -83,6 +86,7 @@ public class WebSocketServer implements CommandLineRunner {
                   pipeline.addLast(heartWebSocketHandle);
                   pipeline.addLast(oneChatWebSocketHandle);
                   pipeline.addLast(manyChatWebSocketHandle);
+                  pipeline.addLast(familyWebSocketHandle);
                   //文件
                   pipeline.addLast(fileWebSocketHandle);
 

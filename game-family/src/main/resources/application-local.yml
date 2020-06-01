@@ -4,6 +4,17 @@ spring:
     username: root
     password: kgdatj1110
     driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: 192.168.10.133
+    username: guest
+    password: guest
+    port: 5672
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
   redis:
     host: 192.168.10.133
     timeout: 2000
