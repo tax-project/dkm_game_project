@@ -76,7 +76,7 @@ public class ApparelServiceImpl implements ApparelService {
         }
         ApparelDto doing = apparelUserDao.getDoing(apparelUserEntity.getApparelUserId());
         int l = (int) (apparelUserEntity.getApparelCompleteTime().toEpochSecond(ZoneOffset.of("+8")) - (System.currentTimeMillis() / 1000));
-        int l1 = l / 60 / 30;
+        int l1 = l / 60 ;
         doing.setDiamond(Math.max(l1,1));
         doing.setApparelCompleteTime(DateUtil.formatDateTime(apparelUserEntity.getApparelCompleteTime()));
         return doing;

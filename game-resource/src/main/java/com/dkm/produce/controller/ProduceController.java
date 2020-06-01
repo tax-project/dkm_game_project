@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,7 +42,6 @@ public class ProduceController {
         return produceService.insertProduce(attendantId);
     }
 
-    @ApiOperation(value = "根据用户id查询跟班和跟班产生的物品", notes = "根据用户id查询跟班和跟班产生的物品")
     @GetMapping("/queryJoinOutPutGoods")
     @CrossOrigin
     public List<AttendantGoods> queryJoinOutPutGoods(@RequestParam(value = "userId") Long userId){
@@ -51,17 +51,17 @@ public class ProduceController {
 
     @ApiOperation(value = "查询用户产出的物品", notes = "查询用户产出的物品")
     @GetMapping("/queryOutput")
-    public List<AttendantGoods> queryOutput(){
+    public List<UserAttendantGoods> queryOutput(){
         return produceService.queryOutput();
     }
 
     /**
-     * 修该掠夺赢了之后
+     * 掠夺赢了之后
      * 修改产出输方产出的物品
      * @param id  产出id
      * @return
      */
-    @ApiOperation(value = "修该掠夺赢了之后修改产出输方产出的物品", notes = "修该掠夺赢了之后修改产出输方产出的物品")
+    @ApiOperation(value = "掠夺赢了之后修改产出输方产出的物品", notes = "掠夺赢了之后修改产出输方产出的物品")
     @GetMapping("/deleteOutGoodNumber")
     @CrossOrigin
     public int deleteOutGoodNumber(Long id){

@@ -4,13 +4,13 @@
 <mapper namespace="com.dkm.seed.dao.SeedMapper">
 
     <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.vo.SeedPlantUnlock" parameterType="java.lang.Long">
-        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
+        select a.seed_id,a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,c.seed_present_unlock,c.seed_all_unlock,c.seed_status from
         tb_seed a, tb_plant_unlock c where c.user_id=#{userId}  and a.seed_id=c.seed_id
     </select>
 
-    <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
-        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,a.seed_status,b.plant_time
-        from tb_land_seed b,tb_seed a where a.seed_id=b.seed_id and b.user_id=#{userId}
+    <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandYesVo" parameterType="java.lang.Long">
+        select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,b.plant_time
+        from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId}
     </select>
 
     <select id="queryAreUnlocked" resultType="com.dkm.seed.entity.vo.LandSeedVo" parameterType="java.lang.Long">
@@ -28,33 +28,37 @@
     </update>
 
     <update id="updateSeedPresentUnlock">
-        update tb_plant_unlock set
+        update tb_plant_unlock
+        <set>
         <if test="seedPresentUnlock!=null">
-            seed_present_unlock=#{seedPresentUnlock}
+            seed_present_unlock=#{seedPresentUnlock},
         </if>
         <if test="seedStatus!=null">
             seed_status=#{seedStatus}
         </if>
+        </set>
         where user_id=#{userId} and seed_id=#{seeId}
     </update>
 
-    <update id="updateUser">
-        update tb_user_info set
-        <if test="userGold!=null">
-            user_info_gold=#{userGold}
-        </if>
-        <if test="userInfoPacketBalance!=null">
-            user_info_packet_balance=#{userInfoPacketBalance}
-        </if>
-        <if test="userInfoNowExperience!=null">
-            user_info_now_experience=#{userInfoNowExperience}
-        </if>
-        <if test="userInfoNextExperience!=null">
-            user_info_next_experience=#{userInfoNextExperience}
-        </if>
-        <if test="userInfoGrade!=null">
-            user_info_grade=#{userInfoGrade}
-        </if>
+    <update id="updateUser" parameterType="com.dkm.seed.entity.vo.UserInIf">
+        update tb_user_info
+        <set>
+            <if test="userGold!=null">
+                user_info_gold=user_info_gold+#{userGold},
+            </if>
+            <if test="userInfoPacketBalance!=null">
+                user_info_packet_balance=user_info_packet_balance+#{userInfoPacketBalance},
+            </if>
+            <if test="userInfoNowExperience!=null">
+                user_info_now_experience=#{userInfoNowExperience},
+            </if>
+            <if test="userInfoNextExperience!=null">
+                user_info_next_experience=#{userInfoNextExperience},
+            </if>
+            <if test="userInfoGrade!=null">
+                user_info_grade=#{userInfoGrade},
+            </if>
+        </set>
         where user_id=#{userId}
     </update>
 
@@ -63,8 +67,12 @@
         update tb_seed set seed_present_unlock=seed_present_unlock-1 where seed_id=#{seedId}
     </update>
 
-    <insert id="addPlant"  parameterType="com.dkm.seed.entity.LandSeed">
-       insert into tb_land_seed(user_id,seed_id,la_id,plant_time)values(#{userId},#{seedId},#{laId},#{plantTime});
+
+    <insert id="addPlant" parameterType="com.dkm.seed.entity.LandSeed">
+        insert into tb_land_seed(le_id,user_id,seed_id,la_no,plant_time)
+        <foreach collection="list" item="lists" index="index" separator="union all">
+            select #{lists.leId},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime}
+        </foreach>
     </insert>
 
 
@@ -77,7 +85,7 @@
     </insert>
 
 
-    <delete id="deleteLandSeed">
+    <delete id="deleteLandSeed" parameterType="java.lang.Long">
         delete from tb_land_seed where user_id=#{userId}
     </delete>
 

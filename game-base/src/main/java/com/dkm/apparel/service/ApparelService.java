@@ -67,6 +67,7 @@ public interface ApparelService {
     /**
      * 出售服饰
      * @param apparelUserId
+     * @param userId
      */
     void sellApparel(Long apparelUserId,Long userId);
 }

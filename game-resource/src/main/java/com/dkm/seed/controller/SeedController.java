@@ -6,9 +6,9 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
-import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.LandSeedVo;
+import com.dkm.seed.entity.vo.SeedPlantVo;
 import com.dkm.seed.entity.vo.SeedVo;
 import com.dkm.seed.entity.vo.UserInIf;
 import com.dkm.seed.service.ISeedService;
@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -77,16 +78,29 @@ public class SeedController {
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "grade", value = "种子等级"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
     })
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
-    public List<LandSeedVo> plant(@RequestBody LandSeed landSeed) {
-        if (landSeed.getSeedId() == 0) {
+    public void plant(@RequestBody SeedPlantVo seedPlantVo) {
+        if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
-        return iSeedService.queryAlreadyPlantSeed(landSeed);
+         iSeedService.queryAlreadyPlantSeed(seedPlantVo);
+    }
+
+
+    /**
+     * 查询已经种植的种子
+     */
+    @ApiOperation(value = "查询已经种植的种子", notes = "查询已经种植的种子")
+    @GetMapping("/queryAlreadyPlantSd")
+    @CrossOrigin
+    @CheckToken
+    public  Map<String,Object> queryAlreadyPlantSd(){
+        return iSeedService.queryAlreadyPlantSd();
     }
 
     /**
@@ -94,18 +108,18 @@ public class SeedController {
      */
     @ApiOperation(value = "收取种子", notes = "收取种子")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userGold", value = "用户金币"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种植等级"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
-            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "userInfoNowExperience", value = "种子当前经验"),
-            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNowExperience", value = "种子当前经验"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
     })
     @PostMapping("/gather")
     @CrossOrigin
     @CheckToken
     public Message gather(@RequestBody UserInIf userInIf) {
-        if (userInIf.getUserGold() == null  || userInIf.getUserInfoPacketBalance() == null ||
-        userInIf.getUserInfoNextExperience()==null || userInIf.getUserInfoNowExperience()==null || userInIf.getUserInfoGrade()==0) {
+        System.out.println("userInIf = " + userInIf);
+        if (userInIf.getUserInfoPacketBalance() == null || userInIf.getUserInfoNextExperience()==null || userInIf.getUserInfoNowExperience()==null || userInIf.getUserInfoGrade()==null || userInIf.getSeedGrade()==null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
         int i = iSeedService.updateUser(userInIf);
