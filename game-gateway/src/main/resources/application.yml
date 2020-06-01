@@ -2,21 +2,25 @@ server:
   port: 8000
 spring:
   application:
-    name: game-eureka
+#    name: game-eureka
+    name: game-gateway
   profiles:
     active: local
-
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.10.133:10000/eureka
 
 zuul:
   routes:
     api-user:
-      path: /*/*/game-user/**
+      path: /game-user/**
       serviceId: service-user
-      strip-prefix: false
+      strip-prefix: true
     api-base:
-      path: /*/*/game-base/**
+      path: /game-base/**
       serviceId: service-base
-      strip-prefix: false
+      strip-prefix: true
     api-family:
       path: /*/*/game-family/**
       serviceId: service-family
