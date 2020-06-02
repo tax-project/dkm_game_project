@@ -48,7 +48,7 @@ public class PetServiceImpl implements PetService {
     @Resource
     private ResourceFeignClient resourceFeignClient;
 
-    private List<FoodDetailEntity> foodDetailEntities;
+    private static List<FoodDetailEntity> foodDetailEntities;
 
     /**
      * 获取宠物页面所需信息
@@ -68,22 +68,15 @@ public class PetServiceImpl implements PetService {
         if(foodDetailEntities==null){
             foodDetailEntities = foodDetailMapper.selectList(null);
         }
-        if (listResult.getData() == null || listResult.getData().size() == 0) {
-            //背包没有数据返回>>添加完整
-            for (FoodDetailEntity foodDetailEntity : foodDetailEntities) {
-                TbEquipmentKnapsackVo foodInfo = new TbEquipmentKnapsackVo();
-                foodInfo.setFoodId(foodDetailEntity.getFoodId());
-                foodInfo.setFoodName(foodDetailEntity.getFoodName());
-                foodInfo.setFoodNumber(0);
-                foodInfo.setFoodUrl(foodDetailEntity.getFoodUrl());
-                listResult.getData().add(foodInfo);
-            }
-        } else if(listResult.getData().size()<3){
-            //有部分食物>>添加完整
+        if(listResult.getData()==null||listResult.getData().size()<3){
             List<FoodDetailEntity> a = foodDetailEntities;
-            for (TbEquipmentKnapsackVo foodInfo : listResult.getData()) {
-                a = a.stream().filter(food -> !food.getFoodId().equals(foodInfo.getFoodId())).collect(Collectors.toList());
+            //有部分食物>>添加完整
+            if(listResult.getData()!=null){
+                for (TbEquipmentKnapsackVo foodInfo : listResult.getData()) {
+                    a = a.stream().filter(food -> !food.getFoodId().equals(foodInfo.getFoodId())).collect(Collectors.toList());
+                }
             }
+            //没有食物
             a.forEach(foodDetailEntity -> {
                 TbEquipmentKnapsackVo foodInfo = new TbEquipmentKnapsackVo();
                 foodInfo.setFoodId(foodDetailEntity.getFoodId());
@@ -205,6 +198,26 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<PetsDto> getPetInfo(Long userId) {
+        //获取用户信息
+        UserInfo userInfo = petsMapper.findUserInfo(userId);
+        //计算等级应有宠物数
+        Integer petCount = Math.min(userInfo.getUserInfoGrade() / 5 + 1, 3);
+        //获得查询宠物数
+        Integer count = petsMapper.selectCount(new QueryWrapper<PetUserEntity>().lambda().eq(PetUserEntity::getUserId, userId));
+        if (count < petCount) {
+            //当前宠物小于应有宠物 >>还有宠物未解锁 >>添加应有宠物
+            List<PetUserEntity> list = new ArrayList<>();
+            for (int i = count; i < petCount; i++) {
+                PetUserEntity pet = new PetUserEntity();
+                pet.setPGrade(1);
+                pet.setPNowFood(0);
+                pet.setUserId(userId);
+                pet.setPId(idGenerator.getNumberId());
+                pet.setPetId(i + 1L);
+                list.add(pet);
+            }
+            petsMapper.insertList(list);
+        }
         return petsMapper.findById(userId);
     }
 }

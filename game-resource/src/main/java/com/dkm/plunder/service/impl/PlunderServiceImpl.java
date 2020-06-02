@@ -14,11 +14,13 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.plunder.dao.PlunderMapper;
 import com.dkm.plunder.entity.Plunder;
 import com.dkm.plunder.entity.vo.PlunderGoodsVo;
+import com.dkm.plunder.entity.vo.PlunderUserGoodVo;
 import com.dkm.plunder.entity.vo.PlunderVo;
 import com.dkm.plunder.service.IPlunderGoodsService;
 import com.dkm.plunder.service.IPlunderService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author qf
@@ -109,12 +112,31 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          }
       }
 
+
       List<GoodQueryVo> goodsList = goodsService.queryGoodsList(longList);
 
-      Map<String,Object> map = new HashMap<>(4);
+      //转成map
+      Map<Long, List<GoodQueryVo>> goodMap = list.stream()
+            .collect(Collectors.toMap(UserPlunderBo::getUserId, userPlunderBo ->
+         new ArrayList<>()
+      ));
 
-      map.put("userInfo",list);
-      map.put("goodInfo",goodsList);
+      for (GoodQueryVo vo : goodsList) {
+         List<GoodQueryVo> goodQueryVos = goodMap.get(vo.getUserId());
+         goodQueryVos.add(vo);
+      }
+
+      List<Object> resultList = list.stream().map(userPlunderBo -> {
+         PlunderUserGoodVo vo = new PlunderUserGoodVo();
+         BeanUtils.copyProperties(userPlunderBo, vo);
+         vo.setGoodList(goodMap.get(userPlunderBo.getUserId()));
+         return vo;
+      }).collect(Collectors.toList());
+
+
+      Map<String,Object> map = new HashMap<>(3);
+
+      map.put("infoList",resultList);
 
       //查询用户信息
       Result<UserInfoQueryBo> queryUser = userFeignClient.queryUser(user.getId());
