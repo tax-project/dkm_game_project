@@ -98,13 +98,11 @@ public class LongToJsonConfig extends WebMvcConfigurationSupport implements WebM
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/**").addResourceLocations(
-//              "classpath:/static/");
         registry.addResourceHandler("swagger-ui.html").addResourceLocations(
               "classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations(
               "classpath:/META-INF/resources/webjars/");
-        registry.addResourceHandler("/img/**").addResourceLocations("file:/root/tax-img/");
+        registry.addResourceHandler("/img/**").addResourceLocations("file:E:\\img/game-img/");
         super.addResourceHandlers(registry);
     }
 
