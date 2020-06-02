@@ -7,7 +7,7 @@ spring:
   profiles:
     active: local
   application:
-    name: service-chat
+    name: chat
   jmx:
     enabled: false
 

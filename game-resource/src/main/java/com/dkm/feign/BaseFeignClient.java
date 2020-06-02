@@ -16,7 +16,7 @@ import java.util.List;
  * @DESCRIPTION:
  * @DATE: 2020/6/1 14:43
  */
-@FeignClient(value = "service-base", fallback = BaseFeignClientFallback.class)
+@FeignClient(value = "base", fallback = BaseFeignClientFallback.class)
 public interface BaseFeignClient {
     /**
      * 战斗获取宠物信息（内部）

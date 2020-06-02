@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2020/5/14
  * @vesion 1.0
  **/
-@FeignClient(value = "service-chat", fallback = FriendFeignClientFallback.class)
+@FeignClient(value = "chat", fallback = FriendFeignClientFallback.class)
 public interface FriendFeignClient {
 
 
