@@ -95,7 +95,7 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * @param userId
      * @return
      */
-    List<Seed> queryAreUnlocked(Long userId);
+    List<SeedUnlockVo> queryAreUnlocked(Long userId);
 
     SeedDetailsVo querySeedById(Integer seedId ,Long userId);
 }

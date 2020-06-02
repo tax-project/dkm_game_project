@@ -271,7 +271,6 @@ public class SeedServiceImpl implements ISeedService {
 
                     //修改用户信息
                     int i = seedMapper.updateUser(userInIf);
-
                 } else{
                     userInIf.setUserGold(userGoldInteger);
                     userInIf.setUserInfoNowExperience(experienceInteger);
@@ -296,7 +295,7 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public List<Seed> queryAreUnlocked(Long userId) {
+    public List<SeedUnlockVo> queryAreUnlocked(Long userId) {
         //得到用户token信息
         return seedMapper.queryAreUnlocked(userId);
     }
