@@ -17,7 +17,7 @@ public class PetsDto {
      * */
     private String petUrl;
     /**
-     * 喂食进度
-     * */
-    private Double schedule;
+     * 宠物等级
+     */
+    private Integer pGrade;
 }

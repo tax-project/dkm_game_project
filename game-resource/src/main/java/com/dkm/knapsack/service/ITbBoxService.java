@@ -21,5 +21,5 @@ public interface ITbBoxService{
 
     List<TbBox> selectAll();
 
-    List<TbEquipmentVo> selectByBoxIdTwo(List<Long> boxId);
+    List<TbEquipmentVo> selectByBoxIdTwo(List<String> boxId);
 }

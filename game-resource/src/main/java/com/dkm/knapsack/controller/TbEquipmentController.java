@@ -2,6 +2,8 @@ package com.dkm.knapsack.controller;
 
 
 
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
@@ -101,11 +103,16 @@ public class TbEquipmentController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/selectByEquipmentId")
+    @GetMapping("/selectByEquipmentId/{equipmentId}")
     @CrossOrigin
     @CheckToken
-    public List<TbEquipmentVo> selectByEquipmentId(Long equipmentId){
-       List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(equipmentId);
+    public List<TbEquipmentVo> selectByEquipmentId(@PathVariable("equipmentId") String equipmentId){
+        if(!StringUtils.isEmpty(equipmentId)){
+            if(StringUtils.isEmpty(equipmentId)){
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+            }
+        }
+       List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(Long.valueOf(equipmentId));
        if(!StringUtils.isEmpty(list)){
            return list;
        }else{

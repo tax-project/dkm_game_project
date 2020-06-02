@@ -1,7 +1,6 @@
 package com.dkm.attendant.service.Impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
@@ -13,6 +12,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.PetsDto;
 import com.dkm.jwt.contain.LocalUser;
@@ -20,7 +20,6 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.utils.IdGenerator;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author 刘梦祺
@@ -57,6 +56,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private UserFeignClient userFeignClient;
+    @Autowired
+    private BaseFeignClient baseFeignClient;
+
     /**
      * 获取用户抓到的跟班信息
      * @return
@@ -155,10 +157,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
         //我方宠物信息
-        Result<List<PetsDto>> petInfo = userFeignClient.getPetInfo(query.getId());
+        Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
+        System.out.println("petInfo = " + petInfo.getData().size());
         //随机获取我方宠物
-        int index = (int) (Math.random() * petInfo.getData().size());
-        PetsDto myPetsDto = petInfo.getData().get(index);
+        PetsDto myPetsDto = petInfo.getData().get(new Random().nextInt(petInfo.getData().size()));
         myPet=myPetsDto.getPetName();
 
         //得到装备信息
@@ -188,10 +190,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
         //他方宠物信息
-        Result<List<PetsDto>> petInfo1 = userFeignClient.getPetInfo(caughtPeopleId);
+        Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
+        System.out.println("petInfo1 = " + petInfo1);
         //随机获取他方宠物
-        int index1 = (int) (Math.random() * petInfo1.getData().size());
-        PetsDto hePetsDto = petInfo1.getData().get(index1);
+        PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
         //得到装备信息
@@ -241,8 +243,18 @@ public class AttendantServiceImpl implements IAttendantService {
                 +(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()*heEquipBonus-userInfoQueryBoResult.getData().getUserInfoRenown()+myEquipBonus);
 
         Integer otherForce = Integer.valueOf((int) heRipetime);
-
-
+        //如果双方宠物相同 等级高的先动手
+        if(myPet.equals(hePet)){
+           if(myPetsDto.getPGrade().equals(hePetsDto.getPGrade())){
+            if(myPetsDto.getPGrade()>hePetsDto.getPGrade()){
+                //我方先动手
+                map.put("status",0);
+            }else{
+                //他方先动手
+                map.put("status",1);
+            }
+           }
+        }
         if ("老鼠".equals(myPet)) {
            if("大象".equals(hePet)){
                //我方先动手
@@ -308,7 +320,7 @@ public class AttendantServiceImpl implements IAttendantService {
     @Override
     public int gather(Integer autId) {
         long exp1 = System.currentTimeMillis() / 1000 + 43200;
-        int gather = attendantMapper.gather(exp1,autId);
+        int gather = attendantMapper.gather(exp1,Long.valueOf(autId));
         return gather;
     }
 

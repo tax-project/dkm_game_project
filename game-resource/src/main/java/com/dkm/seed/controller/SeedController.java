@@ -7,10 +7,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.Seed;
-import com.dkm.seed.entity.vo.LandSeedVo;
-import com.dkm.seed.entity.vo.SeedPlantVo;
-import com.dkm.seed.entity.vo.SeedVo;
-import com.dkm.seed.entity.vo.UserInIf;
+import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,15 +34,15 @@ public class SeedController {
     private ISeedService iSeedService;
 
     /**
-     * 根据用户id得到种子（是否解锁）
+     * 根据用户id得到种子信息
      *
      * @return
      */
-    @ApiOperation(value = "根据用户id得到种子（是否解锁）", notes = "根据用户id得到种子（是否解锁）")
+    @ApiOperation(value = "根据用户id得到种子信息", notes = "根据用户id得到种子")
     @GetMapping("/queryUserIdSeed")
     @CrossOrigin
     @CheckToken
-    public List<Seed> queryUserIdSeed() {
+    public List<SeedPlantUnlock> queryUserIdSeed() {
         return iSeedService.queryUserIdSeed();
     }
 
@@ -135,8 +132,8 @@ public class SeedController {
      * 根据用户id查询已解锁的种子
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
-    @GetMapping("/queryAreUnlocked")
-    public List<Seed> queryAreUnlocked(@RequestParam(value = "userId") Long userId){
+    @GetMapping("/queryAreUnlocked/{userId}")
+    public List<Seed> queryAreUnlocked(@PathVariable("userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
 
@@ -150,5 +147,23 @@ public class SeedController {
     public Result<UserInfoQueryBo> queryUserAll(){
        return iSeedService.queryUserAll();
     }
+
+    /**
+     * 根据种植id查询种植信息
+     */
+    @ApiOperation(value = "根据种植id查询种植信息", notes = "根据种植id查询种植信息")
+    @GetMapping("/querySeedById")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种植id"),
+    })
+    @CrossOrigin
+    @CheckToken
+    public SeedDetailsVo querySeedById(@RequestParam(value = "seedId") Integer seedId){
+        if(seedId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
+           return iSeedService.querySeedById(seedId);
+    }
+
 
 }

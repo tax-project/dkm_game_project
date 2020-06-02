@@ -122,7 +122,7 @@ public class AttendantController {
      */
     @ApiOperation(value = "宠物战斗",notes = "成功返回数据 反则为空")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "id",value = "被抓人id"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
     })
     @GetMapping("/petBattle")
     @CrossOrigin
@@ -130,8 +130,7 @@ public class AttendantController {
         if(caughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"被抓人Id不能为空");
         }
-
-        return null;
+        return iAttendantService.petBattle(caughtPeopleId);
     }
 
 
