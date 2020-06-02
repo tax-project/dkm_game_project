@@ -5,6 +5,8 @@ spring:
     name: game-gateway
   profiles:
     active: local
+  jmx:
+    enabled: false
 
 zuul:
   routes:
