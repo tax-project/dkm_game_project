@@ -47,10 +47,6 @@ public class UserFeignClientFallback implements UserFeignClient {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
-   @Override
-   public Result<List<PetsDto>> getPetInfo(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
 
    @Override
    public Result updateInfo(UserInfoSkillBo bo) {

@@ -53,6 +53,6 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * @param autId
      * @return
      */
-    int gather(long exp1,long autId);
+    int gather(Long exp1,Long autId);
 
 }

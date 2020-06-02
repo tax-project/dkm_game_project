@@ -70,10 +70,5 @@ public interface UserFeignClient {
     */
    @PostMapping("/v1/userInfo/updateInfo")
    Result updateInfo(@RequestBody UserInfoSkillBo bo);
-   /**
-    * 战斗获取宠物信息（内部）
-    * @param userId
-    */
-   @GetMapping("/v1/pets/getPetInfo")
-   Result<List<PetsDto>> getPetInfo(@RequestParam Long userId);
+
 }

@@ -42,9 +42,9 @@ public class ProduceController {
         return produceService.insertProduce(attendantId);
     }
 
-    @GetMapping("/queryJoinOutPutGoods")
+    @GetMapping("/queryJoinOutPutGoods/{userId}")
     @CrossOrigin
-    public List<AttendantGoods> queryJoinOutPutGoods(@RequestParam(value = "userId") Long userId){
+    public List<AttendantGoods> queryJoinOutPutGoods(@PathVariable("userId") Long userId){
         return produceService.queryJoinOutPutGoods(userId);
     }
 

@@ -57,23 +57,23 @@ public interface ResourceFeignClient {
      * 查询当前用户已经解锁的种子
      * @return
      */
-    @PostMapping("/Seed/queryAreUnlocked")
-    Result<List<Seed>> queryAreUnlocked(@RequestParam("userId")Long userId);
+    @GetMapping("/Seed/queryAreUnlocked/{userId}")
+    Result<List<Seed>> queryAreUnlocked(@PathVariable("userId")Long userId);
 
     /**
      * 管家收装备
      * @param boxId
      * @return
      */
-    @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
+    @GetMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 
 
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
-    @GetMapping("/Attendant/queryJoinOutPutGoods")
-    Result<List<AttendantGoods>> queryJoinOutPutGoods(@RequestParam("userId")Long userId);
+    @GetMapping("/v1/produce/queryJoinOutPutGoods/{userId}")
+    Result<List<AttendantGoods>> queryJoinOutPutGoods(@PathVariable("userId")Long userId);
 
 
     /**
