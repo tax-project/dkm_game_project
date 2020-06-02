@@ -80,6 +80,13 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                 long userId = idGenerator.getNumberId();
                 user.setUserIsEffective(0);
                 user.setUserId(userId);
+                if ("1".equals(weChatUtilBO.getWeChatSex())) {
+                    //男
+                    user.setUserSex(1);
+                } {
+                    //女
+                    user.setUserSex(2);
+                }
                 int insert = baseMapper.insert(user);
                 if (insert == 0) {
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "用户创建登录失败，请重新登录");
@@ -161,6 +168,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         long id = idGenerator.getNumberId();
         user1.setUserId(id);
         user1.setUserIsEffective(0);
+        user1.setUserSex(1);
         user1.setWeChatOpenId(vo.getUserName());
         user1.setWeChatNickName(vo.getNickName());
         user1.setUserRemark(ShaUtils.getSha1(vo.getPassword()));
