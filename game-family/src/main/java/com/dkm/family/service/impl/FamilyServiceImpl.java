@@ -50,16 +50,22 @@ public class FamilyServiceImpl implements FamilyService {
         familyDetailEntity.setUserId(userId);
         familyDetailEntity.setFamilyDetailsId(idGenerator.getNumberId());
         familyDetailEntity.setFamilyId(family.getFamilyId());
-        if(familyDao.insert(family)<1||familyDetailDao.insert(familyDetailEntity)<1){
+        int insertFamily = familyDao.insert(family);
+        int insertFamilyDetailEntity = familyDetailDao.insert(familyDetailEntity);
+        if(insertFamily<1||insertFamilyDetailEntity<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"创建家族失败");
         }
     }
 
     @Override
-    public Map<String,Object> getFamilyInfo(Long familyId) {
+    public Map<String,Object> getFamilyInfo(Long userId) {
+        FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
+        if(familyDetailEntity==null){
+            throw  new ApplicationException(CodeType.RESOURCES_NOT_FIND,"您当前还未加入任何家族");
+        }
         Map<String,Object> map = new HashMap<>(2);
-        map.put("family",familyDao.selectById(familyId));
-        map.put("user",familyDetailDao.selectList(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId,familyId)));
+        map.put("family",familyDao.selectById(familyDetailEntity.getFamilyId()));
+        map.put("user",familyDetailDao.selectFamilyUser(familyDetailEntity.getFamilyId()));
         return map;
     }
 
