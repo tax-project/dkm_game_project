@@ -119,6 +119,7 @@ public class SeedServiceImpl implements ISeedService {
         SeedDetailsVo seedDetailsVo = seedMapper.querySeedById(seeId, user.getId());
         int sum=(int)Math.ceil(seedDetailsVo.getSeedGrade()/10.00)*10;
         seedDetailsVo.setPrestige(sum);
+        seedDetailsVo.setUnlockFragmentedGoldCoins(seedDetailsVo.getSeedGrade()*1000);
         return seedDetailsVo;
     }
 
@@ -166,6 +167,7 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
+
         Map<String,Object> map=new HashMap<>();
         List<LandSeed> list=new ArrayList<>();
         //得到用户token信息
@@ -175,13 +177,19 @@ public class SeedServiceImpl implements ISeedService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
 
+        //表示有新的种子种植解锁 种植
+      /*  if(seedPlantVo.getStatus()==1){
+            //根据用户查询解锁的土地
+            List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
+
+        }*/
 
         //根据用户查询解锁的土地
         List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
         //种植时减去用户金币
         IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-        //算出种子种子需要多少钱
+        //算出种植种子需要多少钱
         Integer gold=seedPlantVo.getSeedGold()*userLandUnlocks.size();
         increaseUserInfoBO.setUserId(user.getId());
         increaseUserInfoBO.setUserInfoGold(gold);
@@ -219,11 +227,11 @@ public class SeedServiceImpl implements ISeedService {
 
     @Override
     public int updateUser(UserInIf userInIf) {
+        System.out.println("userInIf = " + userInIf.getUserInfoNowExperience()+"======"+userInIf.getUserInfoNextExperience());
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
         //得到用户已经种植的数据
         List<LandYesVo> landYesVos = seedMapper.queryAlreadyPlantSd(localUser.getUser().getId());
-
         //当前时间必须大于等于种植种植结束时间 才能收取
             if(System.currentTimeMillis()/1000>=landYesVos.get(0).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 //根据用户查询解锁的土地
@@ -233,28 +241,40 @@ public class SeedServiceImpl implements ISeedService {
                 double experience = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) * 100*userLandUnlocks.size();
                 Integer experienceInteger = Integer.valueOf((int) experience);
 
+                System.out.println("experienceInteger ====== " + experienceInteger);
+
                 //种植一次所获得的金币
                 double userGold  = Math.pow(userInIf.getSeedGrade(), 2)*50 +1000*userLandUnlocks.size();
                 Integer userGoldInteger = Integer.valueOf((int) userGold);
-
+                System.out.println("userInIf = " + userInIf.getUserInfoNowExperience()+"======"+userInIf.getUserInfoNextExperience());
 
                 //判断当前经验是否等级下一级的等级 如果等于等级加一
-                if(userInIf.getUserInfoNowExperience()>=userInIf.getUserInfoNextExperience()){
+                if(userInIf.getUserInfoNowExperience()+experienceInteger>=userInIf.getUserInfoNextExperience()){
+
+                    userInIf.setUserInfoNowExperience(userInIf.getUserInfoNextExperience()+experienceInteger);
                     //当前经验减去总经验
                     userInIf.setUserInfoNowExperience(userInIf.getUserInfoNowExperience()-userInIf.getUserInfoNextExperience());
+                    Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+
                     //算出下一级的总经验
-                    double ripetime = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) *100;
-                    Integer nextExperience = Integer.valueOf((int) ripetime);
+                    double v = (((userInfoQueryBoResult.getData().getUserInfoGrade() - 1) +
+                                ((userInfoQueryBoResult.getData().getUserInfoGrade() - 1) *
+                                 (userInfoQueryBoResult.getData().getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
+
+                    Integer nextExperience = Integer.valueOf((int) v);
+                    System.out.println("nextExperience = " + nextExperience);
                     userInIf.setUserInfoNextExperience(nextExperience);
                     userInIf.setUserGold(userGoldInteger);
                     //随便传值 sql语句只是加了1
                     userInIf.setSeedGrade(userInIf.getUserGold()+1);
                     userInIf.setUserId(user.getId());
+
                     //修改用户信息
                     int i = seedMapper.updateUser(userInIf);
+
                 } else{
                     userInIf.setUserGold(userGoldInteger);
-                    userInIf.setUserInfoNextExperience(experienceInteger);
+                    userInIf.setUserInfoNowExperience(experienceInteger);
                     userInIf.setUserId(user.getId());
                     //修改用户信息
                     int i = seedMapper.updateUsers(userInIf);
