@@ -68,7 +68,7 @@
             </plugin>
 
         </plugins>
-        <finalName>game-gateway</finalName>
+        <finalName>game</finalName>
 
         <resources>
             <resource>
