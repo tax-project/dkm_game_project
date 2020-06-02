@@ -75,5 +75,5 @@ public interface UserFeignClient {
     * @param userId
     */
    @GetMapping("/v1/pets/getPetInfo")
-   Result<List<PetsDto>> getPetInfo(@RequestParam Long userId);
+   Result<List<PetsDto>> getPetInfo(Long userId);
 }

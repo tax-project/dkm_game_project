@@ -3,6 +3,7 @@ package com.dkm.shop.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.shop.domain.TbCharge;
 import com.dkm.shop.service.TbChargeService;
 import com.dkm.shop.utils.Message;
@@ -53,7 +54,7 @@ public class TbChargeController {
     })
     @PostMapping("/selectAll")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public List<TbCharge> selectAll(){
         List<TbCharge> list=tbChargeService.selectAll();
         return list;
@@ -83,7 +84,7 @@ public class TbChargeController {
     })
     @PostMapping("/addBlackHouse")
     @CrossOrigin
-   // @CheckToken
+    @CheckToken
     public Message addBlackHouse(@RequestBody TbCharge tbCharges){
         Message errorResult=new Message();
         if(StringUtils.isEmpty(tbCharges.getRuleDescription()) || StringUtils.isEmpty(tbCharges.getChargeImage()) || StringUtils.isEmpty(tbCharges.getChargeMoney()) ){
