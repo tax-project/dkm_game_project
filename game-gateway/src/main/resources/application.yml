@@ -2,10 +2,6 @@ server:
   port: 8000
 spring:
   application:
-<<<<<<< HEAD
-#    name: game-eureka
-=======
->>>>>>> c245512e3daf3c070b3d1c26bec114a9fd676647
     name: game-gateway
   profiles:
     active: local
