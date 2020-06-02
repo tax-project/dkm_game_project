@@ -9,13 +9,13 @@ spring:
 zuul:
   routes:
     api-user:
-      path: /game-user/**
+      path: /*/*/game-user/**
       serviceId: service-user
-      strip-prefix: true
+      strip-prefix: false
     api-base:
-      path: /game-base/**
+      path: /*/*/game-base/**
       serviceId: service-base
-      strip-prefix: true
+      strip-prefix: false
     api-family:
       path: /*/*/game-family/**
       serviceId: service-family
