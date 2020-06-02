@@ -36,10 +36,10 @@
         update tb_plant_unlock
         <set>
         <if test="seedPresentUnlock!=null">
-            seed_present_unlock=#{seedPresentUnlock},
+            seed_present_unlock=seed_present_unlock+1,
         </if>
         <if test="seedStatus!=null">
-            seed_status=#{seedStatus}
+            seed_status=1
         </if>
         </set>
         where user_id=#{userId} and seed_id=#{seedId}

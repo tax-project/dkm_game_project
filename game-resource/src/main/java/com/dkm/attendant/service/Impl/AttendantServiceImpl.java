@@ -191,7 +191,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
-        System.out.println("petInfo1 = " + petInfo1);
         //随机获取他方宠物
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
@@ -206,7 +205,7 @@ public class AttendantServiceImpl implements IAttendantService {
             heEquipBonus=heEquipBonus+tbEquipmentKnapsackVos1.get(i).getEdRedEnvelopeAcceleration().intValue()+
                     tbEquipmentKnapsackVos1.get(i).getEdLife().intValue()+tbEquipmentKnapsackVos1.get(i).getEdDefense().intValue();
 
-            //判断有些装备没有才华将自己赋值给自己
+            //判断有些装备没有才华  默认赋值为0
             if(tbEquipmentKnapsackVos1.get(i).getEdDefense()==null ||tbEquipmentKnapsackVos1.get(i).getEdDefense().intValue()==0){
                 defenseOtherSide=defenseOtherSide;
             }

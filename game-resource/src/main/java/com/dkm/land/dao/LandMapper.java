@@ -33,7 +33,23 @@ public interface LandMapper extends IBaseMapper<Land> {
      */
     int addLand(List<UserLandUnlock> list);
 
+    /**
+     * 查询解锁土地
+     * @param userId
+     * @return
+     */
     List<UserLandUnlock> queryUnlockLand(Long userId);
+
+    /**
+     * 查询未解锁土地
+     * @param userId
+     * @return
+     */
+    List<UserLandUnlock> queryNotUnlocked(Long userId);
+    /**
+     * 修改用户土地状态
+     */
+    int updateStatus(Long userId,Integer laNo);
 
 
 }
