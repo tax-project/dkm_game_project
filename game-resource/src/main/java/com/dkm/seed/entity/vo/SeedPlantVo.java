@@ -14,4 +14,8 @@ public class SeedPlantVo {
     private Integer seedGrade;
 
     private Integer seedGold;
+    /**
+     * 用来做判断
+     */
+    private Integer status;
 }

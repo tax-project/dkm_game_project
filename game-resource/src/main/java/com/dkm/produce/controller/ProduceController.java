@@ -43,7 +43,6 @@ public class ProduceController {
     }
 
     @GetMapping("/queryJoinOutPutGoods/{userId}")
-    @CrossOrigin
     public List<AttendantGoods> queryJoinOutPutGoods(@PathVariable("userId") Long userId){
         return produceService.queryJoinOutPutGoods(userId);
     }
