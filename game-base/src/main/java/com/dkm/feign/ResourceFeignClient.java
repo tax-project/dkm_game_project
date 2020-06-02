@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.entity.AttendantGoods;
+import com.dkm.feign.entity.SeedUnlockVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.personalCenter.domain.Seed;
@@ -58,7 +59,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/Seed/queryAreUnlocked/{userId}")
-    Result<List<Seed>> queryAreUnlocked(@PathVariable("userId")Long userId);
+    Result<List<SeedUnlockVo>> queryAreUnlocked(@PathVariable("userId")Long userId);
 
     /**
      * 管家收装备

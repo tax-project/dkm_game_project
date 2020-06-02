@@ -50,4 +50,12 @@ public class SeedDetailsVo {
      *解锁一次加的声望
      */
     private Integer prestige;
+    /**
+     * 解锁碎片金币
+     */
+   private Integer UnlockFragmentedGoldCoins;
+    /**
+     * 种子状态
+     */
+    private Integer seedStatus;
 }

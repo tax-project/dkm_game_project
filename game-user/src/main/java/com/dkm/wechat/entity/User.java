@@ -48,4 +48,11 @@ public class User {
      * 暂存用户密码
      */
     private String userRemark;
+
+    /**
+     * 性别
+     * 1--男
+     * 2--女
+     */
+    private Integer userSex;
 }
