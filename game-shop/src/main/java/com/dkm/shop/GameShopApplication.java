@@ -40,19 +40,6 @@ public class GameShopApplication extends Aspect {
       return builder.sources(GameShopApplication.class);
    }
 
-   @Bean
-   public LocalUser localUser () {
-      return new LocalUser();
-   }
 
-   @Bean
-   public IdGenerator getIdGenerator() {
-      return new IdGenerator();
-   }
-
-   @Bean
-   public RedisConfig getRedisConfig() {
-      return new RedisConfig();
-   }
 
 }

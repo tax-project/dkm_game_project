@@ -17,7 +17,7 @@ public class ApplicationException extends RuntimeException implements Serializab
     private String msg;
     private int httpStatus;
 
-    ApplicationException() {
+    public ApplicationException() {
         super();
     }
 

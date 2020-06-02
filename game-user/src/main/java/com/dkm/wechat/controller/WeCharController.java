@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
 import com.dkm.wechat.entity.vo.ResultVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;

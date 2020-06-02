@@ -106,6 +106,7 @@ public class MoneyController {
 
 
    @GetMapping("/get")
+   @CheckToken
    public Object get () {
       Result<UserInfoQueryBo> result = feignClient.queryUser(712030633500774400L);
 

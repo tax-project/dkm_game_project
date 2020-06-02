@@ -5,6 +5,7 @@ package com.dkm.shop.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.shop.domain.TbDayCheap;
 import com.dkm.shop.service.TbDayCheapService;
 import com.dkm.shop.utils.Message;
@@ -54,7 +55,7 @@ public class TbDayCheapController {
     })
     @GetMapping("/selectAll")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public List<TbDayCheap> selectAll(){
         List<TbDayCheap> list=tbDayCheapService.selectAll();
         return list;
@@ -84,7 +85,7 @@ public class TbDayCheapController {
     })
     @PostMapping("/addTbDayCheap")
     @CrossOrigin
-   // @CheckToken
+    @CheckToken
     public Message addTbDayCheap(@RequestBody TbDayCheap tbDayCheap){
         Message errorResult=new Message();
         if(StringUtils.isEmpty(tbDayCheap.getCheapName()) || StringUtils.isEmpty(tbDayCheap.getCheapId())

@@ -70,5 +70,4 @@ public interface UserFeignClient {
     */
    @PostMapping("/v1/userInfo/updateInfo")
    Result updateInfo(@RequestBody UserInfoSkillBo bo);
-
 }
