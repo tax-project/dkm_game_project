@@ -160,7 +160,7 @@ public class TbBlackHouseController {
         for (TbBlackHouse blackHouse : selectById) {
 
             if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
-                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
+                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "当前没有人");
             }
             tbBlackHouse.setToId(blackHouse.getToId());
             tbBlackHouse.setFromId(blackHouse.getFromId());
@@ -168,7 +168,7 @@ public class TbBlackHouseController {
         //查询出被关黑屋用户的信息
         TbBlackHouseVo list=tbBlackHouseService.selectIsBlackTwo(tbBlackHouse);
         if( StringUtils.isEmpty(list) ){
-            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
+            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "当前没有人");
         }
         return list;
     }
