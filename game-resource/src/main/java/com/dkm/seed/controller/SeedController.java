@@ -132,8 +132,8 @@ public class SeedController {
      * 根据用户id查询已解锁的种子
      */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
-    @GetMapping("/queryAreUnlocked")
-    public List<Seed> queryAreUnlocked(@RequestParam(value = "userId") Long userId){
+    @GetMapping("/queryAreUnlocked/{userId}")
+    public List<Seed> queryAreUnlocked(@PathVariable("userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
 

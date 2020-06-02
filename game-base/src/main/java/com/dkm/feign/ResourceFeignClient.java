@@ -57,15 +57,15 @@ public interface ResourceFeignClient {
      * 查询当前用户已经解锁的种子
      * @return
      */
-    @PostMapping("/Seed/queryAreUnlocked")
-    Result<List<Seed>> queryAreUnlocked(@RequestParam("userId")Long userId);
+    @GetMapping("/Seed/queryAreUnlocked/{userId}")
+    Result<List<Seed>> queryAreUnlocked(@PathVariable("userId")Long userId);
 
     /**
      * 管家收装备
      * @param boxId
      * @return
      */
-    @PostMapping("/dkm/tbBox/selectByBoxIdTwo")
+    @GetMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 
 
