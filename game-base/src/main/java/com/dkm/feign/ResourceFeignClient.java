@@ -72,8 +72,8 @@ public interface ResourceFeignClient {
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
-    @GetMapping("/Attendant/queryJoinOutPutGoods")
-    Result<List<AttendantGoods>> queryJoinOutPutGoods(@RequestParam("userId")Long userId);
+    @GetMapping("/v1/produce/queryJoinOutPutGoods/{userId}")
+    Result<List<AttendantGoods>> queryJoinOutPutGoods(@PathVariable("userId")Long userId);
 
 
     /**
