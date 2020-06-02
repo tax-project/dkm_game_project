@@ -23,4 +23,8 @@ public class UserLandUnlock {
      * 土地名字
      */
     private String laName;
+    /**
+     * 待解锁
+     */
+    private Integer toUnlocked;
 }
