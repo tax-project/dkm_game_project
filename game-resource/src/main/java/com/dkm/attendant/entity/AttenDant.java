@@ -18,14 +18,6 @@ public class AttenDant {
      */
     private long id;
     /**
-     *用户id
-     */
-    private long userId;
-    /**
-     *物品主键
-     */
-    private long gId;
-    /**
      *跟班图片
      */
     private String atImg;
@@ -50,8 +42,4 @@ public class AttenDant {
      */
     private String exp3;
 
-    /**
-     *被抓人id
-     */
-    private Long caughtPeopleId;
 }

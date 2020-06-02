@@ -6,11 +6,9 @@ import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
-import com.dkm.seed.entity.vo.LandSeedVo;
-import com.dkm.seed.entity.vo.LandYesVo;
-import com.dkm.seed.entity.vo.SeedUnlock;
-import com.dkm.seed.entity.vo.UserInIf;
+import com.dkm.seed.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,12 +21,12 @@ import java.util.List;
  * @USER: 刘梦祺
  * @DATE: 2020/5/11 16:20
  */
-@Service
+@Component
 public interface SeedMapper extends BaseMapper<Seed> {
     /**
      * 根据用户id得到种子（是否解锁）
      */
-    List<Seed> queryUserIdSeed(long userId);
+    List<SeedPlantUnlock> queryUserIdSeed(Long userId);
 
     /**
      * 根据用户id修改金币和声望
@@ -83,6 +81,11 @@ public interface SeedMapper extends BaseMapper<Seed> {
     int updateUser(UserInIf userInIf);
 
     /**
+     * 修改用户信息
+     */
+    int updateUsers(UserInIf userInIf);
+
+    /**
      * 收取种子后 删除土地种子表中对应的数据
      */
     int deleteLandSeed(Long userId);
@@ -93,4 +96,6 @@ public interface SeedMapper extends BaseMapper<Seed> {
      * @return
      */
     List<Seed> queryAreUnlocked(Long userId);
+
+    SeedDetailsVo querySeedById(Integer seedId ,Long userId);
 }

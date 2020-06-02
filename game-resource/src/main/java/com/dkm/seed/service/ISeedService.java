@@ -5,10 +5,7 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
-import com.dkm.seed.entity.vo.LandSeedVo;
-import com.dkm.seed.entity.vo.SeedPlantVo;
-import com.dkm.seed.entity.vo.SeedVo;
-import com.dkm.seed.entity.vo.UserInIf;
+import com.dkm.seed.entity.vo.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
@@ -24,9 +21,9 @@ import java.util.Map;
  */
 public interface ISeedService {
     /**
-     * 根据用户id得到种子（是否解锁）
+     * 根据用户id得到种子信息
      */
-    List<Seed> queryUserIdSeed();
+    List<SeedPlantUnlock> queryUserIdSeed();
 
     /**
      * 解锁植物
@@ -43,7 +40,7 @@ public interface ISeedService {
      * 根据种子查询种子
      *
      */
-    Seed querySeedById(Integer seeId);
+    SeedDetailsVo querySeedById(Integer seeId);
     /**
      * 修改用户信息
      */

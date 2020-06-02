@@ -18,6 +18,9 @@ public class SeedUnlock {
     private long puId;
     private long seedId;
     private long userId;
+    /**
+     * 当前解锁进度
+     */
     private Integer seedPresentUnlock=0;
     private Integer seedAllUnlock;
     private Integer seedStatus=0;
