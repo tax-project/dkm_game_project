@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @date 2020/5/13
  * @vesion 1.0
  **/
-@FeignClient(value = "service-user", fallback = UserFeignClientFallback.class)
+@FeignClient(value = "user", fallback = UserFeignClientFallback.class)
 public interface UserFeignClient {
 
    /**

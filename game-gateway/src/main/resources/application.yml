@@ -5,31 +5,33 @@ spring:
     name: game-gateway
   profiles:
     active: local
+  jmx:
+    enabled: false
 
 
 zuul:
   routes:
     api-user:
       path: /*/*/game-user/**
-      serviceId: service-user
+      serviceId: user
       strip-prefix: false
     api-base:
       path: /*/*/game-base/**
-      serviceId: service-base
+      serviceId: base
       strip-prefix: false
     api-family:
       path: /*/*/game-family/**
-      serviceId: service-family
+      serviceId: family
       strip-prefix: false
     api-resource:
       path: /*/*/game-resource/**
-      serviceId: service-resource
+      serviceId: resource
       strip-prefix: false
     api-shop:
       path: /*/*/game-shop/**
-      serviceId: service-shop
+      serviceId: shop
       strip-prefix: false
     api-chat:
       path: /*/*/game-chat/**
-      serviceId: service-chat
+      serviceId: chat
       strip-prefix: false
