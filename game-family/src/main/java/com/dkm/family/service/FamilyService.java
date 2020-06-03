@@ -1,6 +1,7 @@
 package com.dkm.family.service;
 
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.HotFamilyVo;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public interface FamilyService {
      * @param userId
      * @return
      */
-    FamilyEntity getMyFamily(Long userId);
+    Map<String,Object> getMyFamily(Long userId);
 
     /**
      * 退出家族
@@ -42,7 +43,7 @@ public interface FamilyService {
     /**
      * 热门家族
      */
-    List<FamilyEntity> getHotFamily();
+    List<HotFamilyVo> getHotFamily();
 
     /**
      * 加入家族

@@ -231,7 +231,6 @@ public class SeedServiceImpl implements ISeedService {
 
     @Override
     public int updateUser(UserInIf userInIf) {
-        System.out.println("userInIf = " + userInIf.getUserInfoNowExperience()+"======"+userInIf.getUserInfoNextExperience());
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
         //得到用户已经种植的数据
@@ -281,10 +280,9 @@ public class SeedServiceImpl implements ISeedService {
                             || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12 ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
                             userInfoQueryBoResults.getData().getUserInfoGrade()==18||userInfoQueryBoResults.getData().getUserInfoGrade()==21
                             ||userInfoQueryBoResults.getData().getUserInfoGrade()==24){
-
+                        //查询用户没有解锁的土地 状态等于0结果第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
                         if(userLandUnlocks1.get(0).getLaStatus()==0){
-                            System.out.println("userLandUnlocks1 = " + "修改土地状态");
                             landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
                         }
                     }
