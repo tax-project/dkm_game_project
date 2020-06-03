@@ -2,6 +2,7 @@ package com.dkm.attendant.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
@@ -67,5 +68,9 @@ public interface IAttendantService {
      * @return
      */
    Map<String,Object>  combatResults(AttendantVo vo);
+    /**
+     * 根据跟班id查询用户
+     */
+    AttendantUserVo queryAidUser(Integer aId);
 
 }
