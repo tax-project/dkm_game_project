@@ -93,7 +93,7 @@ public class FamilyController {
 
     @ApiOperation("族长 设置/取消 管理员")
     @GetMapping("/setAdmin")
-    @ApiImplicitParam(value = "用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @ApiImplicitParam(value = "设置用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
     @CrossOrigin
     @CheckToken
     public void setAdmin(Long setUserId){
@@ -101,5 +101,17 @@ public class FamilyController {
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         familyService.setAdmin(localUser.getUser().getId(),setUserId);
+    }
+
+    @ApiOperation("族长踢出成员")
+    @PostMapping("/kickOutUser")
+    @ApiImplicitParam(value = "踢出用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @CrossOrigin
+    @CheckToken
+    public void kickOutUser(Long outUserId){
+        if(outUserId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyService.kickOutUser(localUser.getUser().getId(),outUserId);
     }
 }

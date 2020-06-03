@@ -152,4 +152,22 @@ public class FamilyServiceImpl implements FamilyService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"设置权限失败");
         }
     }
+
+    @Override
+    public void kickOutUser(Long userId, Long outUserId) {
+        //查询是否族长
+        FamilyDetailEntity user = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
+        if(user==null||user.getIsAdmin()!=2){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"您不是族长，没有权限");
+        }
+        //是否同一个家族
+        FamilyDetailEntity outUser = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, outUserId));
+        if(outUser==null||!outUser.getFamilyId().equals(user.getFamilyId())){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"用户不属于您的家族");
+        }
+        int i = familyDetailDao.deleteById(outUser.getFamilyDetailsId());
+        if(i<1){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"踢出成员失败");
+        }
+    }
 }
