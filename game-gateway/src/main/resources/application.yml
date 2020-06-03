@@ -24,9 +24,9 @@ zuul:
       serviceId: family
       strip-prefix: false
     api-resource:
-      path: /*/*/game-resource/**
+      path: /resource/**
       serviceId: resource
-      strip-prefix: false
+      strip-prefix: true
     api-shop:
       path: /*/*/game-shop/**
       serviceId: shop
