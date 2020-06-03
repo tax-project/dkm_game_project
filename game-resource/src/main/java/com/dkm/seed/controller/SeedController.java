@@ -59,7 +59,7 @@ public class SeedController {
     })
     @PostMapping("/unlockPlant")
     @CrossOrigin
-    @CheckToken //自定义注解 判断用户token是否存在
+    @CheckToken
     public Message unlockPlant(@RequestBody SeedVo seedVo) {
         if (seedVo.getGrade() == null || seedVo.getSeedId() == null || seedVo.getUnlockMoney() == null || seedVo.getSeedPresentUnlock() == null ||
                 seedVo.getSeedPresentAggregate() == null) {
