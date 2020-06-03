@@ -2,8 +2,8 @@ package com.dkm.family.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -59,7 +59,7 @@ public class FamilyController {
     @GetMapping("/myFamily")
     @CheckToken
     @CrossOrigin
-    public FamilyEntity myFamily(){
+    public Map<String,Object> myFamily(){
         return familyService.getMyFamily(localUser.getUser().getId());
     }
 
@@ -75,7 +75,7 @@ public class FamilyController {
     @GetMapping("/hotFamily")
     @CrossOrigin
     @CheckToken
-    public List<FamilyEntity> hotFamily(){
+    public List<HotFamilyVo> hotFamily(){
         return familyService.getHotFamily();
     }
 
@@ -90,14 +90,16 @@ public class FamilyController {
         }
         familyService.joinFamily(localUser.getUser().getId(),familyId);
     }
+
     @ApiOperation("族长 设置/取消 管理员")
     @GetMapping("/setAdmin")
-    @ApiImplicitParam(value = "用户id",name="userId",paramType = "path",dataType = "Long",required = true)
+    @ApiImplicitParam(value = "用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
     @CrossOrigin
     @CheckToken
-    public void setAdmin(Long userId){
-        if(userId==null){
+    public void setAdmin(Long setUserId){
+        if(setUserId==null){
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }
+        familyService.setAdmin(localUser.getUser().getId(),setUserId);
     }
 }

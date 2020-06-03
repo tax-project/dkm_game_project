@@ -46,4 +46,8 @@ public class FamilyEntity {
      * 0全部 1 二维码
      */
     private Integer familyJoin;
+    /**
+     *  家族人数
+     */
+    private Integer familyUserNumber;
 }

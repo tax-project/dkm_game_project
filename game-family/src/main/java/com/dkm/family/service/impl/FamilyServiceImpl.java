@@ -7,9 +7,10 @@ import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.FamilyUsersVo;
+import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.utils.IdGenerator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ public class FamilyServiceImpl implements FamilyService {
         family.setFamilyId(idGenerator.getNumberId());
         family.setFamilyGrade(1);
         family.setFamilyJoin(0);
+        family.setFamilyUserNumber(1);
         family.setFamilyQrcode("/family/joinFamily?familyId="+family.getFamilyId());
         FamilyDetailEntity familyDetailEntity = new FamilyDetailEntity();
         familyDetailEntity.setIsAdmin(2);
@@ -63,30 +65,48 @@ public class FamilyServiceImpl implements FamilyService {
             throw  new ApplicationException(CodeType.RESOURCES_NOT_FIND,"您当前还未加入任何家族");
         }
         Map<String,Object> map = new HashMap<>(2);
-        map.put("family",familyDao.selectById(familyDetailEntity.getFamilyId()));
+        //获取用户信息
+        List<FamilyUsersVo> familyUsersVos = familyDetailDao.selectFamilyUser(familyDetailEntity.getFamilyId());
+        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        map.put("family",familyEntity);
         map.put("isAdmin",familyDetailEntity.getIsAdmin());
-        map.put("user",familyDetailDao.selectFamilyUser(familyDetailEntity.getFamilyId()));
+        map.put("user",familyUsersVos);
         return map;
     }
 
     @Override
-    public FamilyEntity getMyFamily(Long userId) {
+    public Map<String,Object> getMyFamily(Long userId) {
         FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
         if(familyDetailEntity==null){
             throw  new ApplicationException(CodeType.RESOURCES_NOT_FIND,"还未加入家族");
         }
-        return familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        Map<String,Object> map = new HashMap<>();
+        //家族基本信息
+        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        map.put("family",familyEntity);
+        //头像 9张
+        map.put("headImg",familyDetailDao.getFamilyHeadImg(familyEntity.getFamilyId()));
+        //家族族长信息
+        map.put("admin",familyDetailDao.selectPatriarch(familyEntity.getFamilyId()));
+        return map;
     }
 
     @Override
     public void exitFamily(Long userId) {
+        FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
+        if(familyDetailEntity==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"你不是该家族成员");
+        }
         if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
         }
+        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()+1);
+        familyDao.updateById(familyEntity);
     }
 
     @Override
-    public List<FamilyEntity> getHotFamily() {
+    public List<HotFamilyVo> getHotFamily() {
         return familyDao.getHotFamily();
     }
 
@@ -108,7 +128,7 @@ public class FamilyServiceImpl implements FamilyService {
         familyDetail.setIsAdmin(0);
         familyDetail.setFamilyDetailsId(idGenerator.getNumberId());
         int insert = familyDetailDao.insert(familyDetail);
-        if(insert<1){
+        if(insert<1||familyDao.updateById(familyEntity)<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"加入家族失败");
         }
     }
