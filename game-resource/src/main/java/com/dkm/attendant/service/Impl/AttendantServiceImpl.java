@@ -359,8 +359,8 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public AttendantUserVo queryAidUser(Integer aId) {
-        return attendantMapper.queryAidUser(aId);
+    public AttendantUserVo queryAidUser(Long CaughtPeopleId) {
+        return attendantMapper.queryAidUser(CaughtPeopleId);
     }
 
 
