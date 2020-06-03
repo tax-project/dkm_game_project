@@ -2,6 +2,7 @@ package com.dkm.family.service;
 
 import com.dkm.family.entity.FamilyEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,5 +39,23 @@ public interface FamilyService {
      */
     void exitFamily(Long UserId);
 
-    void getHotFamily();
+    /**
+     * 热门家族
+     */
+    List<FamilyEntity> getHotFamily();
+
+    /**
+     * 加入家族
+     * @param userId
+     * @param familyId
+     * @return
+     */
+    void joinFamily(Long userId,Long familyId);
+
+    /**
+     * 设置管理员
+     * @param setUserId
+     * @param userId
+     */
+    void setAdmin(Long userId,Long setUserId);
 }
