@@ -30,5 +30,3 @@ hystrix:
   metrics:
     enabled: true
     polling-interval-ms: 4000
-family:
-  url: http://localhost:8002

@@ -196,12 +196,17 @@ public class AttendantController {
         return message;
     }
 
+    /**
+     * 查询自己的一个主人信息
+     * @param CaughtPeopleId 当前用户id
+     * @return
+     */
     @GetMapping("/queryAidUser")
-    public AttendantUserVo queryAidUser(@RequestParam(value = "aId") Integer aId){
-        if(aId==null){
+    public AttendantUserVo queryAidUser(@RequestParam(value = "CaughtPeopleId") Long CaughtPeopleId){
+        if(CaughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
-        return iAttendantService.queryAidUser(aId);
+        return iAttendantService.queryAidUser(CaughtPeopleId);
     }
 
 
