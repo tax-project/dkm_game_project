@@ -73,6 +73,6 @@ public interface IAttendantService {
      * @param CaughtPeopleId 当前用户id
      * @return
      */
-    AttendantUserVo queryAidUser(Long CaughtPeopleId);
+    Map<String,Object> queryAidUser(Long CaughtPeopleId);
 
 }

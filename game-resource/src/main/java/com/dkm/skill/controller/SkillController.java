@@ -1,6 +1,7 @@
 package com.dkm.skill.controller;
 
 import com.dkm.entity.bo.SkillBo;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillInsertVo;
 import com.dkm.skill.service.ISkillService;
@@ -34,6 +35,8 @@ public class SkillController {
 
    @ApiOperation(value = "展示所有技能", notes = "展示所有技能")
    @GetMapping("/listAllSkill")
+   @CheckToken
+   @CrossOrigin
    public List<Skill> listAllSkill () {
       return skillService.listAllSkill();
    }
