@@ -17,4 +17,11 @@ public interface FamilyWageService {
      */
     Map<String,Object> getWageList(Long userId);
 
+    /**
+     * 领取工资
+     * @param wage
+     * @param userId
+     */
+    void updateUserWage(Integer wage,Long userId);
+
 }

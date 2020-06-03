@@ -5,6 +5,7 @@ import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.vo.FamilyUsersVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,4 +40,11 @@ public interface FamilyDetailDao extends BaseMapper<FamilyDetailEntity> {
      */
     @Select("SELECT we_chat_head_img_url FROM  (SELECT user_id FROM tb_family_details  WHERE family_id = #{familyId} ORDER BY is_admin DESC LIMIT 0,9) fd LEFT JOIN tb_user u on u.user_id=fd.user_id")
     List<String> getFamilyHeadImg(@Param("familyId") Long familyId);
+
+    /**
+     * 领取工资
+     * @return
+     */
+    @Update("update tb_user_info set user_info_gold = user_info_gold + #{wage} where user_id = #{userId}")
+    Integer updateUserWage(@Param("wage") Integer wage,@Param("userId") Long userId);
 }
