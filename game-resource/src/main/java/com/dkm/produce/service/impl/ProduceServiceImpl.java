@@ -103,7 +103,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         userProduceService.insertProduce(vo);
 
-        if("金币".equals(goods.getName())){
+
+        //将产出的物品直接存到数据库中
+       if("金币".equals(goods.getName())){
             IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
             increaseUserInfoBO.setUserInfoGold(number);
             increaseUserInfoBO.setUserId(user.getId());

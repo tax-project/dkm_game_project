@@ -47,15 +47,11 @@ public class FamilyController {
     }
 
     @ApiOperation("家族详情")
-    @ApiImplicitParam(value = "家族id",name="familyId",paramType = "path",dataType = "Long",required = true)
     @GetMapping("/familyInfo")
     @CheckToken
     @CrossOrigin
-    public Map<String,Object> familyInfo(Long familyId){
-        if(familyId==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR);
-        }
-        return familyService.getFamilyInfo(familyId);
+    public Map<String,Object> familyInfo(){
+        return familyService.getFamilyInfo(localUser.getUser().getId());
     }
 
     @ApiOperation("我的家族")
@@ -76,6 +72,8 @@ public class FamilyController {
 
     @ApiOperation("热门家族")
     @GetMapping("/hotFamily")
+    @CrossOrigin
+    @CheckToken
     public List<Object> hotFamily(){
         return null;
     }

@@ -11,9 +11,9 @@
     </insert>
 
     <insert id="addLand" parameterType="com.dkm.land.entity.vo.UserLandUnlock">
-        insert into tb_user_land_unlock(user_id,la_no,la_status)
+        insert into tb_user_land_unlock(user_id,la_no,la_status,to_unlocked)
         <foreach collection="list" item="item" index="index" separator="union all">
-            select #{item.userId},#{item.laNo},#{item.laStatus}
+            select #{item.userId},#{item.laNo},#{item.laStatus},#{item.toUnlocked}
         </foreach>
     </insert>
 
@@ -22,7 +22,15 @@
         select a.la_status,b.la_no,b.la_name from tb_user_land_unlock a,tb_land b where a.la_no=b.la_no and a.user_id=#{userId}
     </select>
 
+    <select id="queryNotUnlocked" resultType="com.dkm.land.entity.vo.UserLandUnlock" parameterType="java.lang.Long">
+        select b.la_name,b.la_no from tb_user_land_unlock a,tb_land b where a.la_no=b.la_no and a.user_id=#{userId} and a.la_status=0
+    </select>
+
     <select id="queryUnlockLand" resultType="com.dkm.land.entity.vo.UserLandUnlock" parameterType="java.lang.Long">
         select b.la_name,b.la_no from tb_user_land_unlock a,tb_land b where a.la_no=b.la_no and a.user_id=#{userId} and a.la_status=1
     </select>
+
+    <update id="updateStatus">
+        update tb_user_land_unlock set la_status=1 where user_id=#{userId} and la_no=#{laNo}
+    </update>
 </mapper>

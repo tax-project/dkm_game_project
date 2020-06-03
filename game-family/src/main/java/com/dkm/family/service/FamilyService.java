@@ -20,10 +20,10 @@ public interface FamilyService {
 
     /**
      * 获取家族详情
-     * @param familyId
+     * @param userId
      * @return
      */
-    Map<String,Object> getFamilyInfo(Long familyId);
+    Map<String,Object> getFamilyInfo(Long userId);
 
     /**
      * 获取用户家族

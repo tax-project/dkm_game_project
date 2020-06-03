@@ -1,6 +1,7 @@
 package com.dkm.attendant.controller;
 
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
@@ -113,7 +114,7 @@ public class AttendantController {
      */
     @ApiOperation(value = "宠物战斗",notes = "成功返回数据 反则为空")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "战斗人id"),
     })
     @GetMapping("/petBattle")
     @CrossOrigin
@@ -124,6 +125,26 @@ public class AttendantController {
         return iAttendantService.petBattle(caughtPeopleId);
     }
 
+
+    /**
+     * 战斗过程
+     */
+    @ApiOperation(value = "战斗过程",notes = "成功返回数据 反则为空")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "myHealth",value = "我方血量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "otherHealth",value = "他方血量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "status",value = "谁先动手 0为me，1为other"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "myCapabilities",value = "我战斗力"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "otherForce",value = "对方战斗力"),
+    })
+    @GetMapping("/combatResults")
+    @CrossOrigin
+   public Map<String,Object>  combatResults(AttendantVo vo){
+        if(vo.getOtherForce()==null || vo.getMyCapabilities()==null || vo.getOtherHealth()==null || vo.getStatus()==null || vo.getMyHealth()==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
+        return iAttendantService.combatResults(vo);
+    }
 
     /**
      * 抓跟班

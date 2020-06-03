@@ -84,10 +84,14 @@ public class SeedServiceImpl implements ISeedService {
                throw new ApplicationException(CodeType.PARAMETER_ERROR,"没有种子");
             }
             for (int j = 0; j < attenDants.size(); j++) {
+                System.out.println("attenDants = " + attenDants);
                 SeedUnlock seedUnlock=new SeedUnlock();
                 seedUnlock.setPuId(idGenerator.getNumberId());
                 seedUnlock.setUserId(user.getId());
-                seedUnlock.setSeedAllUnlock((attenDants.get(j).getSeedGrade() + 1) * 2);
+                //得到总需要解锁的次数
+                double pow = Math.pow(Math.ceil(attenDants.get(j).getSeedGrade() / 2.0), 2);
+                Integer powInteger = Integer.valueOf((int) pow);
+                seedUnlock.setSeedAllUnlock(powInteger);
                 seedUnlock.setSeedId(attenDants.get(j).getSeedId());
                 seedUnlocks1.add(seedUnlock);
             }
@@ -117,8 +121,8 @@ public class SeedServiceImpl implements ISeedService {
     public SeedDetailsVo querySeedById(Integer seeId) {
         UserLoginQuery user = localUser.getUser();
         SeedDetailsVo seedDetailsVo = seedMapper.querySeedById(seeId, user.getId());
-        int sum=(int)Math.ceil(seedDetailsVo.getSeedGrade()/10.00)*10;
-        seedDetailsVo.setPrestige(sum);
+        //int sum=(int)Math.ceil(seedDetailsVo.getSeedGrade()/10.00)*10;
+        seedDetailsVo.setPrestige(18);
         seedDetailsVo.setUnlockFragmentedGoldCoins(seedDetailsVo.getSeedGrade()*1000);
         return seedDetailsVo;
     }
@@ -144,17 +148,17 @@ public class SeedServiceImpl implements ISeedService {
         }
         Message message=new Message();
         //如果当前进度等于总进度 则解锁种子 修改种子状态
-        if(seedVo.getSeedPresentUnlock().equals(seedVo.getSeedPresentAggregate())){
+        Integer seedPresentUnlock = seedVo.getSeedPresentUnlock()+1;
+        if(seedPresentUnlock.equals(seedVo.getSeedPresentAggregate())){
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),null,1);
         }
             //种子等级除以10 得出声望
             //等级余10大于0则进一
-            int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
-            System.out.println("seedVo.getSeedId() = " + seedVo.getSeedId());
+            //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
             //修改当前种子解锁进度
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
             //修改用户的金币和声望
-            int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), sum, user.getId());
+            int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
             if(i<=0){
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
             }
@@ -271,6 +275,19 @@ public class SeedServiceImpl implements ISeedService {
 
                     //修改用户信息
                     int i = seedMapper.updateUser(userInIf);
+                    Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
+                    //每三级解锁一块土地
+                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 ||userInfoQueryBoResults.getData().getUserInfoGrade()==6
+                            || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12 ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
+                            userInfoQueryBoResults.getData().getUserInfoGrade()==18||userInfoQueryBoResults.getData().getUserInfoGrade()==21
+                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==24){
+
+                        List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
+                        if(userLandUnlocks1.get(0).getLaStatus()==0){
+                            System.out.println("userLandUnlocks1 = " + "修改土地状态");
+                            landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
+                        }
+                    }
                 } else{
                     userInIf.setUserGold(userGoldInteger);
                     userInIf.setUserInfoNowExperience(experienceInteger);
