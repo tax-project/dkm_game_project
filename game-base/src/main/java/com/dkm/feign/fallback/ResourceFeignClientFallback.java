@@ -63,7 +63,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result<AttendantUserVo> queryAidUser(Integer aId) {
+   public Result<AttendantUserVo> queryAidUser(Integer CaughtPeopleId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 }
