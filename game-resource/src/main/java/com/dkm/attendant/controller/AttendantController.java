@@ -50,7 +50,6 @@ public class AttendantController {
     public List<AttenDant> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
-
     /**
      * 获取用户声望和金币
      * @return
