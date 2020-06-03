@@ -202,7 +202,7 @@ public class AttendantController {
      * @return
      */
     @GetMapping("/queryAidUser")
-    public AttendantUserVo queryAidUser(@RequestParam(value = "CaughtPeopleId") Long CaughtPeopleId){
+    public Map<String,Object> queryAidUser(@RequestParam(value = "CaughtPeopleId") Long CaughtPeopleId){
         if(CaughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }

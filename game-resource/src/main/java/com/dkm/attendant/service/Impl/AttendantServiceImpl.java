@@ -173,50 +173,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
 
-        //我方宠物信息
-        Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
-        //随机获取我方宠物
-        PetsDto myPetsDto = petInfo.getData().get(new Random().nextInt(petInfo.getData().size()));
-        myPet=myPetsDto.getPetName();
-
-        //得到自己装备信息
-        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-        if(tbEquipmentKnapsackVos.size()==0){
-            //血量
-            ourHealth=500;
-            //得到我方装备防御力
-            ourEquipmentDefense=0;
-            //得到我方战力
-            ourCapabilities=100;
-            System.out.println("没有装备 = " + "没有装备");
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"你还没有装备 还不能进行战斗");
-        }else{
-            for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
-                //装备血量之和
-                BigDecimal edLife = tbEquipmentKnapsackVos.get(i).getEdLife();
-                edLisfe=edLisfe+edLife.intValue();
-                //我方装备加成
-                myEquipBonus=myEquipBonus+tbEquipmentKnapsackVos.get(i).getEdRedEnvelopeAcceleration().intValue()+
-                        tbEquipmentKnapsackVos.get(i).getEdLife().intValue()+tbEquipmentKnapsackVos.get(i).getEdDefense().intValue();
-                //判断有些装备没有才华将自己赋值给自己
-                if(tbEquipmentKnapsackVos.get(i).getEdDefense()==null ||tbEquipmentKnapsackVos.get(i).getEdDefense().intValue()==0){
-                    ourDefenses=ourDefenses;
-                }
-                //得到用户防御力
-                ourDefenses=ourDefenses+tbEquipmentKnapsackVos.get(i).getEdDefense().intValue();
-
-                if(tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue()==1){
-                    if(tbEquipmentKnapsackVos.get(i).getEdType().intValue()==1){
-                        // 生命值
-                        bonuses=bonuses+tbEquipmentKnapsackVos.get(i).getEdTypevalue().intValue();
-                    }
-                }
-            }
-            //得到我方血量
-            ourHealth=edLisfe*bonuses;
-            //得到我方装备防御力
-            ourEquipmentDefense = ourDefenses * bonuses;
-        }
 
 
 
@@ -271,14 +227,65 @@ public class AttendantServiceImpl implements IAttendantService {
             double ripetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0)
                     +(userInfoQueryBoResult.getData().getUserInfoRenown()*myEquipBonus-userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()+heEquipBonus);
             //得到我方战力
-             ourCapabilities = Integer.valueOf((int) ripetime);
+            ourCapabilities = Integer.valueOf((int) ripetime);
 
             //得到他方的战力
             double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0)
                     +(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()*heEquipBonus-userInfoQueryBoResult.getData().getUserInfoRenown()+myEquipBonus);
             //得到他方的战力
-             otherForce = Integer.valueOf((int) heRipetime);
+            otherForce = Integer.valueOf((int) heRipetime);
         }
+
+
+
+
+        //我方宠物信息
+        Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
+        //随机获取我方宠物
+        PetsDto myPetsDto = petInfo.getData().get(new Random().nextInt(petInfo.getData().size()));
+        myPet=myPetsDto.getPetName();
+
+        //得到自己装备信息
+        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
+        if(tbEquipmentKnapsackVos.size()==0){
+            //血量
+            ourHealth=500;
+            //得到我方装备防御力
+            ourEquipmentDefense=0;
+            //得到我方战力
+            ourCapabilities=100;
+            System.out.println("没有装备 = " + "没有装备");
+        }else{
+            for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
+                //装备血量之和
+                BigDecimal edLife = tbEquipmentKnapsackVos.get(i).getEdLife();
+                edLisfe=edLisfe+edLife.intValue();
+                //我方装备加成
+                myEquipBonus=myEquipBonus+tbEquipmentKnapsackVos.get(i).getEdRedEnvelopeAcceleration().intValue()+
+                        tbEquipmentKnapsackVos.get(i).getEdLife().intValue()+tbEquipmentKnapsackVos.get(i).getEdDefense().intValue();
+                //判断有些装备没有才华将自己赋值给自己
+                if(tbEquipmentKnapsackVos.get(i).getEdDefense()==null ||tbEquipmentKnapsackVos.get(i).getEdDefense().intValue()==0){
+                    ourDefenses=ourDefenses;
+                }
+                //得到用户防御力
+                ourDefenses=ourDefenses+tbEquipmentKnapsackVos.get(i).getEdDefense().intValue();
+
+                if(tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue()==1){
+                    if(tbEquipmentKnapsackVos.get(i).getEdType().intValue()==1){
+                        // 生命值
+                        bonuses=bonuses+tbEquipmentKnapsackVos.get(i).getEdTypevalue().intValue();
+                    }
+                }
+            }
+            //得到我方血量
+            ourHealth=edLisfe*bonuses;
+            //得到我方装备防御力
+            ourEquipmentDefense = ourDefenses * bonuses;
+        }
+
+
+
+
 
 
 
@@ -385,11 +392,6 @@ public class AttendantServiceImpl implements IAttendantService {
         return map;
     }
 
-    @Override
-    public AttendantUserVo queryAidUser(Long CaughtPeopleId) {
-        return attendantMapper.queryAidUser(CaughtPeopleId);
-    }
-
 
     public ResultAttendeantVo getResult (Integer allMyHealth, Integer allOtherHealth, Integer myCapabilities, Integer otherForce, Integer status) {
 
@@ -455,5 +457,26 @@ public class AttendantServiceImpl implements IAttendantService {
         }
 
     }
+
+
+    @Override
+    public Map<String,Object> queryAidUser(Long CaughtPeopleId) {
+        //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+
+        Map<String,Object> map=new HashMap<>();
+        //主人信息
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(CaughtPeopleId);
+        if(attendantUserVo==null){
+            map.put("msg","没有主人");
+        }
+        //自己的信息
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+        map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());
+        return map;
+    }
+
+
+
 
 }
