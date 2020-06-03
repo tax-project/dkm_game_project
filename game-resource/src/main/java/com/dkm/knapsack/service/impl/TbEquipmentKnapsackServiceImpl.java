@@ -109,7 +109,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     @Override
     public void addTbEquipmentKnapsackTwo(String equipmentId) {
         System.out.println("=========="+equipmentId);
-        if(equipmentId=="" && equipmentId==null){
+        if(equipmentId=="" && equipmentId.equals("")){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
