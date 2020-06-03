@@ -197,6 +197,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+        System.out.println("对方战斗人装备数据 = " + tbEquipmentKnapsackVos1);
         for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
             //装备血量之和
             BigDecimal edLife = tbEquipmentKnapsackVos1.get(i).getEdLife();
