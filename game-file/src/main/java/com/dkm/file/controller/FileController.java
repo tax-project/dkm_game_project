@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
 import com.dkm.file.utils.FileVo;
+import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class FileController {
     */
    @PostMapping("/storeFile")
    @CrossOrigin
+   @CheckToken
    public FileVo storeFile(@RequestBody MultipartFile file) {
 
       if (file == null) {

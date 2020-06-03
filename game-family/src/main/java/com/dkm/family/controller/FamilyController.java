@@ -3,6 +3,7 @@ package com.dkm.family.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -34,7 +35,7 @@ public class FamilyController {
     @ApiOperation("创建家族")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "家族名称",name="familyName",paramType = "path",dataType = "String",required = true),
-            @ApiImplicitParam(value = "家族介绍",name="familyIntroduce",paramType = "path",dataType = "String",required = true),
+            @ApiImplicitParam(value = "家族介绍",name="familyIntroduce",paramType = "path",dataType = "String",required = true)
     })
     @PostMapping("/createFamily")
     @CheckToken
@@ -58,7 +59,7 @@ public class FamilyController {
     @GetMapping("/myFamily")
     @CheckToken
     @CrossOrigin
-    public FamilyEntity myFamily(){
+    public Map<String,Object> myFamily(){
         return familyService.getMyFamily(localUser.getUser().getId());
     }
 
@@ -70,11 +71,35 @@ public class FamilyController {
         familyService.exitFamily(localUser.getUser().getId());
     }
 
-    @ApiOperation("热门家族")
+    @ApiOperation("感兴趣家族")
     @GetMapping("/hotFamily")
     @CrossOrigin
     @CheckToken
-    public List<Object> hotFamily(){
-        return null;
+    public List<HotFamilyVo> hotFamily(){
+        return familyService.getHotFamily();
+    }
+
+    @ApiOperation("加入家族")
+    @GetMapping("/joinFamily")
+    @ApiImplicitParam(value = "家族id",name="familyId",paramType = "path",dataType = "Long",required = true)
+    @CrossOrigin
+    @CheckToken
+    public void joinFamily(Long familyId){
+        if(familyId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyService.joinFamily(localUser.getUser().getId(),familyId);
+    }
+
+    @ApiOperation("族长 设置/取消 管理员")
+    @GetMapping("/setAdmin")
+    @ApiImplicitParam(value = "用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @CrossOrigin
+    @CheckToken
+    public void setAdmin(Long setUserId){
+        if(setUserId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyService.setAdmin(localUser.getUser().getId(),setUserId);
     }
 }

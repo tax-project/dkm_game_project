@@ -69,8 +69,10 @@ public interface IAttendantService {
      */
    Map<String,Object>  combatResults(AttendantVo vo);
     /**
-     * 根据跟班id查询用户
+     * 查询自己的一个主人信息
+     * @param CaughtPeopleId 当前用户id
+     * @return
      */
-    AttendantUserVo queryAidUser(Integer aId);
+    Map<String,Object> queryAidUser(Long CaughtPeopleId);
 
 }

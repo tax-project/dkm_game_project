@@ -56,8 +56,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      */
     int gather(Long exp1, Long autId);
     /**
-     * 根据跟班id查询用户
+     * 查询自己的一个主人信息
+     * @param CaughtPeopleId 当前用户id
+     * @return
      */
-     AttendantUserVo queryAidUser(Integer aId);
+     AttendantUserVo queryAidUser(Long CaughtPeopleId);
 
 }

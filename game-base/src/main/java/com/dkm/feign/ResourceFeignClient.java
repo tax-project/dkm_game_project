@@ -89,11 +89,11 @@ public interface ResourceFeignClient {
 
     /**
      * 根据跟班id查询用户信息
-     * @param aId
+     * @param CaughtPeopleId 当前用户id
      * @return
      */
-    @GetMapping("/queryAidUser")
-    Result<AttendantUserVo> queryAidUser (@RequestParam(value = "aId")  Integer aId);
+    @GetMapping("/Attendant/queryAidUser")
+    Result<AttendantUserVo> queryAidUser (@RequestParam(value = "CaughtPeopleId")  Long CaughtPeopleId);
 
 
 }

@@ -67,7 +67,7 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
       //当前声望累计达到总声望
       userSkill.setSkAllPrestige(1000);
       //升级一级增加的声望
-      userSkill.setAkAddPrestige(319);
+      userSkill.setSkAddPrestige(319);
       //消耗的总个数
       userSkill.setSkAllConsume(2);
       //当前使用消耗的个数
@@ -150,7 +150,7 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
          //当前声望累计达到总声望
          userSkill.setSkAllPrestige(anInt);
          //升级下一级增加的声望
-         userSkill.setAkAddPrestige(anInt - skill.getSkAllPrestige());
+         userSkill.setSkAddPrestige(anInt - skill.getSkAllPrestige());
 
          int updateById = baseMapper.updateById(userSkill);
 
@@ -162,7 +162,7 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
          UserInfoSkillBo bo = new UserInfoSkillBo();
          bo.setUserId(user.getId());
          bo.setGold(1000);
-         bo.setPrestige(skill.getAkAddPrestige());
+         bo.setPrestige(skill.getSkAddPrestige());
          //修改用户信息
          userFeignClient.updateInfo(bo);
       } finally {
@@ -218,7 +218,7 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
       UserSkill userSkill = baseMapper.selectOne(wrapper);
 
       vo.setId(userSkill.getId());
-      vo.setAkAddPrestige(userSkill.getAkAddPrestige());
+      vo.setSkAddPrestige(userSkill.getSkAddPrestige());
       vo.setSkAllConsume(userSkill.getSkAllConsume());
       vo.setSkAllPrestige(userSkill.getSkAllPrestige());
       vo.setSkCurrentConsume(userSkill.getSkCurrentConsume());

@@ -69,7 +69,6 @@ public class LandServiceImpl implements ILandService {
                     userLandUnlock.setLaStatus(0);
                 }
                 userLandUnlock.setUserId(localUser.getUser().getId());
-                userLandUnlock.setToUnlocked(0);
                 list.add(userLandUnlock);
             }
             landMapper.addLand(list);
