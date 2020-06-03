@@ -226,14 +226,17 @@ public class AttendantServiceImpl implements IAttendantService {
             //得到我方战力
             double ripetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0)
                     +(userInfoQueryBoResult.getData().getUserInfoRenown()*myEquipBonus-userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()+heEquipBonus);
+
             //得到我方战力
             ourCapabilities = Integer.valueOf((int) ripetime);
+            System.out.println("我方战力 = " + ourCapabilities);
 
             //得到他方的战力
             double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0)
                     +(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()*heEquipBonus-userInfoQueryBoResult.getData().getUserInfoRenown()+myEquipBonus);
             //得到他方的战力
             otherForce = Integer.valueOf((int) heRipetime);
+            System.out.println("他方战力 = " + otherForce);
         }
 
 
@@ -256,6 +259,8 @@ public class AttendantServiceImpl implements IAttendantService {
             ourCapabilities=100;
             System.out.println("没有装备 = " + "没有装备");
         }else{
+            //得到我方战力
+            ourCapabilities=100;
             for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
                 //装备血量之和
                 BigDecimal edLife = tbEquipmentKnapsackVos.get(i).getEdLife();
@@ -277,6 +282,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
             }
+            System.out.println("我方战斗力 = " + ourCapabilities);
             //得到我方血量
             ourHealth=edLisfe*bonuses;
             //得到我方装备防御力
@@ -286,12 +292,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
 
-
-
-
         //如果双方宠物相同 等级高的先动手
         if(myPet.equals(hePet)){
-           if(myPetsDto.getPGrade().equals(hePetsDto.getPGrade())){
             if(myPetsDto.getPGrade()>hePetsDto.getPGrade()){
                 //我方先动手
                 map.put("status",0);
@@ -299,7 +301,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 //他方先动手
                 map.put("status",1);
             }
-           }
         }
         if ("老鼠".equals(myPet)) {
            if("大象".equals(hePet)){
@@ -469,10 +470,13 @@ public class AttendantServiceImpl implements IAttendantService {
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(CaughtPeopleId);
         if(attendantUserVo==null){
             map.put("msg","没有主人");
+        }else{
+            map.put("attendantUserVo",attendantUserVo);
         }
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
         map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());
+
         return map;
     }
 
