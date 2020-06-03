@@ -10,7 +10,6 @@ spring:
     name: base
   jmx:
     enabled: false
-
 app:
   workerId: 9
   dataCenterId: 1
