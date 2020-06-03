@@ -112,4 +112,10 @@ public class UserInfo extends Model<UserInfo> {
     */
    private Integer userInfoAllEnvelopeMuch;
 
+   /**
+    * 用户技能状态
+    * 1--技能初始化完毕
+    */
+   private Integer userInfoSkillStatus;
+
 }

@@ -55,6 +55,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       userInfo.setUserInfoPacketBalance(0.0);
       userInfo.setUserInfoEnvelopeMuch(0);
       userInfo.setUserInfoAllEnvelopeMuch(15);
+      userInfo.setUserInfoSkillStatus(0);
 
       int insert = baseMapper.insert(userInfo);
 
