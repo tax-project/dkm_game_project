@@ -284,7 +284,6 @@ public class SeedServiceImpl implements ISeedService {
 
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
                         if(userLandUnlocks1.get(0).getLaStatus()==0){
-                            System.out.println("userLandUnlocks1 = " + "修改土地状态");
                             landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
                         }
                     }
