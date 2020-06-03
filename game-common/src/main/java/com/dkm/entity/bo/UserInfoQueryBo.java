@@ -46,6 +46,13 @@ public class UserInfoQueryBo {
     */
    private String userRemark;
 
+   /**
+    * 性别
+    * 1--男
+    * 2--女
+    */
+   private Integer userSex;
+
    private Long userInfoId;
 
    /**

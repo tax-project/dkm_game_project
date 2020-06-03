@@ -208,7 +208,6 @@ public class AttendantServiceImpl implements IAttendantService {
         if(tbEquipmentKnapsackVos1.size()==0){
             System.out.println("对方没有装备 = " + "对方没有装备");
             ourHealth1=1000;
-            otherForce=2000;
         }
         System.out.println("对方战斗人装备数据 = " + tbEquipmentKnapsackVos1);
         for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
