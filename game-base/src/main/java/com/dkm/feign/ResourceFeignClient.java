@@ -92,7 +92,7 @@ public interface ResourceFeignClient {
      * @param CaughtPeopleId 当前用户id
      * @return
      */
-    @GetMapping("/queryAidUser")
+    @GetMapping("/Attendant/queryAidUser")
     Result<AttendantUserVo> queryAidUser (@RequestParam(value = "CaughtPeopleId")  Long CaughtPeopleId);
 
 
