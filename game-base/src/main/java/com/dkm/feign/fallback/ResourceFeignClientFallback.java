@@ -5,6 +5,7 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.AttendantGoods;
+import com.dkm.feign.entity.AttendantUserVo;
 import com.dkm.feign.entity.SeedUnlockVo;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.personalCenter.domain.Seed;
@@ -58,6 +59,11 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
    @Override
    public Result<List<SkillBo>> queryAllSkillByUserId(Long userId) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result<AttendantUserVo> queryAidUser(Integer aId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 }

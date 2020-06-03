@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.User;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +54,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * @param autId
      * @return
      */
-    int gather(Long exp1,Long autId);
+    int gather(Long exp1, Long autId);
+    /**
+     * 根据跟班id查询用户
+     */
+     AttendantUserVo queryAidUser(Integer aId);
 
 }

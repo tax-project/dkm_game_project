@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.entity.AttendantGoods;
+import com.dkm.feign.entity.AttendantUserVo;
 import com.dkm.feign.entity.SeedUnlockVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
@@ -85,6 +86,14 @@ public interface ResourceFeignClient {
      */
     @GetMapping("/v1/skill/queryAllSkillByUserId/{userId}")
     Result<List<SkillBo>> queryAllSkillByUserId (@PathVariable("userId") Long userId);
+
+    /**
+     * 根据跟班id查询用户信息
+     * @param aId
+     * @return
+     */
+    @GetMapping("/queryAidUser")
+    Result<AttendantUserVo> queryAidUser (@RequestParam(value = "aId")  Integer aId);
 
 
 }
