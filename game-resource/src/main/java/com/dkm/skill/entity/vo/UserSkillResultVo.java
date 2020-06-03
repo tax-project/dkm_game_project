@@ -40,7 +40,7 @@ public class UserSkillResultVo {
    /**
     * 升级一级增加的声望
     */
-   private Integer akAddPrestige;
+   private Integer skAddPrestige;
 
    /**
     * 消耗的总个数

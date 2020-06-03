@@ -1,0 +1,17 @@
+server:
+  port: 7002
+  max-http-header-size: 102400
+mybatis-plus:
+  mapper-locations: classpath:com/dkm/*/dao/mapper/*.xml
+spring:
+  profiles:
+    active: local
+  application:
+    name: file
+  jmx:
+    enabled: false
+
+
+app:
+  workerId: 9
+  dataCenterId: 1

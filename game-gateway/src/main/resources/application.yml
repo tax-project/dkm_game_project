@@ -26,7 +26,7 @@ zuul:
     api-resource:
       path: /*/*/game-resource/**
       serviceId: resource
-      strip-prefix: true
+      strip-prefix: false
     api-shop:
       path: /*/*/game-shop/**
       serviceId: shop
@@ -34,4 +34,8 @@ zuul:
     api-chat:
       path: /*/*/game-chat/**
       serviceId: chat
+      strip-prefix: false
+    api-file:
+      path: /*/*/game-file/**
+      serviceId: file
       strip-prefix: false
