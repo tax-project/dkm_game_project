@@ -59,4 +59,11 @@ public interface FamilyService {
      * @param userId
      */
     void setAdmin(Long userId,Long setUserId);
+
+    /**
+     * 踢出家族成员
+     * @param userId
+     * @param outUserId
+     */
+    void kickOutUser(Long userId,Long outUserId);
 }
