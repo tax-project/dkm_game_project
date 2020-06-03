@@ -136,9 +136,9 @@ public class TbBoxController {
             @ApiResponse(code = 500,message="后台报错"),
             @ApiResponse(code = 200,message="返回成功")
     })
-    @PostMapping("/selectByBoxIdTwo")
+    @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
-    public List<TbEquipmentVo> selectByBoxIdTwo(@RequestBody List<String> boxId){
+    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }
 
