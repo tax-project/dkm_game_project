@@ -30,7 +30,7 @@
         update tb_attendant_user set  exp1=#{exp1} where aut_id=#{autId}
     </update>
 
-    <select id="" resultType="com.dkm.attendant.entity.vo.AttendantUserVo">
+    <select id="queryAidUser" resultType="com.dkm.attendant.entity.vo.AttendantUserVo">
         select c.we_chat_head_img_url,c.we_chat_nick_name,a.user_info_renown,c.user_id from tb_user_info a,tb_attendant_user b,tb_user c
         where a.user_id=b.user_id and a.user_id=c.user_id and b.a_id=#{aId}
     </select>
