@@ -13,6 +13,7 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.skill.dao.UserSkillMapper;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.UserSkill;
+import com.dkm.skill.entity.vo.ResultSkillVo;
 import com.dkm.skill.entity.vo.UserSkillResultVo;
 import com.dkm.skill.entity.vo.UserSkillUpGradeVo;
 import com.dkm.skill.entity.vo.UserSkillVo;
@@ -93,9 +94,11 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
     * @param vo id
     */
    @Override
-   public void upGrade(UserSkillUpGradeVo vo) {
+   public ResultSkillVo upGrade(UserSkillUpGradeVo vo) {
 
       UserLoginQuery user = localUser.getUser();
+
+      ResultSkillVo skillVo = new ResultSkillVo();
 
       try {
          //获得分布式锁
@@ -119,7 +122,16 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
 
          if (random > skill.getSkCurrentSuccessRate()) {
             //升级失败
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "很可惜，差一点点就升级成功了");
+            UserInfoSkillBo bo = new UserInfoSkillBo();
+            bo.setUserId(user.getId());
+            bo.setGold(1000);
+            bo.setPrestige(0);
+            //修改用户信息
+            userFeignClient.updateInfo(bo);
+
+            //失败
+            skillVo.setStatus(0);
+            return skillVo;
          }
 
          //升级成功
@@ -145,12 +157,12 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
          }
 
          //算出下一等级的声望
-         int anInt = Integer.parseInt(String.format("%.0f", Math.pow(2, 2 / 5.0) * 1000));
+         int anInt = Integer.parseInt(String.format("%.0f", Math.pow(skill.getSkGrade(), 2 / 5.0) * 1000));
 
          //当前声望累计达到总声望
-         userSkill.setSkAllPrestige(anInt);
+         userSkill.setSkAllPrestige(anInt + skill.getSkAllPrestige());
          //升级下一级增加的声望
-         userSkill.setSkAddPrestige(anInt - skill.getSkAllPrestige());
+         userSkill.setSkAddPrestige(anInt);
 
          int updateById = baseMapper.updateById(userSkill);
 
@@ -168,6 +180,9 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
       } finally {
          redisConfig.deleteLock(redisLock);
       }
+
+      skillVo.setStatus(1);
+      return skillVo;
 
    }
 
