@@ -1,6 +1,7 @@
 package com.dkm.attendant.controller;
 
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
@@ -186,6 +187,13 @@ public class AttendantController {
         return message;
     }
 
+    @GetMapping("/queryAidUser")
+    public AttendantUserVo queryAidUser(@RequestParam(value = "aId") Integer aId){
+        if(aId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
+        return iAttendantService.queryAidUser(aId);
+    }
 
 
 }

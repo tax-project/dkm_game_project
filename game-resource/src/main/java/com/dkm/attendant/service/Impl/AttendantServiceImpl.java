@@ -4,6 +4,7 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.ResultAttendeantVo;
 import com.dkm.attendant.entity.vo.User;
@@ -165,6 +166,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
+        if(tbEquipmentKnapsackVos.size()==0){
+            System.out.println("没有装备 = " + "没有装备");
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"你还没有装备 还不能进行战斗");
+        }
         for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
             //装备血量之和
             BigDecimal edLife = tbEquipmentKnapsackVos.get(i).getEdLife();
@@ -194,9 +199,17 @@ public class AttendantServiceImpl implements IAttendantService {
         //随机获取他方宠物
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
+        //得到他方血量
+        Integer ourHealth1=heEdLisfe*heBonuses;
 
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+        //如果没有装备
+        if(tbEquipmentKnapsackVos1.size()==0){
+            System.out.println("对方没有装备 = " + "对方没有装备");
+            ourHealth1=1000;
+            otherForce=2000;
+        }
         System.out.println("对方战斗人装备数据 = " + tbEquipmentKnapsackVos1);
         for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
             //装备血量之和
@@ -223,8 +236,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //得到我方血量
         Integer ourHealth=edLisfe*bonuses;
 
-        //得到他方血量
-        Integer ourHealth1=heEdLisfe*heBonuses;
+
 
         //得到我方装备防御力
         int ourEquipmentDefense = ourDefenses * bonuses;
@@ -343,6 +355,11 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("result",result);
 
         return map;
+    }
+
+    @Override
+    public AttendantUserVo queryAidUser(Integer aId) {
+        return attendantMapper.queryAidUser(aId);
     }
 
 
