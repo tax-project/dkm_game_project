@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
+import com.dkm.family.dao.FamilyWageDao;
 import com.dkm.family.entity.FamilyDetailEntity;
+import com.dkm.family.entity.FamilyWageEntity;
 import com.dkm.family.service.FamilyWageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,6 +31,9 @@ public class FamilyWageServiceImpl implements FamilyWageService {
     @Resource
     private FamilyDetailDao familyDetailDao;
 
+    @Resource
+    private FamilyWageDao familyWageDao;
+
     @Override
     public Map<String,Object> getWageList(Long userId) {
         FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
@@ -44,7 +49,22 @@ public class FamilyWageServiceImpl implements FamilyWageService {
         }else if(familyDetailEntity.getIsAdmin()==2){
             map.put("wage",Stream.of(200000, 300000, 400000, 500000, 600000, 1000000, 2000000).collect(Collectors.toList()));
         }
-        map.put("day",LocalDateTime.now().getDayOfWeek().getValue());
+        LocalDate now = LocalDate.now();
+        FamilyWageEntity familyWageEntity = familyWageDao.selectOne(new QueryWrapper<FamilyWageEntity>().lambda().eq(FamilyWageEntity::getUserId, userId));
+        if(familyWageEntity!=null&&familyWageEntity.getFamilyWageTime().isEqual(now)){
+            map.put("day", 0);
+        }else {
+            map.put("day", now.getDayOfWeek().getValue());
+        }
         return map;
     }
+
+    @Override
+    public void updateUserWage(Integer wage, Long userId) {
+        Integer integer = familyDetailDao.updateUserWage(wage, userId);
+        if(integer<1){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"领取失败");
+        }
+    }
+
 }

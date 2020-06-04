@@ -9,10 +9,7 @@ import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,18 +32,23 @@ public class FamilyWageController {
     private FamilyWageService familyWageService;
 
     @ApiOperation("获取工资列表")
-    @GetMapping("/getFamilyWake")
+    @GetMapping("/getFamilyWage")
     @CrossOrigin
     @CheckToken
-    public Map<String, Object> getFamilyWake(){
+    public Map<String, Object> getFamilyWage(){
         return familyWageService.getWageList(localUser.getUser().getId());
     }
 
     @ApiOperation("领取当天工资")
-    @GetMapping("/receiveWake")
+    @PostMapping("/receiveWage")
+    @ApiImplicitParam(value = "工资金额",name="familyIntroduce",paramType = "path",dataType = "Integer",required = true)
     @CrossOrigin
     @CheckToken
-    public void receiveWake(){
+    public void receiveWake(@RequestBody Integer wage){
+        if(wage==null||wage<=0){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyWageService.updateUserWage(wage,localUser.getUser().getId());
     }
 
 }
