@@ -223,6 +223,15 @@ public class AttendantServiceImpl implements IAttendantService {
             ourHealth1=heEdLisfe*heBonuses;
             //得到他方装备防御力
             capabilities = defenseOtherSide * heBonuses;
+            if(myEquipBonus==0){
+                //我方装备加成
+                List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
+                for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
+                    myEquipBonus=myEquipBonus+tbEquipmentKnapsackVos.get(i).getEdRedEnvelopeAcceleration().intValue()+
+                            tbEquipmentKnapsackVos.get(i).getEdLife().intValue()+tbEquipmentKnapsackVos.get(i).getEdDefense().intValue();
+                }
+
+            }
             //得到我方战力
             double ripetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0)
                     +(userInfoQueryBoResult.getData().getUserInfoRenown()*myEquipBonus-userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()+heEquipBonus);
@@ -259,8 +268,10 @@ public class AttendantServiceImpl implements IAttendantService {
             ourCapabilities=100;
             System.out.println("没有装备 = " + "没有装备");
         }else{
-            //得到我方战力
-            ourCapabilities=100;
+            if(tbEquipmentKnapsackVos.size()==0){
+                //得到我方战力
+                ourCapabilities=100;
+            }
             for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
                 //装备血量之和
                 BigDecimal edLife = tbEquipmentKnapsackVos.get(i).getEdLife();
