@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,12 +42,16 @@ public class FamilyWageServiceImpl implements FamilyWageService {
         Map<String,Object> map = new HashMap<>();
         //根据权限设置工资
         if(familyDetailEntity.getIsAdmin()==0){
+            //成员工资
             map.put("wage",Stream.of(50000, 50000, 50000, 100000, 100000, 200000, 200000).collect(Collectors.toList()));
         }else if(familyDetailEntity.getIsAdmin()==1){
+            //管理员工资
             map.put("wage",Stream.of(150000, 200000, 300000, 400000, 500000, 800000, 950000).collect(Collectors.toList()));
         }else if(familyDetailEntity.getIsAdmin()==2){
+            //族长工资
             map.put("wage",Stream.of(200000, 300000, 400000, 500000, 600000, 1000000, 2000000).collect(Collectors.toList()));
         }
+        //判断今日是否已领取
         LocalDate now = LocalDate.now();
         FamilyWageEntity familyWageEntity = familyWageDao.selectOne(new QueryWrapper<FamilyWageEntity>().lambda().eq(FamilyWageEntity::getUserId, userId));
         if(familyWageEntity!=null&&familyWageEntity.getFamilyWageTime().isEqual(now)){

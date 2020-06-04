@@ -1,5 +1,6 @@
 package com.dkm.family.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
@@ -97,11 +98,11 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity==null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"你不是该家族成员");
         }
+        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
         if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
         }
-        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
-        familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()+1);
+        familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()-1);
         familyDao.updateById(familyEntity);
     }
 
@@ -122,6 +123,9 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity!=null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"请退出当前家族后再试");
         }
+        //家族人数加1
+        familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()+1);
+        //插入记录
         FamilyDetailEntity familyDetail = new FamilyDetailEntity();
         familyDetail.setFamilyId(familyId);
         familyDetail.setUserId(userId);
@@ -166,7 +170,9 @@ public class FamilyServiceImpl implements FamilyService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"用户不属于您的家族");
         }
         int i = familyDetailDao.deleteById(outUser.getFamilyDetailsId());
-        if(i<1){
+        FamilyEntity familyEntity = familyDao.selectById(user.getFamilyId());
+        familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()-1);
+        if(i<1||familyDao.updateById(familyEntity)<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"踢出成员失败");
         }
     }
