@@ -25,6 +25,8 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserProduce> implements IUserProduceService {
 
+   @Autowired
+   private IdGenerator idGenerator;
 
    @Override
    public void insertAllProduceInfo(List<UserProduceVo> list) {
@@ -37,11 +39,8 @@ public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserP
    }
 
    @Override
-   public void insertProduce(UserProduceVo vo) {
-      UserProduce userProduce = new UserProduce();
-      userProduce.setUserId(vo.getUserId());
-      userProduce.setProduceId(vo.getProduceId());
-
+   public void insertProduce(UserProduce userProduce) {
+      userProduce.setId(idGenerator.getNumberId());
       int insert = baseMapper.insert(userProduce);
 
       if (insert <= 0) {

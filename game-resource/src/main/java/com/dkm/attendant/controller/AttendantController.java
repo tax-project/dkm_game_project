@@ -3,6 +3,7 @@ package com.dkm.attendant.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
+import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
@@ -56,7 +57,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public List<AttenDant> queryThreeAtt() {
+    public List<AttendantUsersVo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 
@@ -81,8 +82,7 @@ public class AttendantController {
     @CrossOrigin
     @CheckToken
     public  List<TbEquipmentKnapsackVo> selectUserIdAndFood(){
-        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iAttendantService.selectUserIdAndFood();
-        return tbEquipmentKnapsackVos;
+        return iAttendantService.selectUserIdAndFood();
     }
 
     /**
@@ -101,17 +101,16 @@ public class AttendantController {
      *解雇
      */
     @ApiOperation(value = "解雇",notes = "成功返回数据 反则为空")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
-    })
+    @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id")
     @GetMapping("/dismissal")
     @CrossOrigin
     @CheckToken
-    public Message dismissal(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+    public Message dismissal(@RequestParam("caughtPeopleId") Long caughtPeopleId){
         Message message=new Message();
         if(caughtPeopleId==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数错误");
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
+
         int dismissaMeassg = iAttendantService.dismissal(caughtPeopleId);
         if(dismissaMeassg>0){
             message.setNum(1);
@@ -131,7 +130,7 @@ public class AttendantController {
     @GetMapping("/petBattle")
     @CrossOrigin
     @CheckToken
-    public Map<String,Object> petBattle(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+    public Map<String,Object> petBattle(@RequestParam("caughtPeopleId") Long caughtPeopleId){
         if(caughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"被抓人Id不能为空");
         }
@@ -150,10 +149,10 @@ public class AttendantController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "myCapabilities",value = "我战斗力"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "otherForce",value = "对方战斗力"),
     })
-    @GetMapping("/combatResults")
+    @PostMapping("/combatResults")
     @CrossOrigin
     @CheckToken
-   public Map<String,Object>  combatResults(AttendantVo vo){
+   public Map<String,Object>  combatResults(@RequestBody AttendantVo vo){
         if(vo.getOtherForce()==null || vo.getMyCapabilities()==null || vo.getOtherHealth()==null || vo.getStatus()==null || vo.getMyHealth()==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
@@ -161,18 +160,17 @@ public class AttendantController {
     }
 
     /**
+     * 让他干活
      * 抓跟班
      */
     @ApiOperation(value = "抓跟班",notes = "成功返回数据 反则为空")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
-    })
+    @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id")
     @GetMapping("/graspFollowing")
     @CrossOrigin
     @CheckToken
-    public Long graspFollowing(@RequestParam(value = "caughtPeopleId") Long caughtPeopleId){
+    public Long graspFollowing(@RequestParam("caughtPeopleId") Long caughtPeopleId){
         Long aLong = iAttendantService.addGraspFollowing(caughtPeopleId);
-        if(aLong<=0){
+        if(aLong <= 0){
             log.info("抓跟班异常");
             throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
@@ -189,8 +187,11 @@ public class AttendantController {
     @GetMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public Message gather(@RequestParam(value = "atuId") Integer atuId){
+    public Message gather(@RequestParam("atuId") Integer atuId){
         Message message=new Message();
+        if(atuId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
+        }
         int gather = iAttendantService.gather(atuId);
         if(gather<0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取失败");
@@ -206,7 +207,7 @@ public class AttendantController {
      * @return
      */
     @GetMapping("/queryAidUser")
-    public Map<String,Object> queryAidUser(@RequestParam(value = "CaughtPeopleId") Long CaughtPeopleId){
+    public Map<String,Object> queryAidUser(@RequestParam("CaughtPeopleId") Long CaughtPeopleId){
         if(CaughtPeopleId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }

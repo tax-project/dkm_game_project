@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.AttendantVo;
 import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import io.swagger.annotations.Api;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,15 +44,12 @@ public class ProduceController {
         return produceService.insertProduce(attendantId);
     }
 
-    @GetMapping("/queryJoinOutPutGoods/{userId}")
-    public List<AttendantGoods> queryJoinOutPutGoods(@PathVariable("userId") Long userId){
-        return produceService.queryJoinOutPutGoods(userId);
-    }
-
 
     @ApiOperation(value = "查询用户产出的物品", notes = "查询用户产出的物品")
     @GetMapping("/queryOutput")
-    public List<UserAttendantGoods> queryOutput(){
+    @CrossOrigin
+    @CheckToken
+    public List<AttendantVo> queryOutput(){
         return produceService.queryOutput();
     }
 
@@ -63,6 +62,7 @@ public class ProduceController {
     @ApiOperation(value = "掠夺赢了之后修改产出输方产出的物品", notes = "掠夺赢了之后修改产出输方产出的物品")
     @GetMapping("/deleteOutGoodNumber")
     @CrossOrigin
+    @CheckToken
     public int deleteOutGoodNumber(Long id){
         if(id==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
@@ -73,7 +73,10 @@ public class ProduceController {
 
 
 
-
+    @GetMapping("/queryJoinOutPutGoods/{userId}")
+    public List<AttendantGoods> queryJoinOutPutGoods(@PathVariable("userId") Long userId){
+        return produceService.queryJoinOutPutGoods(userId);
+    }
 
 
 

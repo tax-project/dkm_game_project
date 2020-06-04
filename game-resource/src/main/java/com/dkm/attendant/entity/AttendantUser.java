@@ -1,6 +1,8 @@
 package com.dkm.attendant.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -12,12 +14,16 @@ import org.springframework.data.annotation.Id;
  */
 @Data
 @TableName("tb_attendant_user")
-public class AttendantUser {
-    @Id
+public class AttendantUser extends Model<AttendantUser> {
+    @TableId
     private long atuId;
-    private Long aId;
+
+    private Long attendantId;
+
     private Long userId;
+
     private Long caughtPeopleId;
+
     private long exp1;
 
 }

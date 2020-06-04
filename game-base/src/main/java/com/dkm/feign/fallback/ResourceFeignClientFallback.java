@@ -14,6 +14,7 @@ import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author qf
@@ -63,7 +64,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result<AttendantUserVo> queryAidUser(Long CaughtPeopleId) {
+   public Result<Map<String,Object>> queryAidUser(Long CaughtPeopleId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 }

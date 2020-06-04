@@ -12,8 +12,10 @@
         where a.user_id=b.user_id ORDER BY RAND() LIMIT 9;
     </select>
 
-    <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.AttenDant">
-        select a.at_img,a.at_name,au.Caught_people_id,au.exp1 from tb_attendant a,tb_attendant_user au where au.user_id=#{userId} and a.id=au.a_id
+    <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.vo.AttendantUsersVo">
+        select a.at_img,a.at_name,au.caught_people_id,au.exp1,au.attendant_id as 'aId'
+        from tb_attendant a,tb_attendant_user au
+        where au.user_id= #{userId} and a.id= au.attendant_id
     </select>
 
 
@@ -27,7 +29,7 @@
 
 
     <update id="gather" parameterType="java.lang.Long">
-        update tb_attendant_user set  exp1=#{exp1} where aut_id=#{autId}
+        update tb_attendant_user set  exp1=#{exp1} where atu_id=#{atuId}
     </update>
 
     <select id="queryAidUser" resultType="com.dkm.attendant.entity.vo.AttendantUserVo">

@@ -3,6 +3,7 @@ package com.dkm.attendant.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
+import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
@@ -25,7 +26,7 @@ public interface IAttendantService {
      *获取用户抓到的跟班信息
      * @return
      */
-   List<AttenDant> queryThreeAtt();
+   List<AttendantUsersVo> queryThreeAtt();
 
     /**
      * 获取用户声望和金币
@@ -60,7 +61,7 @@ public interface IAttendantService {
     * 收取
     * @return
     */
-   int gather(Integer autId);
+   int gather(Integer atuId);
 
     /**
      * 战斗过程
@@ -74,5 +75,11 @@ public interface IAttendantService {
      * @return
      */
     Map<String,Object> queryAidUser(Long CaughtPeopleId);
+
+    /**
+     * 查询所有跟班
+     * @return
+     */
+    List<AttenDant> listAttenDant ();
 
 }

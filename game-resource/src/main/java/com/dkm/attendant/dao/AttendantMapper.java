@@ -6,6 +6,7 @@ import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
+import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.User;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
     /**
      *获取用户抓到的跟班信息
      */
-    List<AttenDant> queryThreeAtt(Long userId);
+    List<AttendantUsersVo> queryThreeAtt(Long userId);
 
     /**
      * 解雇
@@ -51,10 +52,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
     int addGraspFollowing(AttendantUser attendantUser);
     /**
      * 收取
-     * @param autId
+     * @param atuId
      * @return
      */
-    int gather(Long exp1, Long autId);
+    int gather(Long exp1, Long atuId);
     /**
      * 查询自己的一个主人信息
      * @param CaughtPeopleId 当前用户id
