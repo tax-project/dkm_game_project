@@ -72,20 +72,24 @@ public class RabbitMqListener {
             //对方未在线，应存入rabbitMQ消息队列中，等待客户端的连接再发送消息
             //存入一个新的队列中
             log.info("未找到对应的channel,有可能是对方未在线,将消息通过mq发送存入数据库");
+            try {
+               mqChannel.basicAck(deliveryTag,true);
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
             rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
          }
 
          //将消息发送给客户端
          if (channel != null) {
             log.info("发送单聊消息:" + msgInfo);
+            try {
+               mqChannel.basicAck(deliveryTag,true);
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
 
-         }
-
-         try {
-            mqChannel.basicAck(deliveryTag,true);
-         } catch (IOException e) {
-            e.printStackTrace();
          }
 
       }
@@ -112,14 +116,13 @@ public class RabbitMqListener {
 
          //将消息群发
          log.info("消息群发:" +msgInfo);
-         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
-
-
          try {
             mqChannel.basicAck(deliveryTag,true);
          } catch (IOException e) {
             e.printStackTrace();
          }
+         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+
       }
 
 
@@ -135,15 +138,14 @@ public class RabbitMqListener {
             //将消息发送给客户端
             if (channel != null) {
                log.info("挤下线:" + msgInfo);
+               try {
+                  mqChannel.basicAck(deliveryTag,true);
+               } catch (IOException e) {
+                  e.printStackTrace();
+               }
                channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
 
             }
-         }
-
-         try {
-            mqChannel.basicAck(deliveryTag,true);
-         } catch (IOException e) {
-            e.printStackTrace();
          }
 
       }
