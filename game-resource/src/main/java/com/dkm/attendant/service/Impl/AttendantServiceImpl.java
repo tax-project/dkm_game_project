@@ -232,6 +232,7 @@ public class AttendantServiceImpl implements IAttendantService {
         Integer defaultOtherForce=0;
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+        System.out.println("他方装备 = " + tbEquipmentKnapsackVos1);
         //如果没有装备
         if(null == tbEquipmentKnapsackVos1 && tbEquipmentKnapsackVos1.size()==0){
             //血量
@@ -358,6 +359,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到自己装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
+        System.out.println("我方装备 = " + tbEquipmentKnapsackVos);
         if(tbEquipmentKnapsackVos.size()==0){
             //血量
             ourHealth=500;
@@ -447,11 +449,12 @@ public class AttendantServiceImpl implements IAttendantService {
                  * 装备防御力*各个装备属性加成
                  * 得到最终我方防御力
                  */
+                System.out.println("tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus = " + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus);
+
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
             //得到我方的战力
-            double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1.0 / 2.0)
-                    + (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
+            double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1.0 / 2.0)+(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
             //得到最终我方的战力
             //System.out.println("heRipetime = " + heRipetime);
             myRipetime= (int) heRipetime;
