@@ -12,10 +12,16 @@
         where a.user_id=b.user_id ORDER BY RAND() LIMIT 9;
     </select>
 
-    <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.vo.AttendantUsersVo">
+    <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.vo.AttUserAllInfoVo">
         select a.at_img,a.at_name,au.caught_people_id,au.exp1,au.attendant_id as 'aId'
-        from tb_attendant a,tb_attendant_user au
-        where au.user_id= #{userId} and a.id= au.attendant_id
+        from tb_attendant a join tb_attendant_user au on a.id= au.attendant_id
+        where au.user_id= #{userId}
+        <if test="status == 0">
+            and au.caught_people_id = 0
+        </if>
+        <if test="status == 1">
+            and au.caught_people_id != 0
+        </if>
     </select>
 
 

@@ -1,11 +1,13 @@
 package com.dkm.wechat.service;
 
 
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,4 +44,11 @@ public interface IWeChatService {
      * @return 用户所有信息
      */
     UserInfoQueryBo queryUser (Long id);
+
+    /**
+     *  根据用户查询所有头像
+     * @param list
+     * @return
+     */
+    List<UserHeardUrlBo> queryAllHeardByUserId (List<Long> list);
 }

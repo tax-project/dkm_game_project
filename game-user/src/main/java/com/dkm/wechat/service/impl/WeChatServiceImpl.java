@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.websocket.MsgInfo;
@@ -254,5 +255,15 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
             result.setUserInfoEnvelopeQueryTime(DateUtil.formatDate(bo.getUserInfoEnvelopeTime()));
         }
         return result;
+    }
+
+    /**
+     * 查询用户头像
+     * @param list
+     * @return
+     */
+    @Override
+    public List<UserHeardUrlBo> queryAllHeardByUserId(List<Long> list) {
+        return baseMapper.queryAllHeardByUserId (list);
     }
 }

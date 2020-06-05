@@ -2,6 +2,8 @@ package com.dkm.wechat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.ParamBo;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,6 +98,15 @@ public class WeCharController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return weChatService.queryUser(id);
+    }
+
+
+    @PostMapping("/queryAllHeardByUserId")
+    public List<UserHeardUrlBo> queryAllHeardByUserId (@RequestBody ParamBo bo) {
+        if (bo.getList() == null) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        return weChatService.queryAllHeardByUserId(bo.getList());
     }
 
 }
