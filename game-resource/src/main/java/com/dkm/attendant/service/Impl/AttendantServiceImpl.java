@@ -232,9 +232,9 @@ public class AttendantServiceImpl implements IAttendantService {
         Integer defaultOtherForce=0;
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
-        System.out.println("他方装备 = " + tbEquipmentKnapsackVos1);
+        System.out.println("他方装备 = " + tbEquipmentKnapsackVos1.size());
         //如果没有装备
-        if(null == tbEquipmentKnapsackVos1 && tbEquipmentKnapsackVos1.size()==0){
+        if(tbEquipmentKnapsackVos1.size()==0){
             //血量
             heEquipBonus=500;
             //他方装备防御力
@@ -260,6 +260,7 @@ public class AttendantServiceImpl implements IAttendantService {
                         heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                     }
                 }
+                System.out.println("血量======== = " + heEquipBonus);
 
                 /**
                  * 问题： 没有加成我怎么知道他是血量还是才华
@@ -275,24 +276,36 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
 
-/*                //他方装备加成
+/*
                 double heEquipmentBonus = 0;*/
                 /**
                  * 属性加成 1就代表有加成 0代表没有加成
                  * 如果有加成在判断是生命还是才华
                  */
+                //他方装备加成
                 if (tbEquipmentKnapsackVos1.get(i).getEdAttribute().intValue() == 1) {
                     // 1 为生命加成 2 为才华加成
                     if (tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 1) {
                         // 生命加成
                         heEquipmentBonus =heEquipmentBonus+ tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
-                    } else {
+                    } else if(tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 2){
                         //才华加成
                         heEquipmentBonus =heEquipmentBonus+ tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                     }
                 }
 
                 System.out.println("1 为生命加成 2 为才华加成 = " + heEquipmentBonus);
+
+
+
+                /**
+                 * 装备防御力*各个装备属性加成
+                 */
+                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus);
+                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue());
+                System.out.println("他方装备加成 = " + heEquipBonus);
+                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus;
+
 
                 //我方方装备加成
                 //double myEquipmentBonus = 0;
@@ -308,28 +321,24 @@ public class AttendantServiceImpl implements IAttendantService {
                         // 1 为生命加成 2 为才华加成
                         if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
                             // 生命加成
-                            myEquipmentBonus = tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                            myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                         } else {
                             //才华加成
-                            myEquipmentBonus = tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                            myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                         }
                     }
                 }
-
-
-                /**
-                 * 装备防御力*各个装备属性加成
-                 */
-                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus;
             }
 
             //得到他方的战力
-            double heRipetime = StrictMath.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue(), 1.0 / 2.0)
-                    + (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() + myEquipmentBonus);
+            double heRipetime = StrictMath.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
+                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
+
+            System.out.println("userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus = " + userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus);
+            System.out.println("userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus = " + userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
             //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
 
-            System.out.println("他方装备加成 = " + heRipetime);
             //他方最终得到的血量
             //B = heEdLisfe * heEquipBonus;
             System.out.println("他方最终血量 = " + heEquipBonus);
@@ -359,7 +368,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到自己装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-        System.out.println("我方装备 = " + tbEquipmentKnapsackVos);
+        System.out.println("我方装备 = " + tbEquipmentKnapsackVos.size());
         if(tbEquipmentKnapsackVos.size()==0){
             //血量
             ourHealth=500;
@@ -391,7 +400,7 @@ public class AttendantServiceImpl implements IAttendantService {
                         ourHealth = ourHealth + tbEquipmentKnapsackVos.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                     }
                 }
-
+                System.out.println("我方-----血量======== = " + ourHealth);
 
 
                 /**
@@ -405,27 +414,31 @@ public class AttendantServiceImpl implements IAttendantService {
                 }
 
 
-                    //我方装备加成
+
                     /**
                      * 属性加成 1就代表有加成 0代表没有加成
                      * 如果有加成在判断是生命还是才华
                      */
+                   //我方装备加成
                     if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
                         // 1 为生命加成 2 为才华加成
                         if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
                             // 生命加成
-                            myEquipmentBonus = tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        } else {
+                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                        } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
                             //才华加成
-                            myEquipmentBonus = tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                         }
                     }
 
+                System.out.println("我方装备加成ppp = " + myEquipmentBonus);
 
 
                 //他方装备属性加成等于0 在查询一遍赋值
                 if(heEquipBonus==0){
-                    //List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+                    //List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVoss = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+                    //System.out.println("tbEquipmentKnapsackVoss = " + tbEquipmentKnapsackVoss.size());
+                    //System.out.println("tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue()  = " + tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue() );
                     /**
                      * 属性加成 1就代表有加成 0代表没有加成
                      * 如果有加成在判断是生命还是才华
@@ -434,14 +447,13 @@ public class AttendantServiceImpl implements IAttendantService {
                         // 1 为生命加成 2 为才华加成
                         if (tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 1) {
                             // 生命加成
-                            heEquipmentBonus = tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
+                            heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                         } else {
                             //才华加成
-                            heEquipmentBonus = tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
+                            heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                         }
                     }
                 }
-
 
 
 
@@ -450,11 +462,12 @@ public class AttendantServiceImpl implements IAttendantService {
                  * 得到最终我方防御力
                  */
                 System.out.println("tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus = " + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus);
-
+                System.out.println("我方装备加成 = " + myEquipmentBonus);
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
             //得到我方的战力
-            double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1.0 / 2.0)+(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
+            double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
+                    (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
             //得到最终我方的战力
             //System.out.println("heRipetime = " + heRipetime);
             myRipetime= (int) heRipetime;
@@ -710,14 +723,14 @@ public class AttendantServiceImpl implements IAttendantService {
         Map<String,Object> map=new HashMap<>();
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(CaughtPeopleId);
-        System.out.println("1-:"  +attendantUserVo);
-        if(attendantUserVo==null){
+        if(attendantUserVo == null){
             map.put("msg","没有主人");
         }else{
             map.put("attendantUserVo",attendantUserVo);
         }
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+        System.out.println("-->" + userInfoQueryBoResult);
         if (userInfoQueryBoResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
         }
