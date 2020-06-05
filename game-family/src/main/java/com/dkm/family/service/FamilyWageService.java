@@ -15,7 +15,7 @@ public interface FamilyWageService {
      * 根据家族权限获取工资
      * @param userId
      */
-    Map<String,Object> getWageList(Long userId);
+    List<Map<Integer,Integer>> getWageList(Long userId);
 
     /**
      * 领取工资

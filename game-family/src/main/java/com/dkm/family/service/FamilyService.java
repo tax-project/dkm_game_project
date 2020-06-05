@@ -28,6 +28,12 @@ public interface FamilyService {
     Map<String,Object> getFamilyInfo(Long userId);
 
     /**
+     * 获取家族详情
+     * @param familyId
+     * @return
+     */
+    Map<String,Object>  otherFamilyInfo(Long familyId);
+    /**
      * 获取用户家族
      * @param userId
      * @return
