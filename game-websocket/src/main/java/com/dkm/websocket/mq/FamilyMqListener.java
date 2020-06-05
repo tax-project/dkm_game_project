@@ -74,13 +74,13 @@ public class FamilyMqListener {
 
          //将消息群发
          log.info("家族消息群发:" +msgInfo);
-         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
-
          try {
             mqChannel.basicAck(deliveryTag,true);
          } catch (IOException e) {
             e.printStackTrace();
          }
+         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+
       }
 
    }

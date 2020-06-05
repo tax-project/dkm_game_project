@@ -37,6 +37,12 @@ public class MqNotOnlineListener {
       //将未在线的信息存入数据库
       //当用户登录的时候取出来进行一一发送
       log.info("--接收到未在线的信息:" +notOnlineMsg);
+      //确认消息
+      try {
+         channel.basicAck(deliveryTag,true);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
       MsgInfo msg = null;
       try {
          msg = JSONObject.parseObject(notOnlineMsg, MsgInfo.class);
@@ -54,13 +60,6 @@ public class MqNotOnlineListener {
 
          friendNotOnlineService.insertNotOnline(vo);
 
-      }
-
-      //确认消息
-      try {
-         channel.basicAck(deliveryTag,true);
-      } catch (IOException e) {
-         e.printStackTrace();
       }
 
    }
