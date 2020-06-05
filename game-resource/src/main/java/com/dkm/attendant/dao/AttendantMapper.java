@@ -30,10 +30,6 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * @return
      */
     User queryUserReputationGold(Long userId);
-    /**
-     * 随机查询用户表20条数
-     */
-    List<User> queryRandomUser();
 
 
     /**

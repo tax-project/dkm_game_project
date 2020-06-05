@@ -1,11 +1,10 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
-import com.dkm.feign.entity.PetsDto;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -70,4 +69,12 @@ public interface UserFeignClient {
     */
    @PostMapping("/v1/userInfo/updateInfo")
    Result updateInfo(@RequestBody UserInfoSkillBo bo);
+
+   /**
+    *  随机返回9条用户数据
+    * @param userId
+    * @return
+    */
+   @GetMapping("/v1/userInfo/listAttUser")
+   Result<List<AttendantWithUserVo>> listAttUser(Long userId);
 }

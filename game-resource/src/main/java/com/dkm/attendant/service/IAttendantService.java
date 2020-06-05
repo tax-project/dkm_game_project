@@ -37,10 +37,11 @@ public interface IAttendantService {
      */
      List<TbEquipmentKnapsackVo> selectUserIdAndFood();
 
-    /**
-     * 随机查询用户表20条数
-     */
-    List<User> queryRandomUser();
+   /**
+    *  随机查询用户表9条数
+    * @return 返回结果
+    */
+    Map<String, Object> queryRandomUser();
     /**
      * 解雇
      */

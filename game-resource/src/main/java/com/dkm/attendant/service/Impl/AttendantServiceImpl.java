@@ -1,10 +1,10 @@
 package com.dkm.attendant.service.Impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.AttUserResultBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -12,6 +12,7 @@ import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
@@ -20,21 +21,16 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
-import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author 刘梦祺
@@ -122,16 +118,36 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public List<User> queryRandomUser() {
+    public Map<String, Object> queryRandomUser() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        List<User> users = attendantMapper.queryRandomUser();
-        for (int i = 0; i < users.size(); i++) {
-            if(users.get(i).getUserId()==query.getId()){
-                users.remove(i);
-            }
+
+        //随机返回9条数据
+        Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
+
+        if (result.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "Feign有误");
         }
-        return users;
+
+        //得到用户信息集合
+        List<AttendantWithUserVo> userList = result.getData();
+
+        //流化
+        List<AttUserResultBo> attUserResultBoList = userList.stream().map(attendantWithUserVo -> {
+            AttUserResultBo bo = new AttUserResultBo();
+            BeanUtils.copyProperties(attendantWithUserVo, bo);
+            bo.setAId(0L);
+            return bo;
+        }).collect(Collectors.toList());
+
+        //得到系统跟班列表
+        List<AttenDant> list = attendantMapper.selectList(null);
+
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("sys",list);
+        map.put("userInfo",attUserResultBoList);
+
+        return map;
     }
     /**
      * 解雇
@@ -566,7 +582,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 if (attendantUser1 != null) {
                     //该用户已被抓，得到他主人的用户Id返回给前端,继续打
                     Long userId = attendantUser1.getUserId();
-                    vo.setAId(attendantId);
+                    vo.setAId(0L);
                     vo.setCaughtPeopleId(userId);
                     vo.setStatus(1);
                     return vo;
@@ -580,7 +596,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     //说明这是跟主人在打架
                     //将主人的跟班id添加
                     attendantUser.setAtuId(id);
-                    attendantUser.setAttendantId(attendantId);
+                    attendantUser.setAttendantId(0L);
                     attendantUser.setCaughtPeopleId(queryAttendantUser.getCaughtPeopleId());
                     attendantUser.setUserId(user.getId());
                     attendantUser.setExp1(s);
@@ -591,7 +607,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 }
                 //跟没有主人的用户打架
                 attendantUser.setAtuId(id);
-                attendantUser.setAttendantId(attendantId);
+                attendantUser.setAttendantId(0L);
                 attendantUser.setCaughtPeopleId(caughtPeopleId);
                 attendantUser.setUserId(user.getId());
                 attendantUser.setExp1(s);
