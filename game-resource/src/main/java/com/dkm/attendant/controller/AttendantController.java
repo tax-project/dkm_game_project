@@ -88,7 +88,7 @@ public class AttendantController {
     @GetMapping("/queryRandomUser")
     @CrossOrigin
     @CheckToken
-    public List<User> queryRandomUser(){
+    public Map<String, Object> queryRandomUser(){
         return iAttendantService.queryRandomUser();
     }
 
