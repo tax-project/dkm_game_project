@@ -14,13 +14,13 @@
 
     <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.vo.AttUserAllInfoVo">
         select a.at_img,a.at_name,au.caught_people_id,au.exp1,au.attendant_id as 'aId'
-        from tb_attendant a join tb_attendant_user au on a.id= au.attendant_id
+        from tb_attendant a right join tb_attendant_user au on a.id= au.attendant_id
         where au.user_id= #{userId}
         <if test="status == 0">
-            and au.caught_people_id = 0
+            and attendant_id != 0
         </if>
         <if test="status == 1">
-            and au.caught_people_id != 0
+            and attendant_id = 0
         </if>
     </select>
 

@@ -5,12 +5,15 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.bo.AttUserResultBo;
+import com.dkm.attendant.entity.bo.AttendantBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.ParamBo;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
@@ -26,10 +29,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,13 +83,42 @@ public class AttendantServiceImpl implements IAttendantService {
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
 
+        List<Long> longList = new ArrayList<>();
+        for (AttUserAllInfoVo vo : list1) {
+            longList.add(vo.getCaughtPeopleId());
+        }
+
+        //去查询用户的详细信息
+        ParamBo bo = new ParamBo();
+        bo.setList(longList);
+        Result<List<UserHeardUrlBo>> listResult = userFeignClient.queryAllHeardByUserId(bo);
+
+        if (listResult.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "feign有误");
+        }
+
+        List<UserHeardUrlBo> resultData = listResult.getData();
+
+        Map<Long, UserHeardUrlBo> urlBoMap = resultData.stream().
+              collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo ->
+                    userHeardUrlBo
+              ));
+
+        List<AttUserAllInfoVo> collect = list1.stream().map(attUserAllInfoVo -> {
+            AttUserAllInfoVo result = new AttUserAllInfoVo();
+            BeanUtils.copyProperties(attUserAllInfoVo, result);
+            result.setAtImg(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeadUrl());
+            result.setAtName(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+            return result;
+        }).collect(Collectors.toList());
+
         Map<String,Object> map = new HashMap<>(2);
 
         //系统跟班
         map.put("sys-att",list);
 
         //用户跟班
-        map.put("user-att",list1);
+        map.put("user-att",collect);
 
         return map;
     }
@@ -137,14 +167,24 @@ public class AttendantServiceImpl implements IAttendantService {
             AttUserResultBo bo = new AttUserResultBo();
             BeanUtils.copyProperties(attendantWithUserVo, bo);
             bo.setAId(0L);
+            bo.setSysStatus(1);
             return bo;
         }).collect(Collectors.toList());
 
         //得到系统跟班列表
         List<AttenDant> list = attendantMapper.selectList(null);
 
+        List<AttendantBo> boList = new ArrayList<>();
+        for (AttenDant attenDant : list) {
+            AttendantBo bo = new AttendantBo();
+            BeanUtils.copyProperties(attenDant,bo);
+            //系统
+            bo.setSysStatus(0);
+            boList.add(bo);
+        }
+
         Map<String, Object> map = new HashMap<>(2);
-        map.put("sys",list);
+        map.put("sys",boList);
         map.put("userInfo",attUserResultBoList);
 
         return map;
@@ -319,8 +359,8 @@ public class AttendantServiceImpl implements IAttendantService {
                  */
                 System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus);
                 System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue());
-                System.out.println("他方装备加成 = " + heEquipBonus);
-                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus;
+                System.out.println("他方装备加成 = " + heEquipmentBonus);
+                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipmentBonus;
 
 
                 //我方方装备加成
@@ -539,7 +579,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方血量
         map.put("ourHealth1",heEquipBonus+heDefense);
         //我方战力
-        map.put("ourCapabilities",ourCapabilities);
+        map.put("ourCapabilities",myRipetime);
         //System.out.println("他方战斗力 = " + otherForce);
         //他方战力
         map.put("heRipetime1",heRipetime1);
@@ -623,6 +663,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //抓系统跟班
         attendantUser.setAtuId(idGenerator.getNumberId());
+        if (attendantId == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "系统跟班需要传跟班id");
+        }
         attendantUser.setAttendantId(attendantId);
         attendantUser.setCaughtPeopleId(0L);
         attendantUser.setUserId(user.getId());
