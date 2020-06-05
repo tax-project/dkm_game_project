@@ -76,5 +76,5 @@ public interface UserFeignClient {
     * @return
     */
    @GetMapping("/v1/userInfo/listAttUser")
-   Result<List<AttendantWithUserVo>> listAttUser(Long userId);
+   Result<List<AttendantWithUserVo>> listAttUser(@RequestParam("userId") Long userId);
 }

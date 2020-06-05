@@ -319,8 +319,8 @@ public class AttendantServiceImpl implements IAttendantService {
                  */
                 System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus);
                 System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue());
-                System.out.println("他方装备加成 = " + heEquipBonus);
-                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus;
+                System.out.println("他方装备加成 = " + heEquipmentBonus);
+                heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipmentBonus;
 
 
                 //我方方装备加成
@@ -539,7 +539,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方血量
         map.put("ourHealth1",heEquipBonus+heDefense);
         //我方战力
-        map.put("ourCapabilities",ourCapabilities);
+        map.put("ourCapabilities",myRipetime);
         //System.out.println("他方战斗力 = " + otherForce);
         //他方战力
         map.put("heRipetime1",heRipetime1);
