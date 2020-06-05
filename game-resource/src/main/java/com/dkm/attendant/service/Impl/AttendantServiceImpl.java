@@ -407,15 +407,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
 
-
-
-
-
-
-
-
-
-
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
         //随机获取我方宠物
