@@ -244,12 +244,10 @@ public class SeedServiceImpl implements ISeedService {
                 double experience = Math.pow(userInIf.getSeedGrade(), 2 / 5.0) * 100*userLandUnlocks.size();
                 Integer experienceInteger = Integer.valueOf((int) experience);
 
-                System.out.println("experienceInteger ====== " + experienceInteger);
 
                 //种植一次所获得的金币
                 double userGold  = Math.pow(userInIf.getSeedGrade(), 2)*50 +1000*userLandUnlocks.size();
                 Integer userGoldInteger = Integer.valueOf((int) userGold);
-                System.out.println("userInIf = " + userInIf.getUserInfoNowExperience()+"======"+userInIf.getUserInfoNextExperience());
 
                 //判断当前经验是否等级下一级的等级 如果等于等级加一
                 if(userInIf.getUserInfoNowExperience()+experienceInteger>=userInIf.getUserInfoNextExperience()){
@@ -278,14 +276,18 @@ public class SeedServiceImpl implements ISeedService {
 
                     //每三级解锁一块土地
                     if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 ||userInfoQueryBoResults.getData().getUserInfoGrade()==6
-                            || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12 ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
+                            || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12
+                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
                             userInfoQueryBoResults.getData().getUserInfoGrade()==18||userInfoQueryBoResults.getData().getUserInfoGrade()==21
                             ||userInfoQueryBoResults.getData().getUserInfoGrade()==24){
-
+                        System.out.println("userInfoQueryBoResults.getData().getUserInfoGrade() = " + userInfoQueryBoResults.getData().getUserInfoGrade());
                         //查询用户没有解锁的土地 状态等于0结果第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
                         if(userLandUnlocks1.get(0).getLaStatus()==0){
-                            landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
+                            int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
+                            if(i1<=0){
+                                throw new ApplicationException(CodeType.SERVICE_ERROR,"等级等于"+userInfoQueryBoResults.getData().getUserInfoGrade()+"！解锁失败");
+                            }
                         }
                     }
                 } else{
@@ -325,8 +327,7 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public Map<String,Object> queryAlreadyPlantSd() {
-        Map<String,Object> map=new HashMap<>();
+    public List<LandYesVo> queryAlreadyPlantSd() {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
         List<LandYesVo> landYesVos = seedMapper.queryAlreadyPlantSd(user.getId());
@@ -338,10 +339,9 @@ public class SeedServiceImpl implements ISeedService {
                 long l1 = landYesVos.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"));
                 landYesVos.get(i).setTime(l1);
             }
-            map.put("landSeedVos",landYesVos);
         }
 
-        return map;
+        return landYesVos;
     }
 
 
