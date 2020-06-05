@@ -22,9 +22,10 @@
 
 
     <select id="queryAllHeardByUserId" resultType="com.dkm.entity.bo.UserHeardUrlBo" parameterType="Long">
-        <foreach collection="list" item="item" index="index">
-            select we_chat_head_img_url as 'headUrl',user_id as 'userId',we_chat_nick_name as 'nickName'
-             from tb_user where user_id = #{item}
+        select we_chat_head_img_url as 'headUrl',user_id as 'userId',we_chat_nick_name as 'nickName'
+        from tb_user where
+        <foreach collection="list" item="item" index="index" separator="or">
+            user_id = #{item}
         </foreach>
     </select>
 
