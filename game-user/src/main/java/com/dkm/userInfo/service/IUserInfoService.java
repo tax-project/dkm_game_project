@@ -2,6 +2,7 @@ package com.dkm.userInfo.service;
 
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 
 import java.util.List;
@@ -60,4 +61,12 @@ public interface IUserInfoService {
     * @param bo 参数
     */
    void updateInfo (UserInfoSkillBo bo);
+
+   /**
+    * 查询所有跟班的用户信息
+    * 随机返回9条
+    * @param userId
+    * @return
+    */
+   List<AttendantWithUserVo> listAttUser (Long userId);
 }

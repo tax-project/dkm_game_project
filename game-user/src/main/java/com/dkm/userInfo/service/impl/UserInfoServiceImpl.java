@@ -5,14 +5,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
-import com.dkm.jwt.contain.LocalUser;
 import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
-import com.dkm.vilidata.RandomData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,5 +127,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       if (integer <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
+   }
+
+   @Override
+   public List<AttendantWithUserVo> listAttUser(Long userId) {
+      return baseMapper.listAttUser (userId);
    }
 }

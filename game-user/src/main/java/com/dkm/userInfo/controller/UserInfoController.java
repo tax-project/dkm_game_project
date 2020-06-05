@@ -3,6 +3,7 @@ package com.dkm.userInfo.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
@@ -56,5 +57,11 @@ public class UserInfoController {
    @PostMapping("/updateInfo")
    public void updateInfo(@RequestBody UserInfoSkillBo bo){
       userInfoService.updateInfo(bo);
+   }
+
+
+   @GetMapping("/listAttUser")
+   public List<AttendantWithUserVo> listAttUser(@RequestParam("userId") Long userId){
+      return userInfoService.listAttUser(userId);
    }
 }

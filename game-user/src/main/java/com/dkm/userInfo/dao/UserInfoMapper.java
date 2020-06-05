@@ -3,6 +3,7 @@ package com.dkm.userInfo.dao;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import org.apache.ibatis.annotations.Param;
@@ -38,6 +39,13 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 返回掠夺信息结果
      */
     List<UserPlunderBo> listUserPlunder();
+
+    /**
+     *  随机返回9条跟班信息
+     * @param userId 用户
+     * @return 返回结果
+     */
+    List<AttendantWithUserVo> listAttUser(Long userId);
 
     /**
      *  掠夺减少体力
