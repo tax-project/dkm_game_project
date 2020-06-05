@@ -137,6 +137,7 @@ public class AttendantServiceImpl implements IAttendantService {
             AttUserResultBo bo = new AttUserResultBo();
             BeanUtils.copyProperties(attendantWithUserVo, bo);
             bo.setAId(0L);
+            bo.setSysStatus(1);
             return bo;
         }).collect(Collectors.toList());
 

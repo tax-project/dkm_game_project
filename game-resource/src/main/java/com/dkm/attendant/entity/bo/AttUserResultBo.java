@@ -35,4 +35,10 @@ public class AttUserResultBo {
     * 跟班id
     */
    private Long aId;
+
+   /**
+    *  0--系统
+    *  1--用户
+    */
+   private Integer sysStatus;
 }
