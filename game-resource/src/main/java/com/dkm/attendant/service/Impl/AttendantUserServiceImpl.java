@@ -48,4 +48,12 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
               .eq(AttendantUser::getUserId, userId);
         return baseMapper.selectList(wrapper);
     }
+
+    @Override
+    public AttendantUser queryAttendantUser(Long caughtPeopleId, Long attendantId) {
+        LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
+              .eq(AttendantUser::getAttendantId,attendantId)
+              .eq(AttendantUser::getUserId,caughtPeopleId);
+        return baseMapper.selectOne(wrapper);
+    }
 }

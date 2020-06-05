@@ -559,7 +559,24 @@ public class AttendantServiceImpl implements IAttendantService {
                     return vo;
                 }
 
+                //查询主人的跟班的用户id
+                AttendantUser queryAttendantUser = attendantUserService.queryAttendantUser(caughtPeopleId, user.getId());
+
                 long id = idGenerator.getNumberId();
+                if (queryAttendantUser != null) {
+                    //说明这是跟主人在打架
+                    //将主人的跟班id添加
+                    attendantUser.setAtuId(id);
+                    attendantUser.setAttendantId(attendantId);
+                    attendantUser.setCaughtPeopleId(queryAttendantUser.getCaughtPeopleId());
+                    attendantUser.setUserId(user.getId());
+                    attendantUser.setExp1(s);
+                    attendantUserService.insert(attendantUser);
+                    //代表抢用户跟班成功
+                    vo.setStatus(0);
+                    return vo;
+                }
+                //跟没有主人的用户打架
                 attendantUser.setAtuId(id);
                 attendantUser.setAttendantId(attendantId);
                 attendantUser.setCaughtPeopleId(caughtPeopleId);
