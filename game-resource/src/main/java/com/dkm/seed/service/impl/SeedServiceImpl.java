@@ -274,12 +274,15 @@ public class SeedServiceImpl implements ISeedService {
                     int i = seedMapper.updateUser(userInIf);
                     Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
 
-                    //每三级解锁一块土地
-                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 ||userInfoQueryBoResults.getData().getUserInfoGrade()==6
+/*||userInfoQueryBoResults.getData().getUserInfoGrade()==6
                             || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12
                             ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
                             userInfoQueryBoResults.getData().getUserInfoGrade()==18||userInfoQueryBoResults.getData().getUserInfoGrade()==21
-                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==24){
+                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==24
+                            */
+
+                    //每三级解锁一块土地
+                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 ){
                         System.out.println("userInfoQueryBoResults.getData().getUserInfoGrade() = " + userInfoQueryBoResults.getData().getUserInfoGrade());
                         //查询用户没有解锁的土地 状态等于0结果第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
