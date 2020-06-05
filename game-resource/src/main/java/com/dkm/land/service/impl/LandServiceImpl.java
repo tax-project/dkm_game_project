@@ -3,7 +3,6 @@ package com.dkm.land.service.impl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
-import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.land.dao.LandMapper;
 import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.UserLandUnlock;
@@ -76,5 +75,13 @@ public class LandServiceImpl implements ILandService {
         //根据用户id查询解锁的土地
         List<UserLandUnlock> userLandUnlocka = landMapper.queryUserByIdLand(localUser.getUser().getId());
         return userLandUnlocka;
+    }
+
+    @Override
+    public void updateLandStatus(Integer laNo) {
+        int i = landMapper.updateStatus(localUser.getUser().getId(),laNo);
+        if(i<=0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"解锁土地异常");
+        }
     }
 }

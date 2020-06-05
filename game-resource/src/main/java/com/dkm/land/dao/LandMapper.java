@@ -3,6 +3,7 @@ package com.dkm.land.dao;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.UserLandUnlock;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public interface LandMapper extends IBaseMapper<Land> {
     /**
      * 修改用户土地状态
      */
-    int updateStatus(Long userId,Integer laNo);
+    int updateStatus(@Param("userId") Long userId, @Param("laNo") Integer laNo);
 
 
 }

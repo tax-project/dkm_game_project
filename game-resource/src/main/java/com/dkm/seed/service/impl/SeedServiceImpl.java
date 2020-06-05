@@ -282,7 +282,7 @@ public class SeedServiceImpl implements ISeedService {
                             */
 
                     //每三级解锁一块土地
-                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 ){
+                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 || userInfoQueryBoResults.getData().getUserInfoGrade()==6){
                         System.out.println("userInfoQueryBoResults.getData().getUserInfoGrade() = " + userInfoQueryBoResults.getData().getUserInfoGrade());
                         //查询用户没有解锁的土地 状态等于0结果第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
