@@ -50,12 +50,24 @@ public class FamilyController {
         familyService.creatFamily(localUser.getUser().getId(),family);
     }
 
-    @ApiOperation("家族详情")
+    @ApiOperation("我的家族详情")
     @GetMapping("/familyInfo")
     @CheckToken
     @CrossOrigin
     public Map<String,Object> familyInfo(){
         return familyService.getFamilyInfo(localUser.getUser().getId());
+    }
+
+    @ApiOperation("其他家族信息根据familyId查")
+    @ApiImplicitParam(value = "查看家族的id",name="familyId",paramType = "path",dataType = "Long",required = true)
+    @GetMapping("/otherFamilyInfo")
+    @CheckToken
+    @CrossOrigin
+    public Map<String,Object> otherFamilyInfo(Long familyId){
+        if(familyId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return familyService.otherFamilyInfo(familyId);
     }
 
     @ApiOperation("我的家族")
