@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
-import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
 import com.dkm.wechat.entity.vo.ResultVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
@@ -83,11 +82,8 @@ public class WeCharController {
         if (StringUtils.isBlank(vo.getUserName()) || StringUtils.isBlank(vo.getPassword())) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-
         return weChatService.userLogin(vo);
     }
-
-
 
     @GetMapping("/queryUser/{id}")
     public UserInfoQueryBo queryUser (@PathVariable("id") Long id) {
