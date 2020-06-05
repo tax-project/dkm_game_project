@@ -5,6 +5,7 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.bo.AttUserResultBo;
+import com.dkm.attendant.entity.bo.AttendantBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -26,10 +27,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -144,8 +143,17 @@ public class AttendantServiceImpl implements IAttendantService {
         //得到系统跟班列表
         List<AttenDant> list = attendantMapper.selectList(null);
 
+        List<AttendantBo> boList = new ArrayList<>();
+        for (AttenDant attenDant : list) {
+            AttendantBo bo = new AttendantBo();
+            BeanUtils.copyProperties(attenDant,bo);
+            //系统
+            bo.setSysStatus(0);
+            boList.add(bo);
+        }
+
         Map<String, Object> map = new HashMap<>(2);
-        map.put("sys",list);
+        map.put("sys",boList);
         map.put("userInfo",attUserResultBoList);
 
         return map;
