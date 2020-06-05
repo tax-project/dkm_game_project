@@ -8,6 +8,7 @@ import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
@@ -59,21 +60,41 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private UserFeignClient userFeignClient;
+
     @Autowired
     private BaseFeignClient baseFeignClient;
 
     @Autowired
     private IAttendantUserService attendantUserService;
 
+    @Autowired
+    private RedisConfig redisConfig;
+
+    private final String REDIS_LOCK = "REDIS::LOCK:ATTENDANT";
+
     /**
      * 获取用户抓到的跟班信息
      * @return
      */
     @Override
-    public List<AttendantUsersVo > queryThreeAtt() {
+    public Map<String,Object> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        return attendantMapper.queryThreeAtt(query.getId());
+        //查询到所有系统跟班
+        List<AttUserAllInfoVo> list = attendantMapper.queryThreeAtt(query.getId(), 0);
+
+        //查询到所有用户跟班
+        List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
+
+        Map<String,Object> map = new HashMap<>(2);
+
+        //系统跟班
+        map.put("sys-att",list);
+
+        //用户跟班
+        map.put("user-att",list1);
+
+        return map;
     }
 
 
@@ -495,28 +516,71 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public Long addGraspFollowing(Long caughtPeopleId) {
+    public AttUserVo addGraspFollowing(Long caughtPeopleId, Integer status, Long attendantId) {
 
-        //推后12小时
-//        LocalDateTime localDateTime = LocalDateTime.now().plusHours(12);
-//        String time = DateUtil.formatDateTime(localDateTime);
+        UserLoginQuery user = localUser.getUser();
 
-        Long s=System.currentTimeMillis()/1000+43200;
-        AttendantUser attendantUser=new AttendantUser();
+        AttUserVo vo = new AttUserVo();
 
-        AttendantUser attendantUser1 = attendantUserService.queryOne(caughtPeopleId);
+        //根据用户Id查询所有跟班信息
+        List<AttendantUser> list = attendantUserService.queryListByUserId(user.getId());
 
-        if (attendantUser1 == null) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "被抓人没有这个跟班");
+        if (list.size() >= 6) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "您最多只能抓6个跟班");
         }
 
+        //推后12小时
+        Long s=System.currentTimeMillis()/1000+43200;
+        vo.setS(s);
+        AttendantUser attendantUser=new AttendantUser();
+
+        if (status == 1) {
+            //抓用户跟班
+
+            try {
+                //加锁,保证原子性
+                Boolean lock = redisConfig.redisLock(REDIS_LOCK);
+
+                if (!lock) {
+                    throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "网络繁忙请稍后再试");
+                }
+
+                AttendantUser attendantUser1 = attendantUserService.queryOne(caughtPeopleId);
+
+                if (attendantUser1 != null) {
+                    //该用户已被抓，得到他主人的用户Id返回给前端,继续打
+                    Long userId = attendantUser1.getUserId();
+                    vo.setAId(attendantId);
+                    vo.setCaughtPeopleId(userId);
+                    vo.setStatus(1);
+                    return vo;
+                }
+
+                long id = idGenerator.getNumberId();
+                attendantUser.setAtuId(id);
+                attendantUser.setAttendantId(attendantId);
+                attendantUser.setCaughtPeopleId(caughtPeopleId);
+                attendantUser.setUserId(user.getId());
+                attendantUser.setExp1(s);
+                attendantUserService.insert(attendantUser);
+                //代表抢用户跟班成功
+                vo.setStatus(0);
+                return vo;
+            } finally {
+                redisConfig.deleteLock(REDIS_LOCK);
+            }
+
+        }
+
+        //抓系统跟班
         attendantUser.setAtuId(idGenerator.getNumberId());
-        attendantUser.setAttendantId(attendantUser1.getAttendantId());
-        attendantUser.setCaughtPeopleId(caughtPeopleId);
-        attendantUser.setUserId(localUser.getUser().getId());
+        attendantUser.setAttendantId(attendantId);
+        attendantUser.setCaughtPeopleId(0L);
+        attendantUser.setUserId(user.getId());
         attendantUser.setExp1(s);
         attendantUserService.insert(attendantUser);
-        return s;
+        vo.setStatus(0);
+        return vo;
     }
 
 
@@ -637,7 +701,6 @@ public class AttendantServiceImpl implements IAttendantService {
         if (userInfoQueryBoResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
         }
-        System.out.println("----:" +userInfoQueryBoResult);
         map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());
 
         return map;

@@ -2,10 +2,7 @@ package com.dkm.attendant.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.entity.vo.AttendantUserVo;
-import com.dkm.attendant.entity.vo.AttendantUsersVo;
-import com.dkm.attendant.entity.vo.AttendantVo;
-import com.dkm.attendant.entity.vo.User;
+import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
@@ -47,8 +44,6 @@ public class AttendantController {
     @Autowired
     private IAttendantService iAttendantService;
 
-    @Autowired
-    private IGoodsService iGoodsService;
     /**
      * 获取用户抓到的跟班信息
      * @return
@@ -57,7 +52,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public List<AttendantUsersVo> queryThreeAtt() {
+    public Map<String,Object> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 
@@ -164,17 +159,18 @@ public class AttendantController {
      * 抓跟班
      */
     @ApiOperation(value = "抓跟班",notes = "成功返回数据 反则为空")
-    @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id")
+    @ApiImplicitParams({
+          @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
+          @ApiImplicitParam(paramType = "query",dataType = "int",name = "status",value = "0--系统跟班 1--用户的跟班"),
+          @ApiImplicitParam(paramType = "query",dataType = "Long",name = "aId",value = "跟班Id")
+    })
     @GetMapping("/graspFollowing")
     @CrossOrigin
     @CheckToken
-    public Long graspFollowing(@RequestParam("caughtPeopleId") Long caughtPeopleId){
-        Long aLong = iAttendantService.addGraspFollowing(caughtPeopleId);
-        if(aLong <= 0){
-            log.info("抓跟班异常");
-            throw new ApplicationException(CodeType.SERVICE_ERROR);
-        }
-        return aLong;
+    public AttUserVo graspFollowing(@RequestParam("caughtPeopleId") Long caughtPeopleId,
+                                    @RequestParam("status") Integer status,
+                                    @RequestParam("aId") Long aId){
+        return iAttendantService.addGraspFollowing(caughtPeopleId, status, aId);
     }
 
     /**

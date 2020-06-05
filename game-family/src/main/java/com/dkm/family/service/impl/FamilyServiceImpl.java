@@ -74,6 +74,19 @@ public class FamilyServiceImpl implements FamilyService {
         map.put("user",familyUsersVos);
         return map;
     }
+    @Override
+    public Map<String,Object> otherFamilyInfo(Long familyId) {
+        FamilyEntity familyEntity1 = familyDao.selectById(familyId);
+        if(familyEntity1==null){
+            throw  new ApplicationException(CodeType.RESOURCES_NOT_FIND,"该家族不存在");
+        }
+        Map<String,Object> map = new HashMap<>(2);
+        //获取用户信息
+        List<FamilyUsersVo> familyUsersVos = familyDetailDao.selectFamilyUser(familyEntity1.getFamilyId());
+        map.put("family",familyEntity1);
+        map.put("user",familyUsersVos);
+        return map;
+    }
 
     @Override
     public Map<String,Object> getMyFamily(Long userId) {

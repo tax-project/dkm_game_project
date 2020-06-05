@@ -15,15 +15,31 @@ import org.springframework.data.annotation.Id;
 @Data
 @TableName("tb_attendant_user")
 public class AttendantUser extends Model<AttendantUser> {
+
+    /**
+     * 跟班用户id
+     */
     @TableId
     private long atuId;
 
+    /**
+     * 跟班id
+     */
     private Long attendantId;
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
+    /**
+     * 被抓人id
+     */
     private Long caughtPeopleId;
 
+    /**
+     * 时间
+     */
     private long exp1;
 
 }

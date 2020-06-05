@@ -2,10 +2,7 @@ package com.dkm.attendant.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.entity.vo.AttendantUserVo;
-import com.dkm.attendant.entity.vo.AttendantUsersVo;
-import com.dkm.attendant.entity.vo.AttendantVo;
-import com.dkm.attendant.entity.vo.User;
+import com.dkm.attendant.entity.vo.*;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.vo.Message;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +23,7 @@ public interface IAttendantService {
      *获取用户抓到的跟班信息
      * @return
      */
-   List<AttendantUsersVo> queryThreeAtt();
+    Map<String,Object> queryThreeAtt();
 
     /**
      * 获取用户声望和金币
@@ -52,10 +49,16 @@ public interface IAttendantService {
      * 宠物战斗，查询用户信息
      */
     Map<String,Object> petBattle(Long caughtPeopleId);
-    /**
-     * 抓跟班
-     */
-    Long addGraspFollowing(Long caughtPeopleId);
+
+
+   /**
+    *  抓跟班
+    * @param caughtPeopleId 被抓人Id
+    * @param status 0--系统跟班  1--用户跟班
+    * @param attendantId  跟班id
+    * @return
+    */
+   AttUserVo addGraspFollowing(Long caughtPeopleId, Integer status, Long attendantId);
 
    /**
     * 收取

@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -32,10 +34,16 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * 随机查询用户表20条数
      */
     List<User> queryRandomUser();
+
+
     /**
-     *获取用户抓到的跟班信息
+     *  获取用户抓到的跟班信息
+     * @param userId 用户id
+     * @param status 0--系统跟班  1--用户跟班
+     * @return
      */
-    List<AttendantUsersVo> queryThreeAtt(Long userId);
+    List<AttUserAllInfoVo> queryThreeAtt(@Param("userId") Long userId,
+                                         @Param("status") Integer status);
 
     /**
      * 解雇

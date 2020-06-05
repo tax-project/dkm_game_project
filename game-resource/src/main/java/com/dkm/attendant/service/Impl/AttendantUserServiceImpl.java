@@ -8,9 +8,12 @@ import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.IdGenerator;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author 刘梦祺
@@ -37,5 +40,12 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
         LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
                 .eq(AttendantUser::getCaughtPeopleId,caughtPeopleId);
         return baseMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public List<AttendantUser> queryListByUserId(Long userId) {
+        LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
+              .eq(AttendantUser::getUserId, userId);
+        return baseMapper.selectList(wrapper);
     }
 }
