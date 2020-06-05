@@ -17,4 +17,9 @@ public class UserHeardUrlBo {
     * 用户头像地址
     */
    private String headUrl;
+
+   /**
+    * 名称
+    */
+   private String nickName;
 }

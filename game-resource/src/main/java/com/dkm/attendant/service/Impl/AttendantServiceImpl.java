@@ -12,6 +12,8 @@ import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.ParamBo;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
@@ -81,13 +83,42 @@ public class AttendantServiceImpl implements IAttendantService {
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
 
+        List<Long> longList = new ArrayList<>();
+        for (AttUserAllInfoVo vo : list1) {
+            longList.add(vo.getCaughtPeopleId());
+        }
+
+        //去查询用户的详细信息
+        ParamBo bo = new ParamBo();
+        bo.setList(longList);
+        Result<List<UserHeardUrlBo>> listResult = userFeignClient.queryAllHeardByUserId(bo);
+
+        if (listResult.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "feign有误");
+        }
+
+        List<UserHeardUrlBo> resultData = listResult.getData();
+
+        Map<Long, UserHeardUrlBo> urlBoMap = resultData.stream().
+              collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo ->
+                    userHeardUrlBo
+              ));
+
+        List<AttUserAllInfoVo> collect = list1.stream().map(attUserAllInfoVo -> {
+            AttUserAllInfoVo result = new AttUserAllInfoVo();
+            BeanUtils.copyProperties(attUserAllInfoVo, result);
+            result.setAtImg(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeadUrl());
+            result.setAtName(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+            return result;
+        }).collect(Collectors.toList());
+
         Map<String,Object> map = new HashMap<>(2);
 
         //系统跟班
         map.put("sys-att",list);
 
         //用户跟班
-        map.put("user-att",list1);
+        map.put("user-att",collect);
 
         return map;
     }
@@ -623,6 +654,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //抓系统跟班
         attendantUser.setAtuId(idGenerator.getNumberId());
+        if (attendantId == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "系统跟班需要传跟班id");
+        }
         attendantUser.setAttendantId(attendantId);
         attendantUser.setCaughtPeopleId(0L);
         attendantUser.setUserId(user.getId());
