@@ -27,4 +27,20 @@ public class FamilyWageEntity {
      * userId
      */
     private Long userId;
+    /*
+     * 第一天工资
+     */
+    private Integer day1;
+    /*
+     * 第二天工资
+     */
+    private Integer day2;
+    /*
+     * 第三天工资
+     */
+    private Integer day3;
+    /*
+     * 最后一天工资
+     */
+    private Integer day4;
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: game_project
@@ -93,7 +94,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/Attendant/queryAidUser")
-    Result<AttendantUserVo> queryAidUser (@RequestParam(value = "CaughtPeopleId")  Long CaughtPeopleId);
+    Result<Map<String,Object>> queryAidUser (@RequestParam("CaughtPeopleId")  Long CaughtPeopleId);
 
 
 }

@@ -1,5 +1,6 @@
 package com.dkm.skill.service;
 
+import com.dkm.skill.entity.vo.ResultSkillVo;
 import com.dkm.skill.entity.vo.UserSkillResultVo;
 import com.dkm.skill.entity.vo.UserSkillUpGradeVo;
 import com.dkm.skill.entity.vo.UserSkillVo;
@@ -21,7 +22,7 @@ public interface IUserSkillService {
     * 升级
     * @param vo 技能id
     */
-   void upGrade (UserSkillUpGradeVo vo);
+   ResultSkillVo upGrade (UserSkillUpGradeVo vo);
 
    /**
     *  点击消耗增加技能升级成功率

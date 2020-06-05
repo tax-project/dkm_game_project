@@ -2,6 +2,7 @@ package com.dkm.config;
 
 
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitMqConfig {
 
+//   @Bean
+//   public FanoutExchange getFamilyFanoutExchange () {
+//      return new FanoutExchange("game_family_FanoutExchange");
+//   }
+
    @Bean
-   public FanoutExchange getFamilyFanoutExchange () {
-      return new FanoutExchange("game_family_FanoutExchange");
+   public Queue getFamilyWithQueue() {
+      return new Queue("game_family_queue_");
    }
 
 }

@@ -44,6 +44,15 @@
         ORDER BY RAND() LIMIT 20
     </select>
 
+    <select id="listAttUser" resultType="com.dkm.entity.vo.AttendantWithUserVo" parameterType="Long">
+        SELECT a.user_id as 'userId',a.we_chat_head_img_url as 'weChatHeadImgUrl',
+        b.user_info_renown as 'userInfoRenown',
+        a.we_chat_nick_name as 'weChatNickName', b.user_info_gold as 'userInfoGold'
+        FROM tb_user a JOIN tb_user_info b on a.user_id = b.user_id
+        where a.user_id != #{userId}
+        ORDER BY RAND() LIMIT 9
+    </select>
+
 
     <update id="updateStrength">
         update tb_user_info set user_info_strength = user_info_strength - #{grade}

@@ -5,6 +5,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.vo.LandSeedVo;
+import com.dkm.skill.entity.vo.ResultSkillVo;
 import com.dkm.skill.entity.vo.UserSkillResultVo;
 import com.dkm.skill.entity.vo.UserSkillUpGradeVo;
 import com.dkm.skill.entity.vo.UserSkillVo;
@@ -53,11 +54,11 @@ public class UserSkillController {
    @PostMapping("/upGrade")
    @CrossOrigin
    @CheckToken
-   public void upGrade(@RequestBody UserSkillUpGradeVo vo) {
+   public ResultSkillVo upGrade(@RequestBody UserSkillUpGradeVo vo) {
       if (vo.getId() == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
       }
-      userSkillService.upGrade(vo);
+      return userSkillService.upGrade(vo);
    }
 
 

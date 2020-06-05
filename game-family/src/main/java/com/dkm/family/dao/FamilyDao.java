@@ -16,13 +16,19 @@ import java.util.List;
  **/
 @Repository
 public interface FamilyDao extends BaseMapper<FamilyEntity> {
+    //性能好的随机查询
+//    @Select("SELECT f.*,u.we_chat_head_img_url as headImg FROM (" +
+//            "SELECT f.*,fd.user_id FROM (" +
+//            "SELECT * FROM tb_family WHERE family_id>=((" +
+//            "SELECT max(family_id) FROM tb_family)-(" +
+//            "SELECT min(family_id) FROM tb_family))*RAND()+(" +
+//            "SELECT MIN(family_id) FROM tb_family) LIMIT 10) f LEFT JOIN (" +
+//            "SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id ")
 
-    @Select("SELECT f.*,u.we_chat_head_img_url as headImg FROM (" +
-            "SELECT f.*,fd.user_id FROM (" +
-            "SELECT * FROM tb_family WHERE family_id>=((" +
-            "SELECT max(family_id) FROM tb_family)-(" +
-            "SELECT min(family_id) FROM tb_family))*RAND()+(" +
-            "SELECT MIN(family_id) FROM tb_family) LIMIT 10) f LEFT JOIN (" +
+    //性能不好的---进行了全表扫描
+    @Select("SELECT f.*,u.we_chat_head_img_url as headImg FROM ( " +
+            "SELECT f.*,fd.user_id FROM ( " +
+            "SELECT * FROM tb_family ORDER BY RAND() LIMIT 10) f LEFT JOIN ( " +
             "SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id ")
     List<HotFamilyVo> getHotFamily();
 

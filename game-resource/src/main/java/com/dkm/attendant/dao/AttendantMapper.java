@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
+import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -27,14 +30,16 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      * @return
      */
     User queryUserReputationGold(Long userId);
+
+
     /**
-     * 随机查询用户表20条数
+     *  获取用户抓到的跟班信息
+     * @param userId 用户id
+     * @param status 0--系统跟班  1--用户跟班
+     * @return
      */
-    List<User> queryRandomUser();
-    /**
-     *获取用户抓到的跟班信息
-     */
-    List<AttenDant> queryThreeAtt(Long userId);
+    List<AttUserAllInfoVo> queryThreeAtt(@Param("userId") Long userId,
+                                         @Param("status") Integer status);
 
     /**
      * 解雇
@@ -51,10 +56,10 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
     int addGraspFollowing(AttendantUser attendantUser);
     /**
      * 收取
-     * @param autId
+     * @param atuId
      * @return
      */
-    int gather(Long exp1, Long autId);
+    int gather(Long exp1, Long atuId);
     /**
      * 查询自己的一个主人信息
      * @param CaughtPeopleId 当前用户id
