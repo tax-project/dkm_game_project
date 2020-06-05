@@ -34,4 +34,10 @@ public class AttUserAllInfoVo {
     * 被抓人id
     */
    private Long caughtPeopleId;
+
+   /**
+    * 0--系统
+    * 1--用户
+    */
+   private Integer sysStatus;
 }

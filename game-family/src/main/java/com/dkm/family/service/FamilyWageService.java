@@ -1,5 +1,7 @@
 package com.dkm.family.service;
 
+import com.dkm.family.entity.vo.FamilyWageVo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +17,13 @@ public interface FamilyWageService {
      * 根据家族权限获取工资
      * @param userId
      */
-    List<Map<Integer,Integer>> getWageList(Long userId);
+    List<FamilyWageVo> getWageList(Long userId);
 
     /**
      * 领取工资
      * @param wage
      * @param userId
      */
-    void updateUserWage(Integer wage,Long userId);
+    void updateUserWage(Integer wage,Long userId,Integer index);
 
 }

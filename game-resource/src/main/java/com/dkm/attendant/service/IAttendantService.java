@@ -23,7 +23,7 @@ public interface IAttendantService {
      *获取用户抓到的跟班信息
      * @return
      */
-    Map<String,Object> queryThreeAtt();
+    List<AttUserAllInfoVo> queryThreeAtt();
 
     /**
      * 获取用户声望和金币
