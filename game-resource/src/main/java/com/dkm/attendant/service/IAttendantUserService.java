@@ -33,5 +33,11 @@ public interface IAttendantUserService {
      */
     List<AttendantUser> queryListByUserId (Long userId);
 
-
+    /**
+     * 查询主人的跟班信息
+     * @param caughtPeopleId
+     * @param attendantId
+     * @return
+     */
+    AttendantUser queryAttendantUser (Long caughtPeopleId, Long attendantId);
 }
