@@ -52,7 +52,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public Map<String,Object> queryThreeAtt() {
+    public List<AttUserAllInfoVo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 

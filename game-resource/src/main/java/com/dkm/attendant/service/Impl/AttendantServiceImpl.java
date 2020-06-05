@@ -74,7 +74,7 @@ public class AttendantServiceImpl implements IAttendantService {
      * @return
      */
     @Override
-    public Map<String,Object> queryThreeAtt() {
+    public List<AttUserAllInfoVo> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
         //查询到所有系统跟班
@@ -109,18 +109,16 @@ public class AttendantServiceImpl implements IAttendantService {
             BeanUtils.copyProperties(attUserAllInfoVo, result);
             result.setAtImg(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeadUrl());
             result.setAtName(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+            result.setSysStatus(1);
             return result;
         }).collect(Collectors.toList());
 
-        Map<String,Object> map = new HashMap<>(2);
+        for (AttUserAllInfoVo vo : list) {
+            vo.setSysStatus(0);
+            collect.add(vo);
+        }
 
-        //系统跟班
-        map.put("sys-att",list);
-
-        //用户跟班
-        map.put("user-att",collect);
-
-        return map;
+        return collect;
     }
 
 
