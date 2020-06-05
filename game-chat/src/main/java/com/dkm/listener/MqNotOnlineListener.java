@@ -54,12 +54,13 @@ public class MqNotOnlineListener {
 
          friendNotOnlineService.insertNotOnline(vo);
 
-         //确认消息
-         try {
-            channel.basicAck(deliveryTag,true);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
+      }
+
+      //确认消息
+      try {
+         channel.basicAck(deliveryTag,true);
+      } catch (IOException e) {
+         e.printStackTrace();
       }
 
    }

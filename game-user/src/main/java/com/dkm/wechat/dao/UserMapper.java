@@ -1,10 +1,13 @@
 package com.dkm.wechat.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserBO;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author: HuangJie
@@ -27,4 +30,11 @@ public interface UserMapper extends IBaseMapper<User> {
     * @return 用户所有信息
     */
    UserInfoBo queryUser (Long id);
+
+   /**
+    *  根据用户查询所有头像
+    * @param list
+    * @return
+    */
+   List<UserHeardUrlBo> queryAllHeardByUserId(List<Long> list);
 }

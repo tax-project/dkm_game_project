@@ -26,8 +26,8 @@ eureka:
     service-url:
       defaultZone: http://192.168.10.133:10000/eureka
 
-#file:
-#  url: http://192.168.10.133:8000/game/resource/img
+file:
+  url: http://192.168.10.133:8000/game/resource/img
 feign:
   hystrix:
     enabled: true

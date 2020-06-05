@@ -7,6 +7,7 @@ import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -35,24 +36,38 @@ public class FamilyController {
     @ApiOperation("创建家族")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "家族名称",name="familyName",paramType = "path",dataType = "String",required = true),
-            @ApiImplicitParam(value = "家族介绍",name="familyIntroduce",paramType = "path",dataType = "String",required = true)
+            @ApiImplicitParam(value = "家族介绍",name="familyIntroduce",paramType = "path",dataType = "String",required = true),
+            @ApiImplicitParam(value = "欢迎词",name="familyWelcomeWords",paramType = "path",dataType = "String",required = true)
     })
     @PostMapping("/createFamily")
     @CheckToken
     @CrossOrigin
     public void createFamily(@RequestBody FamilyEntity family){
-        if(family==null||family.getFamilyName()==null||"".equals(family.getFamilyName())){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
+        if(family==null||StringUtils.isBlank(family.getFamilyIntroduce())
+                ||StringUtils.isBlank(family.getFamilyWelcomeWords())){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         familyService.creatFamily(localUser.getUser().getId(),family);
     }
 
-    @ApiOperation("家族详情")
+    @ApiOperation("我的家族详情")
     @GetMapping("/familyInfo")
     @CheckToken
     @CrossOrigin
     public Map<String,Object> familyInfo(){
         return familyService.getFamilyInfo(localUser.getUser().getId());
+    }
+
+    @ApiOperation("其他家族信息根据familyId查")
+    @ApiImplicitParam(value = "查看家族的id",name="familyId",paramType = "path",dataType = "Long",required = true)
+    @GetMapping("/otherFamilyInfo")
+    @CheckToken
+    @CrossOrigin
+    public Map<String,Object> otherFamilyInfo(Long familyId){
+        if(familyId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return familyService.otherFamilyInfo(familyId);
     }
 
     @ApiOperation("我的家族")
@@ -92,11 +107,11 @@ public class FamilyController {
     }
 
     @ApiOperation("族长 设置/取消 管理员")
-    @GetMapping("/setAdmin")
+    @PostMapping("/setAdmin")
     @ApiImplicitParam(value = "设置用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
     @CrossOrigin
     @CheckToken
-    public void setAdmin(Long setUserId){
+    public void setAdmin(@RequestBody Long setUserId){
         if(setUserId==null){
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }

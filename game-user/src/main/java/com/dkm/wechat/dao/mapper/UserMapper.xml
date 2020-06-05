@@ -19,4 +19,12 @@
         select * from tb_user a join tb_user_info b on a.user_id = b.user_id where a.user_id = #{id}
     </select>
 
+
+
+    <select id="queryAllHeardByUserId" resultType="com.dkm.entity.bo.UserHeardUrlBo" parameterType="Long">
+        <foreach collection="list" item="item" index="index">
+            select we_chat_head_img_url as 'headUrl',user_id as 'userId' from tb_user where user_id = #{item}
+        </foreach>
+    </select>
+
 </mapper>

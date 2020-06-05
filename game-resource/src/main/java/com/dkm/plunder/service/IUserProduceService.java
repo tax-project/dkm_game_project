@@ -1,5 +1,6 @@
 package com.dkm.plunder.service;
 
+import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.entity.vo.UserProduceVo;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface IUserProduceService {
 
    /**
     *  增加产出信息
-    * @param vo
+    * @param userProduce
     */
-   void insertProduce (UserProduceVo vo);
+   void insertProduce (UserProduce userProduce);
 }

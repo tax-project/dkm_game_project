@@ -5,28 +5,35 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
+import com.dkm.entity.bo.ParamBo;
+import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.problem.dao.MoneyMapper;
 import com.dkm.problem.entity.Money;
+import com.dkm.problem.entity.bo.MoneyBo;
 import com.dkm.problem.entity.vo.*;
 import com.dkm.problem.service.IMoneyService;
 import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Var;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author qf
@@ -174,17 +181,41 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       baseMapper.selectPage(page, wrapper);
 
       List<Money> list = page.getRecords();
+      List<Long> longList = new ArrayList<>();
 
       int peopleNumber = 0;
       for (Money money : list) {
          if (money.getStatus() == 1) {
             peopleNumber += 1;
          }
+         longList.add(money.getUserId());
       }
+      ParamBo bo = new ParamBo();
+      bo.setList(longList);
+
+      //得到用户头像集合
+      Result<List<UserHeardUrlBo>> listResult = userInfoFeignClient.queryAllHeardByUserId(bo);
+
+      if (listResult.getCode() != 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "查询用户头像出错了");
+      }
+
+      List<UserHeardUrlBo> heardUrlBoList = listResult.getData();
+
+      Map<Long, UserHeardUrlBo> heardMap = heardUrlBoList.stream()
+            .collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo -> userHeardUrlBo
+            ));
+
+      List<MoneyBo> resultList = list.stream().map(money -> {
+         MoneyBo moneyBo = new MoneyBo();
+         BeanUtils.copyProperties(money, moneyBo);
+         moneyBo.setHeadUrl(heardMap.get(money.getUserId()).getHeadUrl());
+         return moneyBo;
+      }).collect(Collectors.toList());
 
       Map<String, Object> map = new HashMap<>(3);
       //分页数据
-      map.put("page",page);
+      map.put("data",resultList);
       //正在进行的红包人数
       map.put("peopleNumber",peopleNumber);
       //返回当前登录人的今日总共抢红包数和已经抢红包数

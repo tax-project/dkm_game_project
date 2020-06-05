@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
    @Bean
-   public Exchange fanoutExchange () {
+   public FanoutExchange fanoutExchange () {
       return new FanoutExchange("game_msg_fanoutExchange");
    }
 }

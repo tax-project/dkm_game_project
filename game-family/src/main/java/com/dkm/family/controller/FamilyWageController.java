@@ -35,7 +35,7 @@ public class FamilyWageController {
     @GetMapping("/getFamilyWage")
     @CrossOrigin
     @CheckToken
-    public Map<String, Object> getFamilyWage(){
+    public List<Map<Integer, Integer>> getFamilyWage(){
         return familyWageService.getWageList(localUser.getUser().getId());
     }
 

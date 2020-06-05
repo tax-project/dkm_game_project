@@ -22,7 +22,7 @@ public class UserProduce extends Model<UserProduce> {
     *  自增主键
     *  其他表不需要用
     */
-   private Integer id;
+   private Long id;
 
    /**
     * 用户id

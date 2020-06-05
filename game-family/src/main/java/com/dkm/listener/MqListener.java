@@ -69,7 +69,7 @@ public class MqListener {
       //将消息传给客户端
       //此处也要重新申明交换机，不然生产者找不到交换机
       //广播形式发给所有服务器的家族消息
-      rabbitTemplate.convertAndSend("game_family_FanoutExchange","",msgInfo);
+      rabbitTemplate.convertAndSend("game_family_queue_",msgInfo);
 
       //确认消息
       try {
