@@ -31,7 +31,7 @@ public class AttInfoWithPutBo {
    /**
     *跟班一天生产的时间
     */
-   private long expTime;
+   private String expTime;
 
    /**
     * 被抓人id
