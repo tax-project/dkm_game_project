@@ -82,7 +82,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         long until = now.until(time, ChronoUnit.SECONDS);
 
-        if (until >= 0) {
+        if (until <= 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "产出时间已过期");
         }
 

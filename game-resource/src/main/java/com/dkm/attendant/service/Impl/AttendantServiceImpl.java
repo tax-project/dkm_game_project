@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -703,6 +704,25 @@ public class AttendantServiceImpl implements IAttendantService {
     @Override
     public Map<String, Object> collect(Long attId, Long attUserId) {
 //        long exp1 = System.currentTimeMillis() / 1000 + 43200;
+
+        AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
+
+        if (attUser == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId有误");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime localDateTime = DateUtil.parseDateTime(attUser.getEndDate());
+
+        //得到6小时之前的时间
+        LocalDateTime time = localDateTime.minusHours(6);
+
+        long until = now.until(time, ChronoUnit.SECONDS);
+
+        if (until >= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "现在不能收取");
+        }
 
         UserLoginQuery user = localUser.getUser();
         //得到产出的物品集合
