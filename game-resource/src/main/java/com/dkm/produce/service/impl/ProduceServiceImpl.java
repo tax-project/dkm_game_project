@@ -54,14 +54,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     @Autowired
     private ProduceMapper produceMapper;
 
-    @Autowired
-    private UserFeignClient userFeignClient;
-
-    @Autowired
-    private IAttendantService attendantService;
-
-    @Autowired
-    private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
     @Override
     public Map<String,Object> insertProduce(Long attendantId) {
         UserLoginQuery user = localUser.getUser();
