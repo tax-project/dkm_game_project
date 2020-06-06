@@ -102,24 +102,15 @@ public class FamilyWageServiceImpl implements FamilyWageService {
 
     @Override
     public void updateUserWage(Integer wage, Long userId,Integer index) {
-        //获取周几
-        int weekDay = LocalDate.now().getDayOfWeek().getValue();
         Integer integer = familyDetailDao.updateUserWage(wage, userId);
         FamilyWageEntity familyWageEntity = familyWageDao.selectOne(new QueryWrapper<FamilyWageEntity>().lambda().eq(FamilyWageEntity::getUserId, userId));
-        if(index==0){
-            familyWageEntity.setDay1(1);
-        }else if(index==1){
-            familyWageEntity.setDay2(1);
-        }else if(index==2){
-            familyWageEntity.setDay3(1);
-        }else if(index==3){
-            familyWageEntity.setDay4(1);
-        }
+        if(index==0) familyWageEntity.setDay1(1);
+        else if(index==1) familyWageEntity.setDay2(1);
+        else if(index==2) familyWageEntity.setDay3(1);
+        else if(index==3) familyWageEntity.setDay4(1);
         //更新领取记录
         int i = familyWageDao.updateById(familyWageEntity);
-        if(integer<1||i<1){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"领取失败");
-        }
+        if(integer<1||i<1) throw new ApplicationException(CodeType.SERVICE_ERROR, "领取失败");
     }
 
 }
