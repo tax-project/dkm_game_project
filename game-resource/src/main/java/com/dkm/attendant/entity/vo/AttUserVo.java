@@ -13,7 +13,7 @@ public class AttUserVo {
    /**
     * 时间戳
     */
-   private Long s;
+   private String s;
 
    /**
     * 跟班主人id
