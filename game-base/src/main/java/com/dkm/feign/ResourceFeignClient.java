@@ -75,6 +75,7 @@ public interface ResourceFeignClient {
      * @param userId
      * @return
      */
+    @GetMapping("/PersonalCenterController/PersonalCenterAll")
     Result<Map<String,Object>>  PersonalCenterAll(@RequestParam("userId") Long userId);
 
 }
