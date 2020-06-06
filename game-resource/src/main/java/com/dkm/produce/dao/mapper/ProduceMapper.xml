@@ -16,7 +16,7 @@
               from tb_user_produce a join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
               where a.user_id= #{userId}
-              group by b.attendant_id
+              group by b.attendant_id,c.id
     </select>
 
 
