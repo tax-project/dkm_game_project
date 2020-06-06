@@ -725,10 +725,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public int gather(Integer atuId) {
+    public void gather(Long atuId) {
         long exp1 = System.currentTimeMillis() / 1000 + 43200;
-        int gather = attendantMapper.gather(exp1,Long.valueOf(atuId));
-        return gather;
+        int gather = attendantMapper.gather(exp1,atuId);
+
+        if (gather <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "收取失败");
+        }
     }
 
     @Override

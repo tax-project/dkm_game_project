@@ -2,6 +2,7 @@ package com.dkm.problem.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dkm.problem.entity.Money;
+import com.dkm.problem.entity.bo.MoneyRandomBo;
 import com.dkm.problem.entity.vo.HandOutRedEnvelopesVo;
 import com.dkm.problem.entity.vo.MoneyCountVo;
 import com.dkm.problem.entity.vo.MoneyPageVo;
@@ -61,6 +62,13 @@ public interface IMoneyService {
     * @return
     */
    Page<MoneyCountVo> countHandOutRedEnvelopes(Page<MoneyCountVo> page, Integer status);
+
+
+   /**
+    *  查询红包活动
+    * @return 返回前端需要的数据
+    */
+   MoneyRandomBo queryMoneyRandom ();
 
 
 }

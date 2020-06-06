@@ -66,7 +66,7 @@ public interface IAttendantService {
     * 收取
     * @return
     */
-   int gather(Integer atuId);
+   void gather(Long atuId);
 
     /**
      * 战斗过程
