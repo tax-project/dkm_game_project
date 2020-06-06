@@ -40,4 +40,5 @@ public interface MedalDao extends BaseMapper<MedalEntity> {
             "SELECT process,medal_level,medal_id FROM tb_medal_user WHERE user_id=#{userId}) mu ON mu.medal_id=m.medal_id " +
             "LEFT JOIN tb_gift g on g.gi_id=m.gi_id")
     MedalUserInfoVo selectOneUserMedal(@Param("userId") Long userId, @Param("medalId") Long medalId);
+
 }

@@ -111,10 +111,18 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity==null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"你不是该家族成员");
         }
-        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
         if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
         }
+        if(familyDetailEntity.getIsAdmin()==2){
+            int i = familyDao.deleteById(familyDetailEntity.getFamilyId());
+            int delete = familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+            if(i<1||delete<1){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"解散家族失败");
+            }
+            return;
+        }
+        FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
         familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()-1);
         familyDao.updateById(familyEntity);
     }
@@ -172,6 +180,9 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public void kickOutUser(Long userId, Long outUserId) {
+        if(userId.equals(outUserId)){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"不能踢出自己");
+        }
         //查询是否族长
         FamilyDetailEntity user = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
         if(user==null||user.getIsAdmin()!=2){

@@ -171,32 +171,28 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
-
         Map<String,Object> map=new HashMap<>();
         List<LandSeed> list=new ArrayList<>();
+
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
+
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
         if(user1.getUserInfoGold()<seedPlantVo.getSeedGold()){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
-
-        //表示有新的种子种植解锁 种植
-      /*  if(seedPlantVo.getStatus()==1){
-            //根据用户查询解锁的土地
-            List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
-
-        }*/
 
         //根据用户查询解锁的土地
         List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
         //种植时减去用户金币
         IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+
         //算出种植种子需要多少钱
         Integer gold=seedPlantVo.getSeedGold()*userLandUnlocks.size();
         increaseUserInfoBO.setUserId(user.getId());
         increaseUserInfoBO.setUserInfoGold(gold);
+
         //减少金币
         Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
 
@@ -206,6 +202,7 @@ public class SeedServiceImpl implements ISeedService {
         Integer integer = Integer.valueOf((int) ripetime);
         //得到时间戳转换成时间格式，最后得到种子成熟的时间
         LocalDateTime time2 =LocalDateTime.ofEpochSecond(System.currentTimeMillis()/1000+integer,0,ZoneOffset.ofHours(8));
+
         //循环用户解锁土地，解锁多少多少土地 种植多少种子
         for (int i = 0; i < userLandUnlocks.size(); i++) {
             LandSeed landSeed=new LandSeed();
@@ -219,8 +216,13 @@ public class SeedServiceImpl implements ISeedService {
             landSeed.setUserId(user.getId());
             //结束时间
             landSeed.setPlantTime(time2);
+            //状态
+            landSeed.setLeStatus(1);
+            //
+            landSeed.setId(i);
             list.add(landSeed);
         }
+
         //增加要种植种子的信息和用户信息
         int i = seedMapper.addPlant(list);
         if(i<=0){
@@ -233,8 +235,10 @@ public class SeedServiceImpl implements ISeedService {
     public int updateUser(UserInIf userInIf) {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
+
         //得到用户已经种植的数据
         List<LandYesVo> landYesVos = seedMapper.queryAlreadyPlantSd(localUser.getUser().getId());
+
         //当前时间必须大于等于种植种植结束时间 才能收取
             if(System.currentTimeMillis()/1000>=landYesVos.get(0).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 //根据用户查询解锁的土地

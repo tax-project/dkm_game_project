@@ -23,11 +23,11 @@ public class MedalUserEntity {
     /**
      * 总进度
      */
-    private Long process;
+    private Integer process;
     /**
      * 勋章等级
      */
-    private Long medalLevel;
+    private Integer medalLevel;
     /**
      * 勋章表id
      */
