@@ -184,11 +184,13 @@ public class AttendantController {
     @GetMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public void gather(@RequestParam("atuId") Long atuId){
+    public Map<String, Object> gather(@RequestParam("atuId") Long atuId){
+
         if(atuId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
         }
-        iAttendantService.gather(atuId);
+
+        return iAttendantService.collect(atuId);
     }
 
     /**

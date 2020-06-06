@@ -10,16 +10,35 @@ import lombok.Data;
  */
 @Data
 public class UserAttendantGoods {
+
+    /**
+     * 产出表id
+     */
     private Long id;
 
+    /**
+     * 物品数量
+     */
     private Integer number;
 
+    /**
+     * 物品名字
+     */
     private String name;
 
+    /**
+     * 物品图片
+     */
     private String url;
 
+    /**
+     * 跟班名称
+     */
     private String atName;
 
+    /**
+     * 跟班图片
+     */
     private String atImg;
 
 }

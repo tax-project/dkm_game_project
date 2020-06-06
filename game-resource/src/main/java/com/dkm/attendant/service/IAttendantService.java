@@ -3,6 +3,7 @@ package com.dkm.attendant.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
+import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.vo.Message;
@@ -63,10 +64,11 @@ public interface IAttendantService {
    AttUserVo addGraspFollowing(Long caughtPeopleId, Integer status, Long attendantId);
 
    /**
-    * 收取
+    *  收取
+    * @param atuId
     * @return
     */
-   void gather(Long atuId);
+   Map<String, Object> collect(Long atuId);
 
     /**
      * 战斗过程

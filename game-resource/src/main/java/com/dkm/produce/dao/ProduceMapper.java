@@ -25,11 +25,4 @@ public interface ProduceMapper extends IBaseMapper<Produce> {
 
     List<AttendantPutVo> queryOutput(Long userId);
 
-//    List<AttendantVo> queryOutput1(@Param("userId") Long userId, @Param("id") Long id);
-
-    UserAttendantGoods queryProduce(@Param("userId") Long userId, @Param("goodId") Long goodId);
-
-    int updateNumber(Long id);
-
-
 }
