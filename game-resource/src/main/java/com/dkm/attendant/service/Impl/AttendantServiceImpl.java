@@ -4,6 +4,7 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.bo.AttUserResultBo;
 import com.dkm.attendant.entity.bo.AttendantBo;
 import com.dkm.attendant.entity.vo.*;
@@ -24,6 +25,8 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.produce.entity.vo.AttendantPutVo;
+import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,14 +70,17 @@ public class AttendantServiceImpl implements IAttendantService {
     @Autowired
     private RedisConfig redisConfig;
 
-    private final String REDIS_LOCK = "REDIS::LOCK:ATTENDANT";
+    @Autowired
+    private IProduceService produceService;
+
+    private String redisLock = "REDIS::LOCK:ATTENDANT";
 
     /**
      * 获取用户抓到的跟班信息
      * @return
      */
     @Override
-    public List<AttUserAllInfoVo> queryThreeAtt() {
+    public List<AttInfoWithPutBo> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
         //查询到所有系统跟班
@@ -82,6 +88,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
+
+        List<AttendantPutVo> outputList = produceService.queryOutput(query.getId());
 
         List<Long> longList = new ArrayList<>();
         for (AttUserAllInfoVo vo : list1) {
@@ -118,7 +126,27 @@ public class AttendantServiceImpl implements IAttendantService {
             collect.add(vo);
         }
 
-        return collect;
+
+        //流化   将所有跟班信息和跟班产出的物品整理返回
+        Map<Long, ArrayList<AttendantPutVo>> map = outputList.stream().
+              collect(Collectors.toMap(AttendantPutVo::getAttendantId, attList ->
+                    new ArrayList<AttendantPutVo>()));
+
+        for (AttendantPutVo vo : outputList) {
+            ArrayList<AttendantPutVo> vos = map.get(vo.getAttendantId());
+            vos.add(vo);
+        }
+
+        List<AttInfoWithPutBo> attPutResult = collect.stream().map(attUserAllInfoVo -> {
+            AttInfoWithPutBo attInfoWithPutBo = new AttInfoWithPutBo();
+            BeanUtils.copyProperties(attUserAllInfoVo, attInfoWithPutBo);
+
+            attInfoWithPutBo.setPutList(map.get(attUserAllInfoVo.getAId()));
+            return attInfoWithPutBo;
+        }).collect(Collectors.toList());
+
+
+        return attPutResult;
     }
 
 
@@ -581,10 +609,38 @@ public class AttendantServiceImpl implements IAttendantService {
 
         UserLoginQuery user = localUser.getUser();
 
+        //查询该用户信息
+        Result<UserInfoQueryBo> result = userFeignClient.queryUser(user.getId());
+
+        if (result.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "用户feign错误");
+        }
+
         AttUserVo vo = new AttUserVo();
 
         //根据用户Id查询所有跟班信息
         List<AttendantUser> list = attendantUserService.queryListByUserId(user.getId());
+
+        //得到用户信息
+        UserInfoQueryBo bo = result.getData();
+        int number = 0;
+        int size = 1;
+
+        //3级解锁一个跟班
+        for (int i = 1; i <= 6; i++) {
+
+            if (bo.getUserInfoGrade() == i) {
+                break;
+            }
+
+            if (bo.getUserInfoGrade() >= number && bo.getUserInfoGrade() < number + 3) {
+                if (list.size() >= size) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "该等级不能解锁");
+                }
+            }
+            number += 3;
+            size += 1;
+        }
 
         if (list.size() >= 6) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "您最多只能抓6个跟班");
@@ -600,7 +656,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
             try {
                 //加锁,保证原子性
-                Boolean lock = redisConfig.redisLock(REDIS_LOCK);
+                Boolean lock = redisConfig.redisLock(redisLock);
 
                 if (!lock) {
                     throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "网络繁忙请稍后再试");
@@ -645,7 +701,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 vo.setStatus(0);
                 return vo;
             } finally {
-                redisConfig.deleteLock(REDIS_LOCK);
+                redisConfig.deleteLock(redisLock);
             }
 
         }
@@ -669,10 +725,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public int gather(Integer atuId) {
+    public void gather(Long atuId) {
         long exp1 = System.currentTimeMillis() / 1000 + 43200;
-        int gather = attendantMapper.gather(exp1,Long.valueOf(atuId));
-        return gather;
+        int gather = attendantMapper.gather(exp1,atuId);
+
+        if (gather <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "收取失败");
+        }
     }
 
     @Override

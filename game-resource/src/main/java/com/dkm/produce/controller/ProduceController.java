@@ -4,8 +4,6 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.produce.entity.vo.AttendantGoods;
-import com.dkm.produce.entity.vo.AttendantVo;
-import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,15 +39,6 @@ public class ProduceController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return produceService.insertProduce(attendantId);
-    }
-
-
-    @ApiOperation(value = "查询用户产出的物品", notes = "查询用户产出的物品")
-    @GetMapping("/queryOutput")
-    @CrossOrigin
-    @CheckToken
-    public List<AttendantVo> queryOutput(){
-        return produceService.queryOutput();
     }
 
     /**

@@ -23,6 +23,8 @@ public class LandSeed {
   private long laNo;
   private long grade;
   private LocalDateTime plantTime;
+  private Integer leStatus;
+  private Integer id;
 
 
 }

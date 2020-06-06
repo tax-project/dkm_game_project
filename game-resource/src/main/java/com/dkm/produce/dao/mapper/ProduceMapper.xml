@@ -10,7 +10,7 @@
     </select>
 
 
-    <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantVo" parameterType="java.lang.Long">
+    <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantPutVo" parameterType="java.lang.Long">
         select max(b.attendant_id) as 'attendantId',sum(b.number) as 'number',max(c.id) as 'goodId'
               ,max(c.name) as 'goodName',max(c.url) as 'imgUrl'
               from tb_user_produce a join tb_produce b
@@ -20,7 +20,7 @@
     </select>
 
 
-    <!--<select id="queryOutput1" resultType="com.dkm.produce.entity.vo.AttendantVo" parameterType="java.lang.Long">-->
+    <!--<select id="queryOutput1" resultType="com.dkm.produce.entity.vo.AttendantPutVo" parameterType="java.lang.Long">-->
         <!--select b.attendant_id as 'attendantId',b.number,c.id as 'goodId'-->
                 <!--,c.name as 'goodName',c.url as 'imgUrl'from tb_user_produce a join tb_produce b-->
                 <!--on a.produce_id = b.id join tb_goods c on b.good_id = c.id-->

@@ -1,10 +1,8 @@
 package com.dkm.produce.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
-import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.good.entity.Goods;
@@ -15,12 +13,11 @@ import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.plunder.entity.UserProduce;
-import com.dkm.plunder.entity.vo.UserProduceVo;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
-import com.dkm.produce.entity.vo.AttendantVo;
+import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.IdGenerator;
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author 刘梦祺
@@ -152,14 +148,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public  List<AttendantVo> queryOutput() {
-        UserLoginQuery user = localUser.getUser();
-
+    public  List<AttendantPutVo> queryOutput(Long userId) {
         //查询所有跟班
 //        List<AttenDant> attenDants = attendantService.listAttenDant();
 
         //查询所有要返回的跟班数据
-        return produceMapper.queryOutput(user.getId());
+        return produceMapper.queryOutput(userId);
 
         //根据返回的跟班数据得到不重复的跟班id
 //        Set<Long> set = new HashSet<>();

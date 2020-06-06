@@ -2,6 +2,7 @@ package com.dkm.attendant.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
@@ -52,7 +53,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public List<AttUserAllInfoVo> queryThreeAtt() {
+    public List<AttInfoWithPutBo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 
@@ -183,18 +184,11 @@ public class AttendantController {
     @GetMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public Message gather(@RequestParam("atuId") Integer atuId){
-        Message message=new Message();
+    public void gather(@RequestParam("atuId") Long atuId){
         if(atuId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
         }
-        int gather = iAttendantService.gather(atuId);
-        if(gather<0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"收取失败");
-        }
-        message.setMsg("收取成功");
-        message.setNum(1);
-        return message;
+        iAttendantService.gather(atuId);
     }
 
     /**
