@@ -371,27 +371,6 @@ public class SeedServiceImpl implements ISeedService {
         return 0;
     }
 
-    public boolean isProduceGoldRed(Integer status){
-        //得到用户token信息
-        UserLoginQuery user = localUser.getUser();
 
-        //查询出用户信息
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
-
-        //用户等级
-        Integer userInfoGrade = userInfoQueryBoResult.getData().getUserInfoGrade();
-
-        //红包掉落概率
-        double pow = Math.pow(userInfoGrade, -1 / 2.0);
-
-        //等于一 说明种子是刚刚新解锁的种子
-        if(status==1){
-
-        }
-
-
-
-        return true;
-    }
 
 }
