@@ -28,7 +28,7 @@ public class AttUserAllInfoVo {
    /**
     *跟班一天生产的时间
     */
-   private long exp1;
+   private String expTime;
 
    /**
     * 被抓人id
