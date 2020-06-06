@@ -8,6 +8,8 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: game_project
@@ -28,7 +30,35 @@ public class RandomUtils {
         int pow = (int) (Math.pow(userInfoGrade, -1 / 2.0) * 100);
 
         //生产1-100的随机数
-        int random = (int)(Math.random()*100+1);
+        int random = new Random().nextInt(100) + 1;
+        if(random<=pow){
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 红包掉落的数量
+     */
+    public double NumberRedPacketsDropped(){
+
+
+        return 0;
+    }
+
+
+    /**
+     * 掉落金币概率 是否有金币掉落
+     * @param seedGarde  种子等级
+     * @return
+     */
+    public boolean isProduceGoldRed(Integer seedGarde){
+        //金币掉落概率
+        int pow = (int) (Math.pow(seedGarde, -1 / 4.0) * 100);
+
+        //生产1-100的随机数
+        int random = new Random().nextInt(100) + 1;
         if(random<=pow){
             return true;
         }
@@ -37,5 +67,8 @@ public class RandomUtils {
 
 
 
-
+//    /**
+//     * 金币掉落的数量
+//     */
+//    public Integer
 }
