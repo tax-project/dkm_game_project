@@ -2,6 +2,7 @@ package com.dkm.attendant.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
@@ -52,7 +53,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public List<AttUserAllInfoVo> queryThreeAtt() {
+    public List<AttInfoWithPutBo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 

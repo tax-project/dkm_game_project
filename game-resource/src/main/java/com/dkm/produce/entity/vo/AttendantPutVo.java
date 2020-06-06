@@ -9,7 +9,7 @@ import lombok.Data;
  * @DATE: 2020/6/4 17:18
  */
 @Data
-public class AttendantVo {
+public class AttendantPutVo {
 
     /**
      * 数量

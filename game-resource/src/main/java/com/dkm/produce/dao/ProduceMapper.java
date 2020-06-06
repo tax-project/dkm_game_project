@@ -3,7 +3,7 @@ package com.dkm.produce.dao;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
-import com.dkm.produce.entity.vo.AttendantVo;
+import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.UserAttendantGoods;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public interface ProduceMapper extends IBaseMapper<Produce> {
      */
     List<AttendantGoods> queryJoinOutPutGoods(Long userId);
 
-    List<AttendantVo> queryOutput(Long userId);
+    List<AttendantPutVo> queryOutput(Long userId);
 
 //    List<AttendantVo> queryOutput1(@Param("userId") Long userId, @Param("id") Long id);
 
