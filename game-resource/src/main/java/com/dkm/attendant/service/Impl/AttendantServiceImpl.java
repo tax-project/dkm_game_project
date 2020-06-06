@@ -328,7 +328,6 @@ public class AttendantServiceImpl implements IAttendantService {
             heDefense=0;
             //得到他方的战力
             heRipetime1=100;
-            System.out.println("对方没有装备 = " + "对方没有装备");
         }else {
             for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
                 /**
@@ -347,7 +346,6 @@ public class AttendantServiceImpl implements IAttendantService {
                         heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                     }
                 }
-                System.out.println("血量======== = " + heEquipBonus);
 
                 /**
                  * 问题： 没有加成我怎么知道他是血量还是才华
@@ -381,16 +379,10 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
 
-                System.out.println("1 为生命加成 2 为才华加成 = " + heEquipmentBonus);
-
-
 
                 /**
                  * 装备防御力*各个装备属性加成
                  */
-                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus);
-                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue());
-                System.out.println("他方装备加成 = " + heEquipmentBonus);
                 heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipmentBonus;
 
 
@@ -421,21 +413,12 @@ public class AttendantServiceImpl implements IAttendantService {
             double heRipetime = StrictMath.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
                     (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
 
-            System.out.println("userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus = " + userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus);
-            System.out.println("userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus = " + userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
-            //得到最终他方的战力
+           //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
 
             //他方最终得到的血量
             //B = heEdLisfe * heEquipBonus;
-            System.out.println("他方最终血量 = " + heEquipBonus);
-            System.out.println("他方最终战斗力 = " + heRipetime1);
-            System.out.println("他方最终防御力 = " + heDefense);
         }
-
-
-
-
 
 
         //我方宠物信息
@@ -456,10 +439,6 @@ public class AttendantServiceImpl implements IAttendantService {
             ourCapabilities=100;
             System.out.println("没有装备 = " + "没有装备");
         }else{
-/*            if(tbEquipmentKnapsackVos.size()==0){
-                //得到我方战力
-                ourCapabilities=100;
-            }*/
             for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
 
                 /**
@@ -478,8 +457,6 @@ public class AttendantServiceImpl implements IAttendantService {
                         ourHealth = ourHealth + tbEquipmentKnapsackVos.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                     }
                 }
-                System.out.println("我方-----血量======== = " + ourHealth);
-
 
                 /**
                  *
@@ -509,15 +486,10 @@ public class AttendantServiceImpl implements IAttendantService {
                         }
                     }
 
-                System.out.println("我方装备加成ppp = " + myEquipmentBonus);
-
 
                 //他方装备属性加成等于0 在查询一遍赋值
                 if(heEquipBonus==0){
-                    //List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVoss = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
-                    //System.out.println("tbEquipmentKnapsackVoss = " + tbEquipmentKnapsackVoss.size());
-                    //System.out.println("tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue()  = " + tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue() );
-                    /**
+                     /**
                      * 属性加成 1就代表有加成 0代表没有加成
                      * 如果有加成在判断是生命还是才华
                      */
@@ -547,11 +519,7 @@ public class AttendantServiceImpl implements IAttendantService {
             double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
                     (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
             //得到最终我方的战力
-            //System.out.println("heRipetime = " + heRipetime);
             myRipetime= (int) heRipetime;
-            System.out.println("我方血量 = " + ourHealth);
-            System.out.println("我方防御力 = " + ourDefenses);
-            System.out.println("我方战斗力 = " + myRipetime);
 
         }
 
@@ -652,7 +620,8 @@ public class AttendantServiceImpl implements IAttendantService {
         }
 
         //推后12小时
-        Long s=System.currentTimeMillis()/1000+43200;
+        LocalDateTime time = LocalDateTime.now().plusHours(12);
+        String s = DateUtil.formatDateTime(time);
         vo.setS(s);
         AttendantUser attendantUser=new AttendantUser();
 
@@ -689,7 +658,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     attendantUser.setAttendantId(0L);
                     attendantUser.setCaughtPeopleId(queryAttendantUser.getCaughtPeopleId());
                     attendantUser.setUserId(user.getId());
-                    attendantUser.setExp1(s);
+                    attendantUser.setEndDate(s);
                     attendantUserService.insert(attendantUser);
                     //代表抢用户跟班成功
                     vo.setStatus(0);
@@ -700,7 +669,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 attendantUser.setAttendantId(0L);
                 attendantUser.setCaughtPeopleId(caughtPeopleId);
                 attendantUser.setUserId(user.getId());
-                attendantUser.setExp1(s);
+                attendantUser.setEndDate(s);
                 attendantUserService.insert(attendantUser);
                 //代表抢用户跟班成功
                 vo.setStatus(0);
@@ -719,7 +688,7 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUser.setAttendantId(attendantId);
         attendantUser.setCaughtPeopleId(0L);
         attendantUser.setUserId(user.getId());
-        attendantUser.setExp1(s);
+        attendantUser.setEndDate(s);
         attendantUserService.insert(attendantUser);
         vo.setStatus(0);
         return vo;
