@@ -2,6 +2,7 @@ package com.dkm.attendant.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.dkm.attendant.entity.AttenDant;
+import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.vo.Message;
@@ -23,7 +24,7 @@ public interface IAttendantService {
      *获取用户抓到的跟班信息
      * @return
      */
-    List<AttUserAllInfoVo> queryThreeAtt();
+    List<AttInfoWithPutBo> queryThreeAtt();
 
     /**
      * 获取用户声望和金币
