@@ -1,6 +1,7 @@
 package com.dkm.seed.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @TableName("tb_land_seed")
 public class LandSeed {
 
+  @TableId
   private long leId;
   private long userId;
   private long seedId;

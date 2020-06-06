@@ -213,8 +213,9 @@ public class SeedServiceImpl implements ISeedService {
             LocalDateTime time2 = LocalDateTime.ofEpochSecond(System.currentTimeMillis() / 1000 + integer, 0, ZoneOffset.ofHours(8));
 
 
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("user_id", user.getId());
+            LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
+                    .eq(LandSeed::getUserId, user.getId())
+                    .eq(LandSeed::getLeStatus, 1);
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
             if(list1.size()==0){
                 //循环用户解锁土地，解锁多少多少土地 种植多少种子
