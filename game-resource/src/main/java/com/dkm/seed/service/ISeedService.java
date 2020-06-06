@@ -61,6 +61,6 @@ public interface ISeedService {
     /**
      * 查询已经种植的种子
      */
-    Map<String,Object> queryAlreadyPlantSd();
+    List<LandYesVo> queryAlreadyPlantSd();
 
 }
