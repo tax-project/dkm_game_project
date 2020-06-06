@@ -91,45 +91,19 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         produce.setGoodId(goods.getId());
 
-        UserAttendantGoods userAttendantGoods = produceMapper.queryProduce(user.getId(), goods.getId());
-        if(userAttendantGoods!=null){
-            int i = produceMapper.updateNumber(userAttendantGoods.getId());
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR,"修改数量异常");
-            }
-        }else{
-            int insert = baseMapper.insert(produce);
-            if (insert <= 0) {
-                log.info("添加产出有误");
-                throw new ApplicationException(CodeType.SERVICE_ERROR);
-            }
-            UserProduce userProduce = new UserProduce();
-            userProduce.setUserId(user.getId());
-            userProduce.setProduceId(produceId);
+        //默认0
+        produce.setStatus(0);
 
-            userProduceService.insertProduce(userProduce);
+        int insert = baseMapper.insert(produce);
+        if (insert <= 0) {
+            log.info("添加产出有误");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
+        UserProduce userProduce = new UserProduce();
+        userProduce.setUserId(user.getId());
+        userProduce.setProduceId(produceId);
 
-
-
-        //将产出的物品直接存到数据库中
-       if("金币".equals(goods.getName())){
-            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-            increaseUserInfoBO.setUserInfoGold(number);
-            increaseUserInfoBO.setUserId(user.getId());
-            //修改用户金币
-            userFeignClient.increaseUserInfo(increaseUserInfoBO);
-        }else{
-            TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-            tbEquipmentKnapsack.setFoodId(goods.getId());
-            tbEquipmentKnapsack.setFoodNumber(number);
-            tbEquipmentKnapsack.setTekIsva(1);
-            tbEquipmentKnapsack.setTekDaoju(3);
-            tbEquipmentKnapsack.setTekMoney(50);
-            tbEquipmentKnapsack.setTekSell(2);
-            //添加食物到背包
-            iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
-        }
+        userProduceService.insertProduce(userProduce);
 
         //返回随机生成的物品给前端
 
@@ -149,34 +123,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Override
     public  List<AttendantPutVo> queryOutput(Long userId) {
-        //查询所有跟班
-//        List<AttenDant> attenDants = attendantService.listAttenDant();
-
         //查询所有要返回的跟班数据
         return produceMapper.queryOutput(userId);
-
-        //根据返回的跟班数据得到不重复的跟班id
-//        Set<Long> set = new HashSet<>();
-//        for (AttenDant attenDant : attenDants) {
-//            for (AttendantVo attendantVo : list) {
-//                if (attenDant.getId() == attendantVo.getAttendantId()) {
-//                    set.add(attenDant.getId());
-//                }
-//            }
-//        }
-//
-//        //返回的数据
-//        Map<Integer,Object> map = new HashMap<>();
-//
-//        Integer number = 0;
-//        for (Long aLong : set) {
-//            //通过得到的不重复的id查询所有数据
-//            List<AttendantVo> result = produceMapper.queryOutput1(user.getId(), aLong);
-//            map.put(number,result);
-//            number += 1;
-//        }
-
-//        return map;
 
     }
 

@@ -28,4 +28,12 @@ public class Goods extends Model<Goods> {
     * 物品图片地址
     */
    private String url;
+
+   /**
+    *  物品类别
+    *  0--金币
+    *  2--道具
+    *  3--食物
+    */
+   private Integer goodType;
 }

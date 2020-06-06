@@ -19,4 +19,9 @@ public class GoodsVo {
     * 物品图片地址
     */
    private String url;
+
+   /**
+    * 物品类别
+    */
+   private Integer goodType;
 }

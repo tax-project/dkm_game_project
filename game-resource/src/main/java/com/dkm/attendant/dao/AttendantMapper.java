@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.AttendantUsersVo;
@@ -43,28 +44,32 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
 
     /**
      * 解雇
-     * @param dismissal 跟班id
+     * @param caughtPeopleId 跟班id
      * @return
      */
-    int dismissal(Long dismissal);
+    int dismissal(Long caughtPeopleId);
 
     /**
-     * 抓跟班
-     * @param attendantUser
-     * @return
+     *  收取产出
+     * @param userId 用户id
+     * @param attId 跟班id
+     * @return 返回产出集合
      */
-    int addGraspFollowing(AttendantUser attendantUser);
-    /**
-     * 收取
-     * @param atuId
-     * @return
-     */
-    int gather(Long exp1, Long atuId);
+    List<CollectResultBo> collect(@Param("userId") Long userId, @Param("attId") Long attId);
+
+
     /**
      * 查询自己的一个主人信息
-     * @param CaughtPeopleId 当前用户id
+     * @param caughtPeopleId 当前用户id
      * @return
      */
-     AttendantUserVo queryAidUser(Long CaughtPeopleId);
+     AttendantUserVo queryAidUser(Long caughtPeopleId);
+
+    /**
+     *  修改所有物品的产出状态
+     * @param list
+     * @return
+     */
+     Integer updateProduceStatus (List<Long> list);
 
 }

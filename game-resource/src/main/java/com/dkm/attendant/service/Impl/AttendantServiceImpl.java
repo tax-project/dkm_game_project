@@ -7,6 +7,7 @@ import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.bo.AttUserResultBo;
 import com.dkm.attendant.entity.bo.AttendantBo;
+import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -23,16 +24,20 @@ import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.PetsDto;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
+import com.dkm.knapsack.domain.TbEquipmentKnapsack;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
+import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -721,17 +726,64 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
 
-
-
-
+    /**
+     * 产出
+     * @param attId
+     * @return
+     */
     @Override
-    public void gather(Long atuId) {
-        long exp1 = System.currentTimeMillis() / 1000 + 43200;
-        int gather = attendantMapper.gather(exp1,atuId);
+    public Map<String, Object> collect(Long attId) {
+//        long exp1 = System.currentTimeMillis() / 1000 + 43200;
 
-        if (gather <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "收取失败");
+        UserLoginQuery user = localUser.getUser();
+        //得到产出的物品集合
+        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attId);
+
+        List<Long> idList = new ArrayList<>();
+
+        for (CollectResultBo bo : list) {
+            //如果是金币  加入用户的总金币
+            if (bo.getGoodType() == 0) {
+                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                increaseUserInfoBO.setUserInfoGold(bo.getGoodNumber());
+                increaseUserInfoBO.setUserId(user.getId());
+                //修改用户金币
+                userFeignClient.increaseUserInfo(increaseUserInfoBO);
+            } else {
+                //穿戴物品
+                TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack.setFoodId(bo.getGoodId());
+                tbEquipmentKnapsack.setFoodNumber(bo.getGoodNumber());
+                tbEquipmentKnapsack.setTekIsva(1);
+                tbEquipmentKnapsack.setTekDaoju(bo.getGoodType());
+                tbEquipmentKnapsack.setTekMoney(50);
+                tbEquipmentKnapsack.setTekSell(2);
+                //添加食物到背包
+                iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
+            }
+
+            idList.add(bo.getProduceId());
         }
+
+        //修改产出表的状态
+        Integer integer = attendantMapper.updateProduceStatus(idList);
+
+        if (integer <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改异常");
+        }
+
+        //返回产出的数据以及12小时后的时间给前端
+        LocalDateTime dateTime = LocalDateTime.now().plusHours(12);
+
+        String expTime = DateUtil.formatDateTime(dateTime);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("expTime",expTime);
+
+        //得到产出的物品返回
+        map.put("goods",list);
+
+        return map;
     }
 
     @Override
