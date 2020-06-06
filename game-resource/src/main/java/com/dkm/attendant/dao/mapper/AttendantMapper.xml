@@ -47,14 +47,9 @@
 
 
     <update id="updateProduceStatus" parameterType="Long">
-        <foreach collection="list" index="index" item="item">
-            update tb_produce
-            <set>
-                status = 1
-            </set>
-            <where>
-                id = #{item}
-            </where>
+        update tb_produce set status = 1 where
+        <foreach collection="list" index="index" item="item" separator="or">
+             id = #{item}
         </foreach>
     </update>
 
