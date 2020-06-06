@@ -766,10 +766,12 @@ public class AttendantServiceImpl implements IAttendantService {
         }
 
         //修改产出表的状态
-        Integer integer = attendantMapper.updateProduceStatus(idList);
+        if (null != idList && idList.size() > 0) {
+            Integer integer = attendantMapper.updateProduceStatus(idList);
 
-        if (integer <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改异常");
+            if (integer <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "修改异常");
+            }
         }
 
         //返回产出的数据以及12小时后的时间给前端
