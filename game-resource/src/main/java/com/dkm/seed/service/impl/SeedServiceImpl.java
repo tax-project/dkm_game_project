@@ -14,6 +14,7 @@ import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.land.dao.LandMapper;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.land.entity.vo.UserLandUnlock;
+import com.dkm.seed.dao.LandSeedMapper;
 import com.dkm.seed.dao.SeedMapper;
 import com.dkm.seed.dao.UserLandUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
@@ -22,6 +23,7 @@ import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +68,9 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private LandMapper landMapper;
 
+    @Autowired
+    private LandSeedMapper landSeedMapper;
+
 
 
 
@@ -84,7 +89,6 @@ public class SeedServiceImpl implements ISeedService {
                throw new ApplicationException(CodeType.PARAMETER_ERROR,"没有种子");
             }
             for (int j = 0; j < attenDants.size(); j++) {
-                System.out.println("attenDants = " + attenDants);
                 SeedUnlock seedUnlock=new SeedUnlock();
                 seedUnlock.setPuId(idGenerator.getNumberId());
                 seedUnlock.setUserId(user.getId());
@@ -171,63 +175,74 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
-        Map<String,Object> map=new HashMap<>();
-        List<LandSeed> list=new ArrayList<>();
+        //如果等于一就是种植种子
+        if(seedPlantVo.getStatus()==1){
+            Map<String,Object> map=new HashMap<>();
+            List<LandSeed> list=new ArrayList<>();
 
-        //得到用户token信息
-        UserLoginQuery user = localUser.getUser();
+            //得到用户token信息
+            UserLoginQuery user = localUser.getUser();
 
-        User user1 = attendantMapper.queryUserReputationGold(user.getId());
-        if(user1.getUserInfoGold()<seedPlantVo.getSeedGold()){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            User user1 = attendantMapper.queryUserReputationGold(user.getId());
+            if(user1.getUserInfoGold()<seedPlantVo.getSeedGold()){
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            }
+
+            //根据用户查询解锁的土地
+            List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
+
+            //种植时减去用户金币
+            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+
+            //算出种植种子需要多少钱
+            Integer gold=seedPlantVo.getSeedGold()*userLandUnlocks.size();
+            increaseUserInfoBO.setUserId(user.getId());
+            increaseUserInfoBO.setUserInfoGold(gold);
+
+            //减少金币
+            Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
+
+            //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
+            double ripetime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
+            //将秒数转换成整数类型
+            Integer integer = Integer.valueOf((int) ripetime);
+            //得到时间戳转换成时间格式，最后得到种子成熟的时间
+            LocalDateTime time2 =LocalDateTime.ofEpochSecond(System.currentTimeMillis()/1000+integer,0,ZoneOffset.ofHours(8));
+
+
+            /*QueryWrapper queryWrapper=new QueryWrapper();
+            queryWrapper.eq("user_id",user.getId());
+            List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
+            if(list1.size()!=0){
+
+            }*/
+            //循环用户解锁土地，解锁多少多少土地 种植多少种子
+            for (int i = 0; i < userLandUnlocks.size(); i++) {
+                LandSeed landSeed=new LandSeed();
+                //生成主键id
+                landSeed.setLeId(idGenerator.getNumberId());
+                //土地编号
+                landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+                //种子id
+                landSeed.setSeedId(seedPlantVo.getSeedId());
+                //根据token得到用户id
+                landSeed.setUserId(user.getId());
+                //结束时间
+                landSeed.setPlantTime(time2);
+                //状态 1为种植
+                landSeed.setLeStatus(1);
+                list.add(landSeed);
+            }
+
+            //增加要种植种子的信息和用户信息
+            int i = seedMapper.addPlant(list);
+            if(i<=0){
+                throw new ApplicationException(CodeType.PARAMETER_ERROR,"种植异常");
+            }
         }
 
-        //根据用户查询解锁的土地
-        List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
-        //种植时减去用户金币
-        IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
 
-        //算出种植种子需要多少钱
-        Integer gold=seedPlantVo.getSeedGold()*userLandUnlocks.size();
-        increaseUserInfoBO.setUserId(user.getId());
-        increaseUserInfoBO.setUserInfoGold(gold);
-
-        //减少金币
-        Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
-
-        //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
-        double ripetime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
-        //将秒数转换成整数类型
-        Integer integer = Integer.valueOf((int) ripetime);
-        //得到时间戳转换成时间格式，最后得到种子成熟的时间
-        LocalDateTime time2 =LocalDateTime.ofEpochSecond(System.currentTimeMillis()/1000+integer,0,ZoneOffset.ofHours(8));
-
-        //循环用户解锁土地，解锁多少多少土地 种植多少种子
-        for (int i = 0; i < userLandUnlocks.size(); i++) {
-            LandSeed landSeed=new LandSeed();
-            //生成主键id
-            landSeed.setLeId(idGenerator.getNumberId());
-            //土地编号
-            landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-            //种子id
-            landSeed.setSeedId(seedPlantVo.getSeedId());
-            //根据token得到用户id
-            landSeed.setUserId(user.getId());
-            //结束时间
-            landSeed.setPlantTime(time2);
-            //状态
-            landSeed.setLeStatus(1);
-            //
-            landSeed.setId(i);
-            list.add(landSeed);
-        }
-
-        //增加要种植种子的信息和用户信息
-        int i = seedMapper.addPlant(list);
-        if(i<=0){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"种植异常");
-        }
 
     }
 
@@ -350,5 +365,33 @@ public class SeedServiceImpl implements ISeedService {
         return landYesVos;
     }
 
+    @Override
+    public int seedDrop(Long id, Long seedId) {
+
+        return 0;
+    }
+
+    public boolean isProduceGoldRed(Integer status){
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+
+        //查询出用户信息
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+
+        //用户等级
+        Integer userInfoGrade = userInfoQueryBoResult.getData().getUserInfoGrade();
+
+        //红包掉落概率
+        double pow = Math.pow(userInfoGrade, -1 / 2.0);
+
+        //等于一 说明种子是刚刚新解锁的种子
+        if(status==1){
+
+        }
+
+
+
+        return true;
+    }
 
 }

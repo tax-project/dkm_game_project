@@ -99,4 +99,6 @@
         delete from tb_land_seed where user_id=#{userId}
     </delete>
 
+
+
 </mapper>

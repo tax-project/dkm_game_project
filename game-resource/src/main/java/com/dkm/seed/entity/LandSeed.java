@@ -24,7 +24,6 @@ public class LandSeed {
   private long grade;
   private LocalDateTime plantTime;
   private Integer leStatus;
-  private Integer id;
 
 
 }
