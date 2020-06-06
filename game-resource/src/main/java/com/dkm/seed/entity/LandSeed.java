@@ -19,11 +19,10 @@ import java.time.LocalDateTime;
 public class LandSeed {
 
   @TableId
-  private long leId;
+  private long Id;
   private long userId;
   private long seedId;
   private long laNo;
-  private long grade;
   private LocalDateTime plantTime;
   private Integer leStatus;
 

@@ -228,7 +228,7 @@ public class SeedServiceImpl implements ISeedService {
                 for (int i = 0; i < userLandUnlocks.size(); i++) {
                     LandSeed landSeed = new LandSeed();
                     //生成主键id
-                    landSeed.setLeId(idGenerator.getNumberId());
+                    landSeed.setId(idGenerator.getNumberId());
                     //土地编号
                     landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
                     //种子id
@@ -246,15 +246,22 @@ public class SeedServiceImpl implements ISeedService {
                     //状态 1为种植
                     landSeed.setLeStatus(1);
                     list.add(landSeed);
-                }
-            }else{
 
+                }
+                //增加要种植种子的信息和用户信息
+                int i = seedMapper.addPlant(list);
+                if (i <= 0) {
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+                }
+
+            }else{
                 //如果自己种子的数量等于自己解锁的土地数量  则修改种植状态
                 if (list1.size() == userLandUnlocks.size()) {
                     LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                             .eq(LandSeed::getUserId,user.getId());
                     LandSeed landSeed=new LandSeed();
                     landSeed.setLeStatus(1);
+
                     int update = landSeedMapper.update(landSeed, wrapper);
 
                     if (update <= 0) {
@@ -272,7 +279,6 @@ public class SeedServiceImpl implements ISeedService {
 
 
 
-
                     //删除种子种植信息
                     int i1 = seedMapper.deleteLandSeed(user.getId());
 
@@ -280,7 +286,7 @@ public class SeedServiceImpl implements ISeedService {
                     for (int i = 0; i < userLandUnlocks.size(); i++) {
                         LandSeed landSeed = new LandSeed();
                         //生成主键id
-                        landSeed.setLeId(idGenerator.getNumberId());
+                        landSeed.setId(idGenerator.getNumberId());
                         //土地编号
                         landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
                         //种子id
@@ -293,14 +299,15 @@ public class SeedServiceImpl implements ISeedService {
                         landSeed.setLeStatus(1);
                         list.add(landSeed);
                     }
+                    //增加要种植种子的信息和用户信息
+                    int i = seedMapper.addPlant(list);
+                    if (i <= 0) {
+                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+                    }
                 }
 
 
-                //增加要种植种子的信息和用户信息
-                int i = seedMapper.addPlant(list);
-                if (i <= 0) {
-                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-                }
+
             }
 
 

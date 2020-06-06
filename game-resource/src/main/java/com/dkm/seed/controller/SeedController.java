@@ -75,6 +75,7 @@ public class SeedController {
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "1为种植，2为收取"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
     })
@@ -82,7 +83,7 @@ public class SeedController {
     @CrossOrigin
     @CheckToken
     public void plant(@RequestBody SeedPlantVo seedPlantVo) {
-        if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null) {
+        if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null ||seedPlantVo.getStatus()==null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
         }
          iSeedService.queryAlreadyPlantSeed(seedPlantVo);
