@@ -891,7 +891,6 @@ public class AttendantServiceImpl implements IAttendantService {
         }
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-        System.out.println("-->" + userInfoQueryBoResult);
         if (userInfoQueryBoResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
         }

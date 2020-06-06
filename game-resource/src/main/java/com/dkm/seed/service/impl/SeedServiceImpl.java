@@ -1,6 +1,9 @@
 package com.dkm.seed.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.kotlin.KtUpdateWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
@@ -176,15 +179,15 @@ public class SeedServiceImpl implements ISeedService {
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
         //如果等于一就是种植种子
-        if(seedPlantVo.getStatus()==1){
-            Map<String,Object> map=new HashMap<>();
-            List<LandSeed> list=new ArrayList<>();
+        if (seedPlantVo.getStatus() == 1) {
+            Map<String, Object> map = new HashMap<>();
+            List<LandSeed> list = new ArrayList<>();
 
             //得到用户token信息
             UserLoginQuery user = localUser.getUser();
 
             User user1 = attendantMapper.queryUserReputationGold(user.getId());
-            if(user1.getUserInfoGold()<seedPlantVo.getSeedGold()){
+            if (user1.getUserInfoGold() < seedPlantVo.getSeedGold()) {
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
             }
 
@@ -192,10 +195,10 @@ public class SeedServiceImpl implements ISeedService {
             List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
             //种植时减去用户金币
-            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+            IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
 
             //算出种植种子需要多少钱
-            Integer gold=seedPlantVo.getSeedGold()*userLandUnlocks.size();
+            Integer gold = seedPlantVo.getSeedGold() * userLandUnlocks.size();
             increaseUserInfoBO.setUserId(user.getId());
             increaseUserInfoBO.setUserInfoGold(gold);
 
@@ -207,44 +210,78 @@ public class SeedServiceImpl implements ISeedService {
             //将秒数转换成整数类型
             Integer integer = Integer.valueOf((int) ripetime);
             //得到时间戳转换成时间格式，最后得到种子成熟的时间
-            LocalDateTime time2 =LocalDateTime.ofEpochSecond(System.currentTimeMillis()/1000+integer,0,ZoneOffset.ofHours(8));
+            LocalDateTime time2 = LocalDateTime.ofEpochSecond(System.currentTimeMillis() / 1000 + integer, 0, ZoneOffset.ofHours(8));
 
 
-            /*QueryWrapper queryWrapper=new QueryWrapper();
-            queryWrapper.eq("user_id",user.getId());
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("user_id", user.getId());
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
-            if(list1.size()!=0){
-
-            }*/
-            //循环用户解锁土地，解锁多少多少土地 种植多少种子
-            for (int i = 0; i < userLandUnlocks.size(); i++) {
-                LandSeed landSeed=new LandSeed();
-                //生成主键id
-                landSeed.setLeId(idGenerator.getNumberId());
-                //土地编号
-                landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-                //种子id
-                landSeed.setSeedId(seedPlantVo.getSeedId());
-                //根据token得到用户id
-                landSeed.setUserId(user.getId());
-                //结束时间
-                landSeed.setPlantTime(time2);
-                //状态 1为种植
-                landSeed.setLeStatus(1);
-                list.add(landSeed);
+            if(list1.size()==0){
+                //循环用户解锁土地，解锁多少多少土地 种植多少种子
+                for (int i = 0; i < userLandUnlocks.size(); i++) {
+                    LandSeed landSeed = new LandSeed();
+                    //生成主键id
+                    landSeed.setLeId(idGenerator.getNumberId());
+                    //土地编号
+                    landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+                    //种子id
+                    landSeed.setSeedId(seedPlantVo.getSeedId());
+                    //根据token得到用户id
+                    landSeed.setUserId(user.getId());
+                    //结束时间
+                    landSeed.setPlantTime(time2);
+                    //状态 1为种植
+                    landSeed.setLeStatus(1);
+                    list.add(landSeed);
+                }
             }
+
+
+            if (list1.size() == userLandUnlocks.size()) {
+                LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+                        .eq(LandSeed::getUserId,user.getId());
+                LandSeed landSeed=new LandSeed();
+                landSeed.setLeStatus(1);
+                int update = landSeedMapper.update(landSeed, wrapper);
+
+                if (update <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+                }
+            } else {
+                //删除种子种植信息
+                int i1 = seedMapper.deleteLandSeed(user.getId());
+
+                //循环用户解锁土地，解锁多少多少土地 种植多少种子
+                for (int i = 0; i < userLandUnlocks.size(); i++) {
+                    LandSeed landSeed = new LandSeed();
+                    //生成主键id
+                    landSeed.setLeId(idGenerator.getNumberId());
+                    //土地编号
+                    landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+                    //种子id
+                    landSeed.setSeedId(seedPlantVo.getSeedId());
+                    //根据token得到用户id
+                    landSeed.setUserId(user.getId());
+                    //结束时间
+                    landSeed.setPlantTime(time2);
+                    //状态 1为种植
+                    landSeed.setLeStatus(1);
+                    list.add(landSeed);
+                }
+            }
+
 
             //增加要种植种子的信息和用户信息
             int i = seedMapper.addPlant(list);
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR,"种植异常");
+            if (i <= 0) {
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
             }
         }
-
-
-
-
     }
+
+
+
+
 
     @Override
     public int updateUser(UserInIf userInIf) {

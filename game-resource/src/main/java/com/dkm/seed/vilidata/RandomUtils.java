@@ -41,21 +41,24 @@ public class RandomUtils {
     /**
      * 红包掉落的数量
      */
-    public double NumberRedPacketsDropped(){
+    public double NumberRedPacketsDropped(Integer status,double money){
+         if(status==1){
+             double v = money / 60;
+             return v;
+         }
 
-
-        return 0;
+        return 0.01;
     }
 
 
     /**
      * 掉落金币概率 是否有金币掉落
-     * @param seedGarde  种子等级
+     * @param seedGrade  种子等级
      * @return
      */
-    public boolean isProduceGoldRed(Integer seedGarde){
+    public boolean isProduceGoldRed(Integer seedGrade){
         //金币掉落概率
-        int pow = (int) (Math.pow(seedGarde, -1 / 4.0) * 100);
+        int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
 
         //生产1-100的随机数
         int random = new Random().nextInt(100) + 1;
@@ -67,8 +70,19 @@ public class RandomUtils {
 
 
 
-//    /**
-//     * 金币掉落的数量
-//     */
-//    public Integer
+    /**
+     * 金币掉落的数量
+     *
+     */
+    public Integer NumberCoinsDropped(Integer gold,Long time){
+        double start = gold / time * 2 * 0.5;
+        int start1 = (int) start;
+
+        double end=gold / time * 2 * 0.7;
+        int end1 = (int) end;
+        //金币
+        int random = new Random().nextInt(start1) + end1;
+
+        return random;
+    }
 }
