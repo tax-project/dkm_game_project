@@ -16,10 +16,12 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.problem.dao.MoneyMapper;
 import com.dkm.problem.entity.Money;
 import com.dkm.problem.entity.bo.MoneyBo;
+import com.dkm.problem.entity.bo.MoneyRandomBo;
 import com.dkm.problem.entity.vo.*;
 import com.dkm.problem.service.IMoneyService;
 import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
+import com.dkm.vilidata.RandomData;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.BeanUtils;
@@ -29,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +52,9 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
    @Autowired
    private UserFeignClient userInfoFeignClient;
+
+   @Autowired
+   private RandomData randomData;
 
    /**
     * 发红包
@@ -297,5 +299,38 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       LocalDateTime endDate = DateUtil.parseDateTime(startTime);
 
       return baseMapper.countHandOutRedEnvelopes(page,status,startDate,endDate);
+   }
+
+   @Override
+   public MoneyRandomBo queryMoneyRandom() {
+
+      LambdaQueryWrapper<Money> wrapper = new LambdaQueryWrapper<Money>()
+            .eq(Money::getStatus,0)
+            .or()
+            .eq(Money::getStatus,1);
+
+      List<Money> list = baseMapper.selectList(wrapper);
+
+      if (null == list || list.size() == 0) {
+         //没有正在回答或未开始的红包
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "没有正在举办的红包活动");
+      }
+
+      Set<Integer> set = randomData.getList(list.size(), 1);
+
+      Integer index = 0;
+      for (Integer integer : set) {
+         //得到随机抽取的索引
+         index = integer;
+      }
+
+      Money money = list.get(index);
+
+      MoneyRandomBo bo = new MoneyRandomBo();
+      bo.setId(money.getId());
+      bo.setDiamonds(money.getDiamonds());
+      bo.setUserId(money.getUserId());
+
+      return bo;
    }
 }
