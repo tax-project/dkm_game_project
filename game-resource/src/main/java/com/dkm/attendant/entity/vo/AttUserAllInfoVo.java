@@ -40,4 +40,9 @@ public class AttUserAllInfoVo {
     * 1--用户
     */
    private Integer sysStatus;
+
+   /**
+    *  跟班用户Id
+    */
+   private Long attUserId;
 }

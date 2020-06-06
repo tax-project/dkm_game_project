@@ -16,9 +16,11 @@ public interface IProduceService {
 
     /**
      *  添加产出
-     * @param attendantId
+     * @param attendantId 跟班id
+     * @param attUserId 跟班用户id
+     * @return 返回数据
      */
-    Map<String,Object> insertProduce (Long attendantId);
+    Map<String,Object> insertProduce (Long attendantId, Long attUserId);
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */

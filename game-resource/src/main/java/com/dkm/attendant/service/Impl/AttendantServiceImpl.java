@@ -727,12 +727,12 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     /**
-     * 产出
+     * 收取
      * @param attId
      * @return
      */
     @Override
-    public Map<String, Object> collect(Long attId) {
+    public Map<String, Object> collect(Long attId, Long attUserId) {
 //        long exp1 = System.currentTimeMillis() / 1000 + 43200;
 
         UserLoginQuery user = localUser.getUser();
@@ -765,6 +765,11 @@ public class AttendantServiceImpl implements IAttendantService {
             idList.add(bo.getProduceId());
         }
 
+        //返回产出的数据以及12小时后的时间给前端
+        LocalDateTime dateTime = LocalDateTime.now().plusHours(12);
+
+        String expTime = DateUtil.formatDateTime(dateTime);
+
         //修改产出表的状态
         if (null != idList && idList.size() > 0) {
             Integer integer = attendantMapper.updateProduceStatus(idList);
@@ -774,10 +779,10 @@ public class AttendantServiceImpl implements IAttendantService {
             }
         }
 
-        //返回产出的数据以及12小时后的时间给前端
-        LocalDateTime dateTime = LocalDateTime.now().plusHours(12);
 
-        String expTime = DateUtil.formatDateTime(dateTime);
+        //更新用户跟班表的刷新时间
+        attendantUserService.updateAttTime(expTime, attUserId);
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("expTime",expTime);

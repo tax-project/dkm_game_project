@@ -66,9 +66,10 @@ public interface IAttendantService {
    /**
     *  收取
     * @param atuId
+    * @param attUserId
     * @return
     */
-   Map<String, Object> collect(Long atuId);
+   Map<String, Object> collect(Long atuId, Long attUserId);
 
     /**
      * 战斗过程

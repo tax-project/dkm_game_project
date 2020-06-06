@@ -180,17 +180,18 @@ public class AttendantController {
     @ApiOperation(value = "收取",notes = "成功返回数据 反则为空")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "atuId",value = "id"),
+          @ApiImplicitParam(paramType = "query",dataType = "Long",name = "attUserId",value = "attUserId"),
     })
     @GetMapping("/gather")
     @CrossOrigin
     @CheckToken
-    public Map<String, Object> gather(@RequestParam("atuId") Long atuId){
+    public Map<String, Object> gather(@RequestParam("atuId") Long atuId, @RequestParam("attUserId") Long attUserId){
 
-        if(atuId==null){
+        if(atuId==null || attUserId == null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
         }
 
-        return iAttendantService.collect(atuId);
+        return iAttendantService.collect(atuId, attUserId);
     }
 
     /**
