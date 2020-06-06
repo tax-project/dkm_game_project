@@ -45,6 +45,11 @@ public class AttInfoWithPutBo {
    private Integer sysStatus;
 
    /**
+    *  跟班用户Id
+    */
+   private Long attUserId;
+
+   /**
     *  该跟班产出的物品类表
     */
    private List<AttendantPutVo> putList;

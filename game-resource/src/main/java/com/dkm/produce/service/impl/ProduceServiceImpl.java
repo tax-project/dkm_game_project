@@ -1,7 +1,10 @@
 package com.dkm.produce.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
@@ -20,12 +23,15 @@ import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
+import com.dkm.utils.DateUtil;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -55,16 +61,32 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private ProduceMapper produceMapper;
 
     @Autowired
-    private UserFeignClient userFeignClient;
+    private IAttendantUserService attendantUserService;
 
-    @Autowired
-    private IAttendantService attendantService;
-
-    @Autowired
-    private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
     @Override
-    public Map<String,Object> insertProduce(Long attendantId) {
+    public Map<String,Object> insertProduce(Long attendantId, Long attUserId) {
         UserLoginQuery user = localUser.getUser();
+
+        //查询时间有没有过期
+        LocalDateTime now = LocalDateTime.now();
+
+        AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
+
+        if (attUser == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId传错了..大哥");
+        }
+
+
+        String endDate = attUser.getEndDate();
+        LocalDateTime time = DateUtil.parseDateTime(endDate);
+
+        long until = now.until(time, ChronoUnit.SECONDS);
+
+        if (until >= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "产出时间已过期");
+        }
+
+        //随机返回物品
         Goods goods = goodsService.queryRandomGoods();
 
 
