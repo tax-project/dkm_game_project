@@ -63,4 +63,11 @@ public interface ISeedService {
      */
     List<LandYesVo> queryAlreadyPlantSd();
 
+    /**
+     * 掉落
+     */
+    
+
+
+
 }
