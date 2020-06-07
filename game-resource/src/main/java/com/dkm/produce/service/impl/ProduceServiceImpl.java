@@ -21,6 +21,7 @@ import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.entity.vo.AttendantPutVo;
+import com.dkm.produce.entity.vo.ProduceSelectVo;
 import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtil;
@@ -154,6 +155,25 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     public int deleteOutGoodNumber(Long id) {
         return produceMapper.deleteById(id);
     }
+
+   @Override
+   public void deletePut(Long userId, Long aId) {
+      //先查询id集合
+      List<ProduceSelectVo> list = baseMapper.queryAllIdList(userId, aId);
+
+      //删除产出表信息
+      Integer integer = baseMapper.deleteProduce(list);
+
+      if (integer <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
+      }
+
+      Integer integer1 = baseMapper.deleteProduceUser(list);
+
+      if (integer1 <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
+      }
+   }
 
 
 }

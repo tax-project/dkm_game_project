@@ -12,12 +12,34 @@
 
     <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantPutVo" parameterType="java.lang.Long">
         select max(b.attendant_id) as 'attendantId',sum(b.number) as 'number',max(c.id) as 'goodId'
-              ,max(c.name) as 'goodName',max(c.url) as 'imgUrl'
-              from tb_user_produce a join tb_produce b
+              ,max(c.name) as 'goodName',max(c.url) as 'imgUrl',d.caught_people_id
+              from tb_user_produce a left join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
+              join tb_attendant_user d on b.attendant_id = d.attendant_id
               where a.user_id= #{userId}
               group by b.attendant_id,c.id
     </select>
 
+
+    <select id="queryAllIdList" resultType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        select a.id as 'produceId',b.id as 'produceUserId'
+        from tb_produce a join tb_user_produce b on a.id = b.produce_id
+        where a.attendant_id = #{aId} and b.user_id = #{userId}
+    </select>
+
+    <delete id="deleteProduce" parameterType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        delete from tb_produce where
+        <foreach collection="list" item="item" index="index" separator="or">
+            id = #{item.produceId}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteProduceUser" parameterType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        delete from tb_user_produce where
+        <foreach collection="list" item="item" index="index" separator="or">
+            id = #{item.produceUserId}
+        </foreach>
+    </delete>
 
 </mapper>

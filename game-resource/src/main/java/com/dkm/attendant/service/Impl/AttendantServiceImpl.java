@@ -4,10 +4,7 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
-import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
-import com.dkm.attendant.entity.bo.AttUserResultBo;
-import com.dkm.attendant.entity.bo.AttendantBo;
-import com.dkm.attendant.entity.bo.CollectResultBo;
+import com.dkm.attendant.entity.bo.*;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -86,7 +83,7 @@ public class AttendantServiceImpl implements IAttendantService {
      * @return
      */
     @Override
-    public List<AttInfoWithPutBo> queryThreeAtt() {
+    public List<AttUserAllInfoVo> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
         //查询到所有系统跟班
@@ -132,27 +129,46 @@ public class AttendantServiceImpl implements IAttendantService {
             collect.add(vo);
         }
 
+        List<AttPutBo> userAtt = new ArrayList<>();
+        List<AttPutBo> sysAtt1 = new ArrayList<>();
+        List<AttPutBo> sysAtt2 = new ArrayList<>();
+        List<AttPutBo> sysAtt3 = new ArrayList<>();
+        for (AttUserAllInfoVo vo : collect) {
+            for (AttendantPutVo putVo : outputList) {
+                if (vo.getAId() == 0) {
+                    //用户跟班
+                    if (vo.getCaughtPeopleId().equals(putVo.getCaughtPeopleId())) {
+                        AttPutBo attPutBo = new AttPutBo();
+                        BeanUtils.copyProperties(putVo,attPutBo);
+                        userAtt.add(attPutBo);
+                        vo.setList(userAtt);
+                    }
+                }
 
-        //流化   将所有跟班信息和跟班产出的物品整理返回
-        Map<Long, ArrayList<AttendantPutVo>> map = outputList.stream().
-              collect(Collectors.toMap(AttendantPutVo::getAttendantId, attList ->
-                    new ArrayList<AttendantPutVo>()));
+                if (vo.getAId() == 1) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt1.add(attPutBo);
+                    vo.setList(userAtt);
+                }
 
-        for (AttendantPutVo vo : outputList) {
-            ArrayList<AttendantPutVo> vos = map.get(vo.getAttendantId());
-            vos.add(vo);
+                if (vo.getAId() == 2) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt2.add(attPutBo);
+                    vo.setList(userAtt);
+                }
+
+                if (vo.getAId() == 3) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt3.add(attPutBo);
+                    vo.setList(userAtt);
+                }
+            }
         }
 
-        List<AttInfoWithPutBo> attPutResult = collect.stream().map(attUserAllInfoVo -> {
-            AttInfoWithPutBo attInfoWithPutBo = new AttInfoWithPutBo();
-            BeanUtils.copyProperties(attUserAllInfoVo, attInfoWithPutBo);
-
-            attInfoWithPutBo.setPutList(map.get(attUserAllInfoVo.getAId()));
-            return attInfoWithPutBo;
-        }).collect(Collectors.toList());
-
-
-        return attPutResult;
+        return collect;
     }
 
 
@@ -225,8 +241,14 @@ public class AttendantServiceImpl implements IAttendantService {
      * 解雇
      */
     @Override
-    public int dismissal(Long caughtPeopleId) {
-        return attendantMapper.dismissal(caughtPeopleId);
+    public void dismissal(Long caughtPeopleId, Long aId) {
+
+        UserLoginQuery user = localUser.getUser();
+        //解雇
+        attendantMapper.dismissal(caughtPeopleId, aId);
+
+        //删除对应的跟班产出物品
+        produceService.deletePut (user.getId(),aId);
     }
 
     @Override
@@ -239,33 +261,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //我方装备血量之和
         double myedLisfe=0;
-
-        //他方装备血量之和
-        double heEdLisfe=0;
-
-        //我方各装被属性加成
-        double bonuses=0;
-
-        //他各装被属性加成
-        double heBonuses=0;
-
-
-
-
-
-
-        //他方防御力
-        double defenseOtherSide=0;
-
-        //得到他方血量
-        double ourHealth1=0;
-
-
-
-
-        //得到我方战力
-        Integer ourCapabilities=0;
-
 
         /**
          * 我方数据
@@ -281,10 +276,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到最终我方血量
         double ourHealth=0;
-
-        //我方装备加成
-       // double myEquipBonus=0;
-
 
         /**
          * 他方数据
@@ -309,18 +300,14 @@ public class AttendantServiceImpl implements IAttendantService {
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
 
-
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
         //随机获取他方宠物
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
-
-        Integer defaultOtherForce=0;
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
-        System.out.println("他方装备 = " + tbEquipmentKnapsackVos1.size());
         //如果没有装备
         if(tbEquipmentKnapsackVos1.size()==0){
             //血量
@@ -358,10 +345,6 @@ public class AttendantServiceImpl implements IAttendantService {
                     //没有加成的的话 直接将装备的生命赋值
                     heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdLife().intValue();
                 }
-
-
-
-
 /*
                 double heEquipmentBonus = 0;*/
                 /**
@@ -380,16 +363,13 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
 
-
                 /**
                  * 装备防御力*各个装备属性加成
                  */
                 heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipmentBonus;
 
-
                 //我方方装备加成
                 //double myEquipmentBonus = 0;
-
                 if (myEquipmentBonus == 0) {
                     //我方装备加成
                     List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
@@ -416,11 +396,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
            //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
-
-            //他方最终得到的血量
-            //B = heEdLisfe * heEquipBonus;
         }
-
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
@@ -430,18 +406,15 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到自己装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-        System.out.println("我方装备 = " + tbEquipmentKnapsackVos.size());
         if(tbEquipmentKnapsackVos.size()==0){
             //血量
             ourHealth=500;
             //得到我方装备防御力
             ourDefenses=0;
             //得到我方战力
-            ourCapabilities=100;
-            System.out.println("没有装备 = " + "没有装备");
+            myRipetime=100;
         }else{
             for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
-
                 /**
                  * 属性加成 1就代表有加成 0代表没有加成
                  * 得到各个装备属性加成的值
@@ -469,24 +442,21 @@ public class AttendantServiceImpl implements IAttendantService {
                     myedLisfe = myedLisfe + tbEquipmentKnapsackVos.get(i).getEdLife().intValue();
                 }
 
-
-
-                    /**
-                     * 属性加成 1就代表有加成 0代表没有加成
-                     * 如果有加成在判断是生命还是才华
-                     */
-                   //我方装备加成
-                    if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
-                        // 1 为生命加成 2 为才华加成
-                        if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
-                            // 生命加成
-                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
-                            //才华加成
-                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        }
+                /**
+                 * 属性加成 1就代表有加成 0代表没有加成
+                 * 如果有加成在判断是生命还是才华
+                 */
+                //我方装备加成
+                if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
+                    // 1 为生命加成 2 为才华加成
+                    if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
+                        // 生命加成
+                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                    } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
+                        //才华加成
+                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                     }
-
+                }
 
                 //他方装备属性加成等于0 在查询一遍赋值
                 if(heEquipBonus==0){
@@ -506,14 +476,10 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
 
-
-
                 /**
                  * 装备防御力*各个装备属性加成
                  * 得到最终我方防御力
                  */
-                System.out.println("tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus = " + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus);
-                System.out.println("我方装备加成 = " + myEquipmentBonus);
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
             //得到我方的战力
@@ -523,9 +489,6 @@ public class AttendantServiceImpl implements IAttendantService {
             myRipetime= (int) heRipetime;
 
         }
-
-
-
 
         //如果双方宠物相同 等级高的先动手
         if(myPet.equals(hePet)){

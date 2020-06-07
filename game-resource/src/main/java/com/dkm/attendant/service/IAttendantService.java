@@ -25,7 +25,7 @@ public interface IAttendantService {
      *获取用户抓到的跟班信息
      * @return
      */
-    List<AttInfoWithPutBo> queryThreeAtt();
+    List<AttUserAllInfoVo> queryThreeAtt();
 
     /**
      * 获取用户声望和金币
@@ -44,10 +44,15 @@ public interface IAttendantService {
     * @return 返回结果
     */
     Map<String, Object> queryRandomUser();
-    /**
-     * 解雇
-     */
-    int dismissal(Long caughtPeopleId);
+
+
+   /**
+    *  解雇
+    * @param caughtPeopleId
+    * @param aId
+    */
+    void dismissal(Long caughtPeopleId, Long aId);
+
     /**
      * 宠物战斗，查询用户信息
      */

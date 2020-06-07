@@ -53,7 +53,7 @@ public class AttendantController {
     @GetMapping("/queryThreeAtt")
     @CrossOrigin
     @CheckToken
-    public List<AttInfoWithPutBo> queryThreeAtt() {
+    public List<AttUserAllInfoVo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
 
@@ -97,24 +97,20 @@ public class AttendantController {
      *解雇
      */
     @ApiOperation(value = "解雇",notes = "成功返回数据 反则为空")
-    @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id")
+    @ApiImplicitParams({
+          @ApiImplicitParam(paramType = "query",dataType = "Long",name = "caughtPeopleId",value = "被抓人id"),
+          @ApiImplicitParam(paramType = "query",dataType = "Long",name = "aId",value = "跟班id")
+    })
     @GetMapping("/dismissal")
     @CrossOrigin
     @CheckToken
-    public Message dismissal(@RequestParam("caughtPeopleId") Long caughtPeopleId){
-        Message message=new Message();
-        if(caughtPeopleId==null){
+    public void dismissal(@RequestParam("caughtPeopleId") Long caughtPeopleId, @RequestParam("aId") Long aId){
+
+       if(caughtPeopleId == null || aId == null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
 
-        int dismissaMeassg = iAttendantService.dismissal(caughtPeopleId);
-        if(dismissaMeassg>0){
-            message.setNum(1);
-            message.setMsg("解雇成功");
-        }else{
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"解雇异常");
-        }
-        return message;
+        iAttendantService.dismissal(caughtPeopleId, aId);
     }
     /**
      * 宠物战斗

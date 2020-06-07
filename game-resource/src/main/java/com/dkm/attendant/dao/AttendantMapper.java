@@ -1,19 +1,14 @@
 package com.dkm.attendant.dao;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
-import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -43,11 +38,11 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
                                          @Param("status") Integer status);
 
     /**
-     * 解雇
-     * @param caughtPeopleId 跟班id
-     * @return
+     *  解雇
+     * @param caughtPeopleId
+     * @param aId
      */
-    int dismissal(Long caughtPeopleId);
+    void dismissal(@Param("caughtPeopleId") Long caughtPeopleId, @Param("aId") Long aId);
 
     /**
      *  收取产出

@@ -25,8 +25,9 @@
     </select>
 
 
-    <delete id="dismissal" parameterType="java.lang.Long">
-        delete from tb_attendant_user where Caught_people_id=#{caughtPeopleId}
+    <delete id="dismissal">
+        delete from tb_attendant_user
+        where Caught_people_id= #{caughtPeopleId} and attendant_id = #{aId}
     </delete>
 
 

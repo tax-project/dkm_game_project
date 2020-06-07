@@ -40,4 +40,11 @@ public interface IProduceService {
      * @return
      */
    int deleteOutGoodNumber(Long id);
+
+    /**
+     * 删除对应的产出物品
+     * @param userId
+     * @param aId
+     */
+   void deletePut (Long userId, Long aId);
 }

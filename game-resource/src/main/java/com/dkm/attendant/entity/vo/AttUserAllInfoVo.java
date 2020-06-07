@@ -1,6 +1,9 @@
 package com.dkm.attendant.entity.vo;
 
+import com.dkm.attendant.entity.bo.AttPutBo;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author qf
@@ -13,7 +16,7 @@ public class AttUserAllInfoVo {
    /**
     *跟班主键
     */
-   private long aId;
+   private Long aId;
 
    /**
     *跟班图片
@@ -45,4 +48,9 @@ public class AttUserAllInfoVo {
     *  跟班用户Id
     */
    private Long attUserId;
+
+   /**
+    * 产出物品
+    */
+   private List<AttPutBo> list;
 }

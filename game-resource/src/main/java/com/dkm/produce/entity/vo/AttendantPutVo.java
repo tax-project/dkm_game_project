@@ -35,4 +35,9 @@ public class AttendantPutVo {
      *  跟班id
      */
     private Long attendantId;
+
+    /**
+     *  被抓人id
+     */
+    private Long caughtPeopleId;
 }
