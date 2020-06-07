@@ -44,7 +44,7 @@ public interface ISeedService {
     /**
      * 修改用户信息
      */
-    int updateUser(UserInIf userInIf);
+   // int updateUser(UserInIf userInIf);
 
     /**
      * 根据用户id查询已解锁的种子

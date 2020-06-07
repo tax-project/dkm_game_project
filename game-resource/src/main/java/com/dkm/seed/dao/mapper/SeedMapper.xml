@@ -63,6 +63,9 @@
             <if test="userInfoGrade!=null">
                 user_info_grade=user_info_grade+1,
             </if>
+            <if test="redPacketDropped!=null">
+                user_info_packet_balance=user_info_packet_balance+#{redPacketDropped}
+            </if>
         </set>
         where user_id=#{userId}
     </update>
@@ -70,7 +73,10 @@
 
 
     <update id="updateUsers" parameterType="com.dkm.seed.entity.vo.UserInIf">
-        update tb_user_info set user_info_now_experience=user_info_now_experience+#{userInfoNowExperience}, user_info_gold=user_info_gold+#{userGold} where  user_id=#{userId}
+        update tb_user_info set user_info_now_experience=user_info_now_experience+#{userInfoNowExperience},
+                                user_info_gold=user_info_gold+#{userGold},
+                                user_info_packet_balance=user_info_packet_balance+#{redPacketDropped}
+        where  user_id=#{userId}
     </update>
 
     <update id="uploadPresentUnlock" >

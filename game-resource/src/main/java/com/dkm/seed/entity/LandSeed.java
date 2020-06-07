@@ -3,6 +3,7 @@ package com.dkm.seed.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,13 +17,13 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("tb_land_seed")
-public class LandSeed {
+public class LandSeed extends Model<LandSeed>{
 
-  @TableId
-  private long Id;
-  private long userId;
-  private long seedId;
-  private long laNo;
+  private Long id;
+
+  private Long userId;
+  private Long seedId;
+  private Integer laNo;
   private LocalDateTime plantTime;
   private Integer leStatus;
 
