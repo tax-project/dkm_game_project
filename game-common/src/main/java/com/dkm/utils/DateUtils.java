@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @Date 2019/8/23
  * @Version 1.0
  */
-@Component
-public class DateUtil {
+public class DateUtils {
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";

@@ -27,7 +27,7 @@ import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -585,7 +585,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //推后12小时
         LocalDateTime time = LocalDateTime.now().plusHours(12);
-        String s = DateUtil.formatDateTime(time);
+        String s = DateUtils.formatDateTime(time);
         vo.setS(s);
         AttendantUser attendantUser=new AttendantUser();
 
@@ -676,7 +676,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        LocalDateTime localDateTime = DateUtil.parseDateTime(attUser.getEndDate());
+        LocalDateTime localDateTime = DateUtils.parseDateTime(attUser.getEndDate());
 
         //得到6小时之前的时间
         LocalDateTime time = localDateTime.minusHours(6);
@@ -720,7 +720,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //返回产出的数据以及12小时后的时间给前端
         LocalDateTime dateTime = LocalDateTime.now().plusHours(12);
 
-        String expTime = DateUtil.formatDateTime(dateTime);
+        String expTime = DateUtils.formatDateTime(dateTime);
 
         //修改产出表的状态
         if (null != idList && idList.size() > 0) {
