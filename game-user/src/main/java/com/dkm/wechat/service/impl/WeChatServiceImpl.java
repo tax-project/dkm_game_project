@@ -270,7 +270,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         }
 
         //算出年龄
-        if (bo.getUserAge() == null) {
+        if (bo.getUserAge() != null) {
             LocalDate now = LocalDate.now();
 
             Long until = bo.getUserAge().until(now, ChronoUnit.YEARS);
