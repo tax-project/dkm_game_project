@@ -42,18 +42,6 @@ public interface ResourceFeignClient {
     @GetMapping("/dkm/tbEquipmentKnapsack/selectUserIdAndFoodId")
     Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(@RequestParam("userId") Long userId);
 
-
-
-
-    /**
-     * 黑屋的用户信息对象
-     * @return
-     */
-    @GetMapping("/dkm/tbBlackHouse/selectIsBlackThree/{userId}")
-    Result<TbBlackHouseVo> selectIsBlackTwo(@PathVariable("userId") Long userId);
-
-
-
     /**
      * 管家收装备
      * @param boxId
@@ -67,7 +55,7 @@ public interface ResourceFeignClient {
      * @param userId
      * @return
      */
-    @GetMapping("/PersonalCenterController/PersonalCenterAll")
-    Result<Map<String,Object>>  PersonalCenterAll(@RequestParam("userId") Long userId);
+    @GetMapping("/center/PersonalCenterAll")
+    Result<Map<String,Object>>  personalCenterAll(@RequestParam("userId") Long userId);
 
 }

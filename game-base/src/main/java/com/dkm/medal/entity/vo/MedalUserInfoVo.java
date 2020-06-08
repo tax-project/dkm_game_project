@@ -29,4 +29,8 @@ public class MedalUserInfoVo extends MedalEntity {
      * 勋章图标
      */
     private String medalImage;
+    /**
+     * 领取次数
+     */
+    private Integer medalReceiveCount;
 }

@@ -17,9 +17,33 @@ import org.springframework.stereotype.Component;
 @ChannelHandler.Sharable
 public class NoticeWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo> {
 
+   /**
+    *  起始通知值
+    */
+   private Integer startType = 6;
+
+   /**
+    * 结束通知值
+    */
+   private Integer endType = 10;
+
 
    @Override
-   protected void channelRead0(ChannelHandlerContext channelHandlerContext, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
 
+      if (msgInfo.getType() >= startType && msgInfo.getType() <= endType) {
+         log.info("收到即使通知:" + msgInfo);
+
+         if (msgInfo.getType().equals(startType)) {
+            //----即使通知消息
+         }
+
+         if (msgInfo.getType() == 7) {
+            //----即使通知消息
+         }
+      } else {
+         //不是即使通知消息，继续透传
+         ctx.fireChannelRead(msgInfo);
+      }
    }
 }

@@ -150,7 +150,7 @@ public class TbBlackHouseController {
     })
     @PostMapping("/selectIsBlackTwo")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public TbBlackHouseVo selectIsBlackTwo(){
 
         //首先根据传过来的登录用户的id查询出被关人的id
@@ -166,7 +166,7 @@ public class TbBlackHouseController {
             tbBlackHouse.setFromId(blackHouse.getFromId());
         }
         //查询出被关黑屋用户的信息
-        TbBlackHouseVo list=tbBlackHouseService.selectIsBlackTwo(tbBlackHouse);
+        TbBlackHouseVo list=tbBlackHouseService.selectIsBlackT(tbBlackHouse);
         if( StringUtils.isEmpty(list) ){
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "当前没有人");
         }
@@ -175,23 +175,11 @@ public class TbBlackHouseController {
     @ApiOperation(value = "个人中心专用查询用户小黑屋关的人信息的接口",notes = "成功则返回信息JSON!")
     @GetMapping("/selectIsBlackThree/{userId}")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public TbBlackHouseVo selectIsBlackThree(@PathVariable("userId") Long userId){
 
-        //首先根据传过来的登录用户的id查询出被关人的id
-        List<TbBlackHouse> selectById=tbBlackHouseService.selectById(userId);
-        TbBlackHouse tbBlackHouse=new TbBlackHouse();
-
-        for (TbBlackHouse blackHouse : selectById) {
-
-            if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
-                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
-            }
-            tbBlackHouse.setToId(blackHouse.getToId());
-            tbBlackHouse.setFromId(blackHouse.getFromId());
-        }
         //查询出被关黑屋用户的信息
-        TbBlackHouseVo list=tbBlackHouseService.selectIsBlackTwo(tbBlackHouse);
+        TbBlackHouseVo list=tbBlackHouseService.selectIsBlackTwo(userId);
         if( StringUtils.isEmpty(list) ){
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
         }

@@ -69,12 +69,12 @@ public class IdGenerator {
      */
     public String getOrderCode() {
         long numberId = getNumberId();
-        String time = DateUtil.formatSimpleDateTime(LocalDateTime.now());
+        String time = DateUtils.formatSimpleDateTime(LocalDateTime.now());
         return time + numberId;
     }
 
     public String getShortNo() {
-        String time = DateUtil.formatSimpleDateTime(LocalDateTime.now());
+        String time = DateUtils.formatSimpleDateTime(LocalDateTime.now());
 
 
         String s = time.substring(5, 14);

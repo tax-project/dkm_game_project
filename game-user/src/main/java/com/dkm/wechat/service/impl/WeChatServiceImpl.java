@@ -13,14 +13,17 @@ import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.FriendFeignClient;
 import com.dkm.feign.entity.FriendNotOnlineVo;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.userInfo.service.IUserInfoService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ShaUtils;
 import com.dkm.utils.StringUtils;
 import com.dkm.wechat.dao.UserMapper;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserBO;
+import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 import com.dkm.wechat.service.IWeChatService;
@@ -34,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +72,9 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     @Autowired
     private RedisConfig redisConfig;
 
+    @Autowired
+    private LocalUser localUser;
+
     @Override
     public Map<String, Object> weChatLoginUserInfo(String code) {
         UserBO resultBO = new UserBO();
@@ -81,6 +89,9 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                 long userId = idGenerator.getNumberId();
                 user.setUserIsEffective(0);
                 user.setUserId(userId);
+                //默认初始年龄
+                LocalDate localDate = LocalDate.now().minusYears(20);
+                user.setUserAge(localDate);
                 if ("1".equals(weChatUtilBO.getWeChatSex())) {
                     //男
                     user.setUserSex(1);
@@ -173,6 +184,9 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         user1.setWeChatOpenId(vo.getUserName());
         user1.setWeChatNickName(vo.getNickName());
         user1.setUserRemark(ShaUtils.getSha1(vo.getPassword()));
+        //默认初始年龄
+        LocalDate localDate = LocalDate.now().minusYears(20);
+        user1.setUserAge(localDate);
 
         int insert = baseMapper.insert(user1);
 
@@ -252,8 +266,17 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         UserInfoQueryBo result = new UserInfoQueryBo();
         BeanUtils.copyProperties(bo,result);
         if (bo.getUserInfoEnvelopeTime() != null) {
-            result.setUserInfoEnvelopeQueryTime(DateUtil.formatDate(bo.getUserInfoEnvelopeTime()));
+            result.setUserInfoEnvelopeQueryTime(DateUtils.formatDate(bo.getUserInfoEnvelopeTime()));
         }
+
+        //算出年龄
+        if (bo.getUserAge() != null) {
+            LocalDate now = LocalDate.now();
+
+            Long until = bo.getUserAge().until(now, ChronoUnit.YEARS);
+            result.setAge(until);
+        }
+
         return result;
     }
 
@@ -265,5 +288,39 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     @Override
     public List<UserHeardUrlBo> queryAllHeardByUserId(List<Long> list) {
         return baseMapper.queryAllHeardByUserId (list);
+    }
+
+
+    /**
+     *  修改资料
+     * @param userDataBO 修改的参数
+     */
+    @Override
+    public void updateUserData(UserDataBO userDataBO) {
+
+        UserLoginQuery userLoginQuery = localUser.getUser();
+
+        User user = new User();
+
+        user.setUserId(userLoginQuery.getId());
+        user.setUserAge(DateUtils.parseDate(userDataBO.getUserAge()));
+        if (userDataBO.getUserSex() != 1 && userDataBO.getUserSex() != 2) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改的性别参数有误");
+        }
+        user.setUserSex(userDataBO.getUserSex());
+        user.setWeChatNickName(userDataBO.getNickName());
+        user.setWeChatHeadImgUrl(userDataBO.getHeardUrl());
+        if (StringUtils.isNotBlank(userDataBO.getUserSign())) {
+            user.setUserSign(userDataBO.getUserSign());
+        }
+        if (StringUtils.isNotBlank(userDataBO.getUserExplain())) {
+            user.setUserExplain(userDataBO.getUserExplain());
+        }
+
+        int updateById = baseMapper.updateById(user);
+
+        if (updateById <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "保存失败..");
+        }
     }
 }

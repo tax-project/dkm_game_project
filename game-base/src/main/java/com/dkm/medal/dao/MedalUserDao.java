@@ -1,7 +1,9 @@
 package com.dkm.medal.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.dkm.medal.entity.MedalUserEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @author: zhd
  * @create: 2020-06-06 11:26
  **/
-@Repository
-public interface MedalUserDao extends BaseMapper<MedalUserEntity> {
+@Component
+public interface MedalUserDao extends IService<MedalUserEntity> {
 }

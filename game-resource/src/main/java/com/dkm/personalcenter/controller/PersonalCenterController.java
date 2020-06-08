@@ -1,6 +1,8 @@
 package com.dkm.personalcenter.controller;
 
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
+import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
@@ -27,7 +29,7 @@ import java.util.Map;
  * @DATE: 2020/6/5 20:33
  */
 @RestController
-@RequestMapping("/PersonalCenterController")
+@RequestMapping("/center")
 public class PersonalCenterController {
 
     @Autowired
@@ -42,9 +44,12 @@ public class PersonalCenterController {
     @Autowired
     private ITbEquipmentKnapsackService tbEquipmentKnapsackService;
 
+    @Autowired
+    private TbBlackHouseService tbBlackHouseService;
+
     @GetMapping("/PersonalCenterAll")
-    public Map<String,Object> PersonalCenterAll(Long userId){
-        Map<String,Object> map=new HashMap<>();
+    public Map<String,Object> personalCenterAll(@RequestParam("userId") Long userId){
+        Map<String,Object> map=new HashMap<>(6);
         /**
          * 查询已经解锁种子
          */
@@ -68,12 +73,15 @@ public class PersonalCenterController {
          */
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdTwo(userId);
 
+        TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
+
 
         map.put("Seed",landYesVos);
         map.put("queryMySkill",skillBos);
         map.put("AttendantGoods",attendantGoods);
         map.put("queryAidUser",map1);
         map.put("equipment",tbEquipmentKnapsackVos);
+        map.put("blackHouse",houseVo);
         return map;
     }
 }

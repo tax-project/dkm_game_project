@@ -8,6 +8,7 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
+import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.ResultVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
@@ -107,6 +108,29 @@ public class WeCharController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return weChatService.queryAllHeardByUserId(bo.getList());
+    }
+
+
+    @ApiOperation(value = "修改用户信息资料", notes = "修改用户信息资料")
+    @ApiImplicitParams({
+          @ApiImplicitParam(name = "heardUrl", value = "头像", required = true, dataType = "String", paramType = "path"),
+          @ApiImplicitParam(name = "nickName", value = "昵称", required = true, dataType = "String", paramType = "path"),
+          @ApiImplicitParam(name = "userAge", value = "年龄日期 例:2020-06-08", required = true, dataType = "String", paramType = "path"),
+          @ApiImplicitParam(name = "userSex", value = "性别 1-男 2-女", required = true, dataType = "int", paramType = "path"),
+          @ApiImplicitParam(name = "userSign", value = "个性签名", required = false, dataType = "String", paramType = "path"),
+          @ApiImplicitParam(name = "userExplain", value = "个人说明", required = false, dataType = "String", paramType = "path"),
+    })
+    @PostMapping("/updateUserData")
+    @CrossOrigin
+    @CheckToken
+    public void updateUserData (@RequestBody UserDataBO bo) {
+
+        if (bo.getUserSex() == null || StringUtils.isBlank(bo.getHeardUrl()) ||
+              StringUtils.isBlank(bo.getNickName()) || StringUtils.isBlank(bo.getUserAge())) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+
+        weChatService.updateUserData(bo);
     }
 
 }

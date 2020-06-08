@@ -2,7 +2,7 @@ package com.dkm.vilidata;
 
 
 
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.StringUtils;
 import com.dkm.vilidata.query.TimeQuery;
 
@@ -23,21 +23,21 @@ public class TimeData {
             //开始时间和结束时间都为空
             LocalDate startDate = LocalDate.now().minusMonths(1);
             LocalDate endDate = LocalDate.now();
-            startTime = DateUtil.formatDate(startDate);
-            endTime = DateUtil.formatDate(endDate);
+            startTime = DateUtils.formatDate(startDate);
+            endTime = DateUtils.formatDate(endDate);
             timeQuery.setStartTime(startTime);
             timeQuery.setEndTime(endTime);
         } else if (StringUtils.isBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             //开始时间为空，结束时间不为空
-            LocalDate localDate = DateUtil.parseDate(endTime);
+            LocalDate localDate = DateUtils.parseDate(endTime);
             LocalDate startDate = localDate.minusMonths(1);
-            startTime = DateUtil.formatDate(startDate);
+            startTime = DateUtils.formatDate(startDate);
             timeQuery.setStartTime(startTime);
             timeQuery.setEndTime(endTime);
         } else if (StringUtils.isBlank(endTime) && StringUtils.isNotBlank(startTime)){
             //结束时间为空，开始时间不为空
             LocalDate endDate = LocalDate.now();
-            endTime = DateUtil.formatDate(endDate);
+            endTime = DateUtils.formatDate(endDate);
             timeQuery.setStartTime(startTime);
             timeQuery.setEndTime(endTime);
         } else {
@@ -63,15 +63,15 @@ public class TimeData {
             timeQuery.setEndTime(null);
         } else if (StringUtils.isBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             //开始时间为空，结束时间不为空
-            LocalDate localDate = DateUtil.parseDate(endTime);
+            LocalDate localDate = DateUtils.parseDate(endTime);
             LocalDate startDate = localDate.minusMonths(1);
-            startTime = DateUtil.formatDate(startDate);
+            startTime = DateUtils.formatDate(startDate);
             timeQuery.setStartTime(startTime);
             timeQuery.setEndTime(endTime);
         } else if (StringUtils.isBlank(endTime) && StringUtils.isNotBlank(startTime)){
             //结束时间为空，开始时间不为空
             LocalDate endDate = LocalDate.now();
-            endTime = DateUtil.formatDate(endDate);
+            endTime = DateUtils.formatDate(endDate);
             timeQuery.setStartTime(startTime);
             timeQuery.setEndTime(endTime);
         } else {

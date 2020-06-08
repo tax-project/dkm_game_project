@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * @Author: HuangJie
  * @Date: 2020/5/9 10:05
@@ -55,4 +57,19 @@ public class User {
      * 2--女
      */
     private Integer userSex;
+
+    /**
+     *  年龄
+     */
+    private LocalDate userAge;
+
+    /**
+     * 个性签名
+     */
+    private String userSign;
+
+    /**
+     * 个人说明
+     */
+    private String userExplain;
 }

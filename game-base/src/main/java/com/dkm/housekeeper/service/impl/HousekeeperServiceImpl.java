@@ -9,7 +9,7 @@ import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.housekeeper.service.HousekeeperService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +77,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         Map<String,Object> result = new HashMap<>();
         //返回管家时间信息
         HousekeeperEntity selectOne = housekeeperMapper.selectOne(query.lambda().eq(HousekeeperEntity::getUserId, userId));
-        if(selectOne!=null||selectOne.getIsEffective()!=1){
+        if(selectOne!=null&&selectOne.getIsEffective()!=0){
             //管家过期
             LocalDateTime now = LocalDateTime.now();
             if(selectOne.getExpireTime().isBefore(now)){
@@ -87,13 +87,13 @@ public class HousekeeperServiceImpl implements HousekeeperService {
             }
             //返回管家时间
             result.put("status",now.isBefore(selectOne.getEndWorkTime())?1:0);
-            result.put("toDayTime",DateUtil.formatDate(now.toLocalDate()).replace("-","/")+" 12:00:00");
-            result.put("startWorkTime",selectOne.getStartWorkTime()==null?null:DateUtil.formatDate(selectOne.getStartWorkTime()).replace("-","/"));
-            result.put("reTime",DateUtil.formatDateTime(selectOne.getExpireTime()).replace("-","/"));
-            result.put("endWorkTime",selectOne.getEndWorkTime()==null?null:DateUtil.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
+            result.put("toDayTime", DateUtils.formatDate(now.toLocalDate()).replace("-","/")+" 12:00:00");
+            result.put("startWorkTime",selectOne.getStartWorkTime()==null?null: DateUtils.formatDate(selectOne.getStartWorkTime()).replace("-","/"));
+            result.put("reTime", DateUtils.formatDateTime(selectOne.getExpireTime()).replace("-","/"));
+            result.put("endWorkTime",selectOne.getEndWorkTime()==null?null: DateUtils.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
             return result;
         }else {
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"未找到数据");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"未找到记录");
         }
     }
 
@@ -112,7 +112,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         //第二天12点时间
         Map<String,String> result = new HashMap<>();
         if(housekeeperMapper.updateById(selectOne)>=0){
-            result.put("endWorkTime",DateUtil.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
+            result.put("endWorkTime", DateUtils.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
             return result;
         }else {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"操作失败");

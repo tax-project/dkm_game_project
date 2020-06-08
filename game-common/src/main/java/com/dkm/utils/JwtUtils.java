@@ -20,7 +20,7 @@ import java.util.UUID;
  * @Version 1.0
  */
 @Component
-public class JwtUtil {
+public class JwtUtils {
 
     /**
      * 用户登录成功后生成Jwt
