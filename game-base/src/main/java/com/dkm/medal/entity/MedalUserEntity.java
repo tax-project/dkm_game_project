@@ -32,6 +32,8 @@ public class MedalUserEntity {
      * 勋章表id
      */
     private Long medalId;
-
-
+    /**
+     * 领取次数
+     */
+    private Integer medalReceiveCount;
 }

@@ -79,6 +79,7 @@ public class GiftServiceImpl implements GiftService {
                 medalUserEntity.setMuId(idGenerator.getNumberId());
                 medalUserEntity.setProcess(0);
                 medalUserEntity.setMedalLevel(0);
+                medalUserEntity.setMedalReceiveCount(0);
             }
             //礼物勋章类型0礼物1幸运
             if(medalEntity.getMedalType()==0){
