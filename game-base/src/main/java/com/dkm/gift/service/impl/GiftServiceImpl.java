@@ -69,7 +69,7 @@ public class GiftServiceImpl implements GiftService {
         //礼物有勋章
         if(medalEntity!=null){
             //是否有送礼记录
-            MedalUserEntity medalUserEntity = medalUserDao.selectOne(new QueryWrapper<MedalUserEntity>().lambda()
+            MedalUserEntity medalUserEntity = medalUserDao.getOne(new QueryWrapper<MedalUserEntity>().lambda()
                     .eq(MedalUserEntity::getUserId, sendGiftVo.getSendId())
                     .eq(MedalUserEntity::getMedalId, medalEntity.getMedalId()));
             if(medalUserEntity==null){
@@ -90,7 +90,7 @@ public class GiftServiceImpl implements GiftService {
             medalUserEntity.setMedalLevel(medalUserEntity.getProcess()>=medalEntity.getMedalProcess3()?3:
                                         (medalUserEntity.getProcess()>=medalEntity.getMedalProcess2()?2:
                                         (medalUserEntity.getProcess()>=medalEntity.getMedalProcess1()?1:0)));
-            medalUserDao.insert(medalUserEntity);
+            medalUserDao.saveOrUpdate(medalUserEntity);
         }
     }
 }
