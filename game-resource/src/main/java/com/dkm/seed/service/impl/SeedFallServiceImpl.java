@@ -152,16 +152,15 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
         String substring = s.substring(0,3);
 
-        System.out.println("s = " + substring);
 
-        Double i = Double.valueOf(substring);
+        BigDecimal bd=new BigDecimal(substring);
+        double v = bd.doubleValue();
 
-        System.out.println("i = " + i);
+        BigDecimal a=new BigDecimal(money);
         //得到差值放入集合 得到最后一个红包
-        System.out.println("money = " + money);
-        System.out.println(money-i);
+        System.out.println(a.subtract(bd));
 
-       list.add(money-i);
+       list.add(a.subtract(bd).doubleValue());
 
 
         return list;
