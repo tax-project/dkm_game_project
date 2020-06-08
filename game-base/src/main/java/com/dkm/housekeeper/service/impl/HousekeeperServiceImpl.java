@@ -77,7 +77,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         Map<String,Object> result = new HashMap<>();
         //返回管家时间信息
         HousekeeperEntity selectOne = housekeeperMapper.selectOne(query.lambda().eq(HousekeeperEntity::getUserId, userId));
-        if(selectOne!=null||selectOne.getIsEffective()!=1){
+        if(selectOne!=null&&selectOne.getIsEffective()!=0){
             //管家过期
             LocalDateTime now = LocalDateTime.now();
             if(selectOne.getExpireTime().isBefore(now)){
@@ -93,7 +93,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
             result.put("endWorkTime",selectOne.getEndWorkTime()==null?null: DateUtils.formatDateTime(selectOne.getEndWorkTime()).replace("-","/"));
             return result;
         }else {
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"未找到数据");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"未找到记录");
         }
     }
 
