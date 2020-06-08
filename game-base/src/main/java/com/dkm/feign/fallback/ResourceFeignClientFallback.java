@@ -33,11 +33,6 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
-   @Override
-   public Result<TbBlackHouseVo> selectIsBlackTwo(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
-
 
    @Override
    public Result<List<TbEquipmentVo>> selectByBoxIdTwo(List<Long> boxId) {
@@ -45,7 +40,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result<Map<String, Object>> PersonalCenterAll(Long userId) {
+   public Result<Map<String, Object>> personalCenterAll(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
