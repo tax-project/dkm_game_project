@@ -9,9 +9,9 @@ import java.io.UnsupportedEncodingException;
  * Base64Util
  *
  */
-public class Base64Util {
+public class Base64Utils {
 
-    private static final Logger logger = LoggerFactory.getLogger(Base64Util.class);
+    private static final Logger logger = LoggerFactory.getLogger(Base64Utils.class);
 
     private static char[] base64_code = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g',

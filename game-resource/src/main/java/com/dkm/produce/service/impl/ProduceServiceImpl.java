@@ -1,20 +1,14 @@
 package com.dkm.produce.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.attendant.entity.AttendantUser;
-import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.feign.UserFeignClient;
 import com.dkm.good.entity.Goods;
 import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
-import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
@@ -22,9 +16,8 @@ import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.ProduceSelectVo;
-import com.dkm.produce.entity.vo.UserAttendantGoods;
 import com.dkm.produce.service.IProduceService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +72,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
 
         String endDate = attUser.getEndDate();
-        LocalDateTime time = DateUtil.parseDateTime(endDate);
+        LocalDateTime time = DateUtils.parseDateTime(endDate);
 
         long until = now.until(time, ChronoUnit.SECONDS);
 

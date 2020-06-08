@@ -37,9 +37,6 @@ public class MoneyController {
    @Autowired
    private IMoneyService moneyService;
 
-   @Autowired
-   private UserFeignClient feignClient;
-
    @ApiOperation(value = "发红包", notes = "发红包")
    @ApiImplicitParams({
          @ApiImplicitParam(name = "diamonds", value = "钻石数量", required = true, dataType = "int", paramType = "path"),
