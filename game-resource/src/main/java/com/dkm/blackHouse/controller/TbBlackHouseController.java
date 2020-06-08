@@ -150,7 +150,7 @@ public class TbBlackHouseController {
     })
     @PostMapping("/selectIsBlackTwo")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public TbBlackHouseVo selectIsBlackTwo(){
 
         //首先根据传过来的登录用户的id查询出被关人的id
@@ -175,7 +175,7 @@ public class TbBlackHouseController {
     @ApiOperation(value = "个人中心专用查询用户小黑屋关的人信息的接口",notes = "成功则返回信息JSON!")
     @GetMapping("/selectIsBlackThree/{userId}")
     @CrossOrigin
-    //@CheckToken
+    @CheckToken
     public TbBlackHouseVo selectIsBlackThree(@PathVariable("userId") Long userId){
 
         //首先根据传过来的登录用户的id查询出被关人的id
