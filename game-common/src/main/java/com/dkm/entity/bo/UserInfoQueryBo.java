@@ -53,6 +53,22 @@ public class UserInfoQueryBo {
     */
    private Integer userSex;
 
+   /**
+    * 年龄
+    */
+   private Long age;
+
+   /**
+    * 个性签名
+    */
+   private String userSign;
+
+   /**
+    * 个人说明
+    */
+   private String userExplain;
+
+
    private Long userInfoId;
 
    /**

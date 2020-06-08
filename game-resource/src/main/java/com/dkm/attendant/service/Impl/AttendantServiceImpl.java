@@ -190,8 +190,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdAndFood() {
-        //得到用户登录的token信息
-        UserLoginQuery query = localUser.getUser();
         return iTbEquipmentKnapsackService.selectFoodId();
     }
 
@@ -666,7 +664,6 @@ public class AttendantServiceImpl implements IAttendantService {
      */
     @Override
     public Map<String, Object> collect(Long attId, Long attUserId) {
-//        long exp1 = System.currentTimeMillis() / 1000 + 43200;
 
         AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
 
