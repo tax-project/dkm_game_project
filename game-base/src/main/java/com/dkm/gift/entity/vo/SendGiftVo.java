@@ -35,4 +35,8 @@ public class SendGiftVo {
      * 魅力值
      */
     private Integer charm;
+    /**
+     * 礼品id
+     */
+    private Long giftId;
 }

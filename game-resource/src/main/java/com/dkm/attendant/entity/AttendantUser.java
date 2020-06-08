@@ -42,4 +42,9 @@ public class AttendantUser extends Model<AttendantUser> {
      */
     private long exp1;
 
+    /**
+     * 跟班产出过期时间
+     */
+    private String endDate;
+
 }

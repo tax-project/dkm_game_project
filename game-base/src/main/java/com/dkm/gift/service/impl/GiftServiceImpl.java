@@ -8,6 +8,11 @@ import com.dkm.gift.entity.GiftEntity;
 import com.dkm.gift.entity.dto.UserInfoDto;
 import com.dkm.gift.entity.vo.SendGiftVo;
 import com.dkm.gift.service.GiftService;
+import com.dkm.medal.dao.MedalDao;
+import com.dkm.medal.dao.MedalUserDao;
+import com.dkm.medal.entity.MedalEntity;
+import com.dkm.medal.entity.MedalUserEntity;
+import com.dkm.utils.IdGenerator;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,15 @@ public class GiftServiceImpl implements GiftService {
     @Resource
     private GiftDao giftDao;
 
+    @Resource
+    private MedalDao medalDao;
+
+    @Resource
+    private MedalUserDao medalUserDao;
+
+    @Resource
+    private IdGenerator idGenerator;
+
     @Override
     public List<GiftEntity> getAllGift(Integer type) {
         return giftDao.selectList(new QueryWrapper<GiftEntity>().lambda().eq(GiftEntity::getGiType,type));
@@ -35,16 +49,49 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public void sendGift(SendGiftVo sendGiftVo) {
+        //更新送礼人和收礼人信息
         UserInfoDto userInfo = giftDao.getUserInfo(sendGiftVo.getSendId());
-        if(sendGiftVo.getGold()!=0&&userInfo.getUserInfoGold()<sendGiftVo.getGold()){
+        if(sendGiftVo.getGold()>0&&userInfo.getUserInfoGold()<sendGiftVo.getGold()){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"金币不足");
         }
-        if(sendGiftVo.getDiamond()!=0&&userInfo.getUserInfoDiamonds()<sendGiftVo.getDiamond()){
+        if(sendGiftVo.getDiamond()>0&&userInfo.getUserInfoDiamonds()<sendGiftVo.getDiamond()){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"钻石不足");
         }
+        //更新送礼人钻石、金币
         Integer integer = giftDao.updateUserInfo(sendGiftVo);
-        if(integer<1){
+        //更新收，礼人魅力等值
+        Integer integer1 = giftDao.updateUserCharm(sendGiftVo);
+        if(integer<1||integer1<1){
             throw  new ApplicationException(CodeType.DATABASE_ERROR,"更新信息失败");
+        }
+        //查询礼物勋章信息
+        MedalEntity medalEntity = medalDao.selectOne(new QueryWrapper<MedalEntity>().lambda().eq(MedalEntity::getGiId, sendGiftVo.getGiftId()));
+        //礼物有勋章
+        if(medalEntity!=null){
+            //是否有送礼记录
+            MedalUserEntity medalUserEntity = medalUserDao.getOne(new QueryWrapper<MedalUserEntity>().lambda()
+                    .eq(MedalUserEntity::getUserId, sendGiftVo.getSendId())
+                    .eq(MedalUserEntity::getMedalId, medalEntity.getMedalId()));
+            if(medalUserEntity==null){
+                medalUserEntity = new MedalUserEntity();
+                medalUserEntity.setMedalId(medalEntity.getMedalId());
+                medalUserEntity.setUserId(sendGiftVo.getSendId());
+                medalUserEntity.setMuId(idGenerator.getNumberId());
+                medalUserEntity.setProcess(0);
+                medalUserEntity.setMedalLevel(0);
+                medalUserEntity.setMedalReceiveCount(0);
+            }
+            //礼物勋章类型0礼物1幸运
+            if(medalEntity.getMedalType()==0){
+                medalUserEntity.setProcess(medalUserEntity.getProcess()+1);
+            }else if(medalEntity.getMedalType()==1){
+                medalUserEntity.setProcess(medalUserEntity.getProcess()+sendGiftVo.getDiamond());
+            }
+            //判断当前级别
+            medalUserEntity.setMedalLevel(medalUserEntity.getProcess()>=medalEntity.getMedalProcess3()?3:
+                                        (medalUserEntity.getProcess()>=medalEntity.getMedalProcess2()?2:
+                                        (medalUserEntity.getProcess()>=medalEntity.getMedalProcess1()?1:0)));
+            medalUserDao.saveOrUpdate(medalUserEntity);
         }
     }
 }

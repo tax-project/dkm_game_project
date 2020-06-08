@@ -9,6 +9,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.problem.entity.Money;
+import com.dkm.problem.entity.bo.MoneyRandomBo;
 import com.dkm.problem.entity.vo.*;
 import com.dkm.problem.service.IMoneyService;
 import io.swagger.annotations.Api;
@@ -35,9 +36,6 @@ public class MoneyController {
 
    @Autowired
    private IMoneyService moneyService;
-
-   @Autowired
-   private UserFeignClient feignClient;
 
    @ApiOperation(value = "发红包", notes = "发红包")
    @ApiImplicitParams({
@@ -105,13 +103,11 @@ public class MoneyController {
    }
 
 
-   @GetMapping("/get")
+   @ApiOperation(value = "查询红包活动", notes = "查询红包活动")
+   @GetMapping("/queryMoneyRandom")
    @CheckToken
-   public Object get () {
-      Result<UserInfoQueryBo> result = feignClient.queryUser(712030633500774400L);
-
-      System.out.println(result);
-
-      return result.getData();
+   @CrossOrigin
+   public MoneyRandomBo queryMoneyRandom () {
+      return moneyService.queryMoneyRandom();
    }
 }

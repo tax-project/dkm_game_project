@@ -13,7 +13,7 @@
     </select>
 
     <select id="queryThreeAtt" resultType="com.dkm.attendant.entity.vo.AttUserAllInfoVo">
-        select a.at_img,a.at_name,au.caught_people_id,au.exp1,au.attendant_id as 'aId'
+        select a.at_img,a.at_name,au.caught_people_id,au.end_date as 'expTime',au.attendant_id as 'aId',au.atu_id as 'attUserId'
         from tb_attendant a right join tb_attendant_user au on a.id= au.attendant_id
         where au.user_id= #{userId}
         <if test="status == 0">
@@ -25,22 +25,33 @@
     </select>
 
 
-    <delete id="dismissal" parameterType="java.lang.Long">
-        delete from tb_attendant_user where Caught_people_id=#{caughtPeopleId}
+    <delete id="dismissal">
+        delete from tb_attendant_user
+        where Caught_people_id= #{caughtPeopleId} and attendant_id = #{aId}
     </delete>
 
-    <insert id="addGraspFollowing" parameterType="com.dkm.attendant.entity.AttendantUser">
-          insert into tb_attendant_user(a_id,user_id,Caught_people_id,exp1,atu_id)values(#{aId},#{userId},#{caughtPeopleId},#{exp1},#{atuId})
-    </insert>
-
-
-    <update id="gather" parameterType="java.lang.Long">
-        update tb_attendant_user set  exp1=#{exp1} where atu_id=#{atuId}
-    </update>
 
     <select id="queryAidUser" resultType="com.dkm.attendant.entity.vo.AttendantUserVo">
         select c.we_chat_head_img_url,c.we_chat_nick_name,a.user_info_renown,c.user_id from tb_user_info a,tb_attendant_user b,tb_user c
-        where a.user_id=b.user_id and a.user_id=c.user_id and b.Caught_people_id=#{CaughtPeopleId}
+        where a.user_id=b.user_id and a.user_id=c.user_id and b.Caught_people_id=#{caughtPeopleId}
     </select>
+
+
+    <select id="collect" resultType="com.dkm.attendant.entity.bo.CollectResultBo">
+        SELECT c.`name` as 'goodName',c.url as 'goodImg',c.good_type,b.number as 'goodNumber'
+                ,c.id as 'goodId',b.id as 'produceId'
+                from tb_user_produce a join tb_produce b
+                on a.produce_id = b.id join tb_goods c on b.good_id = c.id
+                where a.user_id = #{userId}
+                and b.attendant_id = #{attId} and b.status = 0
+    </select>
+
+
+    <update id="updateProduceStatus" parameterType="Long">
+        update tb_produce set status = 1 where
+        <foreach collection="list" index="index" item="item" separator="or">
+             id = #{item}
+        </foreach>
+    </update>
 
 </mapper>

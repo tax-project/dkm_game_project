@@ -9,7 +9,7 @@ import lombok.Data;
  * @DATE: 2020/6/4 17:18
  */
 @Data
-public class AttendantVo {
+public class AttendantPutVo {
 
     /**
      * 数量
@@ -35,4 +35,9 @@ public class AttendantVo {
      *  跟班id
      */
     private Long attendantId;
+
+    /**
+     *  被抓人id
+     */
+    private Long caughtPeopleId;
 }

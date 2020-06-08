@@ -51,6 +51,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodMapper, Goods> implements 
       goods.setId(idGenerator.getNumberId());
       goods.setName(vo.getName());
       goods.setUrl(vo.getUrl());
+      goods.setGoodType(vo.getGoodType());
 
       int insert = baseMapper.insert(goods);
 

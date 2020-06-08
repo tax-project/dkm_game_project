@@ -1,7 +1,7 @@
 package com.dkm.wechat.util;
 
 import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.utils.JwtUtil;
+import com.dkm.utils.JwtUtils;
 import com.dkm.wechat.entity.bo.UserBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class CreateToken {
 
    @Autowired
-   private JwtUtil jwtUtil;
+   private JwtUtils jwtUtil;
 
    public String getToken (UserBO bo) {
       UserLoginQuery query = new UserLoginQuery();

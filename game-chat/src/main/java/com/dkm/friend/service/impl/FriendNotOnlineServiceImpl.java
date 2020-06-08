@@ -8,7 +8,7 @@ import com.dkm.friend.dao.FriendNotOnlineMapper;
 import com.dkm.friend.entity.FriendNotOnline;
 import com.dkm.friend.entity.vo.FriendNotOnlineVo;
 import com.dkm.friend.service.IFriendNotOnlineService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -58,7 +57,7 @@ public class FriendNotOnlineServiceImpl extends ServiceImpl<FriendNotOnlineMappe
             vo.setToId(online.getToId());
             vo.setContent(online.getContent());
             vo.setType(online.getType());
-            vo.setCreateDate(DateUtil.formatDateTime(online.getCreateDate()));
+            vo.setCreateDate(DateUtils.formatDateTime(online.getCreateDate()));
             result.add(vo);
          }
 

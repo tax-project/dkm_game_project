@@ -14,7 +14,7 @@ import com.dkm.problem.entity.vo.ScoreListVo;
 import com.dkm.problem.entity.vo.ScoreVo;
 import com.dkm.problem.service.IMoneyService;
 import com.dkm.problem.service.IScoreService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,15 +140,15 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
       //当前时间
 
-      String startTime = DateUtil.formatDate(LocalDate.now()) + " 23:59:59";
+      String startTime = DateUtils.formatDate(LocalDate.now()) + " 23:59:59";
 
       //一周前的时间
       LocalDate start = (LocalDate.now()).minusDays(7);
 
-      String endTime = DateUtil.formatDate(start) + " 00:00:00";
+      String endTime = DateUtils.formatDate(start) + " 00:00:00";
 
-      LocalDateTime startDate = DateUtil.parseDateTime(endTime);
-      LocalDateTime endDate = DateUtil.parseDateTime(startTime);
+      LocalDateTime startDate = DateUtils.parseDateTime(endTime);
+      LocalDateTime endDate = DateUtils.parseDateTime(startTime);
 
       return baseMapper.countListMax(page,status,type,startDate,endDate);
    }

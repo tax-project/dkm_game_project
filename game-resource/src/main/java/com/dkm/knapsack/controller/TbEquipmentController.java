@@ -107,11 +107,6 @@ public class TbEquipmentController {
     @CrossOrigin
     @CheckToken
     public List<TbEquipmentVo> selectByEquipmentId(@PathVariable("equipmentId") String equipmentId){
-        if(!StringUtils.isEmpty(equipmentId)){
-            if(StringUtils.isEmpty(equipmentId)){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-            }
-        }
        List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(Long.valueOf(equipmentId));
        if(!StringUtils.isEmpty(list)){
            return list;

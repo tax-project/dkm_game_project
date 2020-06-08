@@ -25,4 +25,8 @@ public interface ILandService {
      * @return List<Land>
      */
     List<UserLandUnlock> queryUserByIdLand();
+    /**
+     * 根据用户id和土地编号解锁土地
+     */
+    void updateLandStatus(Integer laNo);
 }

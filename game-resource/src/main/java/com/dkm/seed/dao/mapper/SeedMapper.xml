@@ -10,7 +10,7 @@
 
     <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandYesVo" parameterType="java.lang.Long">
         select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,b.plant_time
-        from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId}
+        from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId} and b.le_status=1
     </select>
 
     <select id="queryAreUnlocked" resultType="com.dkm.seed.entity.vo.SeedUnlockVo" parameterType="java.lang.Long">
@@ -63,6 +63,9 @@
             <if test="userInfoGrade!=null">
                 user_info_grade=user_info_grade+1,
             </if>
+            <if test="redPacketDropped!=null">
+                user_info_packet_balance=user_info_packet_balance+#{redPacketDropped}
+            </if>
         </set>
         where user_id=#{userId}
     </update>
@@ -70,7 +73,10 @@
 
 
     <update id="updateUsers" parameterType="com.dkm.seed.entity.vo.UserInIf">
-        update tb_user_info set user_info_now_experience=user_info_now_experience+#{userInfoNowExperience}, user_info_gold=user_info_gold+#{userGold} where  user_id=#{userId}
+        update tb_user_info set user_info_now_experience=user_info_now_experience+#{userInfoNowExperience},
+                                user_info_gold=user_info_gold+#{userGold},
+                                user_info_packet_balance=user_info_packet_balance+#{redPacketDropped}
+        where  user_id=#{userId}
     </update>
 
     <update id="uploadPresentUnlock" >
@@ -79,9 +85,9 @@
 
 
     <insert id="addPlant" parameterType="com.dkm.seed.entity.LandSeed">
-        insert into tb_land_seed(le_id,user_id,seed_id,la_no,plant_time)
+        insert into tb_land_seed(id,user_id,seed_id,la_no,plant_time,le_status)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            select #{lists.leId},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime}
+            select #{lists.id},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime},#{lists.leStatus}
         </foreach>
     </insert>
 
@@ -98,5 +104,7 @@
     <delete id="deleteLandSeed" parameterType="java.lang.Long">
         delete from tb_land_seed where user_id=#{userId}
     </delete>
+
+
 
 </mapper>

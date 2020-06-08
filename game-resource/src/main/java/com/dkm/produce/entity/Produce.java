@@ -35,4 +35,10 @@ public class Produce extends Model<Produce> {
      * 数量
      */
     private Integer number;
+
+    /**
+     * 默认--0  未收取
+     * 1--已收取
+     */
+    private Integer status;
 }

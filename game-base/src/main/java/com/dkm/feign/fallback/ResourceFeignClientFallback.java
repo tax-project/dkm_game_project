@@ -34,19 +34,10 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenterTwo(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
-
-   @Override
    public Result<TbBlackHouseVo> selectIsBlackTwo(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
-   @Override
-   public Result<List<SeedUnlockVo>> queryAreUnlocked(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
 
    @Override
    public Result<List<TbEquipmentVo>> selectByBoxIdTwo(List<Long> boxId) {
@@ -54,17 +45,9 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result<List<AttendantGoods>> queryJoinOutPutGoods(Long userId) {
+   public Result<Map<String, Object>> PersonalCenterAll(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
-   @Override
-   public Result<List<SkillBo>> queryAllSkillByUserId(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
 
-   @Override
-   public Result<Map<String,Object>> queryAidUser(Long CaughtPeopleId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
 }

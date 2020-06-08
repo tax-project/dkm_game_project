@@ -30,10 +30,7 @@ public class UserInIf {
      * 用户下一等级所需经验值
      */
     private Integer userInfoNextExperience;
-    /**
-     * 种子等级
-     */
-    private Integer seedGrade;
+
     /**
      * 用户等级
      */

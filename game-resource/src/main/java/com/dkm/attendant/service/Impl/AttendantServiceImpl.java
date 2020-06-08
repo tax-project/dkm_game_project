@@ -4,8 +4,7 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
-import com.dkm.attendant.entity.bo.AttUserResultBo;
-import com.dkm.attendant.entity.bo.AttendantBo;
+import com.dkm.attendant.entity.bo.*;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -22,14 +21,21 @@ import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.PetsDto;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
+import com.dkm.knapsack.domain.TbEquipmentKnapsack;
+import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.produce.entity.vo.AttendantPutVo;
+import com.dkm.produce.service.IProduceService;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,14 +73,17 @@ public class AttendantServiceImpl implements IAttendantService {
     @Autowired
     private RedisConfig redisConfig;
 
-    private final String REDIS_LOCK = "REDIS::LOCK:ATTENDANT";
+    @Autowired
+    private IProduceService produceService;
+
+    private String redisLock = "REDIS::LOCK:ATTENDANT";
 
     /**
      * 获取用户抓到的跟班信息
      * @return
      */
     @Override
-    public Map<String,Object> queryThreeAtt() {
+    public List<AttUserAllInfoVo> queryThreeAtt() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
         //查询到所有系统跟班
@@ -82,6 +91,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
+
+        List<AttendantPutVo> outputList = produceService.queryOutput(query.getId());
 
         List<Long> longList = new ArrayList<>();
         for (AttUserAllInfoVo vo : list1) {
@@ -109,18 +120,55 @@ public class AttendantServiceImpl implements IAttendantService {
             BeanUtils.copyProperties(attUserAllInfoVo, result);
             result.setAtImg(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeadUrl());
             result.setAtName(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+            result.setSysStatus(1);
             return result;
         }).collect(Collectors.toList());
 
-        Map<String,Object> map = new HashMap<>(2);
+        for (AttUserAllInfoVo vo : list) {
+            vo.setSysStatus(0);
+            collect.add(vo);
+        }
 
-        //系统跟班
-        map.put("sys-att",list);
+        List<AttPutBo> userAtt = new ArrayList<>();
+        List<AttPutBo> sysAtt1 = new ArrayList<>();
+        List<AttPutBo> sysAtt2 = new ArrayList<>();
+        List<AttPutBo> sysAtt3 = new ArrayList<>();
+        for (AttUserAllInfoVo vo : collect) {
+            for (AttendantPutVo putVo : outputList) {
+                if (vo.getAId() == 0) {
+                    //用户跟班
+                    if (vo.getCaughtPeopleId().equals(putVo.getCaughtPeopleId())) {
+                        AttPutBo attPutBo = new AttPutBo();
+                        BeanUtils.copyProperties(putVo,attPutBo);
+                        userAtt.add(attPutBo);
+                        vo.setList(userAtt);
+                    }
+                }
 
-        //用户跟班
-        map.put("user-att",collect);
+                if (vo.getAId() == 1) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt1.add(attPutBo);
+                    vo.setList(userAtt);
+                }
 
-        return map;
+                if (vo.getAId() == 2) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt2.add(attPutBo);
+                    vo.setList(userAtt);
+                }
+
+                if (vo.getAId() == 3) {
+                    AttPutBo attPutBo = new AttPutBo();
+                    BeanUtils.copyProperties(putVo,attPutBo);
+                    sysAtt3.add(attPutBo);
+                    vo.setList(userAtt);
+                }
+            }
+        }
+
+        return collect;
     }
 
 
@@ -142,8 +190,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdAndFood() {
-        //得到用户登录的token信息
-        UserLoginQuery query = localUser.getUser();
         return iTbEquipmentKnapsackService.selectFoodId();
     }
 
@@ -193,8 +239,14 @@ public class AttendantServiceImpl implements IAttendantService {
      * 解雇
      */
     @Override
-    public int dismissal(Long caughtPeopleId) {
-        return attendantMapper.dismissal(caughtPeopleId);
+    public void dismissal(Long caughtPeopleId, Long aId) {
+
+        UserLoginQuery user = localUser.getUser();
+        //解雇
+        attendantMapper.dismissal(caughtPeopleId, aId);
+
+        //删除对应的跟班产出物品
+        produceService.deletePut (user.getId(),aId);
     }
 
     @Override
@@ -207,33 +259,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //我方装备血量之和
         double myedLisfe=0;
-
-        //他方装备血量之和
-        double heEdLisfe=0;
-
-        //我方各装被属性加成
-        double bonuses=0;
-
-        //他各装被属性加成
-        double heBonuses=0;
-
-
-
-
-
-
-        //他方防御力
-        double defenseOtherSide=0;
-
-        //得到他方血量
-        double ourHealth1=0;
-
-
-
-
-        //得到我方战力
-        Integer ourCapabilities=0;
-
 
         /**
          * 我方数据
@@ -249,10 +274,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到最终我方血量
         double ourHealth=0;
-
-        //我方装备加成
-       // double myEquipBonus=0;
-
 
         /**
          * 他方数据
@@ -277,18 +298,14 @@ public class AttendantServiceImpl implements IAttendantService {
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
 
-
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
         //随机获取他方宠物
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
-
-        Integer defaultOtherForce=0;
         //得到装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
-        System.out.println("他方装备 = " + tbEquipmentKnapsackVos1.size());
         //如果没有装备
         if(tbEquipmentKnapsackVos1.size()==0){
             //血量
@@ -297,7 +314,6 @@ public class AttendantServiceImpl implements IAttendantService {
             heDefense=0;
             //得到他方的战力
             heRipetime1=100;
-            System.out.println("对方没有装备 = " + "对方没有装备");
         }else {
             for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
                 /**
@@ -316,7 +332,6 @@ public class AttendantServiceImpl implements IAttendantService {
                         heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
                     }
                 }
-                System.out.println("血量======== = " + heEquipBonus);
 
                 /**
                  * 问题： 没有加成我怎么知道他是血量还是才华
@@ -328,10 +343,6 @@ public class AttendantServiceImpl implements IAttendantService {
                     //没有加成的的话 直接将装备的生命赋值
                     heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdLife().intValue();
                 }
-
-
-
-
 /*
                 double heEquipmentBonus = 0;*/
                 /**
@@ -350,22 +361,13 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
 
-                System.out.println("1 为生命加成 2 为才华加成 = " + heEquipmentBonus);
-
-
-
                 /**
                  * 装备防御力*各个装备属性加成
                  */
-                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipBonus);
-                System.out.println("tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() = " + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue());
-                System.out.println("他方装备加成 = " + heEquipmentBonus);
                 heDefense = heDefense + tbEquipmentKnapsackVos1.get(i).getEdDefense().doubleValue() * heEquipmentBonus;
-
 
                 //我方方装备加成
                 //double myEquipmentBonus = 0;
-
                 if (myEquipmentBonus == 0) {
                     //我方装备加成
                     List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
@@ -390,31 +392,9 @@ public class AttendantServiceImpl implements IAttendantService {
             double heRipetime = StrictMath.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
                     (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
 
-            System.out.println("userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus = " + userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus);
-            System.out.println("userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus = " + userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
-            //得到最终他方的战力
+           //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
-
-            //他方最终得到的血量
-            //B = heEdLisfe * heEquipBonus;
-            System.out.println("他方最终血量 = " + heEquipBonus);
-            System.out.println("他方最终战斗力 = " + heRipetime1);
-            System.out.println("他方最终防御力 = " + heDefense);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
@@ -424,22 +404,15 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到自己装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-        System.out.println("我方装备 = " + tbEquipmentKnapsackVos.size());
         if(tbEquipmentKnapsackVos.size()==0){
             //血量
             ourHealth=500;
             //得到我方装备防御力
             ourDefenses=0;
             //得到我方战力
-            ourCapabilities=100;
-            System.out.println("没有装备 = " + "没有装备");
+            myRipetime=100;
         }else{
-/*            if(tbEquipmentKnapsackVos.size()==0){
-                //得到我方战力
-                ourCapabilities=100;
-            }*/
             for (int i = 0; i < tbEquipmentKnapsackVos.size(); i++) {
-
                 /**
                  * 属性加成 1就代表有加成 0代表没有加成
                  * 得到各个装备属性加成的值
@@ -456,8 +429,6 @@ public class AttendantServiceImpl implements IAttendantService {
                         ourHealth = ourHealth + tbEquipmentKnapsackVos.get(i).getEdDefense().intValue() * tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                     }
                 }
-                System.out.println("我方-----血量======== = " + ourHealth);
-
 
                 /**
                  *
@@ -469,33 +440,25 @@ public class AttendantServiceImpl implements IAttendantService {
                     myedLisfe = myedLisfe + tbEquipmentKnapsackVos.get(i).getEdLife().intValue();
                 }
 
-
-
-                    /**
-                     * 属性加成 1就代表有加成 0代表没有加成
-                     * 如果有加成在判断是生命还是才华
-                     */
-                   //我方装备加成
-                    if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
-                        // 1 为生命加成 2 为才华加成
-                        if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
-                            // 生命加成
-                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
-                            //才华加成
-                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        }
+                /**
+                 * 属性加成 1就代表有加成 0代表没有加成
+                 * 如果有加成在判断是生命还是才华
+                 */
+                //我方装备加成
+                if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
+                    // 1 为生命加成 2 为才华加成
+                    if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
+                        // 生命加成
+                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                    } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
+                        //才华加成
+                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                     }
-
-                System.out.println("我方装备加成ppp = " + myEquipmentBonus);
-
+                }
 
                 //他方装备属性加成等于0 在查询一遍赋值
                 if(heEquipBonus==0){
-                    //List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVoss = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
-                    //System.out.println("tbEquipmentKnapsackVoss = " + tbEquipmentKnapsackVoss.size());
-                    //System.out.println("tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue()  = " + tbEquipmentKnapsackVoss.get(i).getEdAttribute().intValue() );
-                    /**
+                     /**
                      * 属性加成 1就代表有加成 0代表没有加成
                      * 如果有加成在判断是生命还是才华
                      */
@@ -511,30 +474,19 @@ public class AttendantServiceImpl implements IAttendantService {
                     }
                 }
 
-
-
                 /**
                  * 装备防御力*各个装备属性加成
                  * 得到最终我方防御力
                  */
-                System.out.println("tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus = " + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus);
-                System.out.println("我方装备加成 = " + myEquipmentBonus);
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
             //得到我方的战力
             double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
                     (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
             //得到最终我方的战力
-            //System.out.println("heRipetime = " + heRipetime);
             myRipetime= (int) heRipetime;
-            System.out.println("我方血量 = " + ourHealth);
-            System.out.println("我方防御力 = " + ourDefenses);
-            System.out.println("我方战斗力 = " + myRipetime);
 
         }
-
-
-
 
         //如果双方宠物相同 等级高的先动手
         if(myPet.equals(hePet)){
@@ -592,17 +544,46 @@ public class AttendantServiceImpl implements IAttendantService {
 
         UserLoginQuery user = localUser.getUser();
 
+        //查询该用户信息
+        Result<UserInfoQueryBo> result = userFeignClient.queryUser(user.getId());
+
+        if (result.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "用户feign错误");
+        }
+
         AttUserVo vo = new AttUserVo();
 
         //根据用户Id查询所有跟班信息
         List<AttendantUser> list = attendantUserService.queryListByUserId(user.getId());
+
+        //得到用户信息
+        UserInfoQueryBo bo = result.getData();
+        int number = 0;
+        int size = 1;
+
+        //3级解锁一个跟班
+        for (int i = 1; i <= 6; i++) {
+
+            if (bo.getUserInfoGrade() == i) {
+                break;
+            }
+
+            if (bo.getUserInfoGrade() >= number && bo.getUserInfoGrade() < number + 3) {
+                if (list.size() >= size) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "该等级不能解锁");
+                }
+            }
+            number += 3;
+            size += 1;
+        }
 
         if (list.size() >= 6) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "您最多只能抓6个跟班");
         }
 
         //推后12小时
-        Long s=System.currentTimeMillis()/1000+43200;
+        LocalDateTime time = LocalDateTime.now().plusHours(12);
+        String s = DateUtils.formatDateTime(time);
         vo.setS(s);
         AttendantUser attendantUser=new AttendantUser();
 
@@ -611,7 +592,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
             try {
                 //加锁,保证原子性
-                Boolean lock = redisConfig.redisLock(REDIS_LOCK);
+                Boolean lock = redisConfig.redisLock(redisLock);
 
                 if (!lock) {
                     throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "网络繁忙请稍后再试");
@@ -639,7 +620,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     attendantUser.setAttendantId(0L);
                     attendantUser.setCaughtPeopleId(queryAttendantUser.getCaughtPeopleId());
                     attendantUser.setUserId(user.getId());
-                    attendantUser.setExp1(s);
+                    attendantUser.setEndDate(s);
                     attendantUserService.insert(attendantUser);
                     //代表抢用户跟班成功
                     vo.setStatus(0);
@@ -650,13 +631,13 @@ public class AttendantServiceImpl implements IAttendantService {
                 attendantUser.setAttendantId(0L);
                 attendantUser.setCaughtPeopleId(caughtPeopleId);
                 attendantUser.setUserId(user.getId());
-                attendantUser.setExp1(s);
+                attendantUser.setEndDate(s);
                 attendantUserService.insert(attendantUser);
                 //代表抢用户跟班成功
                 vo.setStatus(0);
                 return vo;
             } finally {
-                redisConfig.deleteLock(REDIS_LOCK);
+                redisConfig.deleteLock(redisLock);
             }
 
         }
@@ -669,21 +650,96 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUser.setAttendantId(attendantId);
         attendantUser.setCaughtPeopleId(0L);
         attendantUser.setUserId(user.getId());
-        attendantUser.setExp1(s);
+        attendantUser.setEndDate(s);
         attendantUserService.insert(attendantUser);
         vo.setStatus(0);
         return vo;
     }
 
 
-
-
-
+    /**
+     * 收取
+     * @param attId
+     * @return
+     */
     @Override
-    public int gather(Integer atuId) {
-        long exp1 = System.currentTimeMillis() / 1000 + 43200;
-        int gather = attendantMapper.gather(exp1,Long.valueOf(atuId));
-        return gather;
+    public Map<String, Object> collect(Long attId, Long attUserId) {
+
+        AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
+
+        if (attUser == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId有误");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime localDateTime = DateUtils.parseDateTime(attUser.getEndDate());
+
+        //得到6小时之前的时间
+        LocalDateTime time = localDateTime.minusHours(6);
+
+        long until = now.until(time, ChronoUnit.SECONDS);
+
+        if (until >= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "现在不能收取");
+        }
+
+        UserLoginQuery user = localUser.getUser();
+        //得到产出的物品集合
+        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attId);
+
+        List<Long> idList = new ArrayList<>();
+
+        for (CollectResultBo bo : list) {
+            //如果是金币  加入用户的总金币
+            if (bo.getGoodType() == 0) {
+                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                increaseUserInfoBO.setUserInfoGold(bo.getGoodNumber());
+                increaseUserInfoBO.setUserId(user.getId());
+                //修改用户金币
+                userFeignClient.increaseUserInfo(increaseUserInfoBO);
+            } else {
+                //穿戴物品
+                TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack.setFoodId(bo.getGoodId());
+                tbEquipmentKnapsack.setFoodNumber(bo.getGoodNumber());
+                tbEquipmentKnapsack.setTekIsva(1);
+                tbEquipmentKnapsack.setTekDaoju(bo.getGoodType());
+                tbEquipmentKnapsack.setTekMoney(50);
+                tbEquipmentKnapsack.setTekSell(2);
+                //添加食物到背包
+                iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
+            }
+
+            idList.add(bo.getProduceId());
+        }
+
+        //返回产出的数据以及12小时后的时间给前端
+        LocalDateTime dateTime = LocalDateTime.now().plusHours(12);
+
+        String expTime = DateUtils.formatDateTime(dateTime);
+
+        //修改产出表的状态
+        if (null != idList && idList.size() > 0) {
+            Integer integer = attendantMapper.updateProduceStatus(idList);
+
+            if (integer <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "修改异常");
+            }
+        }
+
+
+        //更新用户跟班表的刷新时间
+        attendantUserService.updateAttTime(expTime, attUserId);
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("expTime",expTime);
+
+        //得到产出的物品返回
+        map.put("goods",list);
+
+        return map;
     }
 
     @Override
@@ -789,7 +845,6 @@ public class AttendantServiceImpl implements IAttendantService {
         }
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-        System.out.println("-->" + userInfoQueryBoResult);
         if (userInfoQueryBoResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
         }

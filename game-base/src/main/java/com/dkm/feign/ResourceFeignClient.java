@@ -42,12 +42,8 @@ public interface ResourceFeignClient {
     @GetMapping("/dkm/tbEquipmentKnapsack/selectUserIdAndFoodId")
     Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(@RequestParam("userId") Long userId);
 
-    /**
-     * 根据当前用户查询装备
-     * @return
-     */
-    @GetMapping("/dkm/tbEquipmentKnapsack/userCenterTwo/{userId}")
-    Result<List<com.dkm.personalCenter.domain.vo.TbEquipmentKnapsackVo>> userCenterTwo(@PathVariable("userId") Long userId);
+
+
 
     /**
      * 黑屋的用户信息对象
@@ -56,12 +52,7 @@ public interface ResourceFeignClient {
     @GetMapping("/dkm/tbBlackHouse/selectIsBlackThree/{userId}")
     Result<TbBlackHouseVo> selectIsBlackTwo(@PathVariable("userId") Long userId);
 
-    /**
-     * 查询当前用户已经解锁的种子
-     * @return
-     */
-    @GetMapping("/Seed/queryAreUnlocked/{userId}")
-    Result<List<SeedUnlockVo>> queryAreUnlocked(@PathVariable("userId")Long userId);
+
 
     /**
      * 管家收装备
@@ -71,30 +62,12 @@ public interface ResourceFeignClient {
     @GetMapping("/dkm/tbBox/selectByBoxIdTwo")
     Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
 
-
     /**
-     * 根据用户id查询跟班和跟班产生的物品
-     */
-    @GetMapping("/v1/produce/queryJoinOutPutGoods/{userId}")
-    Result<List<AttendantGoods>> queryJoinOutPutGoods(@PathVariable("userId")Long userId);
-
-
-    /**
-     * qf
-     *  根据用户id查询所有技能信息
-     * @param userId 用户id
-     * @return 返回技能图片和等级
-     */
-    @GetMapping("/v1/skill/queryAllSkillByUserId/{userId}")
-    Result<List<SkillBo>> queryAllSkillByUserId (@PathVariable("userId") Long userId);
-
-    /**
-     * 根据跟班id查询用户信息
-     * @param CaughtPeopleId 当前用户id
+     * 查询多个接口 得到个人中心信息
+     * @param userId
      * @return
      */
-    @GetMapping("/Attendant/queryAidUser")
-    Result<Map<String,Object>> queryAidUser (@RequestParam("CaughtPeopleId")  Long CaughtPeopleId);
-
+    @GetMapping("/PersonalCenterController/PersonalCenterAll")
+    Result<Map<String,Object>>  PersonalCenterAll(@RequestParam("userId") Long userId);
 
 }

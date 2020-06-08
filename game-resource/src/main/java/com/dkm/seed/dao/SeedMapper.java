@@ -78,12 +78,12 @@ public interface SeedMapper extends BaseMapper<Seed> {
     /**
      * 修改用户信息
      */
-    int updateUser(UserInIf userInIf);
+    int updateUser(SeedPlantVo seedPlantVo);
 
     /**
      * 修改用户信息
      */
-    int updateUsers(UserInIf userInIf);
+    int updateUsers(SeedPlantVo seedPlantVo);
 
     /**
      * 收取种子后 删除土地种子表中对应的数据

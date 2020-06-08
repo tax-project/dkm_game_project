@@ -40,4 +40,18 @@ public interface IAttendantUserService {
      * @return
      */
     AttendantUser queryAttendantUser (Long caughtPeopleId, Long attendantId);
+
+    /**
+     *  根据id更新用户跟班时间
+     * @param endDate
+     * @param id
+     */
+    void updateAttTime (String endDate, Long id);
+
+    /**
+     *  根据id查询跟班用户信息
+     * @param id
+     * @return
+     */
+    AttendantUser queryAttUser (Long id);
 }

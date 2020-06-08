@@ -1,18 +1,14 @@
 package com.dkm.attendant.dao;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
-import com.dkm.attendant.entity.vo.AttendantUsersVo;
 import com.dkm.attendant.entity.vo.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -42,29 +38,33 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
                                          @Param("status") Integer status);
 
     /**
-     * 解雇
-     * @param dismissal 跟班id
-     * @return
+     *  解雇
+     * @param caughtPeopleId
+     * @param aId
      */
-    int dismissal(Long dismissal);
+    void dismissal(@Param("caughtPeopleId") Long caughtPeopleId, @Param("aId") Long aId);
 
     /**
-     * 抓跟班
-     * @param attendantUser
-     * @return
+     *  收取产出
+     * @param userId 用户id
+     * @param attId 跟班id
+     * @return 返回产出集合
      */
-    int addGraspFollowing(AttendantUser attendantUser);
-    /**
-     * 收取
-     * @param atuId
-     * @return
-     */
-    int gather(Long exp1, Long atuId);
+    List<CollectResultBo> collect(@Param("userId") Long userId, @Param("attId") Long attId);
+
+
     /**
      * 查询自己的一个主人信息
-     * @param CaughtPeopleId 当前用户id
+     * @param caughtPeopleId 当前用户id
      * @return
      */
-     AttendantUserVo queryAidUser(Long CaughtPeopleId);
+     AttendantUserVo queryAidUser(Long caughtPeopleId);
+
+    /**
+     *  修改所有物品的产出状态
+     * @param list
+     * @return
+     */
+     Integer updateProduceStatus (List<Long> list);
 
 }

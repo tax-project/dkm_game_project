@@ -344,20 +344,11 @@ public class TbEquipmentKnapsackController {
 
     @ApiOperation(value = "后台专用接口",notes = "成功返回成功")
     @CrossOrigin
-   // @CheckToken
     @GetMapping("/userCenter")
     public List<TbEquipmentKnapsackVo> userCenter(){
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
         return list;
     }
 
-    @ApiOperation(value = "个人中心专用接口",notes = "成功返回成功")
-    @CrossOrigin
-    // @CheckToken
-    @GetMapping("/userCenterTwo/{userId}")
-    public List<TbEquipmentKnapsackVo> userCenterTwo(@PathVariable("userId") Long userId){
-        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserIdTwo(userId);
-        return list;
-    }
 
 }

@@ -44,7 +44,7 @@ public interface ISeedService {
     /**
      * 修改用户信息
      */
-    int updateUser(UserInIf userInIf);
+   // int updateUser(UserInIf userInIf);
 
     /**
      * 根据用户id查询已解锁的种子
@@ -61,6 +61,14 @@ public interface ISeedService {
     /**
      * 查询已经种植的种子
      */
-    Map<String,Object> queryAlreadyPlantSd();
+    List<LandYesVo> queryAlreadyPlantSd();
+
+    /**
+     * 种子掉落
+     */
+    int seedDrop(Long id,Long seedId);
+    
+
+
 
 }

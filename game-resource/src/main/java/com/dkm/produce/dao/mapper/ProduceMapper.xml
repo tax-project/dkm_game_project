@@ -10,32 +10,36 @@
     </select>
 
 
-    <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantVo" parameterType="java.lang.Long">
+    <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantPutVo" parameterType="java.lang.Long">
         select max(b.attendant_id) as 'attendantId',sum(b.number) as 'number',max(c.id) as 'goodId'
-              ,max(c.name) as 'goodName',max(c.url) as 'imgUrl'
-              from tb_user_produce a join tb_produce b
+              ,max(c.name) as 'goodName',max(c.url) as 'imgUrl',d.caught_people_id
+              from tb_user_produce a left join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
+              join tb_attendant_user d on b.attendant_id = d.attendant_id
               where a.user_id= #{userId}
-              group by b.attendant_id
+              group by b.attendant_id,c.id
     </select>
 
 
-    <!--<select id="queryOutput1" resultType="com.dkm.produce.entity.vo.AttendantVo" parameterType="java.lang.Long">-->
-        <!--select b.attendant_id as 'attendantId',b.number,c.id as 'goodId'-->
-                <!--,c.name as 'goodName',c.url as 'imgUrl'from tb_user_produce a join tb_produce b-->
-                <!--on a.produce_id = b.id join tb_goods c on b.good_id = c.id-->
-        <!--where a.user_id= #{userId} and b.attendant_id = #{id}-->
-    <!--</select>-->
-
-
-    <select id="queryProduce" parameterType="java.lang.Long" resultType="com.dkm.produce.entity.vo.UserAttendantGoods">
-        select a.number,c.name,c.url,d.at_name,d.at_img,a.id from tb_produce a,tb_user_produce au,tb_goods c,tb_attendant d where
-            a.id=au.produce_id and a.good_id=c.id and a.attendant_id=d.id and a.good_id=#{userId} and au.user_id=#{goodId}
+    <select id="queryAllIdList" resultType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        select a.id as 'produceId',b.id as 'produceUserId'
+        from tb_produce a join tb_user_produce b on a.id = b.produce_id
+        where a.attendant_id = #{aId} and b.user_id = #{userId}
     </select>
 
-    <update id="updateNumber" parameterType="java.lang.Long">
-        update  tb_produce set number=number+#{number} where id=#{Id}
-    </update>
+    <delete id="deleteProduce" parameterType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        delete from tb_produce where
+        <foreach collection="list" item="item" index="index" separator="or">
+            id = #{item.produceId}
+        </foreach>
+    </delete>
 
+
+    <delete id="deleteProduceUser" parameterType="com.dkm.produce.entity.vo.ProduceSelectVo">
+        delete from tb_user_produce where
+        <foreach collection="list" item="item" index="index" separator="or">
+            id = #{item.produceUserId}
+        </foreach>
+    </delete>
 
 </mapper>

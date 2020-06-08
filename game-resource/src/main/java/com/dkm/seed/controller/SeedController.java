@@ -71,38 +71,34 @@ public class SeedController {
 
     /**
      * 种植种子
+     * 收取种子
      */
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "1为种植，2为收取"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "种子土地id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "dropGoldCoin", value = "掉落的金币"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "redPacketDropped", value = "掉落的红包"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNowExperience", value = "种子当前经验"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
     })
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
     public void plant(@RequestBody SeedPlantVo seedPlantVo) {
-        if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null) {
+        /*if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null ||seedPlantVo.getStatus()==null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
-        }
+        }*/
          iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 
+/*
 
-    /**
-     * 查询已经种植的种子
-     */
-    @ApiOperation(value = "查询已经种植的种子", notes = "查询已经种植的种子")
-    @GetMapping("/queryAlreadyPlantSd")
-    @CrossOrigin
-    @CheckToken
-    public  Map<String,Object> queryAlreadyPlantSd(){
-        return iSeedService.queryAlreadyPlantSd();
-    }
-
-    /**
-     * 收取种子
-     */
     @ApiOperation(value = "收取种子", notes = "收取种子")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种植等级"),
@@ -125,8 +121,21 @@ public class SeedController {
             message.setMsg("修改成功");
             message.setNum(1);
         }
-             return message;
+        return message;
+    }*/
+
+    /**
+     * 查询已经种植的种子
+     */
+    @ApiOperation(value = "查询已经种植的种子", notes = "查询已经种植的种子")
+    @GetMapping("/queryAlreadyPlantSd")
+    @CrossOrigin
+    @CheckToken
+    public  List<LandYesVo> queryAlreadyPlantSd(){
+        return iSeedService.queryAlreadyPlantSd();
     }
+
+
 
     /**
      * 根据用户id查询已解锁的种子

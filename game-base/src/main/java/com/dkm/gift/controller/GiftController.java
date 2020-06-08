@@ -51,7 +51,9 @@ public class GiftController {
             @ApiImplicitParam(name = "receiveId",value = "接收人userId",required = true,paramType = "Long",dataType = "path"),
             @ApiImplicitParam(name = "gold",value = "消耗金币",required = false,paramType = "int",dataType = "path"),
             @ApiImplicitParam(name = "diamond",value = "消耗钻石",required = false,paramType = "int",dataType = "path"),
-            @ApiImplicitParam(name = "charm",value = "魅力值",required = true,paramType = "int",dataType = "path")
+            @ApiImplicitParam(name = "charm",value = "魅力值",required = true,paramType = "int",dataType = "path"),
+            @ApiImplicitParam(name = "giftId",value = "礼物id",required = true,paramType = "Long",dataType = "path")
+
     })
     @PostMapping("/sendGift")
     @CrossOrigin
@@ -59,7 +61,8 @@ public class GiftController {
     public void getGift(@RequestBody SendGiftVo sendGiftVo){
         if(sendGiftVo==null||sendGiftVo.getReceiveId()==null
                 ||(sendGiftVo.getDiamond().equals(sendGiftVo.getGold()))
-                ||sendGiftVo.getDiamond()<0||sendGiftVo.getGold()<0){
+                ||sendGiftVo.getDiamond()<0||sendGiftVo.getGold()<0
+                ||sendGiftVo.getGiftId()==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         sendGiftVo.setSendId(localUser.getUser().getId());

@@ -48,4 +48,20 @@ public class LandController {
     public List<UserLandUnlock> queryUserByIdLand() {
         return iLandService.queryUserByIdLand();
     }
+
+
+    /**
+     * 根据用户id和土地编号解锁土地
+     */
+    @ApiOperation(value = "根据用户id和土地编号解锁土地", notes = "根据用户id和土地编号解锁土地")
+    @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "laNo", value = "土地编号")
+    @GetMapping("/updateLandStatus")
+    @CrossOrigin
+    @CheckToken
+    public void updateLandStatus(@RequestParam(value = "laNo") Integer laNo){
+        if(laNo==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"土地编号不能为空");
+        }
+        iLandService.updateLandStatus(laNo);
+    }
 }

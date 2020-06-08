@@ -56,4 +56,23 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
               .eq(AttendantUser::getUserId,caughtPeopleId);
         return baseMapper.selectOne(wrapper);
     }
+
+    @Override
+    public void updateAttTime(String endDate, Long id) {
+        AttendantUser attendantUser = new AttendantUser();
+
+        attendantUser.setAtuId(id);
+        attendantUser.setEndDate(endDate);
+
+        int updateById = baseMapper.updateById(attendantUser);
+
+        if (updateById <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+        }
+    }
+
+    @Override
+    public AttendantUser queryAttUser(Long id) {
+        return baseMapper.selectById(id);
+    }
 }

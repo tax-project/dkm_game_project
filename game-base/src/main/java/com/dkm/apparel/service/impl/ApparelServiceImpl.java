@@ -9,7 +9,7 @@ import com.dkm.apparel.entity.dto.ApparelDto;
 import com.dkm.apparel.service.ApparelService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +76,7 @@ public class ApparelServiceImpl implements ApparelService {
         int l = (int) (apparelUserEntity.getApparelCompleteTime().toEpochSecond(ZoneOffset.of("+8")) - (System.currentTimeMillis() / 1000));
         int l1 = l / 60 ;
         doing.setDiamond(Math.max(l1,1));
-        doing.setApparelCompleteTime(DateUtil.formatDateTime(apparelUserEntity.getApparelCompleteTime()));
+        doing.setApparelCompleteTime(DateUtils.formatDateTime(apparelUserEntity.getApparelCompleteTime()));
         return doing;
     }
 

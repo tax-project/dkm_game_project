@@ -8,7 +8,6 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.ParamBo;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
-import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -16,12 +15,13 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.problem.dao.MoneyMapper;
 import com.dkm.problem.entity.Money;
 import com.dkm.problem.entity.bo.MoneyBo;
+import com.dkm.problem.entity.bo.MoneyRandomBo;
 import com.dkm.problem.entity.vo.*;
 import com.dkm.problem.service.IMoneyService;
-import com.dkm.utils.DateUtil;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
+import com.dkm.vilidata.RandomData;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +50,9 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
    @Autowired
    private UserFeignClient userInfoFeignClient;
+
+   @Autowired
+   private RandomData randomData;
 
    /**
     * 发红包
@@ -286,16 +286,49 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       //当前时间
       LocalDate end = LocalDate.now();
 
-      String startTime = DateUtil.formatDate(end) + " 23:59:59";
+      String startTime = DateUtils.formatDate(end) + " 23:59:59";
 
       //一周前的时间
       LocalDate start = end.minusDays(7);
 
-      String endTime = DateUtil.formatDate(start) + " 00:00:00";
+      String endTime = DateUtils.formatDate(start) + " 00:00:00";
 
-      LocalDateTime startDate = DateUtil.parseDateTime(endTime);
-      LocalDateTime endDate = DateUtil.parseDateTime(startTime);
+      LocalDateTime startDate = DateUtils.parseDateTime(endTime);
+      LocalDateTime endDate = DateUtils.parseDateTime(startTime);
 
       return baseMapper.countHandOutRedEnvelopes(page,status,startDate,endDate);
+   }
+
+   @Override
+   public MoneyRandomBo queryMoneyRandom() {
+
+      LambdaQueryWrapper<Money> wrapper = new LambdaQueryWrapper<Money>()
+            .eq(Money::getStatus,0)
+            .or()
+            .eq(Money::getStatus,1);
+
+      List<Money> list = baseMapper.selectList(wrapper);
+
+      if (null == list || list.size() == 0) {
+         //没有正在回答或未开始的红包
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "没有正在举办的红包活动");
+      }
+
+      Set<Integer> set = randomData.getList(list.size(), 1);
+
+      Integer index = 0;
+      for (Integer integer : set) {
+         //得到随机抽取的索引
+         index = integer;
+      }
+
+      Money money = list.get(index);
+
+      MoneyRandomBo bo = new MoneyRandomBo();
+      bo.setId(money.getId());
+      bo.setDiamonds(money.getDiamonds());
+      bo.setUserId(money.getUserId());
+
+      return bo;
    }
 }

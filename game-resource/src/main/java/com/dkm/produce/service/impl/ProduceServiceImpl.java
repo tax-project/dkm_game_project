@@ -1,36 +1,32 @@
 package com.dkm.produce.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.service.IAttendantService;
+import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
-import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
-import com.dkm.feign.UserFeignClient;
 import com.dkm.good.entity.Goods;
 import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
-import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.plunder.entity.UserProduce;
-import com.dkm.plunder.entity.vo.UserProduceVo;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantGoods;
-import com.dkm.produce.entity.vo.AttendantVo;
-import com.dkm.produce.entity.vo.UserAttendantGoods;
+import com.dkm.produce.entity.vo.AttendantPutVo;
+import com.dkm.produce.entity.vo.ProduceSelectVo;
 import com.dkm.produce.service.IProduceService;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author 刘梦祺
@@ -59,16 +55,32 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private ProduceMapper produceMapper;
 
     @Autowired
-    private UserFeignClient userFeignClient;
+    private IAttendantUserService attendantUserService;
 
-    @Autowired
-    private IAttendantService attendantService;
-
-    @Autowired
-    private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
     @Override
-    public Map<String,Object> insertProduce(Long attendantId) {
+    public Map<String,Object> insertProduce(Long attendantId, Long attUserId) {
         UserLoginQuery user = localUser.getUser();
+
+        //查询时间有没有过期
+        LocalDateTime now = LocalDateTime.now();
+
+        AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
+
+        if (attUser == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId传错了..大哥");
+        }
+
+
+        String endDate = attUser.getEndDate();
+        LocalDateTime time = DateUtils.parseDateTime(endDate);
+
+        long until = now.until(time, ChronoUnit.SECONDS);
+
+        if (until <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "产出时间已过期");
+        }
+
+        //随机返回物品
         Goods goods = goodsService.queryRandomGoods();
 
 
@@ -95,45 +107,19 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         produce.setGoodId(goods.getId());
 
-        UserAttendantGoods userAttendantGoods = produceMapper.queryProduce(user.getId(), goods.getId());
-        if(userAttendantGoods!=null){
-            int i = produceMapper.updateNumber(userAttendantGoods.getId());
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR,"修改数量异常");
-            }
-        }else{
-            int insert = baseMapper.insert(produce);
-            if (insert <= 0) {
-                log.info("添加产出有误");
-                throw new ApplicationException(CodeType.SERVICE_ERROR);
-            }
-            UserProduce userProduce = new UserProduce();
-            userProduce.setUserId(user.getId());
-            userProduce.setProduceId(produceId);
+        //默认0
+        produce.setStatus(0);
 
-            userProduceService.insertProduce(userProduce);
+        int insert = baseMapper.insert(produce);
+        if (insert <= 0) {
+            log.info("添加产出有误");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
+        UserProduce userProduce = new UserProduce();
+        userProduce.setUserId(user.getId());
+        userProduce.setProduceId(produceId);
 
-
-
-        //将产出的物品直接存到数据库中
-       if("金币".equals(goods.getName())){
-            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-            increaseUserInfoBO.setUserInfoGold(number);
-            increaseUserInfoBO.setUserId(user.getId());
-            //修改用户金币
-            userFeignClient.increaseUserInfo(increaseUserInfoBO);
-        }else{
-            TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-            tbEquipmentKnapsack.setFoodId(goods.getId());
-            tbEquipmentKnapsack.setFoodNumber(number);
-            tbEquipmentKnapsack.setTekIsva(1);
-            tbEquipmentKnapsack.setTekDaoju(3);
-            tbEquipmentKnapsack.setTekMoney(50);
-            tbEquipmentKnapsack.setTekSell(2);
-            //添加食物到背包
-            iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
-        }
+        userProduceService.insertProduce(userProduce);
 
         //返回随机生成的物品给前端
 
@@ -152,37 +138,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public  List<AttendantVo> queryOutput() {
-        UserLoginQuery user = localUser.getUser();
-
-        //查询所有跟班
-//        List<AttenDant> attenDants = attendantService.listAttenDant();
-
+    public  List<AttendantPutVo> queryOutput(Long userId) {
         //查询所有要返回的跟班数据
-        return produceMapper.queryOutput(user.getId());
-
-        //根据返回的跟班数据得到不重复的跟班id
-//        Set<Long> set = new HashSet<>();
-//        for (AttenDant attenDant : attenDants) {
-//            for (AttendantVo attendantVo : list) {
-//                if (attenDant.getId() == attendantVo.getAttendantId()) {
-//                    set.add(attenDant.getId());
-//                }
-//            }
-//        }
-//
-//        //返回的数据
-//        Map<Integer,Object> map = new HashMap<>();
-//
-//        Integer number = 0;
-//        for (Long aLong : set) {
-//            //通过得到的不重复的id查询所有数据
-//            List<AttendantVo> result = produceMapper.queryOutput1(user.getId(), aLong);
-//            map.put(number,result);
-//            number += 1;
-//        }
-
-//        return map;
+        return produceMapper.queryOutput(userId);
 
     }
 
@@ -190,6 +148,25 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     public int deleteOutGoodNumber(Long id) {
         return produceMapper.deleteById(id);
     }
+
+   @Override
+   public void deletePut(Long userId, Long aId) {
+      //先查询id集合
+      List<ProduceSelectVo> list = baseMapper.queryAllIdList(userId, aId);
+
+      //删除产出表信息
+      Integer integer = baseMapper.deleteProduce(list);
+
+      if (integer <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
+      }
+
+      Integer integer1 = baseMapper.deleteProduceUser(list);
+
+      if (integer1 <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
+      }
+   }
 
 
 }
