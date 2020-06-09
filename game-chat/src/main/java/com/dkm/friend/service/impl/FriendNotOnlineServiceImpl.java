@@ -92,11 +92,11 @@ public class FriendNotOnlineServiceImpl extends ServiceImpl<FriendNotOnlineMappe
    }
 
    @Override
-   public void updateLook(List<Long> list) {
-      Integer integer = baseMapper.updateLook(list);
+   public void deleteLook(List<Long> list) {
+      Integer integer = baseMapper.deleteLook(list);
 
       if (integer <= 0) {
-         throw new ApplicationException(CodeType.SERVICE_ERROR, "修改出错");
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
       }
    }
 

@@ -30,10 +30,10 @@ public interface FriendFeignClient {
 
 
    /**
-    * 更改未读的状态
+    * 删除未读的状态
     * @param list id集合
     * @return 返回结果
     */
-   @PostMapping("/v1/notOnline/updateLookStatus")
-   Result updateLookStatus(@RequestBody List<Long> list);
+   @PostMapping("/v1/notOnline/deleteLookStatus")
+   Result deleteLookStatus(@RequestBody List<Long> list);
 }

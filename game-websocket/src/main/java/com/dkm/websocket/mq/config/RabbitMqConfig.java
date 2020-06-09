@@ -22,7 +22,7 @@ public class RabbitMqConfig {
     */
    @Bean
    public Queue getQueue () {
-      return new Queue ("game_msg_queue_");
+      return new Queue ("game_msg_queue_",false);
    }
 
    /**
@@ -31,7 +31,7 @@ public class RabbitMqConfig {
     */
    @Bean
    public FanoutExchange getFanoutExchange () {
-      return new FanoutExchange("game_msg_fanoutExchange");
+      return new FanoutExchange("game_msg_fanoutExchange",false,false);
    }
 
    @Bean
