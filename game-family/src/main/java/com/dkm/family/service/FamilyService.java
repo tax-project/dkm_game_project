@@ -72,4 +72,11 @@ public interface FamilyService {
      * @param outUserId
      */
     void kickOutUser(Long userId,Long outUserId);
+
+    /**
+     * 获取家族所有用户id
+     * @param familyId
+     * @return
+     */
+    List<Long> getFamilyUserIds(Long familyId);
 }

@@ -1,17 +1,11 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
-import com.dkm.entity.bo.SkillBo;
-import com.dkm.feign.entity.AttendantGoods;
-import com.dkm.feign.entity.AttendantUserVo;
-import com.dkm.feign.entity.SeedUnlockVo;
+import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
-import com.dkm.personalCenter.domain.Seed;
-import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,5 +51,13 @@ public interface ResourceFeignClient {
      */
     @GetMapping("/center/PersonalCenterAll")
     Result<Map<String,Object>>  personalCenterAll(@RequestParam("userId") Long userId);
+
+    /**
+     * 收取、种植种子
+     * @param seedPlantVo
+     * @return
+     */
+    @PostMapping("/plant")
+    Result plant(@RequestBody SeedPlantVo seedPlantVo);
 
 }
