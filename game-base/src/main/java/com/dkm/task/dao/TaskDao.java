@@ -5,6 +5,7 @@ import com.dkm.task.entity.TaskEntity;
 import com.dkm.task.entity.vo.TaskUserDetailVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface TaskDao extends BaseMapper<TaskEntity> {
             "SELECT task_id,tu_process FROM tb_task_user WHERE user_id=#{userId}) tu ON t.task_id=tu.task_id")
     List<TaskUserDetailVo> selectUserTask(@Param("type") Integer type,@Param("userId") Long userId);
 
+    @Update("update tb_user_info set user_info_gold = user_info_gold+#{gold}")
+    Integer updateUserInfo(@Param("gold") Integer gold);
 }

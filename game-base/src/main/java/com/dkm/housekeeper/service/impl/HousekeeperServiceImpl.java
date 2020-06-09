@@ -145,4 +145,17 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         return listResult.getData();
     }
 
+
+    @Override
+    public boolean housekeeperStatus(Long userId) {
+        HousekeeperEntity housekeeperEntity = housekeeperMapper.selectOne(new QueryWrapper<HousekeeperEntity>().lambda().eq(HousekeeperEntity::getUserId,userId));
+        if(housekeeperEntity!=null&&housekeeperEntity.getIsEffective()==1){
+            //管家在上班 不能进行偷取
+            return LocalDateTime.now().isAfter(housekeeperEntity.getEndWorkTime());
+        }else {
+            //表示可以偷取等操作
+            return true;
+        }
+    }
+
 }

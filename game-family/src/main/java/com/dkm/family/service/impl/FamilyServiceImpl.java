@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @program: game_project
@@ -199,5 +200,11 @@ public class FamilyServiceImpl implements FamilyService {
         if(i<1||familyDao.updateById(familyEntity)<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"踢出成员失败");
         }
+    }
+
+    @Override
+    public List<Long> getFamilyUserIds(Long familyId) {
+        List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyId));
+        return familyDetailEntities.stream().mapToLong(FamilyDetailEntity::getUserId).boxed().collect(Collectors.toList());
     }
 }
