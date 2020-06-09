@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.wallet.dao.WithdrawalRecordMapper">
+
+    <select id="queryRecordMonth" resultType="com.dkm.wallet.entity.vo.WithdrawalRecordVo" parameterType="Long">
+        SELECT withdrawal_money,withdrawal_time,withdrawal_describe,count(withdrawal_money) as totalamount
+        FROM tb_withdrawal_record WHERE user_id=#{userId} and DATE_FORMAT(withdrawal_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
+
+
+    <select id="queryRecordMonthStatistics" resultType="java.lang.Double" parameterType="Long">
+        SELECT count(withdrawal_money) as totalamount
+        FROM tb_withdrawal_record WHERE user_id=#{userId} and DATE_FORMAT(withdrawal_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
+
+
+</mapper>
