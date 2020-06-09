@@ -57,7 +57,7 @@ public interface ResourceFeignClient {
      * @param seedPlantVo
      * @return
      */
-    @PostMapping("/plant")
+    @PostMapping("/Seed/plant")
     Result plant(@RequestBody SeedPlantVo seedPlantVo);
 
 }
