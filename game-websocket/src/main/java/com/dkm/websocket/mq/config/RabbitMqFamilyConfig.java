@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
  * @date 2020/6/1
  * @vesion 1.0
  **/
-//@Component
+@Component
 public class RabbitMqFamilyConfig {
 
-//   @Bean
-//   public Queue getFamilyWithQueue() {
-//      return new Queue("game_family_queue_");
-//   }
+   @Bean
+   public Queue getFamilyWithQueue() {
+      return new Queue("game_family_queue_",false);
+   }
 
 //   @Bean
 //   public FanoutExchange getFamilyFanoutExchange () {
