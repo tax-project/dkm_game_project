@@ -1,6 +1,7 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
+import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
@@ -57,7 +58,15 @@ public interface ResourceFeignClient {
      * @param seedPlantVo
      * @return
      */
-    @PostMapping("/Seed/plant")
+    @PostMapping("/Seed/plants")
     Result plant(@RequestBody SeedPlantVo seedPlantVo);
+
+    /**
+     * 查询用户种子
+     * @param userId
+     * @return
+     */
+    @GetMapping("/Seed/queryUserIdSeeds")
+    Result<List<SeedPlantUnlock>>  queryUserIdSeed(Long userId);
 
 }
