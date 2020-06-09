@@ -82,4 +82,15 @@ public class HousekeeperController {
     public List<TbEquipmentVo> getBoxEquipment(){
          return housekeeperService.getBoxEquipment(localUser.getUser().getId());
     }
+
+    /**
+     * 判断是否能偷取
+     * @return
+     */
+    @ApiOperation("获取管家状态判断是否能偷取")
+    @GetMapping("/status")
+    @CrossOrigin
+    public boolean housekeeperStatus(@RequestParam("userId") Long userId){
+        return housekeeperService.housekeeperStatus(userId);
+    }
 }

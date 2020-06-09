@@ -42,4 +42,9 @@ public interface HousekeeperService {
      * @return
      */
     List<TbEquipmentVo> getBoxEquipment(Long userId);
+
+    /**
+     * 判断管家状态，是否保护生产
+     */
+    boolean housekeeperStatus(Long userId);
 }
