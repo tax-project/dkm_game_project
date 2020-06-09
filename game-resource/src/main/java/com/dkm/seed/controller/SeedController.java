@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.Seed;
@@ -33,6 +34,9 @@ public class SeedController {
     @Autowired
     private ISeedService iSeedService;
 
+    @Autowired
+    private LocalUser localUser;
+
     /**
      * 根据用户id得到种子信息
      *
@@ -43,8 +47,19 @@ public class SeedController {
     @CrossOrigin
     @CheckToken
     public List<SeedPlantUnlock> queryUserIdSeed() {
-        return iSeedService.queryUserIdSeed();
+        return iSeedService.queryUserIdSeed(localUser.getUser().getId());
     }
+
+
+    @GetMapping("/queryUserIdSeeds")
+    @CrossOrigin
+    public List<SeedPlantUnlock> queryUserIdSeed(Long userId) {
+        return iSeedService.queryUserIdSeed(userId);
+    }
+
+
+
+
 
     /**
      * 解锁植物碎片
