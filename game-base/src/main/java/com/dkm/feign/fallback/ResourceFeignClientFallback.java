@@ -6,6 +6,7 @@ import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.AttendantGoods;
 import com.dkm.feign.entity.AttendantUserVo;
+import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.feign.entity.SeedUnlockVo;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.personalCenter.domain.Seed;
@@ -41,6 +42,11 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
    @Override
    public Result<Map<String, Object>> personalCenterAll(Long userId) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result plant(SeedPlantVo seedPlantVo) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
