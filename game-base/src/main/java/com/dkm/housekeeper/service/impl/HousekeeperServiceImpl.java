@@ -5,6 +5,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.entity.SeedPlantUnlock;
+import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
@@ -109,6 +111,9 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         LocalDateTime now = LocalDateTime.now();
         selectOne.setEndWorkTime(now.minusHours(-8));
         selectOne.setStartWorkTime(now);
+        selectOne.setSeedGold(0);
+        selectOne.setSeedExp(0);
+        selectOne.setSeedCount(0);
         //第二天12点时间
         Map<String,String> result = new HashMap<>();
         if(housekeeperMapper.updateById(selectOne)>=0){
@@ -156,6 +161,51 @@ public class HousekeeperServiceImpl implements HousekeeperService {
             //表示可以偷取等操作
             return true;
         }
+    }
+
+    @Override
+    public Map<String,Integer> getSeed(Long userId) {
+        Map<String,Integer> map = new HashMap<>();
+        //查询管家状态
+        HousekeeperEntity housekeeperEntity = housekeeperMapper.selectOne(new QueryWrapper<HousekeeperEntity>().lambda().eq(HousekeeperEntity::getUserId, userId));
+        if(housekeeperEntity==null||housekeeperEntity.getIsEffective()==0){
+            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND,"管家已过期");
+        }
+        //得到种植的种子
+        Result<List<SeedPlantUnlock>> listResult = resourceFeignClient.queryUserIdSeed(userId);
+        if(listResult.getCode()!=0){
+            throw new ApplicationException(CodeType.DATABASE_ERROR,listResult.getMsg());
+        }
+        //种子数据
+        List<SeedPlantUnlock> data = listResult.getData();
+        //种子土地
+        int size = data.size();
+        //当前时间判断
+        LocalDateTime now = LocalDateTime.now();
+        now = now.isAfter(housekeeperEntity.getEndWorkTime())?housekeeperEntity.getEndWorkTime():now;
+        LocalDateTime startWorkTime = housekeeperEntity.getStartWorkTime();
+        //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
+        Integer integer = (int) Math.pow(data.get(0).getSeedGrade(), 3 / 2.0) * 20 + 60;
+        //计算需要收取几次
+        long l = now.toEpochSecond(ZoneOffset.of("+8")) - startWorkTime.toEpochSecond(ZoneOffset.of("+8"));
+        //需要收取的次数 并更新次数
+        int count =(int) l / integer-housekeeperEntity.getSeedCount();
+        if(count<1){
+            map.put("gold",housekeeperEntity.getSeedGold());
+            map.put("exp",housekeeperEntity.getSeedExp());
+            return map;
+        }
+        housekeeperEntity.setSeedCount(housekeeperEntity.getSeedCount()+count);
+        //收取的经验
+        int exp = count * data.size() * data.get(0).getSeedExperience();
+        //收取的金币
+        int gold = count * data.size() * data.get(0).getSeedGold();
+        //调用收取种子的接口
+        SeedPlantVo seedPlantVo = new SeedPlantVo();
+        seedPlantVo.setDropGoldCoin(0);
+        seedPlantVo.setSeedGold(gold);
+        seedPlantVo.setUserInfoNowExperience(exp);
+        return null;
     }
 
 }

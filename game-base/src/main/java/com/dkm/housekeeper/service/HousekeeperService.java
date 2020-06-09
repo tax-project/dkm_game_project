@@ -47,4 +47,11 @@ public interface HousekeeperService {
      * 判断管家状态，是否保护生产
      */
     boolean housekeeperStatus(Long userId);
+
+    /**
+     * 收取种子
+     * @param userId
+     * @return
+     */
+    Map<String,Integer> getSeed(Long userId);
 }
