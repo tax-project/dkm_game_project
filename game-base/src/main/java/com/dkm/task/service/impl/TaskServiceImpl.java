@@ -35,6 +35,7 @@ public class TaskServiceImpl implements TaskService {
         if(taskEntity==null){
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND,"不存在该任务");
         }
-
+        Integer taskGold = taskEntity.getTaskGold();
+        taskDao.updateUserInfo(taskGold);
     }
 }
