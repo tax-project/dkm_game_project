@@ -112,6 +112,18 @@ public class SeedController {
          iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 
+
+    @PostMapping("/plants")
+    @CrossOrigin
+    public void plants(@RequestBody SeedPlantVo seedPlantVo) {
+        /*if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null ||seedPlantVo.getStatus()==null) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
+        }*/
+        iSeedService.queryAlreadyPlantSeed(seedPlantVo);
+    }
+
+
+
 /*
 
     @ApiOperation(value = "收取种子", notes = "收取种子")
