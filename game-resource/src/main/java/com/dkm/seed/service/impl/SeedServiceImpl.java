@@ -90,33 +90,44 @@ public class SeedServiceImpl implements ISeedService {
      * 根据用户id得到种子
      */
     @Override
-    public List<SeedPlantUnlock> queryUserIdSeed() {
-        UserLoginQuery user = localUser.getUser();
+    public List<SeedPlantUnlock> queryUserIdSeed(Long userId) {
+
         //查看用户是否是新用户
-        List<SeedUnlock> seedUnlocks = seedMapper.queryIsById(user.getId());
+        List<SeedUnlock> seedUnlocks = seedMapper.queryIsById(userId);
+
         if(seedUnlocks.size()==0){
             List<SeedUnlock> seedUnlocks1=new ArrayList<>();
+
             List<Seed> attenDants = seedMapper.selectList(null);
+
             if(attenDants.size()==0) {
                throw new ApplicationException(CodeType.PARAMETER_ERROR,"没有种子");
             }
+
             for (int j = 0; j < attenDants.size(); j++) {
+
                 SeedUnlock seedUnlock=new SeedUnlock();
                 seedUnlock.setPuId(idGenerator.getNumberId());
-                seedUnlock.setUserId(user.getId());
+                seedUnlock.setUserId(userId);
+
                 //得到总需要解锁的次数
                 double pow = Math.pow(Math.ceil(attenDants.get(j).getSeedGrade() / 2.0), 2);
                 Integer powInteger = Integer.valueOf((int) pow);
+
                 seedUnlock.setSeedAllUnlock(powInteger);
                 seedUnlock.setSeedId(attenDants.get(j).getSeedId());
                 seedUnlocks1.add(seedUnlock);
             }
+
             //增加新用户进来和用户对应的种子
             seedMapper.insertSeedUnlock(seedUnlocks1);
+
         }
-        List<SeedPlantUnlock> seeds = seedMapper.queryUserIdSeed(user.getId());
+
+        List<SeedPlantUnlock> seeds = seedMapper.queryUserIdSeed(userId);
 
         for (int i = 0; i < seeds.size(); i++) {
+
             //种植所获得的经验
             double experience = Math.pow(seeds.get(i).getSeedGrade(), 2 / 5.0) * 100;
             Integer experienceInteger = Integer.valueOf((int) experience);
@@ -126,7 +137,9 @@ public class SeedServiceImpl implements ISeedService {
             Integer userGoldInteger = Integer.valueOf((int) userGold);
             seeds.get(i).setSeedExperience(experienceInteger);
             seeds.get(i).setSeedGold(userGoldInteger);
+
         }
+
         return seeds;
     }
     /**
@@ -135,11 +148,15 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public SeedDetailsVo querySeedById(Integer seeId) {
+
         UserLoginQuery user = localUser.getUser();
+
         SeedDetailsVo seedDetailsVo = seedMapper.querySeedById(seeId, user.getId());
+
         //int sum=(int)Math.ceil(seedDetailsVo.getSeedGrade()/10.00)*10;
         seedDetailsVo.setPrestige(18);
         seedDetailsVo.setUnlockFragmentedGoldCoins(seedDetailsVo.getSeedGrade()*1000);
+
         return seedDetailsVo;
     }
 
@@ -157,28 +174,37 @@ public class SeedServiceImpl implements ISeedService {
     @Override
     public Message unlockPlant(SeedVo seedVo) {
         UserLoginQuery user = localUser.getUser();
+
         //得到用户金币
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
+
         if(user1.getUserInfoGold()<seedVo.getUnlockMoney()){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
+
         Message message=new Message();
+
         //如果当前进度等于总进度 则解锁种子 修改种子状态
         Integer seedPresentUnlock = seedVo.getSeedPresentUnlock()+1;
         if(seedPresentUnlock.equals(seedVo.getSeedPresentAggregate())){
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),null,1);
         }
+
             //种子等级除以10 得出声望
             //等级余10大于0则进一
             //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
             //修改当前种子解锁进度
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
+
             //修改用户的金币和声望
             int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
+
             if(i<=0){
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
             }
+
             message.setMsg("解锁碎片成功");
+
             return message;
     }
     /**
@@ -187,6 +213,7 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
+
         //如果等于一就是种植种子
         if (seedPlantVo.getStatus() == 1) {
             Map<String, Object> map = new HashMap<>();
@@ -396,11 +423,14 @@ public class SeedServiceImpl implements ISeedService {
 
                     Integer nextExperience = Integer.valueOf((int) v);
                     seedPlantVo.setUserInfoNextExperience(nextExperience);
+
                     //不等于空 说明掉落了红包
                     if(seedPlantVo.getRedPacketDropped()!=null){
                         seedPlantVo.setRedPacketDropped(seedPlantVo.getRedPacketDropped());
                     }
+
                     seedPlantVo.setUserGold(userGoldInteger+seedPlantVo.getDropGoldCoin());
+
                     //随便传值 sql语句只是加了1
                     seedPlantVo.setSeedGrade(seedPlantVo.getUserGold()+1);
                     seedPlantVo.setUserId(user.getId());
@@ -421,22 +451,27 @@ public class SeedServiceImpl implements ISeedService {
                         System.out.println("userInfoQueryBoResults.getData().getUserInfoGrade() = " + userInfoQueryBoResults.getData().getUserInfoGrade());
                         //查询用户没有解锁的土地 状态等于0结果第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
-                        if(userLandUnlocks1.get(0).getLaStatus()==0){
+
+                        if(userLandUnlocks1.get(0).getLaStatus() == 0){
                             int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
                             if(i1<=0){
                                 throw new ApplicationException(CodeType.SERVICE_ERROR,"等级等于"+userInfoQueryBoResults.getData().getUserInfoGrade()+"！解锁失败");
                             }
                         }
+
                     }
                 } else{
                     //加上掉落的金币
                     seedPlantVo.setUserGold(userGoldInteger+seedPlantVo.getDropGoldCoin());
                     seedPlantVo.setUserInfoNowExperience(experienceInteger);
+
                     //不等于空 说明掉落了红包
                     if(seedPlantVo.getRedPacketDropped()!=null){
                         seedPlantVo.setRedPacketDropped(seedPlantVo.getRedPacketDropped());
                     }
+
                     seedPlantVo.setUserId(user.getId());
+
                     //修改用户信息
                     int i = seedMapper.updateUsers(seedPlantVo);
                     if(i<=0){
@@ -460,6 +495,7 @@ public class SeedServiceImpl implements ISeedService {
     public Result<UserInfoQueryBo> queryUserAll() {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
+
         return userFeignClient.queryUser(user.getId());
     }
 
@@ -467,7 +503,9 @@ public class SeedServiceImpl implements ISeedService {
     public List<LandYesVo> queryAlreadyPlantSd() {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
+
         List<LandYesVo> landYesVos = seedMapper.queryAlreadyPlantSd(user.getId());
+
         if(landYesVos.size()==0){
                 return null;
         }else{
@@ -477,12 +515,8 @@ public class SeedServiceImpl implements ISeedService {
                 landYesVos.get(i).setTime(l1);
             }
         }
+
         return landYesVos;
     }
-
-
-
-
-
 
 }

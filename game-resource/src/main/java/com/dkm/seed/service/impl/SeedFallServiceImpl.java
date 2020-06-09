@@ -94,7 +94,6 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
                 seedsFall.setDropCoins(gold);
 
-
                 goldOrMoneyVo.setGold(gold);
 
             }
@@ -134,6 +133,11 @@ public class SeedFallServiceImpl implements ISeedFallService {
         double end=0;
 
         //掉落次数
+        /**
+         * 一分钟
+         * 两秒钟掉一次
+         * 得出一分钟掉落多少次
+         */
         int numberDrops= 60 / 2;
 
         for (int i = 0; i < numberDrops; i++) {
@@ -143,25 +147,23 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
             end+= f1;
 
-
-            sta=  f1;
+            sta= f1;
 
             list.add(sta);
         }
+
         String s = String.valueOf(end);
 
         String substring = s.substring(0,3);
 
-
         BigDecimal bd=new BigDecimal(substring);
+
         double v = bd.doubleValue();
 
         BigDecimal a=new BigDecimal(money);
+
         //得到差值放入集合 得到最后一个红包
-        System.out.println(a.subtract(bd));
-
        list.add(a.subtract(bd).doubleValue());
-
 
         return list;
     }
