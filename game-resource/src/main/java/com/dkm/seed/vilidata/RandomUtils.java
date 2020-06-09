@@ -1,11 +1,6 @@
 package com.dkm.seed.vilidata;
 
-import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoQueryBo;
-import com.dkm.feign.UserFeignClient;
-import com.dkm.jwt.contain.LocalUser;
-import com.dkm.jwt.entity.UserLoginQuery;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -21,11 +16,10 @@ public class RandomUtils {
 
     /**
      * 掉落红包概率 是否有红包掉落
-     * @param status
      * @param userInfoGrade  用户等级
      * @return
      */
-    public boolean isProduceGoldRed(Integer status, Integer userInfoGrade){
+    public boolean isProduceGoldRed(Integer userInfoGrade){
         //红包掉落概率
         int pow = (int) (Math.pow(userInfoGrade, -1 / 2.0) * 100);
 
@@ -40,13 +34,17 @@ public class RandomUtils {
 
     /**
      * 红包掉落的数量
+     * @return
      */
-    public double NumberRedPacketsDropped(Integer status,double money){
-         if(status==1){
-             double v = money / 60;
-             return v;
-         }
-
+    public double NumberRedPacketsDropped(){
+         /*if(status==1){
+             //double v = money / 60;
+             return 0.01;
+         }*/
+        int random = new Random().nextInt(100) + 1;
+        if(random==1){
+            return 0.1;
+        }
         return 0.01;
     }
 
@@ -56,7 +54,7 @@ public class RandomUtils {
      * @param seedGrade  种子等级
      * @return
      */
-    public boolean isProduceGoldRed(Integer seedGrade){
+    public boolean probabilityDroppingGold(Integer seedGrade){
         //金币掉落概率
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
 

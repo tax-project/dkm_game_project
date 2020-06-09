@@ -93,6 +93,7 @@
 
 
 
+
     <insert id="insertSeedUnlock" parameterType="com.dkm.seed.entity.vo.SeedUnlock">
         insert into tb_plant_unlock(pu_id,seed_id,seed_present_unlock,seed_all_unlock,seed_status,user_id)
         <foreach collection="list" item="lists" index="index" separator="union all">
