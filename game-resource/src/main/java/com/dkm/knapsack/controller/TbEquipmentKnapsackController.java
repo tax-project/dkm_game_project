@@ -43,7 +43,9 @@ public class TbEquipmentKnapsackController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekDaoju",value = "1为穿戴品 2为道具 3为食物"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekIsva",value = "1为没有被卖 0被卖了"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "食物主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量")
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priId",value = "特权商品主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priNumber",value = "特权商品数量")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -57,6 +59,35 @@ public class TbEquipmentKnapsackController {
     @CheckToken
     public void addTbEquipmentKnapsack(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
         tbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
+    }
+
+    /**
+     * 增加特权商品到背包的方法
+     * 自动判断这个商品有没有进背包 没有则增加 否则修改
+     */
+    @ApiOperation(value = "增加特权商品的接口  input都是需要传递的参数",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekSell",value = "我的装备 1为装备上了 2为背包装备",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekMoney",value = "道具50金币 穿戴品只有5金币",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekDaoju",value = "1为穿戴品 2为道具 3为食物",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekIsva",value = "1为没有被卖 0被卖了",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "食物主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priId",value = "特权商品主键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priNumber",value = "特权商品数量",required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/addTbPrivilegeMall")
+    @CrossOrigin
+    public void addTbPrivilegeMall(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
+        tbEquipmentKnapsackService.addTbPrivilegeMall(tbEquipmentKnapsack);
     }
 
     /**
@@ -87,7 +118,8 @@ public class TbEquipmentKnapsackController {
      * 查登录用户的装备
      * @return
      */
-    @ApiOperation(value = "查当前登录用户的装备",notes = "成功返回数据 反则为空 data为装备 dataOne为食物")
+    @ApiOperation(value = "查当前登录用户的装备",notes = "成功返回数据 反则为空 data为装备 dataOne为食物" +
+            "dataTwo 为特权道具")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "用户背包装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备的外键"),
@@ -117,7 +149,10 @@ public class TbEquipmentKnapsackController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodName",value = "食物名字"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodUrl",value = "食物图片地址"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodGold",value = "食物售价")
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priId",value = "特殊道具主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priNumber",value = "特殊道具数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priNname",value = "特殊道具名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priImg",value = "特殊道具图片地址")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -133,14 +168,11 @@ public class TbEquipmentKnapsackController {
         Map<String,Object> map=new HashMap<>();
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodId();
+        List<TbEquipmentKnapsackVo> listTwo=tbEquipmentKnapsackService.selectProps();
         map.put("data",list);
         map.put("dataOne",listOne);
-
-        if(!StringUtils.isEmpty(list) || !StringUtils.isEmpty(listOne)){
-            return map;
-        }else{
-            return map;
-        }
+        map.put("dataTwo",listTwo);
+        return map;
     }
 
 

@@ -21,6 +21,16 @@ import java.util.List;
 public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsack> {
     List<TbEquipmentKnapsackVo> selectUserId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
+
+    /**
+     * 查询道具的接口
+     * @param userId
+     * @return
+     */
+    List<TbEquipmentKnapsackVo> selectProps(Long userId);
+
+    List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
+
     int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     int selectCountAll(Long knapsackId);
     List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);

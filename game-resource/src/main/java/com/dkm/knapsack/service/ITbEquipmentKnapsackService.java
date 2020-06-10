@@ -20,11 +20,14 @@ public interface ITbEquipmentKnapsackService{
 
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
+    List<TbEquipmentKnapsackVo> selectProps();
+    List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectFoodId();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
 
     void addTbEquipmentKnapsackTwo(String equipmentId);
     void deleteTbEquipment(Long tekId,Integer tekMoney);
+    void addTbPrivilegeMall(TbEquipmentKnapsack tbEquipmentKnapsack);
     Map<String,Object> findById(Long equipmentId);
     int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);

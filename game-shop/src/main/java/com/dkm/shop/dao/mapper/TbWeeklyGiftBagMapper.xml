@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbWeeklyGiftBagMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbWeeklyGiftBag">
+		<id column="twg_id" property="twgId" />
+		<result column="twg_title" property="twgTitle" />
+		<result column="twg_img" property="twgImg" />
+		<result column="twg_contnet" property="twgContnet" />
+		<result column="twg_money" property="twgMoney" />
+		<result column="twg_quan" property="twgQuan" />
+		<result column="twg_jinbi" property="twgJinbi" />
+		<result column="twg_tili" property="twgTili" />
+		<result column="twg_jin" property="twgJin" />
+		<result column="twg_lucky" property="twgLucky" />
+		<result column="twg_sp" property="twgSp" />
+		<result column="twg_wnsp" property="twgWnsp" />
+	</resultMap>
+
+</mapper>
