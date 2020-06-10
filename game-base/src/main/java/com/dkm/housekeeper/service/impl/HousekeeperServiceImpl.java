@@ -190,22 +190,18 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         long l = now.toEpochSecond(ZoneOffset.of("+8")) - startWorkTime.toEpochSecond(ZoneOffset.of("+8"));
         //需要收取的次数 并更新次数
         int count =(int) l / integer-housekeeperEntity.getSeedCount();
-        if(count<1){
-            map.put("gold",housekeeperEntity.getSeedGold());
-            map.put("exp",housekeeperEntity.getSeedExp());
-            return map;
-        }
         housekeeperEntity.setSeedCount(housekeeperEntity.getSeedCount()+count);
         //收取的经验
         int exp = count * data.size() * data.get(0).getSeedExperience();
         //收取的金币
         int gold = count * data.size() * data.get(0).getSeedGold();
         //调用收取种子的接口
-        SeedPlantVo seedPlantVo = new SeedPlantVo();
-        seedPlantVo.setDropGoldCoin(0);
-        seedPlantVo.setSeedGold(gold);
-        seedPlantVo.setUserInfoNowExperience(exp);
-        return null;
+        housekeeperEntity.setSeedGold(housekeeperEntity.getSeedGold()+gold);
+        housekeeperEntity.setSeedExp(housekeeperEntity.getSeedExp()+exp);
+        housekeeperMapper.updateById(housekeeperEntity);
+        map.put("gold",housekeeperEntity.getSeedGold());
+        map.put("exp",housekeeperEntity.getSeedExp());
+        return map;
     }
 
 }
