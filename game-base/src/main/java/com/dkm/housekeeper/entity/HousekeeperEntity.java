@@ -51,4 +51,19 @@ public class HousekeeperEntity {
      * 开工时间
      */
     private LocalDateTime startWorkTime;
+
+    /**
+     * 种子金币
+     */
+    private Integer seedGold;
+
+    /**
+     * 种子金币
+     */
+    private Integer seedExp;
+
+    /**
+     * 种子金币
+     */
+    private Integer seedCount;
 }
