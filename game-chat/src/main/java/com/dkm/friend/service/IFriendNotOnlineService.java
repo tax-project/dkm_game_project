@@ -26,10 +26,10 @@ public interface IFriendNotOnlineService {
    void insertNotOnline(FriendNotOnlineVo vo);
 
    /**
-    *  更改未读状态
+    *  删除未在线消息
     * @param list id集合
     */
-   void updateLook(List<Long> list);
+   void deleteLook(List<Long> list);
 
    /**
     * 删除所有已读的消息

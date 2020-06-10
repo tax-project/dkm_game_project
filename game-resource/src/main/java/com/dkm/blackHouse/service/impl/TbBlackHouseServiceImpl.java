@@ -13,6 +13,7 @@ import com.dkm.land.entity.Land;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -37,9 +38,17 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     private IdGenerator idGenerator;
     @Autowired
     private LocalUser localUser;
+
+    @Autowired
+    TbBlackHouseService tbBlackHouseService;
     @Override
     public int selectIsBlack(Long fromId) {
         return tbBlackHouseMapper.selectIsBlack(fromId);
+    }
+
+    @Override
+    public TbBlackHouseVo selectIsBlackT(TbBlackHouse tbBlackHouse) {
+        return tbBlackHouseMapper.selectIsBlackTwo(tbBlackHouse);
     }
 
     @Override
@@ -79,7 +88,20 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     }
 
     @Override
-    public TbBlackHouseVo selectIsBlackTwo(TbBlackHouse tbBlackHouse) {
+    public TbBlackHouseVo selectIsBlackTwo(Long userId) {
+        //首先根据传过来的登录用户的id查询出被关人的id
+        List<TbBlackHouse> selectById=tbBlackHouseService.selectById(userId);
+        TbBlackHouse tbBlackHouse=new TbBlackHouse();
+
+        for (TbBlackHouse blackHouse : selectById) {
+
+            if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
+                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
+            }
+            tbBlackHouse.setToId(blackHouse.getToId());
+            tbBlackHouse.setFromId(blackHouse.getFromId());
+        }
+
         return tbBlackHouseMapper.selectIsBlackTwo(tbBlackHouse);
     }
 

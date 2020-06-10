@@ -63,10 +63,7 @@ public interface ISeedService {
      */
     List<LandYesVo> queryAlreadyPlantSd();
 
-    /**
-     * 种子掉落
-     */
-    int seedDrop(Long id,Long seedId);
+
     
 
 

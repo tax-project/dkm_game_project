@@ -19,11 +19,14 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.seed.dao.LandSeedMapper;
 import com.dkm.seed.dao.SeedMapper;
+import com.dkm.seed.dao.SeedsFallMapper;
 import com.dkm.seed.dao.UserLandUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
+import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
+import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -73,6 +76,12 @@ public class SeedServiceImpl implements ISeedService {
 
     @Autowired
     private LandSeedMapper landSeedMapper;
+
+    @Autowired
+    private RandomUtils randomUtils;
+
+    @Autowired
+    private SeedsFallMapper seedsFallMapper;
 
 
 
@@ -471,11 +480,8 @@ public class SeedServiceImpl implements ISeedService {
         return landYesVos;
     }
 
-    @Override
-    public int seedDrop(Long id, Long seedId) {
 
-        return 0;
-    }
+
 
 
 

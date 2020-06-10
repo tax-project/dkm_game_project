@@ -18,11 +18,13 @@ public interface TbBlackHouseService  {
 
     int selectIsBlack(Long fromId);
 
+    TbBlackHouseVo selectIsBlackT(TbBlackHouse tbBlackHouse);
+
     void insertLand(TbBlackHouse tbBlackHouse);
 
     void updateIsBlack(TbBlackHouse tbBlackHouse);
 
-    TbBlackHouseVo selectIsBlackTwo(TbBlackHouse tbBlackHouse);
+    TbBlackHouseVo selectIsBlackTwo(Long userId);
 
     List<TbBlackHouse> selectById();
 

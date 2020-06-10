@@ -137,8 +137,8 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                         rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
                     }
 
-                    //更改数据库的未读状态
-                    friendFeignClient.updateLookStatus(longList);
+                    //删除数据库的信息
+                    friendFeignClient.deleteLookStatus(longList);
                 }
             }
                 //拷贝新的微信信息，如果是创建用户的话还有新的ID
@@ -237,8 +237,8 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                 rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
             }
 
-            //更改数据库的未读状态
-            friendFeignClient.updateLookStatus(longList);
+            //删除数据库的信息
+            friendFeignClient.deleteLookStatus(longList);
         }
 
         //将设备Id和用户Id存入redis中

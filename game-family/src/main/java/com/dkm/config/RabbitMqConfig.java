@@ -22,7 +22,7 @@ public class RabbitMqConfig {
 
    @Bean
    public Queue getFamilyWithQueue() {
-      return new Queue("game_family_queue_");
+      return new Queue("game_family_queue_",false);
    }
 
 }

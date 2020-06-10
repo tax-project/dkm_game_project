@@ -25,8 +25,8 @@ public class FriendNotOnlineController {
    }
 
 
-   @PostMapping("/updateLookStatus")
-   public void updateLookStatus(@RequestBody List<Long> list) {
-      friendNotOnlineService.updateLook(list);
+   @PostMapping("/deleteLookStatus")
+   public void deleteLookStatus(@RequestBody List<Long> list) {
+      friendNotOnlineService.deleteLook(list);
    }
 }

@@ -41,6 +41,13 @@ public class MqListener {
    public void msg (@Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, String msgInfo, Channel channel) {
       log.info("收到服务器传来的家族信息:" +msgInfo);
 
+      //确认消息
+      try {
+         channel.basicAck(deliveryTag,true);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
       //判断是不是家族消息
       MsgInfo info = null;
       try {
@@ -63,13 +70,6 @@ public class MqListener {
          }
          info.setToIdList(longList);
          msgInfo = JSON.toJSONString(info);
-      }
-
-      //确认消息
-      try {
-         channel.basicAck(deliveryTag,true);
-      } catch (IOException e) {
-         e.printStackTrace();
       }
 
       //一些业务操作之后

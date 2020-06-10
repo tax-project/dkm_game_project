@@ -4,12 +4,12 @@
 <mapper namespace="com.dkm.friend.dao.FriendNotOnlineMapper">
 
 
-    <update id="updateLook" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index">
-            update tb_friend_online set is_look = 1
-            where to_id = #{item}
+    <delete id="deleteLook" parameterType="Long">
+        delete from tb_friend_online where
+        <foreach collection="list" item="item" index="index" separator="or">
+             to_id = #{item}
         </foreach>
-    </update>
+    </delete>
 
 
 

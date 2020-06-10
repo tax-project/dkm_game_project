@@ -18,7 +18,7 @@ public class RabbitMqQueueConfig {
     */
    @Bean
    public Queue getWebQueue () {
-      return new Queue("game_msg_chat_queue");
+      return new Queue("game_msg_chat_queue",false);
    }
 
    /**
@@ -27,7 +27,7 @@ public class RabbitMqQueueConfig {
     */
    @Bean
    public Queue getNotOnlineQueue () {
-      return new Queue("game_msg_not_online_queue");
+      return new Queue("game_msg_not_online_queue",false);
    }
 
    /**
@@ -36,6 +36,6 @@ public class RabbitMqQueueConfig {
     */
    @Bean
    public Queue getFamilyQueue () {
-      return new Queue("game_family_info_queue");
+      return new Queue("game_family_info_queue",false);
    }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.seed.dao.SeedsFallMapper">
+
+    <insert id="insertSeedDropGoldOrRedEnvelopes" parameterType="com.dkm.seed.entity.SeedsFall">
+        insert into tb_seeds_fall(id,seed_id,drop_coins,drop_red_envelope)
+        <foreach collection="list" item="lists" index="index" separator="union all">
+            select #{lists.id},#{lists.seedId},#{lists.dropCoins},#{lists.dropRedEnvelope}
+        </foreach>
+    </insert>
+
+
+
+
+
+</mapper>

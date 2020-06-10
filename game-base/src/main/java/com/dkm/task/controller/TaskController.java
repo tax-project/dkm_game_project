@@ -44,9 +44,9 @@ public class TaskController {
     @ApiOperation("领取任务奖励")
     @ApiImplicitParam(name = "taskId",value = "任务id",paramType = "path",dataType = "Long",required = true)
     @CrossOrigin
-    @GetMapping("/getUserTask")
+    @GetMapping("/getTaskReward")
     @CheckToken
-    public void getUserTask(Long taskId){
+    public void getTaskReward(Long taskId){
         taskService.getTaskReward(localUser.getUser().getId(),taskId);
     }
 

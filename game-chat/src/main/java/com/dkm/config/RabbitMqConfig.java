@@ -15,6 +15,6 @@ public class RabbitMqConfig {
 
    @Bean
    public FanoutExchange fanoutExchange () {
-      return new FanoutExchange("game_msg_fanoutExchange");
+      return new FanoutExchange("game_msg_fanoutExchange",false,false);
    }
 }
