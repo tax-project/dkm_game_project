@@ -23,7 +23,7 @@ public class FriendFeignClientFallback implements FriendFeignClient {
    }
 
    @Override
-   public Result updateLookStatus(List<Long> list) {
+   public Result deleteLookStatus(List<Long> list) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
