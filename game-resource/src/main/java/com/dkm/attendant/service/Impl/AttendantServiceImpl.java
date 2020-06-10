@@ -257,8 +257,6 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方随机上场的宠物
         String hePet=null;
 
-        //我方装备血量之和
-        double myedLisfe=0;
 
         /**
          * 我方数据
@@ -291,15 +289,19 @@ public class AttendantServiceImpl implements IAttendantService {
         double heEquipBonus=0;
 
         Map<String,Object> map=new HashMap<>();
+
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
+
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
 
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
+
         //随机获取他方宠物
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
@@ -437,7 +439,7 @@ public class AttendantServiceImpl implements IAttendantService {
                  */
                 if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 0) {
                     //没有加成的的话 直接将装备的生命赋值
-                    myedLisfe = myedLisfe + tbEquipmentKnapsackVos.get(i).getEdLife().intValue();
+                    ourHealth = ourHealth + tbEquipmentKnapsackVos.get(i).getEdLife().intValue();
                 }
 
                 /**

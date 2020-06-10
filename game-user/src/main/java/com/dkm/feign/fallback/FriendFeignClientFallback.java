@@ -17,13 +17,14 @@ import java.util.List;
 public class FriendFeignClientFallback implements FriendFeignClient {
 
 
+
    @Override
    public Result<List<FriendNotOnlineVo>> queryNotOnline(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
    @Override
-   public Result updateLookStatus(List<Long> list) {
+   public Result deleteLookStatus(List<Long> list) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
