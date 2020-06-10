@@ -1,4 +1,4 @@
-package com.dkm.wallet.service.Impl;
+package com.dkm.wallet.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,7 +7,6 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
-import com.dkm.seed.entity.LandSeed;
 import com.dkm.wallet.dao.WithdrawalMapper;
 import com.dkm.wallet.entity.Withdrawal;
 import com.dkm.wallet.service.IWithdrawalService;
