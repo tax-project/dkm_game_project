@@ -52,10 +52,12 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
    @Override
    public void friendRequest(FriendRequestVo vo) {
 
+      UserLoginQuery user = localUser.getUser();
+
       FriendRequest friendRequest = new FriendRequest();
       friendRequest.setId(idGenerator.getNumberId());
 
-      friendRequest.setFromId(vo.getFromId());
+      friendRequest.setFromId(user.getId());
       friendRequest.setToId(vo.getToId());
       friendRequest.setRequestRemark(vo.getRequestRemark());
 
@@ -72,7 +74,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
       //通知客户端收到好友申请的通知
       MsgInfo msgInfo = new MsgInfo();
       msgInfo.setType(101);
-      msgInfo.setFromId(vo.getFromId());
+      msgInfo.setFromId(user.getId());
       msgInfo.setToId(vo.getToId());
       msgInfo.setMsg("收到一条好友申请");
 
