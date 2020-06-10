@@ -53,6 +53,7 @@ import java.util.Map;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class SeedServiceImpl implements ISeedService {
+
     @Autowired
     private SeedMapper seedMapper;
 
@@ -68,22 +69,12 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private UserFeignClient userFeignClient;
 
-    @Autowired
-    private UserLandUnlockMapper userLandUnlockMapper;
 
     @Autowired
     private LandMapper landMapper;
 
     @Autowired
     private LandSeedMapper landSeedMapper;
-
-    @Autowired
-    private RandomUtils randomUtils;
-
-    @Autowired
-    private SeedsFallMapper seedsFallMapper;
-
-
 
 
     /**
@@ -258,12 +249,14 @@ public class SeedServiceImpl implements ISeedService {
                     .eq(LandSeed::getUserId, user.getId())
                     //.eq(LandSeed::getLeStatus, 3)
                     .eq(LandSeed::getSeedId,seedPlantVo.getSeedId());
+
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
 
             //如果查询出来长度等于0说明是新种植 添加到数据库 ，第一个种子持续1分钟产出红包
             if(list1.size()==0){
                 //循环用户解锁土地，解锁多少多少土地 种植多少种子
                 for (int i = 0; i < userLandUnlocks.size(); i++) {
+
                     LandSeed landSeed = new LandSeed();
                     //生成主键id
                     landSeed.setId(idGenerator.getNumberId());
@@ -296,6 +289,7 @@ public class SeedServiceImpl implements ISeedService {
             }else{
                 //如果自己种子的数量等于自己解锁的土地数量  则修改种植状态
                 if (list1.size() == userLandUnlocks.size()) {
+
                     LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                             .eq(LandSeed::getUserId,user.getId());
                     LandSeed landSeed=new LandSeed();
@@ -359,6 +353,7 @@ public class SeedServiceImpl implements ISeedService {
 
 
     public void updateUser(SeedPlantVo seedPlantVo) {
+
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
 
@@ -367,6 +362,7 @@ public class SeedServiceImpl implements ISeedService {
 
            //当前时间必须大于等于种植种植结束时间 才能收取
             if(System.currentTimeMillis()/1000>=landYesVos.get(0).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+
                 //根据用户查询解锁的土地
                 List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 

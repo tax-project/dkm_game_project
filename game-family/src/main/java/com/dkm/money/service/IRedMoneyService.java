@@ -6,4 +6,6 @@ package com.dkm.money.service;
  * @vesion 1.0
  **/
 public interface IRedMoneyService {
+
+
 }

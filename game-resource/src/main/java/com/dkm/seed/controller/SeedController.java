@@ -116,9 +116,6 @@ public class SeedController {
     @PostMapping("/plants")
     @CrossOrigin
     public void plants(@RequestBody SeedPlantVo seedPlantVo) {
-        /*if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null ||seedPlantVo.getStatus()==null) {
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
-        }*/
         iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 
