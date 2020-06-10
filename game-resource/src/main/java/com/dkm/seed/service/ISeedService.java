@@ -23,7 +23,7 @@ public interface ISeedService {
     /**
      * 根据用户id得到种子信息
      */
-    List<SeedPlantUnlock> queryUserIdSeed();
+    List<SeedPlantUnlock> queryUserIdSeed(Long userId);
 
     /**
      * 解锁植物

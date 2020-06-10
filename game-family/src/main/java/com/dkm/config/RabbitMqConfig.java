@@ -25,4 +25,13 @@ public class RabbitMqConfig {
       return new Queue("game_family_queue_",false);
    }
 
+   /**
+    *  传输家族的消息队列
+    * @return
+    */
+   @Bean
+   public Queue getFamilyQueue () {
+      return new Queue("game_family_info_queue",false);
+   }
+
 }
