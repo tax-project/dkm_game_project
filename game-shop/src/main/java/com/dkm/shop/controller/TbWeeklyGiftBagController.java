@@ -62,5 +62,6 @@ public class TbWeeklyGiftBagController {
         List<TbWeeklyGiftBag> list=tbWeeklyGiftBagService.selectAll();
         return list;
     }
-	
+
+
 }
