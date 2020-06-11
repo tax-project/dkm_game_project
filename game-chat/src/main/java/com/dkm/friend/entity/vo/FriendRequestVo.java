@@ -13,11 +13,6 @@ import java.time.LocalDateTime;
 public class FriendRequestVo {
 
    /**
-    * 加人ID
-    */
-   private Long fromId;
-
-   /**
     * 被加人ID
     */
    private Long toId;
