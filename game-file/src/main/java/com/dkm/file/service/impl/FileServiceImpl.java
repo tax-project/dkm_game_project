@@ -1,8 +1,8 @@
 package com.dkm.file.service.impl;
 
+import com.dkm.entity.vo.FileVo;
 import com.dkm.file.service.IFileService;
 import com.dkm.file.utils.FileUtils;
-import com.dkm.file.utils.FileVo;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.QrCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
