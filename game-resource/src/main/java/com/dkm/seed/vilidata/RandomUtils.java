@@ -37,13 +37,13 @@ public class RandomUtils {
      * @return
      */
     public double NumberRedPacketsDropped(){
-         /*if(status==1){
-             //double v = money / 60;
-             return 0.01;
-         }*/
         int random = new Random().nextInt(100) + 1;
         if(random<=10){
             return 0.01;
+        }
+
+        if(random==1){
+            return 0.1;
         }
         return 0.0;
     }
@@ -57,9 +57,10 @@ public class RandomUtils {
     public boolean probabilityDroppingGold(Integer seedGrade){
         //金币掉落概率
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
-
+        System.out.println("pow = " + pow);
         //生产1-100的随机数
         int random = new Random().nextInt(100) + 1;
+        System.out.println("random = " + random);
         if(random<=pow){
             return true;
         }

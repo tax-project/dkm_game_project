@@ -13,7 +13,7 @@ public class GoldOrMoneyVo {
     /**
      * 金币
      */
-    private Integer Gold;
+    private Integer Gold=0;
     /**
      * 红包
      */
