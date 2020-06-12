@@ -661,6 +661,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //抓系统跟班
         attendantUser.setAtuId(idGenerator.getNumberId());
         if (attendantId == null) {
+
             throw new ApplicationException(CodeType.SERVICE_ERROR, "系统跟班需要传跟班id");
         }
         attendantUser.setAttendantId(attendantId);
@@ -669,8 +670,10 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUser.setEndDate(s);
         attendantUserService.insert(attendantUser);
         vo.setStatus(0);
+
         //添加事件
         insertEvent(caughtPeopleId);
+
         //
         return vo;
 
