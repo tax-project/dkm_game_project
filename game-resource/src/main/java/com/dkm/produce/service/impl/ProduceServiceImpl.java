@@ -95,8 +95,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //算出随机生成的数量
         if ("金币".equals(goods.getName())) {
             Random rand = new Random();
-            int randNum = rand.nextInt(5000)+2000;
-            number = randNum;
+            int randNum = rand.nextInt(5000);
+            if(randNum<2000){
+                randNum = new Random().nextInt(5000);
+                number = randNum;
+            }
+
         } else {
             Random r = new Random();
             int randNum =r.nextInt(3)+1;

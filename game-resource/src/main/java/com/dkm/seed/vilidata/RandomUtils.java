@@ -42,10 +42,10 @@ public class RandomUtils {
              return 0.01;
          }*/
         int random = new Random().nextInt(100) + 1;
-        if(random==1){
-            return 0.1;
+        if(random<=10){
+            return 0.01;
         }
-        return 0.01;
+        return 0.0;
     }
 
 
@@ -73,14 +73,17 @@ public class RandomUtils {
      *
      */
     public Integer NumberCoinsDropped(Integer gold,Long time){
-        double start = gold / time * 2 * 0.5;
-        int start1 = (int) start;
+        double start = time / gold / 2 * 0.5/100;
 
-        double end=gold / time * 2 * 0.7;
+        int start1 = (int) start;
+        double end=time / gold / 2 * 0.7/100;
+
         int end1 = (int) end;
         //金币
-        int random = new Random().nextInt(start1) + end1;
-
+        int random = new Random().nextInt(start1);
+        if(random<end1){
+            random = new Random().nextInt(start1);
+        }
         return random;
     }
 }

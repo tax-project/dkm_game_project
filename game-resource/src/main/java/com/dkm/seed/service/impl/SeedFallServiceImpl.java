@@ -79,6 +79,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
         SeedsFall seedsFall=null;
 
         for (LandSeed seed : landSeedList) {
+
             GoldOrMoneyVo goldOrMoneyVo=new GoldOrMoneyVo();
 
             seedsFall=new SeedsFall();
@@ -90,7 +91,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
             if(dropCoins){
                 double userGold  = Math.pow(userInfoQueryBoResult.getData().getUserInfoGrade(), 2)*50 +1000;
                 Integer userGoldInteger = (int) userGold;
-                gold = randomUtils.NumberCoinsDropped(userGoldInteger, seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
+                gold = randomUtils.NumberCoinsDropped(userGoldInteger,seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
 
                 seedsFall.setDropCoins(gold);
 
