@@ -1,4 +1,4 @@
-package com.dkm.wallet.service.Impl;
+package com.dkm.wallet.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.jwt.contain.LocalUser;
@@ -34,7 +34,7 @@ public class WithdrawalRecordServiceImpl extends ServiceImpl<WithdrawalRecordMap
      */
     @Override
     public Map<String,Object> queryRecordMonth() {
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>(16);
 
         //本月提现记录
         List<WithdrawalRecord> withdrawalRecords = baseMapper.queryRecordMonth(localUser.getUser().getId());

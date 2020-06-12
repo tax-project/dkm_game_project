@@ -15,6 +15,10 @@ app:
   workerId: 9
   dataCenterId: 1
 
+file:
+  #  前端地址   二维码地址  跳转到搜索好友页面
+  qrCodeUrl: http://www.baidu.com
+
 #微信密钥
 weChat:
   access:

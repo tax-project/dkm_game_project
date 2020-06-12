@@ -15,6 +15,9 @@ import com.dkm.entity.bo.ParamBo;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.event.dao.EventMapper;
+import com.dkm.event.entity.Event;
+import com.dkm.event.service.IEventService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
@@ -75,6 +78,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private IProduceService produceService;
+
+    @Autowired
+    private EventMapper eventMapper;
+
 
     private String redisLock = "REDIS::LOCK:ATTENDANT";
 
@@ -626,6 +633,9 @@ public class AttendantServiceImpl implements IAttendantService {
                     attendantUserService.insert(attendantUser);
                     //代表抢用户跟班成功
                     vo.setStatus(0);
+                    //添加事件
+                    insertEvent(caughtPeopleId);
+                    //
                     return vo;
                 }
                 //跟没有主人的用户打架
@@ -635,8 +645,12 @@ public class AttendantServiceImpl implements IAttendantService {
                 attendantUser.setUserId(user.getId());
                 attendantUser.setEndDate(s);
                 attendantUserService.insert(attendantUser);
+
                 //代表抢用户跟班成功
                 vo.setStatus(0);
+                //添加事件
+                insertEvent(caughtPeopleId);
+                //
                 return vo;
             } finally {
                 redisConfig.deleteLock(redisLock);
@@ -647,6 +661,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //抓系统跟班
         attendantUser.setAtuId(idGenerator.getNumberId());
         if (attendantId == null) {
+
             throw new ApplicationException(CodeType.SERVICE_ERROR, "系统跟班需要传跟班id");
         }
         attendantUser.setAttendantId(attendantId);
@@ -655,7 +670,26 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUser.setEndDate(s);
         attendantUserService.insert(attendantUser);
         vo.setStatus(0);
+
+        //添加事件
+        insertEvent(caughtPeopleId);
+
+        //
         return vo;
+
+
+    }
+
+    public void insertEvent(Long caughtPeopleId){
+        Event event=new Event();
+        event.setId(idGenerator.getNumberId());
+        event.setHeUserId(caughtPeopleId);
+        event.setUserId(localUser.getUser().getId());
+        event.setEvMsgExternal("从别人手中抓你成功1次");
+        LocalDateTime now = LocalDateTime.now();
+        event.setEvTime(now);
+        event.setEvMsgIn("成为你的新主人");
+        int insert = eventMapper.insert(event);
     }
 
 
@@ -833,13 +867,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public Map<String,Object> queryAidUser(Long CaughtPeopleId) {
+    public Map<String,Object> queryAidUser(Long caughtPeopleId) {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
 
         Map<String,Object> map=new HashMap<>();
         //主人信息
-        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(CaughtPeopleId);
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(caughtPeopleId);
         if(attendantUserVo == null){
             map.put("msg","没有主人");
         }else{

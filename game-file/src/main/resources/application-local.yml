@@ -22,18 +22,5 @@ eureka:
 
 file:
   url: http://192.168.10.133:7000/game-file/img
-feign:
-  hystrix:
-    enabled: true
-  httpclient:
-    connection-timeout: 10000
-hystrix:
-    metrics:
-      enabled: true
-      polling-interval-ms: 4000
-
-ribbon:
-  eureka:
-    enabled: true
 
 

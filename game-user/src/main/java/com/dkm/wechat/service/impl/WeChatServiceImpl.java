@@ -9,8 +9,10 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.vo.FileVo;
 import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.FileFeignClient;
 import com.dkm.feign.FriendFeignClient;
 import com.dkm.feign.entity.FriendNotOnlineVo;
 import com.dkm.jwt.contain.LocalUser;
@@ -33,6 +35,7 @@ import com.dkm.wechat.util.bo.WeChatUtilBO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +78,12 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     @Autowired
     private LocalUser localUser;
 
+    @Value("${file.qrCodeUrl}")
+    private String qrCodeUrl;
+
+    @Autowired
+    private FileFeignClient fileFeignClient;
+
     @Override
     public Map<String, Object> weChatLoginUserInfo(String code) {
         UserBO resultBO = new UserBO();
@@ -99,6 +108,15 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                     //女
                     user.setUserSex(2);
                 }
+
+                //生成属于自己的二维码
+                Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?userId=" + userId);
+
+                if (qrCode.getCode() != 0) {
+                    throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "文件feign出错");
+                }
+                user.setQrCode(qrCode.getData().getFileUrl());
+
                 int insert = baseMapper.insert(user);
                 if (insert == 0) {
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "用户创建登录失败，请重新登录");
@@ -187,6 +205,14 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         //默认初始年龄
         LocalDate localDate = LocalDate.now().minusYears(20);
         user1.setUserAge(localDate);
+
+        //生成属于自己的二维码
+        Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?userId=" + id);
+
+        if (qrCode.getCode() != 0) {
+            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "文件feign出错");
+        }
+        user1.setQrCode(qrCode.getData().getFileUrl());
 
         int insert = baseMapper.insert(user1);
 
@@ -287,6 +313,11 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
      */
     @Override
     public List<UserHeardUrlBo> queryAllHeardByUserId(List<Long> list) {
+
+        if (null == list || list.size() == 0) {
+            return null;
+        }
+
         return baseMapper.queryAllHeardByUserId (list);
     }
 

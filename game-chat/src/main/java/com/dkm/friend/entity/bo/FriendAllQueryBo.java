@@ -1,16 +1,19 @@
-package com.dkm.friend.entity.vo;
+package com.dkm.friend.entity.bo;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author qf
- * @date 2020/5/12
+ * @date 2020/6/11
  * @vesion 1.0
  **/
 @Data
-public class FriendAllListVo {
+public class FriendAllQueryBo {
+
+   /**
+    * 谁的账号
+    */
+   private Long fromId;
 
    /**
     * 好友的用户id

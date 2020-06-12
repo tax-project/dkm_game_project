@@ -1,16 +1,14 @@
-package com.dkm.friend.entity.vo;
+package com.dkm.friend.entity.bo;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author qf
- * @date 2020/5/12
+ * @date 2020/6/11
  * @vesion 1.0
  **/
 @Data
-public class FriendAllListVo {
+public class FriendBo {
 
    /**
     * 好友的用户id
@@ -18,14 +16,14 @@ public class FriendAllListVo {
    private Long toId;
 
    /**
-    * 昵称
-    */
-   private String nickName;
-
-   /**
-    * 头像地址
+    * 头像
     */
    private String headUrl;
+
+   /**
+    * 名称
+    */
+   private String nickName;
 
    /**
     * 性别
@@ -33,4 +31,9 @@ public class FriendAllListVo {
     * 2--女
     */
    private Integer userSex;
+
+   /**
+    * 共同好友
+    */
+   private FriendToWithBo bo;
 }

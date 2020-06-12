@@ -24,6 +24,10 @@ public class TbEquipmentKnapsackVo {
      */
     private Long equipmentId;
     /**
+     * 用户主键
+     */
+    private Long userId;
+    /**
      * 背包主键
      */
     private Long knapsackId;
@@ -52,6 +56,23 @@ public class TbEquipmentKnapsackVo {
      * 食物数量
      */
     private Integer foodNumber;
+
+    /**
+     * 特权道具主键
+     */
+    private Long priId;
+    /**
+     * 特权道具数量
+     */
+    private Integer priNumber;
+    /**
+     * 特权道具图片
+     */
+    private Integer priImg;
+    /**
+     * 特权道具名字
+     */
+    private Integer priName;
     /**
      * 宝箱主键
      */
@@ -152,4 +173,6 @@ public class TbEquipmentKnapsackVo {
      * 售价
      */
     private Integer foodGold;
+
+
 }

@@ -3,9 +3,10 @@ package com.dkm.manyChat.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.vo.FileVo;
 import com.dkm.exception.ApplicationException;
-import com.dkm.file.service.IFileService;
-import com.dkm.file.utils.FileVo;
+import com.dkm.feign.FileFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.manyChat.dao.ManyChatMapper;
@@ -38,11 +39,11 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
    @Autowired
    private IdGenerator idGenerator;
 
+   @Autowired
+   private FileFeignClient fileFeignClient;
+
    @Value("${file.qrCodeUrl}")
    private String qrCodeUrl;
-
-   @Autowired
-   private IFileService fileService;
 
    @Autowired
    private LocalUser localUser;
@@ -61,8 +62,13 @@ public class ManyChatServiceImpl extends ServiceImpl<ManyChatMapper, ManyChat> i
       manyChat.setCreateDate(LocalDateTime.now());
       manyChat.setManyName(vo.getManyName());
       //生成群聊二维码
-      FileVo qrCode = fileService.getQrCode(qrCodeUrl + "?manyChatId=" + manyChatId);
-      manyChat.setManyQrCode(qrCode.getFileUrl());
+      Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?manyChatId=" + manyChatId);
+
+      if (qrCode.getCode() != 0) {
+         throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "调用fileFeign失败");
+      }
+
+      manyChat.setManyQrCode(qrCode.getData().getFileUrl());
 
       int insert = baseMapper.insert(manyChat);
 

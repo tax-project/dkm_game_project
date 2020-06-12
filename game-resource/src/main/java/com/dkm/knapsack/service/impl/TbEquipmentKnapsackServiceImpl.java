@@ -73,6 +73,16 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectUserId(userId);
     }
 
+    @Override
+    public List<TbEquipmentKnapsackVo> selectProps() {
+        return tbEquipmentKnapsackMapper.selectProps(localUser.getUser().getId());
+    }
+
+    @Override
+    public List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
+        return tbEquipmentKnapsackMapper.selectPropsTwo(tbEquipmentKnapsackVo);
+    }
+
     /**
      * 根据当前用户查询食物
      * @return
@@ -185,6 +195,41 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     //增加金币的方法
                     userFeignClient.increaseUserInfo(increaseUserInfoBO);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void addTbPrivilegeMall(TbEquipmentKnapsack tbEquipmentKnapsack) {
+        TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
+        tbEquipmentKnapsackVo.setPriId(tbEquipmentKnapsack.getPriId());
+        tbEquipmentKnapsackVo.setUserId(localUser.getUser().getId());
+        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackMapper.selectPropsTwo(tbEquipmentKnapsackVo);
+        if(!StringUtils.isEmpty(list)){
+            Long id=null;
+            int price=0;
+            for (TbEquipmentKnapsackVo equipmentKnapsack : list) {
+                id=equipmentKnapsack.getTekId();
+                price=equipmentKnapsack.getPriNumber();
+            }
+            //有的话直接修改
+            TbEquipmentKnapsack tbEquipmentKnapsackOne = new TbEquipmentKnapsack();
+            QueryWrapper queryWrapperOne = new QueryWrapper();
+            tbEquipmentKnapsackOne.setPriNumber(price+tbEquipmentKnapsack.getPriNumber());
+
+            queryWrapperOne.eq("tek_id", id);
+            int rows = tbEquipmentKnapsackMapper.update(tbEquipmentKnapsackOne, queryWrapperOne);
+            if (rows <= 0) {
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+            }
+        }else{
+            tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
+            //没有的话直接增加
+            int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
+            if (rows <= 0) {
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
             }
         }
     }
@@ -388,28 +433,56 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 //如果失败将回滚
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "数量没有那么多了");
             }else{
-                TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
-                tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
-                QueryWrapper queryWrapper1=new QueryWrapper();
-                queryWrapper1.eq("tek_id",tekId);
-                int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
-                if(rows<=0){
-                    //如果失败将回滚
-                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
-                }else{
-                    QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
-                    queryWrapper2.eq("tek_id",tekId);
-                    List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
-                    for (TbEquipmentKnapsack equipmentKnapsack : list2) {
-                        if(equipmentKnapsack.getFoodNumber()<=0){
-                            QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
-                            queryWrapper3.eq("tek_id",tekId);
-                            TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
-                            tbEquipmentKnapsack2.setTekIsva(0);
-                            tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                if(tbEquipmentKnapsack.getFoodId()!=null){
+                    TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                    tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
+                    QueryWrapper queryWrapper1=new QueryWrapper();
+                    queryWrapper1.eq("tek_id",tekId);
+                    int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                    if(rows<=0){
+                        //如果失败将回滚
+                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                    }else{
+                        QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
+                        queryWrapper2.eq("tek_id",tekId);
+                        List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
+                        for (TbEquipmentKnapsack equipmentKnapsack : list2) {
+                            if(equipmentKnapsack.getFoodNumber()<=0){
+                                QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
+                                queryWrapper3.eq("tek_id",tekId);
+                                TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
+                                tbEquipmentKnapsack2.setTekIsva(0);
+                                tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                            }
+                        }
+                    }
+                 //判断特殊商品不为空
+                }else if(tbEquipmentKnapsack.getPriId()!=null){
+                    QueryWrapper queryWrapper1=new QueryWrapper();
+
+                    TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                    tbEquipmentKnapsack1.setPriNumber(tbEquipmentKnapsack.getPriNumber()-foodNumber);
+                    queryWrapper1.eq("tek_id",tekId);
+                    int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                    if(rows<=0){
+                        //如果失败将回滚
+                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                    }else{
+                        QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
+                        queryWrapper2.eq("tek_id",tekId);
+                        List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
+                        for (TbEquipmentKnapsack equipmentKnapsack : list2) {
+                            if(equipmentKnapsack.getPriNumber()<=0){
+                                QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
+                                queryWrapper3.eq("tek_id",tekId);
+                                TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
+                                tbEquipmentKnapsack2.setTekIsva(0);
+                                tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                            }
                         }
                     }
                 }
+
             }
         }
     }

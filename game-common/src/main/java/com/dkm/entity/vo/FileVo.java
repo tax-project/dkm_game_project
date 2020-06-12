@@ -1,4 +1,4 @@
-package com.dkm.file.utils;
+package com.dkm.entity.vo;
 
 import lombok.Data;
 

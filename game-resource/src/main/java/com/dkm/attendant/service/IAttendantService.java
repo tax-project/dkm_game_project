@@ -21,6 +21,7 @@ import java.util.Map;
  * @DATE: 2020/5/11 14:06
  */
 public interface IAttendantService {
+
     /**
      *获取用户抓到的跟班信息
      * @return
@@ -82,12 +83,14 @@ public interface IAttendantService {
      * @return
      */
    Map<String,Object>  combatResults(AttendantVo vo);
+
     /**
      * 查询自己的一个主人信息
      * @param CaughtPeopleId 当前用户id
      * @return
      */
     Map<String,Object> queryAidUser(Long CaughtPeopleId);
+
 
     /**
      * 查询所有跟班

@@ -1,9 +1,9 @@
 package com.dkm.file.controller;
 
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.vo.FileVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
-import com.dkm.file.utils.FileVo;
 import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,16 @@ public class FileController {
       }
 
       return fileService.storeFile(file);
+   }
+
+   /**
+    * Feign调用  不提供外部
+    * @param content
+    * @return
+    */
+   @GetMapping("/getQrCode")
+   public FileVo getQrCode(@RequestParam("content") String content) {
+      return fileService.getQrCode (content);
    }
 
 }

@@ -4,12 +4,33 @@
 <mapper namespace="com.dkm.friend.dao.FriendMapper">
 
     <select id="queryAllFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.vo.FriendAllListVo">
-        <foreach collection="list" item="item" index="index">
-            select user_id as 'toId',we_chat_nick_name as 'nickName',we_chat_head_img_url as 'headUrl'
-            from tb_user where user_id = #{item.fromId}
+        select user_id as 'toId',we_chat_nick_name as 'nickName',we_chat_head_img_url as 'headUrl',user_sex as 'userSex'
+        from tb_user where
+        <foreach collection="list" item="item" index="index" separator="or">
+            user_id = #{item.fromId}
         </foreach>
     </select>
 
 
+    <select id="queryRandomFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.vo.FriendAllListVo">
+        select user_id as 'toId',we_chat_nick_name as 'nickName',we_chat_head_img_url as 'headUrl',
+        user_sex as 'userSex' from tb_user where
+        <foreach collection="list" item="item" index="index" separator="or">
+            user_id = #{item.fromId}
+        </foreach>
+        ORDER BY RAND() LIMIT 10
+    </select>
+
+    <select id="listAllTwoFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.bo.FriendAllQueryBo">
+        select a.from_id as 'fromId', a.to_id as 'toId',b.we_chat_nick_name as 'nickName',
+        b.we_chat_head_img_url as 'headUrl',b.user_sex as 'userSex'
+        from tb_user b join tb_friend a on a.to_id = b.user_id
+        where
+        <foreach collection="list" item="item" index="index" separator="or">
+            a.from_id = #{item.fromId}
+        </foreach>
+        and a.status = 0
+        ORDER BY RAND() LIMIT 10
+    </select>
 
 </mapper>

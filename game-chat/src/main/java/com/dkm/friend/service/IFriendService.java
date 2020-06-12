@@ -1,5 +1,6 @@
 package com.dkm.friend.service;
 
+import com.dkm.friend.entity.bo.FriendBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
 import com.dkm.friend.entity.vo.FriendVo;
 
@@ -29,4 +30,11 @@ public interface IFriendService {
     * @return 所有好友信息
     */
    List<FriendAllListVo> listAllFriend();
+
+
+   /**
+    *  可能认识的人
+    * @return 返回所有可能认识的人的集合
+    */
+   List<FriendBo> listAllProblemFriend ();
 }
