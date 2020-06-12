@@ -313,6 +313,11 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
      */
     @Override
     public List<UserHeardUrlBo> queryAllHeardByUserId(List<Long> list) {
+
+        if (null == list || list.size() == 0) {
+            return null;
+        }
+
         return baseMapper.queryAllHeardByUserId (list);
     }
 
