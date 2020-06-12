@@ -9,6 +9,7 @@ import com.dkm.entity.bo.ParamBo;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;

@@ -31,6 +31,5 @@ eureka:
       defaultZone: http://192.168.10.133:10000/eureka
 
 file:
-  url: http://192.168.10.133:8304/game-resource/img
-  #  前端地址   二维码地址
+  # 前端地址   跳转搜索群聊的页面
   qrCodeUrl: http://www.baidu.com

@@ -6,6 +6,9 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.friend.dao.FriendMapper;
 import com.dkm.friend.entity.Friend;
+import com.dkm.friend.entity.bo.FriendAllQueryBo;
+import com.dkm.friend.entity.bo.FriendBo;
+import com.dkm.friend.entity.bo.FriendToWithBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
 import com.dkm.friend.entity.vo.FriendVo;
 import com.dkm.friend.entity.vo.IdVo;
@@ -15,6 +18,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author qf
@@ -135,5 +141,69 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
 
       //查询所有好友的信息
       return baseMapper.queryAllFriend(list);
+   }
+
+
+   @Override
+   public List<FriendBo> listAllProblemFriend() {
+      //得到用户信息
+      UserLoginQuery user = localUser.getUser();
+
+      LambdaQueryWrapper<Friend> wrapper = new LambdaQueryWrapper<Friend>()
+            .eq(Friend::getFromId,user.getId());
+
+      List<Friend> friendList = baseMapper.selectList(wrapper);
+
+      if (null == friendList || friendList.size() == 0) {
+         return null;
+      }
+
+      List<IdVo> list = new ArrayList<>();
+      for (Friend friend : friendList) {
+         IdVo vo = new IdVo();
+         vo.setFromId(friend.getToId());
+         list.add(vo);
+      }
+
+      //查询所有的好友列表
+      //随机取10条数据
+      List<FriendAllListVo> voList = baseMapper.queryRandomFriend(list);
+
+      if (null == voList || voList.size() == 0) {
+         return null;
+      }
+
+      //得到登陆人所有的好友列表
+      List<IdVo> myFriendList = new ArrayList<>();
+      for (FriendAllListVo vo : voList) {
+         IdVo idVo = new IdVo();
+         idVo.setFromId(vo.getToId());
+         myFriendList.add(idVo);
+      }
+
+      //根据所有好友列表去查询每个人的好友名单以及每个人好友的资料信息
+      //随机取10条   该信息资料就是可能认识的人
+      List<FriendAllQueryBo> boList = baseMapper.listAllTwoFriend(myFriendList);
+      //根据好友的好友名单装数据返回给前端
+
+      if (null == boList || boList.size() == 0) {
+         return null;
+      }
+
+      Map<Long, FriendAllListVo> map = voList.stream().
+            collect(Collectors.toMap(FriendAllListVo::getToId, friendAllListVo
+                  -> friendAllListVo));
+
+      return boList.stream().map(friendAllQueryBo -> {
+         FriendBo bo = new FriendBo();
+         BeanUtils.copyProperties(friendAllQueryBo,bo);
+         FriendToWithBo friendToWithBo = new FriendToWithBo();
+         friendToWithBo.setHeard(map.get(friendAllQueryBo.getFromId()).getHeadUrl());
+         friendToWithBo.setWeChatName(map.get(friendAllQueryBo.getFromId()).getNickName());
+         //将共同好友加入对象中返回
+         bo.setBo(friendToWithBo);
+
+         return bo;
+      }).collect(Collectors.toList());
    }
 }

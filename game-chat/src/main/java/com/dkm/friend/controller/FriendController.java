@@ -2,6 +2,7 @@ package com.dkm.friend.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.friend.entity.bo.FriendBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
 import com.dkm.friend.entity.vo.ResultVo;
 import com.dkm.friend.service.IFriendService;
@@ -58,5 +59,14 @@ public class FriendController {
 
       return resultVo;
 
+   }
+
+
+   @ApiOperation(value = "可能认识的人", notes = "可能认识的人")
+   @GetMapping("/listAllProblemFriend")
+   @CrossOrigin
+   @CheckToken
+   public List<FriendBo> listAllProblemFriend () {
+      return friendService.listAllProblemFriend();
    }
 }
