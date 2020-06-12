@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbPrivilegeMallMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbPrivilegeMall">
+		<id column="pri_id" property="priId" />
+		<result column="pri_name" property="priName" />
+		<result column="pri_content" property="priContent" />
+		<result column="pri_type" property="priType" />
+		<result column="pri_money" property="priMoney" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+		<result column="exp3" property="exp3" />
+		<result column="pri_img" property="priImg" />
+		<result column="pr_content_one" property="prContentOne" />
+	</resultMap>
+
+</mapper>

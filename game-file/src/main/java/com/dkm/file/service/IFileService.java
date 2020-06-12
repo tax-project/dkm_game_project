@@ -1,6 +1,6 @@
 package com.dkm.file.service;
 
-import com.dkm.file.utils.FileVo;
+import com.dkm.entity.vo.FileVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

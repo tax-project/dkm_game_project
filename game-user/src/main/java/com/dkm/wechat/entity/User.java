@@ -72,4 +72,9 @@ public class User {
      * 个人说明
      */
     private String userExplain;
+
+    /**
+     * 个人二维码
+     */
+    private String qrCode;
 }

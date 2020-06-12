@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbGrowthMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbGrowth">
+		<result column="tb_gid" property="tbGid" />
+		<result column="user_id" property="userId" />
+		<result column="tb_date" property="tbDate" />
+		<result column="tb_isva" property="tbIsva" />
+		<result column="tb_num" property="tbNum" />
+		<result column="tb_dj" property="tbDj" />
+	</resultMap>
+
+	<select id="selectCountMy" parameterType="com.dkm.shop.domain.TbGrowth" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM tb_growth
+		WHERE user_id=#{userId} and tb_isva=1
+	</select>
+	<select id="selectCountDj" parameterType="com.dkm.shop.domain.TbGrowth" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM tb_growth
+		WHERE user_id=#{userId} and tb_isva=2 and tb_dj=#{tbDj}
+	</select>
+</mapper>

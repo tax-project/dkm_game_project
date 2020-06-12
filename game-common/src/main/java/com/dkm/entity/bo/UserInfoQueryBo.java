@@ -68,6 +68,11 @@ public class UserInfoQueryBo {
     */
    private String userExplain;
 
+   /**
+    * 个人二维码
+    */
+   private String qrCode;
+
 
    private Long userInfoId;
 
