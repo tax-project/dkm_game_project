@@ -26,9 +26,9 @@ public class SeedsFall extends Model<SeedsFall> {
     /**
      * 掉落的金币
      */
-    private Integer dropCoins;
+    private Integer dropCoins=0;
     /**
      * 掉落的红包
      */
-    private Double dropRedEnvelope;
+    private Double dropRedEnvelope=0.0;
 }

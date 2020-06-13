@@ -109,9 +109,9 @@ public class SeedFallServiceImpl implements ISeedFallService {
                 goldOrMoneyVo.setMoney(money);
 
             }
-
+            //将对象添加到集合  然后批量添加
             list.add(seedsFall);
-
+            //将值封装到vo
             GoldOrMoneyVolist.add(goldOrMoneyVo);
 
         }
@@ -120,7 +120,6 @@ public class SeedFallServiceImpl implements ISeedFallService {
         if(seedsFall.getDropCoins() != null && seedsFall.getDropRedEnvelope()!= null){
             seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
         }
-
 
         return GoldOrMoneyVolist;
     }
