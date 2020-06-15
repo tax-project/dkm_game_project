@@ -37,13 +37,13 @@ public class RandomUtils {
      * @return
      */
     public double NumberRedPacketsDropped(){
-         /*if(status==1){
-             //double v = money / 60;
-             return 0.01;
-         }*/
         int random = new Random().nextInt(100) + 1;
         if(random<=10){
             return 0.01;
+        }
+
+        if(random==1){
+            return 0.1;
         }
         return 0.0;
     }
@@ -57,7 +57,6 @@ public class RandomUtils {
     public boolean probabilityDroppingGold(Integer seedGrade){
         //金币掉落概率
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
-
         //生产1-100的随机数
         int random = new Random().nextInt(100) + 1;
         if(random<=pow){
@@ -73,17 +72,33 @@ public class RandomUtils {
      *
      */
     public Integer NumberCoinsDropped(Integer gold,Long time){
-        double start = time / gold / 2 * 0.5/100;
+/*        double start = time / gold / 2 * 0.5/100;
 
         int start1 = (int) start;
         double end=time / gold / 2 * 0.7/100;
 
-        int end1 = (int) end;
+        int end1 = (int) end;*/
         //金币
-        int random = new Random().nextInt(start1);
-        if(random<end1){
-            random = new Random().nextInt(start1);
+        int random = new Random().nextInt(1);
+        if(random<500){
+            random = new Random().nextInt(500);
+            return random;
         }
-        return random;
+            return 0;
     }
+    /**
+     * 花朵掉落
+     *
+     */
+    public Integer fallingFlowers(){
+
+        Random random=new Random();
+        int i = random.nextInt(100) + 1;
+        if(i<=2){
+            return 1;
+        }
+        return 0;
+    }
+
+
 }
