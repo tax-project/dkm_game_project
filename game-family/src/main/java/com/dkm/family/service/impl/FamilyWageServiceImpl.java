@@ -110,7 +110,8 @@ public class FamilyWageServiceImpl implements FamilyWageService {
         else if(index==3) familyWageEntity.setDay4(1);
         //更新领取记录
         int i = familyWageDao.updateById(familyWageEntity);
-        if(integer<1||i<1) throw new ApplicationException(CodeType.SERVICE_ERROR, "领取失败");
+        Integer update = familyWageDao.updateUserGold(wage);
+        if(integer<1||i<1||update<1) throw new ApplicationException(CodeType.SERVICE_ERROR, "领取失败");
     }
 
 }
