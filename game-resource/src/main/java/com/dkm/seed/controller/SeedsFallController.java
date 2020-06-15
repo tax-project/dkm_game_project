@@ -52,6 +52,7 @@ public class SeedsFallController {
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "money", value = "种子首次产出的红包金额")
     @PostMapping("/redBagDroppedSeparately")
     @CrossOrigin
+    @CheckToken
     List<Double> redBagDroppedSeparately(@RequestParam(value = "money") Double money){
         if (money == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
