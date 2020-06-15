@@ -1,6 +1,7 @@
 package com.dkm.pay.service;
 
 
+import com.dkm.pay.entity.Pay;
 import com.dkm.pay.entity.vo.PayInfoVo;
 
 import java.util.List;
@@ -18,5 +19,11 @@ public interface IPayService {
     * @return 返回支付记录
     */
    List<PayInfoVo> listAllPayInfo (Long userId);
+
+   /**
+    *  增加支付信息
+    * @param pay 支付返回的结果
+    */
+   void insertPay (Pay pay);
 
 }

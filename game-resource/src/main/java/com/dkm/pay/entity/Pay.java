@@ -2,6 +2,7 @@ package com.dkm.pay.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.dkm.utils.IdGenerator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -48,4 +49,11 @@ public class Pay extends Model<Pay> {
     *  支付时间
     */
    private LocalDateTime payTime;
+
+   /**
+    * 支付结果
+    * 0--支付成功
+    * 1--支付失败
+    */
+   private Integer payResult;
 }
