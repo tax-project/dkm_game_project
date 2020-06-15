@@ -1,6 +1,7 @@
 package com.dkm.family.service;
 
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 
 import java.util.List;
@@ -79,4 +80,9 @@ public interface FamilyService {
      * @return
      */
     List<Long> getFamilyUserIds(Long familyId);
+
+    /**
+     * 获取家族姓名、id
+     */
+    List<FamilyGoldInfoVo> selectFamilyGoldInfo();
 }

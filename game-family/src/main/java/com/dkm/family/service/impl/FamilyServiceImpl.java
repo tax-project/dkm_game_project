@@ -8,6 +8,7 @@ import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.FamilyUsersVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
@@ -218,5 +219,10 @@ public class FamilyServiceImpl implements FamilyService {
     public List<Long> getFamilyUserIds(Long familyId) {
         List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyId));
         return familyDetailEntities.stream().mapToLong(FamilyDetailEntity::getUserId).boxed().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FamilyGoldInfoVo> selectFamilyGoldInfo() {
+        return familyDao.selectFamilyGoldInfo();
     }
 }
