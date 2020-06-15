@@ -109,6 +109,13 @@ public class SeedFallServiceImpl implements ISeedFallService {
                 goldOrMoneyVo.setMoney(money);
 
             }
+
+            //掉落花
+            Integer integer = randomUtils.fallingFlowers();
+            seedsFall.setDropFallingFlowers(integer);
+
+            goldOrMoneyVo.setDropFallingFlowers(integer);
+
             //将对象添加到集合  然后批量添加
             list.add(seedsFall);
             //将值封装到vo
@@ -116,10 +123,8 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
         }
 
-        //如果金币和红包都不为空 则添加
-        if(seedsFall.getDropCoins() != null && seedsFall.getDropRedEnvelope()!= null){
-            seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
-        }
+        //将掉落的金币和红包存入数据库
+        seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
 
         return GoldOrMoneyVolist;
     }

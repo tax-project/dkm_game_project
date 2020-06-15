@@ -8,6 +8,8 @@ import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.FamilyGoldInfoVo;
+import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.FamilyUsersVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +133,17 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public List<HotFamilyVo> getHotFamily() {
-        return familyDao.getHotFamily();
+        //获取热门家族
+        List<HotFamilyVo> hotFamily = familyDao.getHotFamily();
+        List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
+        //根据家族id查询人员头像
+        Map<Long, List<String>> collect1 = familyDao.getImgs(collect).stream().collect(Collectors.groupingBy(FamilyImgsVo::getFamilyId,Collectors.mapping(FamilyImgsVo::getWeChatHeadImgUrl,Collectors.toList())));
+        //整合头像并返回结果
+        hotFamily.forEach(hotFamilyVo->{
+            List<String> strings = collect1.get(hotFamilyVo.getFamilyId());
+            hotFamilyVo.setImgs(strings.subList(0, Math.min(strings.size(), 3)));
+        });
+        return hotFamily;
     }
 
     @Override
@@ -206,5 +219,10 @@ public class FamilyServiceImpl implements FamilyService {
     public List<Long> getFamilyUserIds(Long familyId) {
         List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyId));
         return familyDetailEntities.stream().mapToLong(FamilyDetailEntity::getUserId).boxed().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FamilyGoldInfoVo> selectFamilyGoldInfo() {
+        return familyDao.selectFamilyGoldInfo();
     }
 }

@@ -11,11 +11,17 @@ import lombok.Data;
 @Data
 public class GoldOrMoneyVo {
     /**
-     * 金币
+     * 掉落的金币
      */
     private Integer Gold=0;
     /**
-     * 红包
+     *  掉落的红包
      */
     private Double Money;
+
+    /**
+     *  掉落的花
+     */
+    private Integer dropFallingFlowers;
+
 }

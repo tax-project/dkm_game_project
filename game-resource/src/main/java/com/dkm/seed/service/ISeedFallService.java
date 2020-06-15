@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ISeedFallService {
     /**
-     * 种子掉落
+     * 种子掉落(金币  红包)
      */
     List<GoldOrMoneyVo> seedDrop(Integer seedGrade);
     /**
@@ -20,4 +20,8 @@ public interface ISeedFallService {
      */
 
     List<Double> redBagDroppedSeparately(Double money);
+
+
+
+
 }

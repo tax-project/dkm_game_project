@@ -120,10 +120,10 @@ public class FamilyController {
 
     @ApiOperation("族长踢出成员")
     @PostMapping("/kickOutUser")
-    @ApiImplicitParam(value = "踢出用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @ApiImplicitParam(value = "踢出用户id",name="outUserId",paramType = "path",dataType = "Long",required = true)
     @CrossOrigin
     @CheckToken
-    public void kickOutUser(Long outUserId){
+    public void kickOutUser(@RequestBody Long outUserId){
         if(outUserId==null){
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }

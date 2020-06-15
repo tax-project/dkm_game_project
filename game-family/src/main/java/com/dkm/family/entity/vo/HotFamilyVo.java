@@ -4,6 +4,8 @@ import com.dkm.family.entity.FamilyEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 
 /**
  * @program: game_project
@@ -18,4 +20,9 @@ public class HotFamilyVo extends FamilyEntity {
      * 头像
      */
     private String headImg;
+
+    /**
+     * 成员头像
+     */
+    private List<String> imgs;
 }
