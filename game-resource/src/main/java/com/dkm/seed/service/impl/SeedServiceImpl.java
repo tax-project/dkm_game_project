@@ -435,26 +435,25 @@ public class SeedServiceImpl implements ISeedService {
                     int i = seedMapper.updateUser(seedPlantVo);
                     Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
 
-/*||userInfoQueryBoResults.getData().getUserInfoGrade()==6
-                            || userInfoQueryBoResults.getData().getUserInfoGrade()==9 ||userInfoQueryBoResults.getData().getUserInfoGrade()==12
-                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==15 ||
-                            userInfoQueryBoResults.getData().getUserInfoGrade()==18||userInfoQueryBoResults.getData().getUserInfoGrade()==21
-                            ||userInfoQueryBoResults.getData().getUserInfoGrade()==24
-                            */
-
                     //每三级解锁一块土地
-                    if(userInfoQueryBoResults.getData().getUserInfoGrade()==3 || userInfoQueryBoResults.getData().getUserInfoGrade()==6){
-                        System.out.println("userInfoQueryBoResults.getData().getUserInfoGrade() = " + userInfoQueryBoResults.getData().getUserInfoGrade());
-                        //查询用户没有解锁的土地 状态等于0结果第一块土地
+                    if(userInfoQueryBoResults.getData().getUserInfoGrade()%3==0){
+                        //查询用户没有解锁的土地 状态等于0解锁第一块土地
                         List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
 
-                        if(userLandUnlocks1.get(0).getLaStatus() == 0){
-                            int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
-                            if(i1<=0){
-                                throw new ApplicationException(CodeType.SERVICE_ERROR,"等级等于"+userInfoQueryBoResults.getData().getUserInfoGrade()+"！解锁失败");
+                        //应该拥有土地
+                        int i2 = userInfoQueryBoResults.getData().getUserInfoGrade() / 3 +1;
+                        //现在拥有土地
+                        int size = userLandUnlocks.size();
+                        //需要解锁
+                        if(i2>size&&i2<=9){
+                            //需要解锁的土地数
+                            if(userLandUnlocks1.get(0).getLaStatus() == 0){
+                                int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
+                                if(i1<=0){
+                                    throw new ApplicationException(CodeType.SERVICE_ERROR,"等级等于"+userInfoQueryBoResults.getData().getUserInfoGrade()+"！解锁失败");
+                                }
                             }
                         }
-
                     }
                 } else{
                     //加上掉落的金币
