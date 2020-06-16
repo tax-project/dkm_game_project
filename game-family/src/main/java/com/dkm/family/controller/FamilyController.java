@@ -7,6 +7,7 @@ import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.utils.QrCodeUtils;
 import com.dkm.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,13 @@ public class FamilyController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         return familyService.otherFamilyInfo(familyId);
+    }
+
+    @ApiOperation("获取家族二维码")
+    @GetMapping("/getQrcode")
+    @CrossOrigin
+    public String getQrcode(Long familyId){
+        return familyService.getQrcode(familyId);
     }
 
     @ApiOperation("我的家族")

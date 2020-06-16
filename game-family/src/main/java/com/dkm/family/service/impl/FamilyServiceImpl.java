@@ -1,5 +1,6 @@
 package com.dkm.family.service.impl;
 
+import com.alibaba.druid.util.Base64;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
@@ -14,15 +15,26 @@ import com.dkm.family.entity.vo.FamilyUsersVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.QrCodeUtils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,12 +46,16 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class FamilyServiceImpl implements FamilyService {
+    @Value("${urls.family}")
+    private String familyUrl;
     @Resource
     private FamilyDao familyDao;
     @Resource
     private FamilyDetailDao familyDetailDao;
     @Resource
     private IdGenerator idGenerator;
+    @Resource
+    private QrCodeUtils qrCodeUtils;
     @Override
     public void creatFamily(Long userId,FamilyEntity family) {
         if(familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId,userId))!=null){
@@ -50,7 +66,7 @@ public class FamilyServiceImpl implements FamilyService {
         family.setFamilyGrade(1);
         family.setFamilyJoin(0);
         family.setFamilyUserNumber(1);
-        family.setFamilyQrcode("/family/joinFamily?familyId="+family.getFamilyId());
+        family.setFamilyQrcode(familyUrl+"/family/joinFamily?familyId="+family.getFamilyId());
         FamilyDetailEntity familyDetailEntity = new FamilyDetailEntity();
         familyDetailEntity.setIsAdmin(2);
         familyDetailEntity.setUserId(userId);
@@ -224,5 +240,42 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public List<FamilyGoldInfoVo> selectFamilyGoldInfo() {
         return familyDao.selectFamilyGoldInfo();
+    }
+
+    @Override
+    public String getQrcode(Long familyId) {
+        String content = familyUrl + "/family/joinFamily?familyId=" + familyId;
+        //图片的宽度
+        int width=300;
+        //图片的高度
+        int height=300;
+        //图片的格式
+        String format="png";
+
+        ByteArrayOutputStream os =new ByteArrayOutputStream();
+
+        /**
+         * 定义二维码的参数
+         */
+        HashMap hints=new HashMap();
+        //指定字符编码为“utf-8”
+        hints.put(EncodeHintType.CHARACTER_SET,"utf-8");
+        //指定二维码的纠错等级为中级
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+        //设置图片的边距
+        hints.put(EncodeHintType.MARGIN, 2);
+
+        /**
+         * 生成二维码
+         */
+        try {
+            BitMatrix bitMatrix=new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height,hints);
+            BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+            ImageIO.write(bufferedImage,format,os);
+            return "data:image/png;base64," + Base64.byteArrayToBase64(os.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

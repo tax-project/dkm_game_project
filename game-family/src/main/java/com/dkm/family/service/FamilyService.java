@@ -4,6 +4,7 @@ import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -85,4 +86,10 @@ public interface FamilyService {
      * 获取家族姓名、id
      */
     List<FamilyGoldInfoVo> selectFamilyGoldInfo();
+
+
+    /**
+     * 家族二维码
+     */
+    String getQrcode(Long familyId);
 }
