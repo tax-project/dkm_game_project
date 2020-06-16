@@ -1,6 +1,8 @@
 package com.dkm.wallet.service;
 
+import com.dkm.land.entity.vo.Message;
 import com.dkm.wallet.entity.Withdrawal;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,13 @@ public interface IWithdrawalService {
      * 查询所有提现数据
      */
     Map<String,Object> queryAllWithdrawalData();
+
+    /**
+     * 提现
+     * @param id
+     * @return
+     */
+    Message withdrawal(Long id);
 
 
 

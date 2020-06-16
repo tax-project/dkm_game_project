@@ -1,7 +1,10 @@
 package com.dkm.wallet.controller;
 
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.land.entity.vo.Message;
 import com.dkm.wallet.service.IWithdrawalService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,10 @@ import java.util.Map;
  * @DESCRIPTION:
  * @DATE: 2020/6/9 16:33
  */
-@Data
+@Api(tags = "提现api")
 @RestController
-@RequestMapping("/WithdrawalRecord")
-public class WithdrawalRecord {
+@RequestMapping("/WithdrawalController")
+public class WithdrawalController {
 
     @Autowired
     private IWithdrawalService iWithdrawalService;
@@ -36,4 +39,16 @@ public class WithdrawalRecord {
        return iWithdrawalService.queryAllWithdrawalData();
    }
 
+
+    /**
+     * 提现
+     */
+    @ApiOperation(value = " 提现", notes = " 查询所有提现数据")
+    @PostMapping("/withdrawal")
+    @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "id")
+    @CrossOrigin
+    @CheckToken
+    public Message withdrawal(@RequestParam("id") Long id){
+      return iWithdrawalService.withdrawal(id);
+    }
 }
