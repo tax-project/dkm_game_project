@@ -2,6 +2,7 @@ package com.dkm.family.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 import org.apache.ibatis.annotations.Param;
@@ -34,4 +35,7 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
     List<HotFamilyVo> getHotFamily();
 
     List<FamilyImgsVo> getImgs(@Param("param") List<Long> param);
+
+    @Select("select family_id,family_name from tb_family")
+    List<FamilyGoldInfoVo> selectFamilyGoldInfo();
 }

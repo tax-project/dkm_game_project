@@ -1,41 +1,62 @@
 package com.dkm.turntable.controller;
 
+import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.turntable.entity.bo.TurntableItemBO;
+import com.dkm.turntable.entity.vo.TurntableInfoVo;
+import com.dkm.turntable.service.ITurntableCouponService;
 import com.dkm.turntable.service.ITurntableService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @Author: HuangJie
- * @Date: 2020/5/9 14:42
- * @Version: 1.0V
- */
+ * @program: game_project
+ * @description: 转盘
+ * @author: zhd
+ * @create: 2020-06-11 09:40
+ **/
 @Api(tags = "幸运大转盘API")
 @RestController
-@RequestMapping("v1/turntable")
+@RequestMapping("/turntable")
 public class TurntableController {
 
-    @Autowired
+    @Resource
+    private LocalUser localUser;
+
+    @Resource
+    private ITurntableCouponService turntableCouponService;
+
+    @Resource
     private ITurntableService turntableService;
 
-    @GetMapping("/lucky/draw/items")
-    @ApiOperation(value = "转盘物品获取接口",notes = "获得物品信息",produces = "application/json")
-    @ApiImplicitParam(name = "token",value = "用户登录token",dataType = "String",paramType = "body",required = true)
-    @CheckToken
+    /**
+     * 获取转盘物品
+     * @param type
+     * @return
+     */
+    @GetMapping("/getGoods")
+    @ApiOperation("获取转盘物品")
+    @ApiImplicitParam(value = "转盘类型",name = "type",dataType = "int",paramType = "path",required = true)
     @CrossOrigin
-    public List<TurntableItemBO> luckyDrawItems(){
-        return turntableService.luckyDrawItems();
+    @CheckToken
+    public List<TurntableInfoVo> getGoods(Integer type){
+        return turntableService.getTurntable(localUser.getUser().getId(),type);
     }
 
-
-
+    /**
+     * 用户卷数量信息
+     * @return
+     */
+    @GetMapping("/getCoupons")
+    @ApiOperation("获取卷信息")
+    @CrossOrigin
+    @CheckToken
+    public Map<String,Object> getCoupons(){
+        return turntableCouponService.getUserCoupon(localUser.getUser().getId());
+    }
 }
