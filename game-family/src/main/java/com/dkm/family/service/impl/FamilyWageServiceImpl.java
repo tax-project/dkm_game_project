@@ -104,10 +104,11 @@ public class FamilyWageServiceImpl implements FamilyWageService {
     public void updateUserWage(Integer wage, Long userId,Integer index) {
         Integer integer = familyDetailDao.updateUserWage(wage, userId);
         FamilyWageEntity familyWageEntity = familyWageDao.selectOne(new QueryWrapper<FamilyWageEntity>().lambda().eq(FamilyWageEntity::getUserId, userId));
-        if(index==0) familyWageEntity.setDay1(1);
-        else if(index==1) familyWageEntity.setDay2(1);
-        else if(index==2) familyWageEntity.setDay3(1);
-        else if(index==3) familyWageEntity.setDay4(1);
+        if(index==0&&familyWageEntity.getDay1()!=0) familyWageEntity.setDay1(1);
+        else if(index==1&&familyWageEntity.getDay2()!=0) familyWageEntity.setDay2(1);
+        else if(index==2&&familyWageEntity.getDay3()!=0) familyWageEntity.setDay3(1);
+        else if(index==3&&familyWageEntity.getDay4()!=0) familyWageEntity.setDay4(1);
+        else throw new ApplicationException(CodeType.SERVICE_ERROR,"您已领取今日工资");
         //更新领取记录
         int i = familyWageDao.updateById(familyWageEntity);
         Integer update = familyWageDao.updateUserGold(wage);
