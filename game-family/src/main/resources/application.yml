@@ -15,4 +15,4 @@ app:
   workerId: 9
   dataCenterId: 1
 urls:
-  family: http://192.168.10.133:10000/family
+  family: http://192.168.10.133:8000/game/family
