@@ -35,9 +35,6 @@ import java.util.stream.Collectors;
 public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayService {
 
    @Autowired
-   private LocalUser localUser;
-
-   @Autowired
    private IOrderService orderService;
 
    @Override
@@ -77,5 +74,14 @@ public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayS
 
          return vo;
       }).collect(Collectors.toList());
+   }
+
+   @Override
+   public void insertPay(Pay pay) {
+      int insert = baseMapper.insert(pay);
+
+      if (insert <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "增加失败");
+      }
    }
 }

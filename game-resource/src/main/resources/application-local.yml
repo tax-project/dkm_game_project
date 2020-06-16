@@ -43,3 +43,13 @@ ribbon:
     enabled: true
 
 
+pay:
+  #支付设备key
+  authUserKey: 20200615204058722188929742311424
+  #支付设备密钥
+  authPassword: 518eff0233a24401b20a66720d3f20f4
+  #地址
+  url: http://192.168.10.133:20001/pay
+
+
+
