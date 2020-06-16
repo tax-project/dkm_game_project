@@ -11,6 +11,7 @@ import com.dkm.family.entity.vo.FamilyWageVo;
 import com.dkm.family.service.FamilyWageService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
  * @create: 2020-06-03 14:36
  **/
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FamilyWageServiceImpl implements FamilyWageService {
 
 
