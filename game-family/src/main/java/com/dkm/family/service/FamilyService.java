@@ -92,4 +92,11 @@ public interface FamilyService {
      * 家族二维码
      */
     String getQrcode(Long familyId);
+
+    /**
+     * 转让族长
+     * @param userId
+     * @param setUserId
+     */
+    void transfer(Long userId,Long setUserId);
 }

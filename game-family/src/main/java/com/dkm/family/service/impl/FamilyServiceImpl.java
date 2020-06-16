@@ -2,6 +2,7 @@ package com.dkm.family.service.impl;
 
 import com.alibaba.druid.util.Base64;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
@@ -36,6 +37,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @program: game_project
@@ -54,8 +56,6 @@ public class FamilyServiceImpl implements FamilyService {
     private FamilyDetailDao familyDetailDao;
     @Resource
     private IdGenerator idGenerator;
-    @Resource
-    private QrCodeUtils qrCodeUtils;
     @Override
     public void creatFamily(Long userId,FamilyEntity family) {
         if(familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId,userId))!=null){
@@ -276,6 +276,21 @@ public class FamilyServiceImpl implements FamilyService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void transfer(Long userId, Long setUserId) {
+        List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new LambdaQueryWrapper<FamilyDetailEntity>().in(FamilyDetailEntity::getUserId, Stream.of(userId, setUserId).collect(Collectors.toList())));
+        if(familyDetailEntities==null||familyDetailEntities.size()!=2){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"转让失败");
+        }
+        if(familyDetailEntities.stream().noneMatch(a->a.getIsAdmin()==2)){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"您不是族长");
+        }
+        familyDetailEntities.forEach(a-> a.setIsAdmin(a.getIsAdmin()==2?1:2));
+        if(familyDetailDao.updateById(familyDetailEntities.get(0))<1||familyDetailDao.updateById(familyDetailEntities.get(1))<1){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"转让失败");
         }
     }
 }

@@ -24,7 +24,7 @@ public interface FamilyDetailDao extends BaseMapper<FamilyDetailEntity> {
      * @param familyId
      * @return
      */
-    @Select("SELECT  fd.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT user_id,is_admin FROM tb_family_details WHERE family_id = #{familyId}) fd LEFT JOIN tb_user u ON  fd.user_id=u.user_id")
+    @Select("SELECT  fd.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT user_id,is_admin FROM tb_family_details WHERE family_id = #{familyId} ) fd LEFT JOIN tb_user u ON  fd.user_id=u.user_id ORDER BY is_admin DESC")
     List<FamilyUsersVo> selectFamilyUser(@Param("familyId") Long familyId);
 
     /**

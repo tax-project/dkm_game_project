@@ -127,6 +127,18 @@ public class FamilyController {
         familyService.setAdmin(localUser.getUser().getId(),setUserId);
     }
 
+    @ApiOperation("转让族长")
+    @PostMapping("/transfer")
+    @ApiImplicitParam(value = "设置用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @CrossOrigin
+    @CheckToken
+    public void transfer(@RequestBody Long setUserId){
+        if(setUserId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyService.transfer(localUser.getUser().getId(),setUserId);
+    }
+
     @ApiOperation("族长踢出成员")
     @PostMapping("/kickOutUser")
     @ApiImplicitParam(value = "踢出用户id",name="outUserId",paramType = "path",dataType = "Long",required = true)
