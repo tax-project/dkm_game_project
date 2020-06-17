@@ -4,6 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dkm.goldMine.dao.MineMapper">
     <select id="selectMineByFamilyId" resultType="com.dkm.goldMine.bean.entity.MineEntity">
-        select * from tb_family_mine where familyId = #{familyId}
+        select * from tb_family_mine where family_id = #{family_id}
     </select>
 </mapper>
