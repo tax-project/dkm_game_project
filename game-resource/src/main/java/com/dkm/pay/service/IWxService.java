@@ -17,4 +17,7 @@ public interface IWxService {
     * @return
     */
    Object wxPay(String body, String orderNo, Double price);
+
+
+
 }
