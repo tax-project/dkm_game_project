@@ -7,6 +7,7 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.vo.SeedVo;
 import com.dkm.wallet.entity.WithdrawalRecord;
 import com.dkm.wallet.service.IWithdrawalRecordService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @DESCRIPTION:
  * @DATE: 2020/6/9 11:53
  */
+@Api(tags = "提现记录api")
 @RestController
 @RequestMapping("/WithdrawalRecordController")
 public class WithdrawalRecordController {

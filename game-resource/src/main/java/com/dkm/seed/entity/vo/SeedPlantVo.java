@@ -62,5 +62,5 @@ public class SeedPlantVo {
     /**
      * 掉落的红包
      */
-    private Integer redPacketDropped;
+    private Double redPacketDropped;
 }

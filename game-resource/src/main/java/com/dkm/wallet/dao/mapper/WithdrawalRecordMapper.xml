@@ -10,7 +10,7 @@
 
 
     <select id="queryRecordMonthStatistics" resultType="java.lang.Double" parameterType="Long">
-        SELECT count(withdrawal_money) as totalamount
+        SELECT sum(withdrawal_money) as totalamount
         FROM tb_withdrawal_record WHERE user_id=#{userId} and DATE_FORMAT(withdrawal_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
     </select>
 
