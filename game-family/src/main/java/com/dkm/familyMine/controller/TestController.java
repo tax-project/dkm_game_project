@@ -1,9 +1,7 @@
 package com.dkm.familyMine.controller;
 
-import com.dkm.familyMine.dao.FamilyMineDao;
-import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.familyMine.dao.FamilyMineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +14,7 @@ public class TestController {
         return "ok";
     }
     @Autowired
-    private FamilyMineDao familyDao;
+    private FamilyMineMapper familyDao;
 
 //    @CrossOrigin
 //    @CheckToken

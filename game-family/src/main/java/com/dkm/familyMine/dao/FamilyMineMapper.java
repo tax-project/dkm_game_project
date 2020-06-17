@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FamilyMineDao extends BaseMapper<MineEntity>  {
+public interface FamilyMineMapper extends BaseMapper<MineEntity>  {
 
-    @Select("SELECT  * FROM  `tb_family_mine` where familyId = #{id}")
+    @Select("SELECT  * FROM  `tb_family_mine` where familyId = ${id}")
     List<MineEntity> getFamilyMineById(Long id);
 }
