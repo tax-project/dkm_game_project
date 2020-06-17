@@ -3,6 +3,7 @@ package com.dkm.pay.service;
 
 import com.dkm.pay.entity.Pay;
 import com.dkm.pay.entity.vo.PayInfoVo;
+import com.dkm.pay.entity.vo.PayVo;
 
 import java.util.List;
 
@@ -25,5 +26,11 @@ public interface IPayService {
     * @param pay 支付返回的结果
     */
    void insertPay (Pay pay);
+
+   /**
+    *  根据订单号修改支付信息
+    * @param payVo 1
+    */
+   void updatePayInfo (PayVo payVo);
 
 }

@@ -11,6 +11,7 @@ import com.dkm.family.entity.vo.FamilyWageVo;
 import com.dkm.family.service.FamilyWageService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
  * @create: 2020-06-03 14:36
  **/
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class FamilyWageServiceImpl implements FamilyWageService {
 
 
@@ -78,25 +80,11 @@ public class FamilyWageServiceImpl implements FamilyWageService {
 
         //根据权限设置工资
         List<FamilyWageVo> wage  = new ArrayList<>();
-        if(familyDetailEntity.getIsAdmin()==0){
             //成员工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),50000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,50000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,50000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,600000));
-        }else if(familyDetailEntity.getIsAdmin()==1){
-            //管理员工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),150000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,200000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,300000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,2650000));
-        }else if(familyDetailEntity.getIsAdmin()==2){
-            //族长工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),200000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,300000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,400000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,4100000));
-        }
+            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?150000:200000)));
+            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?200000:300000)));
+            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?300000:400000)));
+            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,familyDetailEntity.getIsAdmin()==0?600000:(familyDetailEntity.getIsAdmin()==1?2650000:4100000)));
         return wage;
     }
 
@@ -104,10 +92,10 @@ public class FamilyWageServiceImpl implements FamilyWageService {
     public void updateUserWage(Integer wage, Long userId,Integer index) {
         Integer integer = familyDetailDao.updateUserWage(wage, userId);
         FamilyWageEntity familyWageEntity = familyWageDao.selectOne(new QueryWrapper<FamilyWageEntity>().lambda().eq(FamilyWageEntity::getUserId, userId));
-        if(index==0&&familyWageEntity.getDay1()!=0) familyWageEntity.setDay1(1);
-        else if(index==1&&familyWageEntity.getDay2()!=0) familyWageEntity.setDay2(1);
-        else if(index==2&&familyWageEntity.getDay3()!=0) familyWageEntity.setDay3(1);
-        else if(index==3&&familyWageEntity.getDay4()!=0) familyWageEntity.setDay4(1);
+        if(index==0&&familyWageEntity.getDay1()==0) familyWageEntity.setDay1(1);
+        else if(index==1&&familyWageEntity.getDay2()==0) familyWageEntity.setDay2(1);
+        else if(index==2&&familyWageEntity.getDay3()==0) familyWageEntity.setDay3(1);
+        else if(index==3&&familyWageEntity.getDay4()==0) familyWageEntity.setDay4(1);
         else throw new ApplicationException(CodeType.SERVICE_ERROR,"您已领取今日工资");
         //更新领取记录
         int i = familyWageDao.updateById(familyWageEntity);

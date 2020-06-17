@@ -163,12 +163,13 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
         BigDecimal bd=new BigDecimal(substring);
 
-        double v = bd.doubleValue();
-
         BigDecimal a=new BigDecimal(money);
 
-        //得到差值放入集合 得到最后一个红包
-       list.add(a.subtract(bd).doubleValue());
+        /**
+         * 得到差值放入集合 得到最后一个红包
+         * subtract相减
+         */
+        list.add(a.subtract(bd).doubleValue());
 
         return list;
     }

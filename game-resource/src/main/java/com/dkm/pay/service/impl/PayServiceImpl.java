@@ -1,5 +1,6 @@
 package com.dkm.pay.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
@@ -10,6 +11,7 @@ import com.dkm.order.service.IOrderService;
 import com.dkm.pay.dao.PayMapper;
 import com.dkm.pay.entity.Pay;
 import com.dkm.pay.entity.vo.PayInfoVo;
+import com.dkm.pay.entity.vo.PayVo;
 import com.dkm.pay.service.IPayService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.JavaBeanUtils;
@@ -83,5 +85,25 @@ public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayS
       if (insert <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "增加失败");
       }
+   }
+
+   @Override
+   public void updatePayInfo(PayVo payVo) {
+
+      Pay pay = new Pay();
+      LambdaQueryWrapper<Pay> wrapper = new LambdaQueryWrapper<Pay>()
+            .eq(Pay::getOrderNo,payVo.getOrderNo());
+
+      pay.setPayResult(payVo.getPayResult());
+      pay.setPayTime(payVo.getPayTime());
+      pay.setPayType(payVo.getPayType());
+      pay.setPayNo(payVo.getPayNo());
+
+      int update = baseMapper.update(pay, wrapper);
+
+      if (update <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+      }
+
    }
 }

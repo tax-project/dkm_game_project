@@ -117,6 +117,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         List<UserHeardUrlBo> resultData = listResult.getData();
 
+        if (null == resultData || resultData.size() == 0) {
+            return null;
+        }
+
         Map<Long, UserHeardUrlBo> urlBoMap = resultData.stream().
               collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo ->
                     userHeardUrlBo
@@ -867,24 +871,24 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public Map<String,Object> queryAidUser(Long caughtPeopleId) {
+    public Map<String,Object> queryAidUser() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
 
         Map<String,Object> map=new HashMap<>();
         //主人信息
-        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(caughtPeopleId);
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
         if(attendantUserVo == null){
             map.put("msg","没有主人");
         }else{
             map.put("attendantUserVo",attendantUserVo);
         }
         //自己的信息
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-        if (userInfoQueryBoResult.getCode() != 0) {
+        //Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+       /* if (userInfoQueryBoResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
         }
-        map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());
+        map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());*/
 
         return map;
     }

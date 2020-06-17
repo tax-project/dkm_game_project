@@ -86,10 +86,9 @@ public interface IAttendantService {
 
     /**
      * 查询自己的一个主人信息
-     * @param CaughtPeopleId 当前用户id
      * @return
      */
-    Map<String,Object> queryAidUser(Long CaughtPeopleId);
+    Map<String,Object> queryAidUser();
 
 
     /**

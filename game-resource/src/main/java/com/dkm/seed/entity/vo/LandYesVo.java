@@ -12,6 +12,12 @@ import java.time.LocalDateTime;
  */
 @Data
 public class LandYesVo {
+
+    /**
+     * 主键
+     */
+    private Long id;
+
     /**
      * 种子名称
      */
@@ -47,4 +53,11 @@ public class LandYesVo {
     private LocalDateTime plantTime;
 
     private Long time;
+
+    /**
+     *是否新种子 （1新种子 0不是）
+     */
+    private Integer newSeedIs;
+
+
 }

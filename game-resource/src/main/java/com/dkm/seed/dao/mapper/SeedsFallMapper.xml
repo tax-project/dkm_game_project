@@ -10,6 +10,11 @@
         </foreach>
     </insert>
 
+    <select id="queryGoldAndRed" resultType="com.dkm.seed.entity.vo.GoldRedVo">
+        select sum(drop_coins) as 'goldCoin',sum(drop_red_envelope) as 'redEnvelopes'
+        from tb_land_seed a,tb_seeds_fall b where a.id=b.id and a.user_id=#{userId}
+    </select>
+
 
 
 

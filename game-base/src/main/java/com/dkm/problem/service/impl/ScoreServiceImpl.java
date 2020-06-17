@@ -3,7 +3,10 @@ package com.dkm.problem.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.problem.dao.ScoreMapper;
@@ -45,6 +48,9 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
    @Autowired
    private IMoneyService moneyService;
+
+   @Autowired
+   private UserFeignClient userFeignClient;
 
    /**
     * *  增加用户积分表
@@ -94,6 +100,16 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       }
 
 
+      Result<UserInfoQueryBo> result = userFeignClient.queryUser(money.getUserId());
+
+      if (result.getCode() != 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "调用有误");
+      }
+
+
+      vo.setHeadUrl(result.getData().getWeChatHeadImgUrl());
+      vo.setNickName(result.getData().getWeChatNickName());
+
       return vo;
    }
 
@@ -109,7 +125,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
       List<ScoreListVo> list = listVoPage.getRecords();
 
-      Map<String, Object> map = new HashMap<>();
+      Map<String, Object> map = new HashMap<>(3);
       map.put("page",listVoPage);
       map.put("allNumber",list.size());
 

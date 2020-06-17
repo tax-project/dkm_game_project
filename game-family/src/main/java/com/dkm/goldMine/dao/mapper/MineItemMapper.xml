@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.goldMine.dao.MineItemMapper">
+<!--    <select id="selectMineByFamilyId" resultType="com.dkm.goldMine.bean.entity.MineItemEntity">-->
+<!--        select * from tb_family_mine where family_id = #{family_id}-->
+<!--    </select>-->
+
+        <select id="selectByBattleId" resultType="com.dkm.goldMine.bean.entity.MineItemEntity">
+            select * from tb_family_mine_item where battle_id = ${battle_id}
+        </select>
+    <select id="selectByBattleIdAndGoldItemId" resultType="com.dkm.goldMine.bean.entity.MineItemEntity">
+        select * from tb_family_mine_item where family_id = ${family_id} AND gold_item_id = ${gold_item_id}
+    </select>
+</mapper>

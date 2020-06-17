@@ -14,7 +14,7 @@
 
 <!--    统计收红包的金额或者答题达人-->
     <select id="countListMax" resultType="com.dkm.problem.entity.vo.MoneyCountVo">
-        select u.we_chat_nick_name as 'name'
+        select u.we_chat_nick_name as 'name',u.we_chat_head_img_url as 'headUrl'
         <if test="type == 0">
             ,sum(s.price) as 'number'
         </if>
@@ -28,7 +28,7 @@
             where s.create_date BETWEEN #{startDate} and #{endDate}
         </if>
         GROUP BY s.user_id
-        ORDER BY max(DATE_FORMAT(m.create_date, '%Y-%m-%d %H:%i:%s')) DESC
+        ORDER BY max(DATE_FORMAT(s.create_date, '%Y-%m-%d %H:%i:%s')) DESC
     </select>
 
 </mapper>

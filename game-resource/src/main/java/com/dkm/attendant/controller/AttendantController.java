@@ -180,15 +180,14 @@ public class AttendantController {
 
     /**
      * 查询自己的一个主人信息
-     * @param CaughtPeopleId 当前用户id
      * @return
      */
+    @ApiOperation(value = "查询自己的一个主人信息",notes = "成功返回数据 反则为空")
     @GetMapping("/queryAidUser")
-    public Map<String,Object> queryAidUser(@RequestParam("CaughtPeopleId") Long CaughtPeopleId){
-        if(CaughtPeopleId==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
-        }
-        return iAttendantService.queryAidUser(CaughtPeopleId);
+    @CrossOrigin
+    @CheckToken
+    public Map<String,Object> queryAidUser(){
+        return iAttendantService.queryAidUser();
     }
 
 
