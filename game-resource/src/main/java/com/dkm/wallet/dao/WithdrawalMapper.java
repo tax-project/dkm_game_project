@@ -16,5 +16,6 @@ import java.util.List;
 @Component
 public interface WithdrawalMapper extends IBaseMapper<Withdrawal> {
 
+    void insertWithdrawalData(List<Withdrawal> list);
 
 }

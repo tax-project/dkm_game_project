@@ -7,6 +7,7 @@ import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.utils.QrCodeUtils;
 import com.dkm.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +72,13 @@ public class FamilyController {
         return familyService.otherFamilyInfo(familyId);
     }
 
+    @ApiOperation("获取家族二维码")
+    @GetMapping("/getQrcode")
+    @CrossOrigin
+    public String getQrcode(Long familyId){
+        return familyService.getQrcode(familyId);
+    }
+
     @ApiOperation("我的家族")
     @GetMapping("/myFamily")
     @CheckToken
@@ -116,6 +125,18 @@ public class FamilyController {
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         familyService.setAdmin(localUser.getUser().getId(),setUserId);
+    }
+
+    @ApiOperation("转让族长")
+    @PostMapping("/transfer")
+    @ApiImplicitParam(value = "设置用户id",name="setUserId",paramType = "path",dataType = "Long",required = true)
+    @CrossOrigin
+    @CheckToken
+    public void transfer(@RequestBody Long setUserId){
+        if(setUserId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        familyService.transfer(localUser.getUser().getId(),setUserId);
     }
 
     @ApiOperation("族长踢出成员")

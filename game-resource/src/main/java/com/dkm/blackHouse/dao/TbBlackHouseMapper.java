@@ -25,4 +25,6 @@ public interface TbBlackHouseMapper extends BaseMapper<TbBlackHouse> {
 
     TbBlackHouseVo selectIsBlackTwo(TbBlackHouse tbBlackHouse);
 
+    TbBlackHouseVo selectIsBlackThree(TbBlackHouse tbBlackHouse);
+
 }

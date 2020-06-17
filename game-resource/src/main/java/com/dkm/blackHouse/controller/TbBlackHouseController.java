@@ -185,4 +185,32 @@ public class TbBlackHouseController {
         }
         return list;
     }
+
+    /**
+     * 查询自己有没有被人关
+     */
+    @ApiOperation(value = "查询自己有没有被人关 通知接口",notes = "自己被关了返回 关自己的人信息  没有被关则code返回1003")
+    @GetMapping("/selectMyIsBlack")
+    @CrossOrigin
+    @CheckToken
+    public TbBlackHouseVo selectMyIsBlack(){
+        //首先看自己有没有被人关起来
+        TbBlackHouse tbBlackHouse=new TbBlackHouse();
+
+        List<TbBlackHouse> selectById=tbBlackHouseService.selectToId();
+
+        for (TbBlackHouse blackHouse : selectById) {
+            if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
+                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "当前自己没有被关");
+            }
+            tbBlackHouse.setToId(blackHouse.getToId());
+            tbBlackHouse.setFromId(blackHouse.getFromId());
+        }
+        //查询出关自己的人信息
+        TbBlackHouseVo list=tbBlackHouseService.selectIsBlackThree(tbBlackHouse);
+        if( StringUtils.isEmpty(list) ){
+            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "当前没有人");
+        }
+        return list;
+    }
 }

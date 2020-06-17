@@ -23,7 +23,7 @@ public interface MedalDao extends BaseMapper<MedalEntity> {
      * @param type
      * @return
      */
-    @Select("SELECT m.*,mu.medal_receive_count,IFNULL(mu.process,0) as process,IFNULL(mu.medal_level,0) as medal_level,g.gi_name FROM  ( " +
+    @Select("SELECT m.*,mu.medal_receive_count,IFNULL(mu.process,0) as process,IFNULL(mu.medal_level,0) as medal_level,g.gi_name,g.gi_url as medalImage FROM  ( " +
             "SELECT*FROM tb_medal WHERE medal_type=#{type}) m LEFT JOIN ( " +
             "SELECT medal_receive_count,process,medal_level,medal_id FROM tb_medal_user WHERE user_id=#{userId}) mu ON mu.medal_id=m.medal_id " +
             "LEFT JOIN tb_gift g on g.gi_id=m.gi_id")

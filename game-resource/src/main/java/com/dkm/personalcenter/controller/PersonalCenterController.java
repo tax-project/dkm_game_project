@@ -62,10 +62,7 @@ public class PersonalCenterController {
          *查询跟班产出的产物
          */
         List<AttendantGoods> attendantGoods = iProduceService.queryJoinOutPutGoods(userId);
-        /**
-         * 查询出用户的主人
-         */
-        Map<String, Object> map1 = iAttendantService.queryAidUser(userId);
+
 
         /**
          * 根据当前用户查询装备
@@ -79,7 +76,6 @@ public class PersonalCenterController {
         map.put("Seed",landYesVos);
         map.put("queryMySkill",skillBos);
         map.put("AttendantGoods",attendantGoods);
-        map.put("queryAidUser",map1);
         map.put("equipment",tbEquipmentKnapsackVos);
         map.put("blackHouse",houseVo);
         return map;
