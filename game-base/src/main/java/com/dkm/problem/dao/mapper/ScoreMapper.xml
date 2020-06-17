@@ -28,7 +28,7 @@
             where s.create_date BETWEEN #{startDate} and #{endDate}
         </if>
         GROUP BY s.user_id
-        ORDER BY max(DATE_FORMAT(m.create_date, '%Y-%m-%d %H:%i:%s')) DESC
+        ORDER BY max(DATE_FORMAT(s.create_date, '%Y-%m-%d %H:%i:%s')) DESC
     </select>
 
 </mapper>
