@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
 import java.time.LocalDate;
 
 /**
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 public class UserInfo extends Model<UserInfo> {
-
    /**
     * 主键
     */
