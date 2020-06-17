@@ -117,6 +117,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         List<UserHeardUrlBo> resultData = listResult.getData();
 
+        if (null == resultData || resultData.size() == 0) {
+            return null;
+        }
+
         Map<Long, UserHeardUrlBo> urlBoMap = resultData.stream().
               collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo ->
                     userHeardUrlBo

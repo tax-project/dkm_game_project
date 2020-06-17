@@ -152,6 +152,7 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
             withdrawalRecord.setUserId(localUser.getUser().getId());
             withdrawalRecord.setWithdrawalId(idGenerator.getNumberId());
             withdrawalRecord.setWithdrawalMoney(withdrawal.getWithdrawalAmount());
+            System.out.println("LocalDateTime.now() = " + LocalDateTime.now());
             withdrawalRecord.setWithdrawalTime(LocalDateTime.now());
             withdrawalRecord.setWithdrawalDescribe("提现成功，你可以到微信或者支付宝账单中查询");
 
@@ -159,6 +160,8 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
                     .eq(Withdrawal::getId , id);
             Withdrawal withdrawal1=new Withdrawal();
             withdrawal1.setWithdrawalStatus(1);
+
+
 
 
             if(userInfoQueryBoResult.getData().getUserInfoNowExperience()>=userInfoQueryBoResult.getData().getUserInfoNextExperience()){
@@ -172,9 +175,10 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "提现失败");
                 }
                 message.setMsg("提现成功");
+            }else{
+                message.setMsg("提现条件不足！");
             }
 
-            message.setMsg("提现条件不足！");
 
         }
 

@@ -80,25 +80,11 @@ public class FamilyWageServiceImpl implements FamilyWageService {
 
         //根据权限设置工资
         List<FamilyWageVo> wage  = new ArrayList<>();
-        if(familyDetailEntity.getIsAdmin()==0){
             //成员工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),50000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,50000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,50000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,600000));
-        }else if(familyDetailEntity.getIsAdmin()==1){
-            //管理员工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),150000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,200000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,300000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,2650000));
-        }else if(familyDetailEntity.getIsAdmin()==2){
-            //族长工资
-            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),200000));
-            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,300000));
-            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,400000));
-            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,4100000));
-        }
+            wage.add(new FamilyWageVo(familyWageEntity.getDay1(),familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?150000:200000)));
+            wage.add(new FamilyWageVo(weekDay>=2?familyWageEntity.getDay2():2,familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?200000:300000)));
+            wage.add(new FamilyWageVo(weekDay>=3?familyWageEntity.getDay3():2,familyDetailEntity.getIsAdmin()==0?50000:(familyDetailEntity.getIsAdmin()==1?300000:400000)));
+            wage.add(new FamilyWageVo(weekDay>=7?familyWageEntity.getDay4():2,familyDetailEntity.getIsAdmin()==0?600000:(familyDetailEntity.getIsAdmin()==1?2650000:4100000)));
         return wage;
     }
 
