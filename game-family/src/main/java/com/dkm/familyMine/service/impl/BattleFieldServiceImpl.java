@@ -1,6 +1,6 @@
 package com.dkm.familyMine.service.impl;
 
-import com.dkm.familyMine.dao.BattleFieldDao;
+import com.dkm.familyMine.dao.BattleFieldMapper;
 import com.dkm.familyMine.service.IBattleFieldService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 public class BattleFieldServiceImpl implements IBattleFieldService {
 
     @Resource
-    private BattleFieldDao fieldDao;
+    private BattleFieldMapper fieldDao;
 
     @Override
     public Long getBattleFieldByFamilyId(Long familyId) {

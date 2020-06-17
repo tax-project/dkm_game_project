@@ -99,4 +99,11 @@ public interface FamilyService {
      * @param setUserId
      */
     void transfer(Long userId,Long setUserId);
+
+    /**
+     * 判断家族是否存在
+     * @param familyId
+     * @return
+     */
+    boolean familyExists(Long familyId);
 }

@@ -293,4 +293,9 @@ public class FamilyServiceImpl implements FamilyService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"转让失败");
         }
     }
+
+    @Override
+    public boolean familyExists(Long familyId) {
+        return familyDao.selectById(familyId) != null;
+    }
 }
