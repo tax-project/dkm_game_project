@@ -4,10 +4,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.goldMine.bean.vo.FamilyGoldMineVo;
 import com.dkm.goldMine.service.IMineService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.dkm.jwt.islogin.CheckToken;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -18,9 +16,11 @@ public class MineController {
     @Resource
     private IMineService mineService;
 
+    @CrossOrigin
+    @CheckToken
     @GetMapping("/{familyId}/getInfo")
     public FamilyGoldMineVo getFamilyGoldMine(@PathVariable String familyId) {
-        Long familyIdInt;
+        long familyIdInt;
         try {
             familyIdInt = Long.parseLong(familyId);
         } catch (NumberFormatException e) {
