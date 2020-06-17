@@ -14,4 +14,14 @@ public class ScoreVo {
     * 返回金额
     */
    private Double price;
+
+   /**
+    * 头像
+    */
+   private String headUrl;
+
+   /**
+    *  昵称
+    */
+   private String nickName;
 }
