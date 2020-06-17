@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -33,7 +34,7 @@ public class WithdrawalRecord extends Model<WithdrawalRecord> {
     /**
      * 提现金额
      */
-    private Double withdrawalMoney;
+    private BigDecimal withdrawalMoney;
 
     /**
      * 提现时间

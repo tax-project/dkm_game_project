@@ -47,4 +47,14 @@ public class LandYesVo {
     private LocalDateTime plantTime;
 
     private Long time;
+
+    /**
+     *是否新种子 （1新种子 0不是）
+     */
+    private Integer newSeedIs;
+
+    /**
+     * 主键
+     */
+    private Long id;
 }

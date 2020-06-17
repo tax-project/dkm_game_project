@@ -95,8 +95,6 @@ public class SeedController {
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "种子土地id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "dropGoldCoin", value = "掉落的金币"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "redPacketDropped", value = "掉落的红包"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNowExperience", value = "种子当前经验"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
@@ -106,9 +104,6 @@ public class SeedController {
     @CrossOrigin
     @CheckToken
     public void plant(@RequestBody SeedPlantVo seedPlantVo) {
-        /*if (seedPlantVo.getSeedId() == null ||seedPlantVo.getSeedGrade() ==null || seedPlantVo.getSeedGold()==null ||seedPlantVo.getStatus()==null) {
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
-        }*/
          iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 

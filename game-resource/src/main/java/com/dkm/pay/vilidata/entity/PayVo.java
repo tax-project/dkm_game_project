@@ -1,6 +1,6 @@
 package com.dkm.pay.vilidata.entity;
 
-import eqlee.ctm.apply.entry.vilidata.ResultTokenVo;
+
 import lombok.Data;
 
 /**

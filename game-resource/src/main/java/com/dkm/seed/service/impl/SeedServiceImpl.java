@@ -76,6 +76,9 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private LandSeedMapper landSeedMapper;
 
+    @Autowired
+    private SeedsFallMapper seedsFallMapper;
+
 
     /**
      * 根据用户id得到种子
@@ -269,6 +272,8 @@ public class SeedServiceImpl implements ISeedService {
                     if(i==1){
                         //结束时间
                         landSeed.setPlantTime(localDateTime);
+                        //是否新种子
+                        landSeed.setNewSeedIs(1);
                     }else{
                         //结束时间
                         landSeed.setPlantTime(time2);
@@ -276,6 +281,7 @@ public class SeedServiceImpl implements ISeedService {
 
                     //状态 1为种植
                     landSeed.setLeStatus(1);
+
 
                     list.add(landSeed);
 
@@ -366,16 +372,24 @@ public class SeedServiceImpl implements ISeedService {
                 //根据用户查询解锁的土地
                 List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
+
+                //查询掉落的金币红包
+                GoldRedVo goldRedVo = seedsFallMapper.queryGoldAndRed(localUser.getUser().getId());
+
+
                 //如果id不等于空  就只是收取了一个种植 否则就是全部收取
                 if(seedPlantVo.getId()!=null){
+
                     //收取种子后 修改当前用户土地种子的状态
                     LandSeed landSeed=new LandSeed();
                     landSeed.setId(seedPlantVo.getId());
                     landSeed.setLeStatus(3);
+                    landSeed.setNewSeedIs(0);
 
                     //修改用户种子种植状态
                     int update = landSeedMapper.updateById(landSeed);
                 }else{
+
                     //收取种子后 修改当前用户土地种子的状态
                     LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                             .eq(LandSeed::getUserId,user.getId());
@@ -421,11 +435,12 @@ public class SeedServiceImpl implements ISeedService {
                     seedPlantVo.setUserInfoNextExperience(nextExperience);
 
                     //不等于空 说明掉落了红包
-                    if(seedPlantVo.getRedPacketDropped()!=null){
-                        seedPlantVo.setRedPacketDropped(seedPlantVo.getRedPacketDropped());
+                    if(goldRedVo.getRedEnvelopes()!=0.0){
+                        seedPlantVo.setRedPacketDropped(goldRedVo.getRedEnvelopes());
                     }
 
-                    seedPlantVo.setUserGold(userGoldInteger+seedPlantVo.getDropGoldCoin());
+
+                    seedPlantVo.setUserGold(userGoldInteger+goldRedVo.getGoldCoin());
 
                     //随便传值 sql语句只是加了1
                     seedPlantVo.setSeedGrade(seedPlantVo.getUserGold()+1);
@@ -457,12 +472,12 @@ public class SeedServiceImpl implements ISeedService {
                     }
                 } else{
                     //加上掉落的金币
-                    seedPlantVo.setUserGold(userGoldInteger+seedPlantVo.getDropGoldCoin());
+                    seedPlantVo.setUserGold(userGoldInteger+goldRedVo.getGoldCoin());
                     seedPlantVo.setUserInfoNowExperience(experienceInteger);
 
                     //不等于空 说明掉落了红包
-                    if(seedPlantVo.getRedPacketDropped()!=null){
-                        seedPlantVo.setRedPacketDropped(seedPlantVo.getRedPacketDropped());
+                    if(goldRedVo.getRedEnvelopes()!=0.0){
+                        seedPlantVo.setRedPacketDropped(goldRedVo.getRedEnvelopes());
                     }
 
                     seedPlantVo.setUserId(user.getId());
