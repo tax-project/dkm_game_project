@@ -2,17 +2,20 @@ package com.dkm.goldMine.controller;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.feign.UserFeignClient;
-import com.dkm.goldMine.bean.ao.UserInfoBO;
 import com.dkm.goldMine.bean.vo.*;
 import com.dkm.goldMine.service.IMineService;
-import com.dkm.jwt.islogin.CheckToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * 注意，此处需要鉴权！！！，未作鉴权判断
+ */
+@Api(tags = "家族矿区 API")
 @RestController
 @RequestMapping("/family/goldMine/")
 public class MineController {
@@ -28,8 +31,13 @@ public class MineController {
      * @param familyId
      * @return
      */
+
+    @ApiOperation("查询家族矿区信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "家族ID",name="familyId",paramType = "path",dataType = "Long",required = true),
+    })
     @GetMapping("/{familyId}/getInfo")
-    public FamilyGoldMineVo getFamilyGoldMine(@PathVariable String familyId) {
+    public GoldMineVo getFamilyGoldMine(@PathVariable String familyId) {
         long familyIdInt;
         try {
             familyIdInt = Long.parseLong(familyId);
@@ -46,34 +54,66 @@ public class MineController {
      * @param goldItemId
      * @return
      */
+    @ApiOperation("获取金矿信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "家族ID",name="familyId",paramType = "path",dataType = "Long",required = true),
+            @ApiImplicitParam(value = "矿区ID",name="goldItemId",paramType = "path",dataType = "Long",required = true),
+    })
     @GetMapping("/{familyId}/{goldItemId}/getStatus")
-    public MineItemNpcVo getFamilyGoldMine(@PathVariable Long familyId, @PathVariable Long goldItemId) {
+    public MineItemFightVo getFamilyGoldMine(@PathVariable Long familyId, @PathVariable Long goldItemId) {
        return mineService.getGoldMineItemInfo(familyId,goldItemId);
-
     }
 
     /**
-     * 攻击矿区 ，实时返回结果，
-     *
-     * @param familyId
-     * @param goldItemId
-     * @return
+     * 注意，此处需要鉴权！！！，未作鉴权判断
      */
-    @GetMapping("/{familyId}/{goldItemId}/fight")
-    public FightVo fight(@PathVariable Long familyId, @PathVariable Long goldItemId) {
-        return mineService.fightMineItem(familyId,goldItemId);
+    @ApiOperation("矿区对战")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "家族ID",name="familyId",paramType = "path",dataType = "Long",required = true),
+            @ApiImplicitParam(value = "矿区ID",name="goldItemId",paramType = "path",dataType = "Long",required = true),
+            @ApiImplicitParam(value = "用户ID",name="userId",paramType = "path",dataType = "Long",required = true),
+    })
+    @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/now")
+    public FightVo fight(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
+        return mineService.fight(familyId,goldItemId,userId);
     }
+
     /**
-     * 攻击矿区 ，实时返回结果，
-     *
-     * @param familyId
-     * @param goldItemId
-     * @return
+     * 注意，此处需要鉴权！！！，未作鉴权判断
      */
-    @GetMapping("/{familyId}/{goldItemId}/tryFight")
-    public TryFightVo tryFight(@PathVariable Long familyId, @PathVariable Long goldItemId) {
-        return mineService.tryFightMineItem(familyId,goldItemId);
+    @ApiOperation("取消矿区对战")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "家族ID",name="familyId",paramType = "path",dataType = "Long",required = true),
+            @ApiImplicitParam(value = "矿区ID",name="goldItemId",paramType = "path",dataType = "Long",required = true),
+            @ApiImplicitParam(value = "用户ID",name="userId",paramType = "path",dataType = "Long",required = true),
+    })
+    @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/kill")
+    public FightKillVo fightKill(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
+        return mineService.fightKill(familyId,goldItemId,userId);
     }
+
+//    /**
+//     * 攻击矿区 ，实时返回结果，
+//     *
+//     * @param familyId
+//     * @param goldItemId
+//     * @return
+//     */
+//    @GetMapping("/{familyId}/{goldItemId}/fight")
+//    public FightVo fight(@PathVariable Long familyId, @PathVariable Long goldItemId) {
+//        return mineService.fightMineItem(familyId,goldItemId);
+//    }
+//    /**
+//     * 攻击矿区 ，实时返回结果，
+//     *
+//     * @param familyId
+//     * @param goldItemId
+//     * @return
+//     */
+//    @GetMapping("/{familyId}/{goldItemId}/tryFight")
+//    public TryFightVo tryFight(@PathVariable Long familyId, @PathVariable Long goldItemId) {
+//        return mineService.tryFightMineItem(familyId,goldItemId);
+//    }
 
 //    @Autowired
 //    UserFeignClient userFeignClient;

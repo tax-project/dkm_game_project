@@ -10,6 +10,12 @@ public class MineItemVo {
     int level;
     int locationX;
     int locationY;
+    /**
+     * 被占领
+     */
+    boolean occupied;
+
+
 }
 
 //Profit per hour
