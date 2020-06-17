@@ -41,7 +41,6 @@ public class CallbackController {
 
       //支付金额
 
-
       pay.setId(idGenerator.getNumberId());
       pay.setOrderNo(vo.getOrderNo());
       pay.setPayNo(vo.getTradeNo());

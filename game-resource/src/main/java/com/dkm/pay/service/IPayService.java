@@ -26,4 +26,10 @@ public interface IPayService {
     */
    void insertPay (Pay pay);
 
+   /**
+    *  根据订单号修改支付信息
+    * @param pay
+    */
+   void updatePayInfo (Pay pay);
+
 }

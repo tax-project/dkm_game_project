@@ -84,4 +84,10 @@ public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayS
          throw new ApplicationException(CodeType.SERVICE_ERROR, "增加失败");
       }
    }
+
+   @Override
+   public void updatePayInfo(Pay pay) {
+
+
+   }
 }
