@@ -32,4 +32,6 @@ public class WithdrawalRecordVo {
      *本月累计体现总金额
      */
     private Double totalAmount;
+
+    private String time;
 }

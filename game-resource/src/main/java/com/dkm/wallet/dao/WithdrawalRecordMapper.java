@@ -2,6 +2,7 @@ package com.dkm.wallet.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.wallet.entity.WithdrawalRecord;
+import com.dkm.wallet.entity.vo.WithdrawalRecordVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface WithdrawalRecordMapper extends IBaseMapper<WithdrawalRecord> {
      * @param userId
      * @return
      */
-    List<WithdrawalRecord> queryRecordMonth(Long userId);
+    List<WithdrawalRecordVo> queryRecordMonth(Long userId);
 
     /**
      * 查看本月累计金额
