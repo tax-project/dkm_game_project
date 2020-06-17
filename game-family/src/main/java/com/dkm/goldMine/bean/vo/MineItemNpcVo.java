@@ -4,11 +4,13 @@ import lombok.Data;
 
 @Data
 public class MineItemNpcVo {
-    long userId;
-    long userFamilyId;
-    String npcName;
-    int level;
+    Boolean npc;
+    long userId = 0;
+    long userFamilyId  = 0;
+    String npcName ;
+    int npcLevel ;
     String occupiedStartDate = "";
     String occupiedEndDate = "";
     final ProfitPerHourVo profitPerHour = new ProfitPerHourVo();
+
 }

@@ -6,8 +6,8 @@ import com.dkm.family.service.FamilyService;
 import com.dkm.goldMine.bean.ao.DataPair;
 import com.dkm.goldMine.bean.entity.MineEntity;
 import com.dkm.goldMine.bean.entity.MineItemEntity;
-import com.dkm.goldMine.bean.vo.FamilyGoldMineVo;
-import com.dkm.goldMine.bean.vo.MineItemVo;
+import com.dkm.goldMine.bean.enums.GoldItemLevel;
+import com.dkm.goldMine.bean.vo.*;
 import com.dkm.goldMine.dao.MineItemMapper;
 import com.dkm.goldMine.dao.MineMapper;
 import com.dkm.goldMine.service.IMineService;
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -68,9 +70,6 @@ public class MineServiceImpl implements IMineService {
         return goldMineVo;
     }
 
-    private boolean goldMineNotExists(Long familyId) {
-        return mineMapper.selectMineByFamilyId(familyId) == null;
-    }
 
     public void createNewMineByFamilyId(Long familyId) {
         val entity = new MineEntity();
@@ -105,6 +104,47 @@ public class MineServiceImpl implements IMineService {
         }
     }
 
+    @Override
+    public MineItemNpcVo getGoldMineItemInfo(Long familyId, Long goldItemId) {
+        MineItemNpcVo npcVo = new MineItemNpcVo();
+        val itemEntity = mineItemMapper.selectByBattleIdAndGoldItemId(familyId, goldItemId);
+        if (itemEntity == null) {
+            log.error("id 未发现！" + familyId + " | " + goldItemId);
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"未发现id的表");
+        }
+        val goldItemLevel = GoldItemLevel.valueOf("LEVEL_" + itemEntity.getLevel());
+        npcVo.getProfitPerHour().setGold(goldItemLevel.getGoldYield());
+        npcVo.getProfitPerHour().setIntegral(goldItemLevel.getIntegralYield());
+        npcVo.setUserId(itemEntity.getUserId());
+        npcVo.setUserFamilyId(itemEntity.getFamilyId());
+        if (itemEntity.getUserId() == 0) {
+            // 这是空的
+            npcVo.setNpc(true);
+            npcVo.setNpcName(goldItemLevel.getNpcName());
+            npcVo.setNpcLevel(goldItemLevel.getNpcLevel());
+            npcVo.setOccupiedStartDate("");
+            npcVo.setOccupiedEndDate("");
+        }else {
+            npcVo.setNpc(false);
+            npcVo.setNpcName("");
+            npcVo.setNpcLevel(0);
+            npcVo.setOccupiedStartDate(itemEntity.getFightStartDate().toString());
+            npcVo.setOccupiedEndDate(itemEntity.getFightEndDate().toString());
+        }
+        return npcVo;
+    }
+
+    @Override
+    public TryFightVo tryFightMineItem(Long familyId, Long goldItemId) {
+        return null;
+    }
+
+    @Override
+    public FightVo fightMineItem(Long familyId, Long goldItemId) {
+        return null;
+    }
+
+
     private Boolean checkLocal(DataPair dataPair) {
         return dataPair.getX() < 6 && dataPair.getY() < 6;
     }
@@ -120,6 +160,9 @@ public class MineServiceImpl implements IMineService {
             y = new Random().nextInt(16) + 2;
         }
         return new DataPair(x, y);
+    }
+    private boolean goldMineNotExists(Long familyId) {
+        return mineMapper.selectMineByFamilyId(familyId) == null;
     }
 
 

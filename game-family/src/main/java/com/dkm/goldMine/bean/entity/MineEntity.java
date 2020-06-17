@@ -9,7 +9,6 @@ import lombok.Data;
 public class MineEntity {
     @TableId
     private Long id;
-
     private Long familyId;
 
 }
