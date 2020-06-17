@@ -2,6 +2,7 @@ package com.dkm.wallet.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.jwt.contain.LocalUser;
+import com.dkm.utils.DateUtils;
 import com.dkm.wallet.dao.WithdrawalRecordMapper;
 import com.dkm.wallet.entity.WithdrawalRecord;
 import com.dkm.wallet.service.IWithdrawalRecordService;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +44,12 @@ public class WithdrawalRecordServiceImpl extends ServiceImpl<WithdrawalRecordMap
 
         //本月累计金额
         Double aDouble = baseMapper.queryRecordMonthStatistics(localUser.getUser().getId());
+
+        System.out.println("aDouble = " + LocalDateTime.now());
+        for (int i = 0; i < withdrawalRecords.size(); i++) {
+
+            withdrawalRecords.get(i).setTime(DateUtils.formatDate(withdrawalRecords.get(i).getWithdrawalTime()));
+        }
 
         map.put("withdrawalRecords",withdrawalRecords);
 
