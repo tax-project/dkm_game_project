@@ -158,6 +158,10 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
       //先查询id集合
       List<ProduceSelectVo> list = baseMapper.queryAllIdList(userId, aId);
 
+      if (null == list || list.size() == 0) {
+          return;
+      }
+
       //删除产出表信息
       Integer integer = baseMapper.deleteProduce(list);
 
@@ -166,6 +170,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
       }
 
       Integer integer1 = baseMapper.deleteProduceUser(list);
+
 
       if (integer1 <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");

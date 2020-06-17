@@ -64,7 +64,8 @@ public class MoneyController {
    @GetMapping("/listAllMoney")
    @CrossOrigin
    @CheckToken
-   public Map<String, Object> listAllMoney (@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+   public Map<String, Object> listAllMoney (@RequestParam("current") Integer current,
+                                            @RequestParam("size") Integer size) {
 
       if (current == null || size == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");

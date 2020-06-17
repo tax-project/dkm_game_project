@@ -4,8 +4,9 @@ package com.dkm.pay.vilidata.exp;
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.httpclient.HttpClientUtils;
 import com.dkm.httpclient.HttpResult;
+import com.dkm.pay.entity.vo.PayVo;
+import com.dkm.pay.vilidata.entity.PayParamVo;
 import com.dkm.pay.vilidata.entity.PayToken;
-import com.dkm.pay.vilidata.entity.PayVo;
 import com.dkm.pay.vilidata.entity.ResultTokenVo;
 import com.dkm.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -63,12 +64,12 @@ public class PayTokenUtils {
       String s = JSONObject.toJSONString(payToken);
       HttpResult httpResult = apiService.doPost(url, s);
 
-      PayVo vo = JSONObject.parseObject(httpResult.getBody(), PayVo.class);
+      PayParamVo vo = JSONObject.parseObject(httpResult.getBody(), PayParamVo.class);
 
-      ResultTokenVo result = vo.getResult();
+      ResultTokenVo result = (ResultTokenVo)vo.getData();
 
       map.put("pay_token",result.getToken());
-      map.put("pay_ext",result.getExpires());
+      map.put("pay_ext",result.getExp());
       return result.getToken();
    }
 

@@ -10,7 +10,7 @@
 
 
     <select id="countHandOutRedEnvelopes" resultType="com.dkm.problem.entity.vo.MoneyCountVo">
-        SELECT u.we_chat_nick_name as 'name',SUM(m.diamonds) as 'number',
+        SELECT u.we_chat_nick_name as 'name',SUM(m.diamonds) as 'number',u.we_chat_head_img_url as 'headUrl',
         max(DATE_FORMAT(m.create_date, '%Y-%m-%d %H:%i:%s')) as 'date' from tb_money m
         join tb_user u on m.user_id = u.user_id
         <if test="status == 0">

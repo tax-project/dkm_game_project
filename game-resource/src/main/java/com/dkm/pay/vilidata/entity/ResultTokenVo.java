@@ -12,5 +12,5 @@ public class ResultTokenVo {
 
    private String token;
 
-   private String expires;
+   private String exp;
 }

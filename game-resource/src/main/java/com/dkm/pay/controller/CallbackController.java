@@ -1,6 +1,8 @@
 package com.dkm.pay.controller;
 
 import com.dkm.pay.entity.Pay;
+import com.dkm.pay.entity.vo.AliPayParamVo;
+import com.dkm.pay.entity.vo.PayVo;
 import com.dkm.pay.entity.vo.SucVo;
 import com.dkm.pay.service.IPayService;
 import com.dkm.utils.IdGenerator;
@@ -26,9 +28,6 @@ public class CallbackController {
    @Autowired
    private IPayService payService;
 
-   @Autowired
-   private IdGenerator idGenerator;
-
    /**
     * 微信回调接口
     * @param vo 支付结果的参数
@@ -37,24 +36,20 @@ public class CallbackController {
    @CrossOrigin
    public void sucFail (@RequestBody SucVo vo) {
 
-      Pay pay = new Pay();
 
-      //支付金额
-
-
-      pay.setId(idGenerator.getNumberId());
-      pay.setOrderNo(vo.getOrderNo());
-      pay.setPayNo(vo.getTradeNo());
+      PayVo payVo = new PayVo();
+      payVo.setOrderNo(vo.getOrderNo());
+      payVo.setPayNo(vo.getTradeNo());
+      payVo.setPayTime(LocalDateTime.now());
+      payVo.setPayType(0);
       if ("SUCCESS".equals(vo.getMsg())) {
          //支付成功
-         pay.setPayResult(0);
+         payVo.setPayResult(0);
       } else {
-         pay.setPayResult(1);
+         payVo.setPayResult(1);
       }
-      pay.setPayTime(LocalDateTime.now());
-      pay.setPayType(0);
 
-      payService.insertPay(pay);
+      payService.updatePayInfo(payVo);
    }
 
 
@@ -64,24 +59,21 @@ public class CallbackController {
     */
    @PostMapping("/sucAliFail")
    @CrossOrigin
-   public void sucAliFail (@RequestBody SucVo vo) {
+   public void sucAliFail (@RequestBody AliPayParamVo vo) {
 
-      Pay pay = new Pay();
-      pay.setId(idGenerator.getNumberId());
-      pay.setOrderNo(vo.getOrderNo());
-      pay.setPayNo(vo.getTradeNo());
+      PayVo payVo = new PayVo();
+      payVo.setOrderNo(vo.getOrderNo());
+      payVo.setPayNo(vo.getTradeNo());
+      payVo.setPayTime(LocalDateTime.now());
+      payVo.setPayType(1);
       if ("SUCCESS".equals(vo.getMsg())) {
          //支付成功
-         pay.setPayResult(0);
+         payVo.setPayResult(0);
       } else {
-         pay.setPayResult(1);
+         payVo.setPayResult(1);
       }
-      pay.setPayTime(LocalDateTime.now());
-      pay.setPayType(1);
 
-      //支付金额
-
-      payService.insertPay(pay);
+      payService.updatePayInfo(payVo);
 
    }
 }

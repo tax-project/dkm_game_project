@@ -15,4 +15,6 @@ public class MoneyCountVo {
    private Object number;
 
    private String date;
+
+   private String headUrl;
 }

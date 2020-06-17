@@ -1,18 +1,21 @@
 DROP TABLE IF EXISTS `tb_family_mine`;
+DROP TABLE IF EXISTS `tb_family_mine_battle_field`;
+DROP TABLE IF EXISTS `tb_family_mine_battle_field_user`;
+DROP TABLE IF EXISTS `tb_family_mine_battle_field_item`;
+
 CREATE TABLE IF NOT EXISTS `tb_family_mine`
 (
     `familyId`      BIGINT(20) NOT NULL PRIMARY KEY COMMENT '家族矿区ID ，对应家族ID',
     `battleFieldId` BIGINT(20) COMMENT '战场 ID'
 );
 
-DROP TABLE IF EXISTS `tb_family_mine_battle_field_user`;
+
 CREATE TABLE IF NOT EXISTS `tb_family_mine_battle_field_user`
 (
     `user_id`         BIGINT(20) PRIMARY KEY NOT NULL COMMENT '用户ID',
     `battle_field_id` BIGINT(20)             NOT NULL COMMENT '战场矿区ID'
 );
 
-DROP TABLE IF EXISTS `tb_family_mine_battle_field`;
 CREATE TABLE IF NOT EXISTS `tb_family_mine_battle_field`
 (
     `battle_field_id`  BIGINT(20) NOT NULL COMMENT '战场矿区ID',
@@ -23,8 +26,9 @@ CREATE TABLE IF NOT EXISTS `tb_family_mine_battle_field`
 );
 
 
-
 DROP TABLE IF EXISTS `tb_family_mine_battle_field_item`;
+
+
 CREATE TABLE IF NOT EXISTS `tb_family_mine_battle_field_item`
 (
     `battle_field_id` BIGINT(20) NOT NULL COMMENT '战场矿区ID',
@@ -39,3 +43,6 @@ CREATE TABLE IF NOT EXISTS `tb_family_mine_battle_field_item`
 );
 
 
+# INSERT INTO tb_family_mine_battle_field(battle_field_id) VALUES (#{id})
+
+# UPDATE `tb_family_mine_battle_field` SET familyIdByFirst = ? , familyIdBySecond = ?,familyIdByThird = ? ,familyIdByForth = ? WHERE battle_field_id = ?

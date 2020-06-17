@@ -170,18 +170,14 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
       UserLoginQuery user = localUser.getUser();
 
-      Page<Money> page = new Page<>();
-      page.setCurrent(vo.getCurrent());
-      page.setSize(vo.getSize());
-
       LambdaQueryWrapper<Money> wrapper = new LambdaQueryWrapper<Money>()
             .eq(Money::getStatus,0)
             .or()
-            .eq(Money::getStatus,1);
+            .eq(Money::getStatus,1)
+            .orderByDesc(Money::getCreateDate);
 
-      baseMapper.selectPage(page, wrapper);
+      List<Money> list = baseMapper.selectList(wrapper);
 
-      List<Money> list = page.getRecords();
       List<Long> longList = new ArrayList<>();
 
       int peopleNumber = 0;
