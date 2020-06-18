@@ -87,11 +87,8 @@ public class WeCharController {
         if (StringUtils.isBlank(vo.getUserName()) || StringUtils.isBlank(vo.getPassword())) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-
         return weChatService.userLogin(vo);
     }
-
-
 
     @GetMapping("/queryUser/{id}")
     public UserInfoQueryBo queryUser (@PathVariable("id") Long id) {

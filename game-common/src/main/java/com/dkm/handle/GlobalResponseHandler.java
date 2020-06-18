@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice
 public class GlobalResponseHandler implements ResponseBodyAdvice {
 
-
     @Override
     public boolean supports(MethodParameter methodParameter, Class aClass) {
         if (methodParameter.getMethod().isAnnotationPresent(IgnoreResponseAdvice.class) ||

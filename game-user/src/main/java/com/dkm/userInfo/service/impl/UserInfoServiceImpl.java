@@ -7,9 +7,11 @@ import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.contain.LocalUser;
 import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Autowired
    private IdGenerator idGenerator;
+   @Autowired
+   private LocalUser localUser;
 
    @Override
    public void insertUserInfo(Long userId) {
@@ -132,5 +136,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public List<AttendantWithUserVo> listAttUser(Long userId) {
       return baseMapper.listAttUser (userId);
+   }
+
+   @Override
+   public List<ReputationRankingBO> reputationRanking() {
+
+      List<ReputationRankingBO> reputationRankingBoS = baseMapper.reputationRanking();
+      if (reputationRankingBoS==null){
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "数据库查询失败");
+      }
+      return reputationRankingBoS;
    }
 }

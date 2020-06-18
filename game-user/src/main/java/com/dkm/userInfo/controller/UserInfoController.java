@@ -6,6 +6,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,9 +60,12 @@ public class UserInfoController {
       userInfoService.updateInfo(bo);
    }
 
-
    @GetMapping("/listAttUser")
    public List<AttendantWithUserVo> listAttUser(@RequestParam("userId") Long userId){
       return userInfoService.listAttUser(userId);
+   }
+   @GetMapping("/reputation/ranking")
+   public List<ReputationRankingBO> reputationRanking(){
+      return userInfoService.reputationRanking();
    }
 }

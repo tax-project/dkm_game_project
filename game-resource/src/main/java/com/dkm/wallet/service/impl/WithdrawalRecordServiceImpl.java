@@ -46,9 +46,6 @@ public class WithdrawalRecordServiceImpl extends ServiceImpl<WithdrawalRecordMap
         //本月累计金额
         Double aDouble = baseMapper.queryRecordMonthStatistics(localUser.getUser().getId());
 
-        System.out.println("aDouble = " + LocalDateTime.now());
-        System.out.println("withdrawalRecords.get(0) = " + withdrawalRecords.get(0));
-
         if(withdrawalRecords.get(0).getWithdrawalTime()==null){
             map.put("msg","没有提现记录");
             map.put("aDouble","0.0");

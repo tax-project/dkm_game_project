@@ -69,8 +69,6 @@ public class ScoreController {
 
       return scoreService.pageScore(page,moneyId);
    }
-
-
    @ApiOperation(value = "收红包排行榜或者答题达人", notes = "收红包排行榜或者答题达人")
    @ApiImplicitParams({
          @ApiImplicitParam(name = "current", value = "当前页", required = true, dataType = "int", paramType = "path"),

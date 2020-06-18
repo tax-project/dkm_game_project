@@ -6,6 +6,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -63,5 +64,11 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 返回结果
      */
     Integer updateInfo(UserInfoSkillBo bo);
+
+    /**
+     * 获取用户声望排行榜
+     * @return 排行集合
+     */
+    List<ReputationRankingBO> reputationRanking();
 
 }

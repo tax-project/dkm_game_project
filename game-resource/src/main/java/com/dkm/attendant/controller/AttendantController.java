@@ -1,43 +1,32 @@
 package com.dkm.attendant.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dkm.attendant.entity.AttenDant;
-import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
-import com.dkm.attendant.entity.vo.*;
+import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
+import com.dkm.attendant.entity.vo.AttUserVo;
+import com.dkm.attendant.entity.vo.AttendantVo;
+import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.constanct.CodeType;
-import com.dkm.data.Result;
-import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
-import com.dkm.feign.UserFeignClient;
-import com.dkm.good.entity.Goods;
-import com.dkm.good.service.IGoodsService;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.land.entity.Land;
-import com.dkm.land.entity.vo.Message;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author 刘梦祺
  * @PROJECT_NAME: dkm_game
  * @DESCRIPTION:
  * @USER: 刘梦祺
  * @DATE: 2020/5/11 14:01
  */
-    @Api(tags = "跟班Api")
+@Api(tags = "跟班Api")
 @RestController
 @Slf4j
 @RequestMapping("/Attendant")
@@ -56,7 +45,6 @@ public class AttendantController {
     public List<AttUserAllInfoVo> queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
-
     /**
      * 获取用户声望和金币
      * @return

@@ -4,6 +4,7 @@ import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
+import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 
 import java.util.List;
 
@@ -69,4 +70,11 @@ public interface IUserInfoService {
     * @return
     */
    List<AttendantWithUserVo> listAttUser (Long userId);
+
+
+   /**
+    * 获取声望排行
+    * @return 排行结果
+    */
+   List<ReputationRankingBO> reputationRanking();
 }
