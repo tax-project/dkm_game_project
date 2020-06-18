@@ -5,7 +5,7 @@
     <select id="getUnionUser"  resultType="com.dkm.union.entity.vo.UnionUserVo">
         SELECT user_id,we_chat_head_img_url,we_chat_nick_name  from tb_user WHERE
         <foreach collection="userIds" item="item" separator="or">
-            user_id == #{item}
+            user_id = #{item}
         </foreach>
     </select>
 

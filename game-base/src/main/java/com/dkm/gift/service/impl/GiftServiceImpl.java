@@ -115,10 +115,24 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public List<GiftRankingDto> getGiftRanking(Integer type) {
+        List<GiftRankingDto> send =null;
         if(type==1){
-            return giftRankingDao.getGiftRanking("send");
+            send= giftRankingDao.getGiftRanking("send");
         }else{
-            return giftRankingDao.getGiftRanking("accept");
+            send= giftRankingDao.getGiftRanking("accept");
         }
+        for (int i = 0; i < send.size(); i++) {
+            if(i==1){
+                send.get(i).setMedal(2000);
+                send.get(i).setRenown(15);
+            }else if(i%5==0){
+                send.get(i).setMedal(1200);
+                send.get(i).setRenown(10);
+            }else {
+                send.get(i).setMedal(600);
+                send.get(i).setRenown(7);
+            }
+        }
+        return send;
     }
 }

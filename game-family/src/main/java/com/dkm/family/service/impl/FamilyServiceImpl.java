@@ -168,6 +168,7 @@ public class FamilyServiceImpl implements FamilyService {
     public List<HotFamilyVo> getHotFamily() {
         //获取热门家族
         List<HotFamilyVo> hotFamily = familyDao.getHotFamily();
+        if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
         //根据家族id查询人员头像
         Map<Long, List<String>> collect1 = familyDao.getImgs(collect).stream().collect(Collectors.groupingBy(FamilyImgsVo::getFamilyId,Collectors.mapping(FamilyImgsVo::getWeChatHeadImgUrl,Collectors.toList())));

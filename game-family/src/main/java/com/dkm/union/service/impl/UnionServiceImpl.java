@@ -42,7 +42,7 @@ public class UnionServiceImpl implements IUnionService {
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND);
         }
         List<UnionFamilyInfoVo> unionFamily = familyDao.getUnionFamily(unionEntity.getUnionId());
-        List<UnionUserVo> unionUser = unionMapper.getUnionUser(Stream.of(unionEntity.getUserId(), unionEntity.getUnionUserId1(), unionEntity.getUnionUserId2()).collect(Collectors.toList()));
+        List<UnionUserVo> unionUser = unionMapper.getUnionUser(Stream.of(unionEntity.getUserId(), unionEntity.getViceUserId1(), unionEntity.getViceUserId2()).collect(Collectors.toList()));
         unionUser.forEach(a->{
             if(a.getUserId().equals(unionEntity.getUserId()))a.setLevel(2);
             else a.setLevel(1);
@@ -50,7 +50,7 @@ public class UnionServiceImpl implements IUnionService {
         if(unionFamily!=null){
             List<Long> collect = unionFamily.stream().mapToLong(UnionFamilyInfoVo::getFamilyId).boxed().collect(Collectors.toList());
             Map<Long, List<FamilyImgsVo>> collect1 = familyDao.getImgs(collect).stream().collect(Collectors.groupingBy(FamilyImgsVo::getFamilyId, Collectors.toList()));
-            unionFamily.forEach(a-> a.setImgs(collect1.get(a.getFamilyId()).subList(0, 9).stream().map(FamilyImgsVo::getWeChatHeadImgUrl).collect(Collectors.toList())));
+            unionFamily.forEach(a-> a.setImgs(collect1.get(a.getFamilyId()).subList(0, Math.min(collect1.get(a.getFamilyId()).size(), 9)).stream().map(FamilyImgsVo::getWeChatHeadImgUrl).collect(Collectors.toList())));
         }
         Map<String, Object> map = new HashMap<>();
         map.put("users",unionUser);
