@@ -26,7 +26,7 @@ import java.util.Map;
  * @USER: 刘梦祺
  * @DATE: 2020/5/11 14:01
  */
-    @Api(tags = "跟班Api")
+@Api(tags = "跟班Api")
 @RestController
 @Slf4j
 @RequestMapping("/Attendant")

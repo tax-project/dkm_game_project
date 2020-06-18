@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.*;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.feign.entity.ReputationRankingBO;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -83,4 +84,7 @@ public interface UserFeignClient {
     */
    @PostMapping("/v1/we/chat/queryAllHeardByUserId")
    Result<List<UserHeardUrlBo>> queryAllHeardByUserId (@RequestBody ParamBo bo);
+
+   @GetMapping("/v1/userInfo/reputation/ranking")
+   Result<List<ReputationRankingBO>>  reputationRanking();
 }
