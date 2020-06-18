@@ -50,4 +50,8 @@ public class FamilyEntity {
      *  家族人数
      */
     private Integer familyUserNumber;
+    /**
+     * 工会名称
+     */
+    private Long unionId;
 }

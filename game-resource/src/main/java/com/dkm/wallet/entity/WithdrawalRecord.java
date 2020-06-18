@@ -46,7 +46,6 @@ public class WithdrawalRecord extends Model<WithdrawalRecord> {
      */
     private String withdrawalDescribe;
 
-    private String time;
 
 
 }

@@ -16,7 +16,7 @@ public class SendGiftVo {
     /**
      * 送礼人userId
      */
-    private long sendId;
+    private Long sendId;
     /**
      * 收礼人id
      */

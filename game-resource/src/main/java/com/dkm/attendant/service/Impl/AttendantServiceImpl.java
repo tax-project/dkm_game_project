@@ -117,6 +117,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         List<UserHeardUrlBo> resultData = listResult.getData();
 
+        System.out.println("---->" +resultData);
         if (null == resultData || resultData.size() == 0) {
             return null;
         }

@@ -9,9 +9,9 @@ import java.util.List;
  * 家族金矿ID
  */
 @Data
-public class FamilyGoldMineVo {
+public class GoldMineVo {
     long familyId;
     long goldMineId;
-    long goldLevel = 0;
+    long familyLevel = 0;
     final List<MineItemVo> goldItems = new ArrayList<>();
 }

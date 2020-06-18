@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.union.dao.UnionMapper">
+    <select id="getUnionUser"  resultType="com.dkm.union.entity.vo.UnionUserVo">
+        SELECT user_id,we_chat_head_img_url,we_chat_nick_name  from tb_user WHERE
+        <foreach collection="userIds" item="item" separator="or">
+            user_id == #{item}
+        </foreach>
+    </select>
+
+</mapper>

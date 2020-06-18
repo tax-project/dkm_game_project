@@ -98,4 +98,6 @@ public interface SeedMapper extends BaseMapper<Seed> {
     List<SeedUnlockVo> queryAreUnlocked(Long userId);
 
     SeedDetailsVo querySeedById(Integer seedId ,Long userId);
+
+    List<CountIdVo> queryStatus(@Param("userId") Long userId,@Param("list")List<Integer> list);
 }

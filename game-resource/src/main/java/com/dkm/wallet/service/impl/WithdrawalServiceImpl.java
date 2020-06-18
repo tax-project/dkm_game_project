@@ -77,6 +77,7 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
         //如果等于0 初始化数据
         if(withdrawals.size()==0){
             for (int i = 1; i <=39; i++) {
+
                 Withdrawal withdrawal=new Withdrawal();
                 withdrawal.setId(idGenerator.getNumberId());
                 withdrawal.setUserId(user.getId());
@@ -152,7 +153,6 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
             withdrawalRecord.setUserId(localUser.getUser().getId());
             withdrawalRecord.setWithdrawalId(idGenerator.getNumberId());
             withdrawalRecord.setWithdrawalMoney(withdrawal.getWithdrawalAmount());
-            System.out.println("LocalDateTime.now() = " + LocalDateTime.now());
             withdrawalRecord.setWithdrawalTime(LocalDateTime.now());
             withdrawalRecord.setWithdrawalDescribe("提现成功，你可以到微信或者支付宝账单中查询");
 
@@ -160,8 +160,6 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
                     .eq(Withdrawal::getId , id);
             Withdrawal withdrawal1=new Withdrawal();
             withdrawal1.setWithdrawalStatus(1);
-
-
 
 
             if(userInfoQueryBoResult.getData().getUserInfoNowExperience()>=userInfoQueryBoResult.getData().getUserInfoNextExperience()){
