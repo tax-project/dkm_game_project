@@ -71,7 +71,7 @@ public class GiftController {
         giftService.sendGift(sendGiftVo);
     }
 
-    @ApiOperation("获取礼物列表")
+    @ApiOperation("排行")
     @ApiImplicitParam(name = "type",value = "1富豪2魅力",required = true,paramType = "int",dataType = "path")
     @GetMapping("/getGiftRanking")
     @CrossOrigin
