@@ -70,4 +70,9 @@
         where user_id = #{userId}
     </update>
 
+    <select id="reputationRanking" resultType="com.dkm.userInfo.entity.bo.ReputationRankingBO">
+        SELECT  a.we_chat_nick_name , a.we_chat_head_img_url, a.user_sex, b.user_info_renown
+        FROM  tb_user a LEFT JOIN  tb_user_info b ON a.user_id = b.user_id ORDER BY b.user_info_renown DESC
+    </select>
+
 </mapper>
