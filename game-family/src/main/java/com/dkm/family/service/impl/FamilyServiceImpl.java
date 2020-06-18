@@ -15,6 +15,8 @@ import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.FamilyUsersVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.service.FamilyService;
+import com.dkm.union.dao.UnionMapper;
+import com.dkm.union.entity.UnionEntity;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.QrCodeUtils;
 import com.google.zxing.BarcodeFormat;
@@ -56,12 +58,15 @@ public class FamilyServiceImpl implements FamilyService {
     private FamilyDetailDao familyDetailDao;
     @Resource
     private IdGenerator idGenerator;
+    @Resource
+    private UnionMapper unionMapper;
     @Override
     public void creatFamily(Long userId,FamilyEntity family) {
         if(familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId,userId))!=null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"请先退出当前家族");
         }
-        family.setFamilyCreateTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        family.setFamilyCreateTime(now);
         family.setFamilyId(idGenerator.getNumberId());
         family.setFamilyGrade(1);
         family.setFamilyJoin(0);
@@ -72,9 +77,21 @@ public class FamilyServiceImpl implements FamilyService {
         familyDetailEntity.setUserId(userId);
         familyDetailEntity.setFamilyDetailsId(idGenerator.getNumberId());
         familyDetailEntity.setFamilyId(family.getFamilyId());
+        //工会
+        UnionEntity unionEntity = unionMapper.selectOne(new LambdaQueryWrapper<UnionEntity>().eq(UnionEntity::getUserId, userId));
+        int union=0;
+        if(unionEntity==null){
+            unionEntity = new UnionEntity();
+            unionEntity.setCreateTime(now);
+            unionEntity.setUnionId(idGenerator.getNumberId());
+            unionEntity.setUserId(userId);
+            unionEntity.setUnionName(family.getFamilyName());
+            union = unionMapper.insert(unionEntity);
+        }
+        family.setUnionId(unionEntity.getUnionId());
         int insertFamily = familyDao.insert(family);
         int insertFamilyDetailEntity = familyDetailDao.insert(familyDetailEntity);
-        if(insertFamily<1||insertFamilyDetailEntity<1){
+        if(insertFamily<1||insertFamilyDetailEntity<1||union<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"创建家族失败");
         }
     }

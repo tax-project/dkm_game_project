@@ -5,6 +5,7 @@ import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
+import com.dkm.union.entity.vo.UnionFamilyInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -38,4 +39,8 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
 
     @Select("select family_id,family_name from tb_family")
     List<FamilyGoldInfoVo> selectFamilyGoldInfo();
+
+
+    @Select("SELECT family_id,family_name,family_introduce,family_welcome_words FROM tb_family WHERE union_id = #{unionId}")
+    List<UnionFamilyInfoVo> getUnionFamily(@Param("unionId") Long unionId);
 }
