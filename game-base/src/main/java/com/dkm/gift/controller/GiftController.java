@@ -3,6 +3,7 @@ package com.dkm.gift.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.gift.entity.GiftEntity;
+import com.dkm.gift.entity.dto.GiftRankingDto;
 import com.dkm.gift.entity.vo.SendGiftVo;
 import com.dkm.gift.service.GiftService;
 import com.dkm.jwt.contain.LocalUser;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -67,5 +69,16 @@ public class GiftController {
         }
         sendGiftVo.setSendId(localUser.getUser().getId());
         giftService.sendGift(sendGiftVo);
+    }
+
+    @ApiOperation("获取礼物列表")
+    @ApiImplicitParam(name = "type",value = "0富豪1魅力",required = true,paramType = "int",dataType = "path")
+    @GetMapping("/getGiftRanking")
+    @CrossOrigin
+    public List<GiftRankingDto> getGiftRanking(@RequestParam("type") Integer type){
+        if(type==null||type>2||type<1){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return giftService.getGiftRanking(type);
     }
 }

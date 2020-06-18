@@ -1,6 +1,7 @@
 package com.dkm.gift.service;
 
 import com.dkm.gift.entity.GiftEntity;
+import com.dkm.gift.entity.dto.GiftRankingDto;
 import com.dkm.gift.entity.vo.SendGiftVo;
 
 import java.util.List;
@@ -25,4 +26,11 @@ public interface GiftService {
      * @param sendGiftVo
      */
     void sendGift(SendGiftVo sendGiftVo);
+
+    /**
+     * 送礼排行榜
+     * @param type
+     * @return
+     */
+    List<GiftRankingDto> getGiftRanking(Integer type);
 }
