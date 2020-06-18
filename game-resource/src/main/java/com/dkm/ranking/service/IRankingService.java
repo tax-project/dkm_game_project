@@ -14,5 +14,5 @@ public interface IRankingService {
      * 查询排行榜（声望，魅力，富豪）
      * @return
      */
-    Map<String,Object> queryRankingList();
+    Map<String,Object> queryRankingList(Integer type);
 }

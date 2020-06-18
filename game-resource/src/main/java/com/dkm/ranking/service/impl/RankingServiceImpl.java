@@ -1,8 +1,13 @@
 package com.dkm.ranking.service.impl;
 
+import com.dkm.data.Result;
+import com.dkm.feign.BaseFeignClient;
+import com.dkm.feign.entity.GiftRankingDto;
 import com.dkm.ranking.service.IRankingService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +19,8 @@ import java.util.Map;
 public class RankingServiceImpl implements IRankingService {
 
 
+    @Autowired
+    private BaseFeignClient baseFeignClient;
 
 
     /**
@@ -21,9 +28,16 @@ public class RankingServiceImpl implements IRankingService {
      * @return
      */
     @Override
-    public Map<String, Object> queryRankingList() {
+    public Map<String, Object> queryRankingList(Integer type) {
         Map<String,Object> map=new HashMap<>(16);
+        /**
+         * 查询排行榜（魅力，富豪）
+         */
+        Result<List<GiftRankingDto>> giftRanking = baseFeignClient.getGiftRanking(type);
 
-        return null;
+
+
+        map.put("giftRanking",giftRanking.getData());
+        return map;
     }
 }
