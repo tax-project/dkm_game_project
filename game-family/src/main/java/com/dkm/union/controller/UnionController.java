@@ -1,5 +1,7 @@
 package com.dkm.union.controller;
 
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.union.service.IUnionService;
 import io.swagger.annotations.Api;
@@ -34,7 +36,10 @@ public class UnionController {
     @CheckToken
     @CrossOrigin
     public Map<String,Object> familyInfo(Long unionId){
-        return null;
+        if (unionId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return iUnionService.getUnionInfo(unionId);
     }
 
 
