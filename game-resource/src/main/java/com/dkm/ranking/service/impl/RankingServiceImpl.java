@@ -47,6 +47,7 @@ public class RankingServiceImpl implements IRankingService {
          */
         Result<List<GiftRankingDto>> giftRanking = baseFeignClient.getGiftRanking(type);
 
+        System.out.println("giftRanking = " + giftRanking.getData());
         /**
          * 查询声望排行榜
          */

@@ -72,7 +72,7 @@ public class GiftController {
     }
 
     @ApiOperation("获取礼物列表")
-    @ApiImplicitParam(name = "type",value = "0富豪1魅力",required = true,paramType = "int",dataType = "path")
+    @ApiImplicitParam(name = "type",value = "1富豪2魅力",required = true,paramType = "int",dataType = "path")
     @GetMapping("/getGiftRanking")
     @CrossOrigin
     public List<GiftRankingDto> getGiftRanking(@RequestParam("type") Integer type){
