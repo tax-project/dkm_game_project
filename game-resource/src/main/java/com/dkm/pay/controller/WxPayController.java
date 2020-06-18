@@ -50,6 +50,22 @@ public class WxPayController {
 
 
 
+   @ApiOperation(value = "提现到零钱(最低不能少于0.3元)", notes = "提现到零钱(最低不能少于0.3元)")
+   @ApiImplicitParams({
+         @ApiImplicitParam(name = "openId", value = "微信openId", required = true, dataType = "String", paramType = "path"),
+         @ApiImplicitParam(name = "price", value = "支付金钱", required = true, dataType = "Double", paramType = "path"),
+   })
+   @GetMapping("/toWxPerson")
+   @CheckToken
+   @CrossOrigin
+   public Object toPerson(@RequestParam("openId") String openId,
+                        @RequestParam("price") Double price) {
+
+      if (StringUtils.isBlank(openId) || price == null) {
+         throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+      }
+      return wxService.toPerson(openId,price);
+   }
 
 
 

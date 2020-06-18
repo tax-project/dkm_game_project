@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
  * @date 2020/6/15
  * @vesion 1.0
  **/
-@Slf4j
-@Api(tags = "微信，支付宝回调接口")
 @RestController
 @RequestMapping("/callBack")
 public class CallbackController {
