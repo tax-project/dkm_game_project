@@ -50,7 +50,7 @@ public class WithdrawalRecordServiceImpl extends ServiceImpl<WithdrawalRecordMap
             map.put("msg","没有提现记录");
             map.put("aDouble","0.0");
         }else{
-            withdrawalRecords.forEach(a->a.setTime(DateUtils.formatDate(a.getWithdrawalTime())));
+            withdrawalRecords.forEach(a->a.setTime(DateUtils.formatDateTime(a.getWithdrawalTime())));
 
             map.put("withdrawalRecords",withdrawalRecords);
 

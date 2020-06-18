@@ -86,12 +86,8 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
                     withdrawal.setWithdrawalStatus(1);
                 }
 
-                if(userInfoQueryBoResult.getData().getUserInfoGrade()<i){
+                if(userInfoQueryBoResult.getData().getUserInfoGrade()<=i){
                     withdrawal.setWithdrawalStatus(0);
-                }
-
-                if(userInfoQueryBoResult.getData().getUserInfoGrade()==i){
-                    withdrawal.setWithdrawalStatus(2);
                 }
 
                 withdrawal.setUserGrade(i);
@@ -101,17 +97,50 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
 
                 //截取小数点后两位
                 BigDecimal bigDecimal=new BigDecimal(f1);
+                //人物等于余5不等于0
                 if(i%5!=0){
 
                     withdrawal.setWithdrawalAmount(bigDecimal);
                 }
-
+                //人物等于余5等于0 金币加0.1
                 if(i%5==0){
                     money=money+0.1;
 
-                    withdrawal.setWithdrawalAmount(bigDecimal);
-                }
+                    if(i==5){
+                        BigDecimal b2 = new BigDecimal(1);
+                        withdrawal.setWithdrawalAmount(b2);
+                    }
 
+                    if(i==10){
+                        BigDecimal b2 = new BigDecimal(1);
+                        withdrawal.setWithdrawalAmount(b2);
+                    }
+
+                    if(i==15){
+                        BigDecimal b3 = new BigDecimal(2);
+                        withdrawal.setWithdrawalAmount(b3);
+                    }
+
+                    if(i==20){
+                        BigDecimal b3 = new BigDecimal(3);
+                        withdrawal.setWithdrawalAmount(b3);
+                    }
+
+                    if(i==25){
+                        BigDecimal b4 = new BigDecimal(3);
+                        withdrawal.setWithdrawalAmount(b4);
+                    }
+                    if(i==30){
+                        BigDecimal b5 = new BigDecimal(4);
+                        withdrawal.setWithdrawalAmount(b5);
+                    }
+
+                    if(i==35){
+                        BigDecimal b6 = new BigDecimal(4);
+                        withdrawal.setWithdrawalAmount(b6);
+                    }
+
+                }
 
                 list.add(withdrawal);
             }
@@ -126,7 +155,6 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
 
 
         map.put("withdrawals1",withdrawals1);
-        System.out.println("userInfoQueryBoResult.getData().getUserInfoPacketBalance() = " + userInfoQueryBoResult.getData().getUserInfoPacketBalance());
         //余额
         map.put("balance",userInfoQueryBoResult.getData().getUserInfoPacketBalance());
 
@@ -156,13 +184,19 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
             withdrawalRecord.setWithdrawalTime(LocalDateTime.now());
             withdrawalRecord.setWithdrawalDescribe("提现成功，你可以到微信或者支付宝账单中查询");
 
-            LambdaQueryWrapper<Withdrawal> queryWrapper = new LambdaQueryWrapper<Withdrawal>()
-                    .eq(Withdrawal::getId , id);
-            Withdrawal withdrawal1=new Withdrawal();
-            withdrawal1.setWithdrawalStatus(1);
 
 
-            if(userInfoQueryBoResult.getData().getUserInfoNowExperience()>=userInfoQueryBoResult.getData().getUserInfoNextExperience()){
+
+
+            if(userInfoQueryBoResult.getData().getUserInfoNowExperience()>=userInfoQueryBoResult.getData().getUserInfoNextExperience()
+           && userInfoQueryBoResult.getData().getUserInfoPacketBalance()>=withdrawal.getWithdrawalAmount().doubleValue()){
+
+                //把状态修改为已提现（1）
+                LambdaQueryWrapper<Withdrawal> queryWrapper = new LambdaQueryWrapper<Withdrawal>()
+                        .eq(Withdrawal::getId , id);
+                Withdrawal withdrawal1=new Withdrawal();
+                withdrawal1.setWithdrawalStatus(1);
+
                 //修改状态为 已提现的
                 int update = baseMapper.update(withdrawal1, queryWrapper);
 
@@ -173,10 +207,11 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "提现失败");
                 }
                 message.setMsg("提现成功");
+                message.setNum(1);
             }else{
                 message.setMsg("提现条件不足！");
+                message.setNum(0);
             }
-
 
         }
 
