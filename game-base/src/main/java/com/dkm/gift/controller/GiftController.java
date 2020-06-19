@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * @program: game_project
- * @description: 送礼
+ * @description: 送礼e
  * @author: zhd
  * @create: 2020-05-27 09:20
  **/
@@ -54,8 +54,9 @@ public class GiftController {
             @ApiImplicitParam(name = "gold",value = "消耗金币",required = false,paramType = "int",dataType = "path"),
             @ApiImplicitParam(name = "diamond",value = "消耗钻石",required = false,paramType = "int",dataType = "path"),
             @ApiImplicitParam(name = "charm",value = "魅力值",required = true,paramType = "int",dataType = "path"),
-            @ApiImplicitParam(name = "giftId",value = "礼物id",required = true,paramType = "Long",dataType = "path")
-
+            @ApiImplicitParam(name = "giftId",value = "礼物id",required = true,paramType = "Long",dataType = "path"),
+            @ApiImplicitParam(name = "giftName",value = "名称",required = true,paramType = "int",dataType = "path"),
+            @ApiImplicitParam(name = "giftNumber",value = "礼品数量",required = true,paramType = "int",dataType = "path")
     })
     @PostMapping("/sendGift")
     @CrossOrigin
@@ -71,7 +72,7 @@ public class GiftController {
         giftService.sendGift(sendGiftVo);
     }
 
-    @ApiOperation("排行")
+    @ApiOperation("魅力排行")
     @ApiImplicitParam(name = "type",value = "1富豪2魅力",required = true,paramType = "int",dataType = "path")
     @GetMapping("/getGiftRanking")
     @CrossOrigin
@@ -80,5 +81,16 @@ public class GiftController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         return giftService.getGiftRanking(type);
+    }
+
+    @ApiOperation("花神排行")
+    @ApiImplicitParam(name = "type",value = "1骑士2花神",required = true,paramType = "int",dataType = "path")
+    @GetMapping("/getGiftFlower")
+    @CrossOrigin
+    public List<GiftRankingDto> getGiftFlower(@RequestParam("type") Integer type){
+        if(type==null||type>2||type<1){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return giftService.getGiftFlower(type);
     }
 }

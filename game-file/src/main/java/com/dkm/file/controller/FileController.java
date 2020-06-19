@@ -39,7 +39,6 @@ public class FileController {
       if (file == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "未上传文件");
       }
-
       return fileService.storeFile(file);
    }
 

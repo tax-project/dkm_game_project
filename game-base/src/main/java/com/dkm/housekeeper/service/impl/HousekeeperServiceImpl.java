@@ -143,9 +143,11 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         for (long i = 0; i < count; i++) {
             boxId.addAll(allBoxId);
         }
-        Result<List<TbEquipmentVo>> listResult = resourceFeignClient.selectByBoxIdTwo(boxId);
+        String replace = boxId.toString().replace("[", "").replace("]", "").replace(" ","");
+        System.out.println(replace);
+        Result<List<TbEquipmentVo>> listResult = resourceFeignClient.selectByBoxIdTwo(replace);
         if(listResult.getCode()!=0){
-            throw  new ApplicationException(CodeType.SERVICE_ERROR);
+            throw  new ApplicationException(CodeType.SERVICE_ERROR,listResult.getMsg());
         }
         return listResult.getData();
     }

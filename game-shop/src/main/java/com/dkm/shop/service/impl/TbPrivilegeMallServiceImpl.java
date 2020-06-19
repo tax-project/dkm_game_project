@@ -1,6 +1,7 @@
 package com.dkm.shop.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.shop.dao.TbPrivilegeMallMapper;
@@ -30,7 +31,9 @@ public class TbPrivilegeMallServiceImpl implements ITbPrivilegeMallService {
     private IdGenerator idGenerator;
     @Override
     public List<TbPrivilegeMall> selectAll() {
-        return tbPrivilegeMallMapper.selectList(null);
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("exp2",1);
+        return tbPrivilegeMallMapper.selectList(queryWrapper);
     }
 
     @Override

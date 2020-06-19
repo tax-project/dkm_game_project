@@ -16,4 +16,6 @@ public class GiftRankingDto extends GiftRankingEntity {
     private String weChatHeadImgUrl;
     private Integer renown;
     private Integer medal;
+    private Integer userSex;
+    private Integer userGrade;
 }

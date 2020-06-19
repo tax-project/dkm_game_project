@@ -43,7 +43,11 @@ public class TbBoxController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱主键"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号",required = true),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子",required = true)
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip 5为普通 6为精良 7为高级 8为稀有 9为超凡 10为史诗 11为远古 12为传奇",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxMoney",value = "继续开箱子 要花费的钻石数量",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxBid",value = "种子外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxName",value = "宝箱名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxImg",value = "宝箱图片"),
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -66,7 +70,11 @@ public class TbBoxController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "背包主键",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxName",value = "宝箱名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxImg",value = "宝箱图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip 5为普通 6为精良 7为高级 8为稀有 9为超凡 10为史诗 11为远古 12为传奇"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxMoney",value = "继续开箱子 要花费的钻石数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxBid",value = "种子外键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "edId",value = "装备详情主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
@@ -109,7 +117,9 @@ public class TbBoxController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "背包主键",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip 5为普通 6为精良 7为高级 8为稀有 9为超凡 10为史诗 11为远古 12为传奇"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxMoney",value = "继续开箱子 要花费的钻石数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxBid",value = "种子外键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "edId",value = "装备详情主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "equipmentLevel",value = "装备等级"),
@@ -138,7 +148,7 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
-    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String boxId){
+    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }
 
@@ -150,7 +160,12 @@ public class TbBoxController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "宝箱主键"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号",required = true),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为VIP箱子",required = true)
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxName",value = "宝箱名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxImg",value = "宝箱图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip 5为普通 6为精良 7为高级 8为稀有 9为超凡 10为史诗 11为远古 12为传奇",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxMoney",value = "继续开箱子 要花费的钻石数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxBid",value = "继续开箱子 要花费的钻石数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxBid",value = "种子外键"),
     })
     @GetMapping("/selectAll")
     @CrossOrigin
