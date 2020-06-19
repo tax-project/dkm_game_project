@@ -18,6 +18,8 @@ import java.util.List;
 @Repository
 public interface GiftRankingDao extends IService<GiftRankingEntity> {
 
-    @Select("SELECT gr.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT * FROM tb_gift_ranking ORDER BY #{type} desc LIMIT 20) gr LEFT JOIN tb_user u on u.user_id = gr.user_id")
-    List<GiftRankingDto> getGiftRanking(@Param("type") String type);
+    @Select("SELECT gr.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT * FROM tb_gift_ranking ORDER BY send desc LIMIT 20) gr LEFT JOIN tb_user u on u.user_id = gr.user_id")
+    List<GiftRankingDto> getGiftRankingSend();
+    @Select("SELECT gr.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT * FROM tb_gift_ranking ORDER BY accept desc LIMIT 20) gr LEFT JOIN tb_user u on u.user_id = gr.user_id")
+    List<GiftRankingDto> getGiftRankingAccept();
 }
