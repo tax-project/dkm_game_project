@@ -31,7 +31,7 @@ public class RankingController {
      * @return
      */
     @ApiOperation("查询排行榜（声望，魅力，富豪）")
-    @ApiImplicitParam(name = "type",value = "0富豪1魅力",required = true,paramType = "Integer",dataType = "path")
+    @ApiImplicitParam(name = "type",value = "1富豪2魅力",required = true,paramType = "Integer",dataType = "path")
     @GetMapping("/queryRankingList")
     @CrossOrigin
     public Map<String,Object> queryRankingList(@RequestParam(value = "type") Integer type){
