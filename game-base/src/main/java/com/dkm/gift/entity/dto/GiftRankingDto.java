@@ -15,4 +15,8 @@ import lombok.EqualsAndHashCode;
 public class GiftRankingDto extends GiftRankingEntity {
     private String weChatNickName;
     private String weChatHeadImgUrl;
+    private Integer renown;
+    private Integer medal;
+    private Integer userSex;
+    private Integer userGrade;
 }

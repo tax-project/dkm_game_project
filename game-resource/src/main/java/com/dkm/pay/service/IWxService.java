@@ -19,5 +19,12 @@ public interface IWxService {
    Object wxPay(String body, String orderNo, Double price);
 
 
+   /**
+    *  提现
+    * @param openId 微信openId
+    * @param price 金钱
+    * @return 返回支付结果
+    */
+   Object toPerson (String openId, Double price);
 
 }

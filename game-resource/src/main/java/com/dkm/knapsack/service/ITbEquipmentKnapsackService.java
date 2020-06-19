@@ -3,6 +3,7 @@ package com.dkm.knapsack.service;
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbNumberVo;
 
 import java.util.List;
 import java.util.Map;
@@ -45,4 +46,11 @@ public interface ITbEquipmentKnapsackService{
      * @return
      */
     int selectCount();
+
+    /**
+     * 用户使用三条鱼兑换一个蜂蜜的接口
+     * @param tbNumberVo
+     * @return
+     */
+    int updateFood(TbNumberVo tbNumberVo);
 }

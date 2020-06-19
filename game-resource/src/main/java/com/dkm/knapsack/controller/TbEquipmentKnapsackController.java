@@ -5,7 +5,9 @@ package com.dkm.knapsack.controller;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbNumberVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -382,5 +384,37 @@ public class TbEquipmentKnapsackController {
         return list;
     }
 
+    /**
+     * 用户使用三条鱼兑换一个蜂蜜的接口
+     * @param tbNumberVo
+     * @return
+     */
+    @ApiOperation(value = "用户使用三条鱼兑换一个蜂蜜的接口",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "yuNumber",value = "🐟鱼数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "fmNumber",value = "🍯蜂蜜数量"),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/addTbKnapsack")
+    @CrossOrigin
+    //@CheckToken
+    public Message updateFood(TbNumberVo tbNumberVo){
+        Message message=new Message();
+        int rows=tbEquipmentKnapsackService.updateFood(tbNumberVo);
+        if(rows==1){
+            message.setNum(1);
+            message.setMsg("兑换成功");
+        }else{
+            message.setMsg("兑换失败");
+            message.setNum(0);
+        }
+        return message;
+    }
 
 }

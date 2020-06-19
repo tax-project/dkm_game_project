@@ -19,4 +19,6 @@ public class GiftRankingEntity {
     private Long userId;
     private Integer send;
     private Integer accept;
+    private Integer sendFlower;
+    private Integer acceptFlower;
 }

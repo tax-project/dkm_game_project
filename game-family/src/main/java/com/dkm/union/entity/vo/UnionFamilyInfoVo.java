@@ -34,4 +34,8 @@ public class UnionFamilyInfoVo {
      * 成员头像
      */
     private List<String> imgs;
+    /**
+     * 成员头像
+     */
+    private Integer familyUserNumber;
 }

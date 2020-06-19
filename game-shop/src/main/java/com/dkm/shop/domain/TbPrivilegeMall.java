@@ -52,7 +52,7 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
      */
 	private String exp1;
     /**
-     * 拓展字段2
+     * 1为商品物品 2为别的地方物品
      */
 	private String exp2;
     /**

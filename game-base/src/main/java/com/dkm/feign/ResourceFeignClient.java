@@ -42,8 +42,8 @@ public interface ResourceFeignClient {
      * @param boxId
      * @return
      */
-    @GetMapping("/dkm/tbBox/selectByBoxIdTwo")
-    Result<List<TbEquipmentVo>> selectByBoxIdTwo(@RequestBody List<Long> boxId);
+    @GetMapping("/dkm/tbBox/selectByBoxIdTwo/{boxId}")
+    Result<List<TbEquipmentVo>> selectByBoxIdTwo(@PathVariable("boxId") String boxId);
 
     /**
      * 查询多个接口 得到个人中心信息

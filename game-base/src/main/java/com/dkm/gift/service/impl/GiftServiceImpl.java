@@ -77,11 +77,17 @@ public class GiftServiceImpl implements GiftService {
         MedalEntity medalEntity = medalDao.selectOne(new QueryWrapper<MedalEntity>().lambda().eq(MedalEntity::getGiId, sendGiftVo.getGiftId()));
         //更新送礼排行表
         List<GiftRankingEntity> giftRankingEntities = giftRankingDao.list(new LambdaQueryWrapper<GiftRankingEntity>().in(GiftRankingEntity::getUserId,Stream.of(sendGiftVo.getSendId(),sendGiftVo.getReceiveId()).collect(Collectors.toList())));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getSendId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getSendId(),0,0));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getReceiveId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getReceiveId(),0,0));
+        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getSendId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getSendId(),0,0,0,0));
+        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getReceiveId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getReceiveId(),0,0,0,0));
+        boolean equals = "蓝色妖姬".equals(sendGiftVo.getGiftName());
         giftRankingEntities.forEach(a->{
-            if(a.getUserId().equals(sendGiftVo.getSendId()))a.setSend(sendGiftVo.getCharm());
-            else a.setAccept(sendGiftVo.getCharm());
+            if(a.getUserId().equals(sendGiftVo.getSendId())){
+                a.setSend(sendGiftVo.getCharm());
+                if(equals)a.setSendFlower(sendGiftVo.getGiftNumber());
+            } else {
+                a.setAccept(sendGiftVo.getCharm());
+                if(equals)a.setAcceptFlower(sendGiftVo.getGiftNumber());
+            }
         });
         giftRankingDao.updateBatchById(giftRankingEntities);
         //礼物有勋章
@@ -101,7 +107,7 @@ public class GiftServiceImpl implements GiftService {
             }
             //礼物勋章类型0礼物1幸运
             if(medalEntity.getMedalType()==0){
-                medalUserEntity.setProcess(medalUserEntity.getProcess()+1);
+                medalUserEntity.setProcess(medalUserEntity.getProcess()+sendGiftVo.getGiftNumber());
             }else if(medalEntity.getMedalType()==1){
                 medalUserEntity.setProcess(medalUserEntity.getProcess()+sendGiftVo.getDiamond());
             }
@@ -115,10 +121,44 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public List<GiftRankingDto> getGiftRanking(Integer type) {
+        List<GiftRankingDto> send =null;
         if(type==1){
-            return giftRankingDao.getGiftRanking("send");
+            send= giftRankingDao.getGiftRankingSend();
         }else{
-            return giftRankingDao.getGiftRanking("accept");
+            send= giftRankingDao.getGiftRankingAccept();
         }
+        for (int i = 0; i < send.size(); i++) {
+            if(i==0){
+                send.get(i).setMedal(2000);
+                send.get(i).setRenown(15);
+            }else if((i+1)%5==0){
+                send.get(i).setMedal(1200);
+                send.get(i).setRenown(10);
+            }else {
+                send.get(i).setMedal(600);
+                send.get(i).setRenown(7);
+            }
+        }
+        return send;
+    }
+
+    @Override
+    public List<GiftRankingDto> getGiftFlower(Integer type) {
+        List<GiftRankingDto> send =null;
+        if(type==1){
+            send= giftRankingDao.getGiftRankingSendFlower();
+        }else{
+            send= giftRankingDao.getGiftRankingAcceptFlower();
+        }
+        for (int i = 0; i < send.size(); i++) {
+            if(i==0){
+                send.get(i).setRenown(15);
+            }else if((i+1)%5==0){
+                send.get(i).setRenown(10);
+            }else {
+                send.get(i).setRenown(7);
+            }
+        }
+        return send;
     }
 }
