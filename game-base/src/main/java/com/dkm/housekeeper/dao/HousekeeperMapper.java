@@ -18,6 +18,6 @@ public interface HousekeeperMapper extends IBaseMapper<HousekeeperEntity> {
      * 获取宝箱id
      * @return
      */
-    @Select("select box_id from tb_box")
+    @Select("select box_id from tb_box where box_type = 1")
     List<Long> getAllBoxId();
 }
