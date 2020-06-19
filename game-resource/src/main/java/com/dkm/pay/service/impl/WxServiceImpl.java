@@ -46,7 +46,7 @@ public class WxServiceImpl implements IWxService {
     *  支付模块的地址
     */
    @Value("${pay.payUrl}")
-   private Service url;
+   private String url;
 
    @Autowired
    private IPayService payService;
