@@ -6,6 +6,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feedback.dao.FeedBackMapper;
 import com.dkm.feedback.entity.FeedBack;
+import com.dkm.feedback.entity.vo.FeedBackVo;
 import com.dkm.feedback.service.IFeedBackService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.utils.IdGenerator;
@@ -35,12 +36,23 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
     @Autowired
     private IdGenerator idGenerator;
 
+    /**
+     * 添加反馈信息
+     */
     @Override
-    public int insertFeedBack(FeedBack feedBack) {
+    public int insertFeedBack(FeedBackVo feedBackVo) {
+
+        FeedBack feedBack=new FeedBack();
+
+        feedBack.setFContent(feedBackVo.getFContent());
+
+        feedBack.setFStatus(feedBackVo.getFStatus());
 
         feedBack.setUserId(localUser.getUser().getId());
 
         feedBack.setReplyStatus(0);
+
+        feedBack.setId(idGenerator.getNumberId());
 
         //添加反馈信息
         int insert = baseMapper.insert(feedBack);
@@ -50,6 +62,9 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
         return insert;
     }
 
+    /**
+     * 查询自己反馈的信息
+     */
     @Override
     public List<FeedBack> queryAllFeedBack() {
 

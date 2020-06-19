@@ -3,6 +3,7 @@ package com.dkm.feedback.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feedback.entity.FeedBack;
+import com.dkm.feedback.entity.vo.FeedBackVo;
 import com.dkm.feedback.service.IFeedBackService;
 import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
@@ -39,13 +40,13 @@ public class FeedBackController {
     @PostMapping("/insertFeedBack")
     @CrossOrigin
     @CheckToken
-    public int insertFeedBack(@RequestBody FeedBack feedBack){
-        if (feedBack.getFContent() == null || feedBack.getFStatus() == null) {
+    public int insertFeedBack(@RequestBody FeedBackVo feedBackVo){
+        if (feedBackVo.getFContent() == null || feedBackVo.getFStatus() == null) {
 
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
 
-        int i = iFeedBackService.insertFeedBack(feedBack);
+        int i = iFeedBackService.insertFeedBack(feedBackVo);
 
         return i;
     }

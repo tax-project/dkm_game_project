@@ -1,6 +1,7 @@
 package com.dkm.feedback.service;
 
 import com.dkm.feedback.entity.FeedBack;
+import com.dkm.feedback.entity.vo.FeedBackVo;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface IFeedBackService {
     /**
      * 添加反馈信息
      */
-     int insertFeedBack(FeedBack feedBack);
+     int insertFeedBack(FeedBackVo feedBackVo);
 
     /**
      * 查询自己反馈的信息
