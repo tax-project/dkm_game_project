@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @since 2020-05-14
  */
 @TableName("tb_box")
+@Data
 public class TbBox extends Model<TbBox> {
 
     private static final long serialVersionUID = 1L;
@@ -46,50 +48,17 @@ public class TbBox extends Model<TbBox> {
 	 */
 	@TableField("box_bid")
 	private Long boxBid;
+	/**
+	 * 箱子编号
+	 */
+	@TableField("box_name")
+	private String boxName;
+	/**
+	 * 箱子编号
+	 */
+	@TableField("box_img")
+	private String boxImg;
 
-	public Long getBoxBid() {
-		return boxBid;
-	}
-
-	public void setBoxBid(Long boxBid) {
-		this.boxBid = boxBid;
-	}
-
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
-	public Integer getBoxMoney() {
-		return boxMoney;
-	}
-
-	public void setBoxMoney(Integer boxMoney) {
-		this.boxMoney = boxMoney;
-	}
-
-	public Long getBoxId() {
-		return boxId;
-	}
-
-	public void setBoxId(Long boxId) {
-		this.boxId = boxId;
-	}
-
-	public String getBoxNo() {
-		return boxNo;
-	}
-
-	public void setBoxNo(String boxNo) {
-		this.boxNo = boxNo;
-	}
-
-	public Integer getBoxType() {
-		return boxType;
-	}
-
-	public void setBoxType(Integer boxType) {
-		this.boxType = boxType;
-	}
 
 	@Override
 	protected Serializable pkVal() {

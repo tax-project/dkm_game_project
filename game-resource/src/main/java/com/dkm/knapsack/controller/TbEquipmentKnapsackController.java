@@ -5,6 +5,7 @@ package com.dkm.knapsack.controller;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbNumberVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
@@ -385,14 +386,13 @@ public class TbEquipmentKnapsackController {
 
     /**
      * 用户使用三条鱼兑换一个蜂蜜的接口
-     * @param
+     * @param tbNumberVo
      * @return
      */
     @ApiOperation(value = "用户使用三条鱼兑换一个蜂蜜的接口",notes = "成功返回成功")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "knapsackId",value = "背包主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "用户id"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "knapsackCapacity",value = "背包容量 默认 30 VIP容纳60")
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "yuNumber",value = "🐟鱼数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "fmNumber",value = "🍯蜂蜜数量"),
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -403,11 +403,18 @@ public class TbEquipmentKnapsackController {
     })
     @PostMapping("/addTbKnapsack")
     @CrossOrigin
-    @CheckToken
-    public Message updateFood(){
-        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodId();
-
-        return null;
+    //@CheckToken
+    public Message updateFood(TbNumberVo tbNumberVo){
+        Message message=new Message();
+        int rows=tbEquipmentKnapsackService.updateFood(tbNumberVo);
+        if(rows==1){
+            message.setNum(1);
+            message.setMsg("兑换成功");
+        }else{
+            message.setMsg("兑换失败");
+            message.setNum(0);
+        }
+        return message;
     }
 
 }

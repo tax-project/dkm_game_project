@@ -9,6 +9,8 @@
 		<result column="box_type" property="boxType" />
 		<result column="box_money" property="boxMoney" />
 		<result column="box_bid" property="boxBid" />
+		<result column="box_name" property="boxName" />
+		<result column="box_img" property="boxImg" />
 	</resultMap>
 
 	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentVo">
@@ -27,6 +29,8 @@
 		<result column="box_type" property="boxType" />
 		<result column="box_money" property="boxMoney" />
 		<result column="box_bid" property="boxBid" />
+		<result column="box_name" property="boxName" />
+		<result column="box_img" property="boxImg" />
 	</resultMap>
 
 	<select id="selectByBoxId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">

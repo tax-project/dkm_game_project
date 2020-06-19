@@ -21,6 +21,7 @@ import com.dkm.knapsack.domain.TbKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
+import com.dkm.knapsack.domain.vo.TbNumberVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
@@ -60,7 +61,8 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     TbEquipmentMapper tbEquipmentMapper;
     @Autowired
     ITbEquipmentService tbEquipmentService;
-
+    @Autowired
+    ITbEquipmentKnapsackService tbEquipmentKnapsackService;
     @Autowired
     private UserFeignClient userFeignClient;
     @Override
@@ -509,6 +511,47 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             one=knapsack.getKnapsackCapacity()-tbEquipmentKnapsackMapper.selectCountAll(knapsackId);
         }
         return one;
+    }
+
+    @Override
+    public int updateFood(TbNumberVo tbNumberVo) {
+        Integer yuNum=null;
+        Integer fmNum=null;
+        Long yuId=null;
+        Long fmId=null;
+        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectUserIdAndFoodId(709866088598507520L);
+        for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : listOne) {
+            //得到蜂蜜的id 从而得到数量 和这条数据主键
+            if(tbEquipmentKnapsackVo.getFoodId()==1){
+                fmId=tbEquipmentKnapsackVo.getKnapsackId();
+                fmNum=tbEquipmentKnapsackVo.getFoodNumber();
+            }
+            //得到鱼的id 从而得到数量 和这条数据主键
+            if(tbEquipmentKnapsackVo.getFoodId()==2){
+                yuId=tbEquipmentKnapsackVo.getKnapsackId();
+                yuNum=tbEquipmentKnapsackVo.getFoodNumber();
+            }
+        }
+        Integer number=yuNum-Integer.valueOf(tbNumberVo.getYuNumber());
+        Integer numberTwo=fmNum+Integer.valueOf(tbNumberVo.getFmNumber());
+        //鱼的修改
+        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+        tbEquipmentKnapsack.setFoodNumber(number);
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("knapsack_id",yuId);
+        int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
+
+        //蜂蜜的修改
+        TbEquipmentKnapsack tbEquipmentKnapsackTwo=new TbEquipmentKnapsack();
+        QueryWrapper queryWrapperTwo=new QueryWrapper();
+        queryWrapperTwo.eq("knapsack_id",fmId);
+        tbEquipmentKnapsackTwo.setFoodNumber(numberTwo);
+        int rowsTwo=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsackTwo,queryWrapperTwo);
+        if(rows>0 &&rowsTwo>0){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
     public void too(Long tekId){

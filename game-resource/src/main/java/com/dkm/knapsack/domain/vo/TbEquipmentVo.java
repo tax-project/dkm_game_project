@@ -127,4 +127,7 @@ public class TbEquipmentVo{
 	 */
 	private Long boxBid;
 
+	private String boxName;
+
+	private String boxImg;
 }
