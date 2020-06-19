@@ -39,4 +39,12 @@ public class SendGiftVo {
      * 礼品id
      */
     private Long giftId;
+    /**
+     * 礼品名称
+     */
+    private String giftName;
+    /**
+     * 礼品数量
+     */
+    private Integer giftNumber;
 }

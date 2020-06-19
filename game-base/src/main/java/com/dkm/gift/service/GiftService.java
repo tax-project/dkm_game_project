@@ -33,4 +33,11 @@ public interface GiftService {
      * @return
      */
     List<GiftRankingDto> getGiftRanking(Integer type);
+
+    /**
+     * 花神排行榜
+     * @param type
+     * @return
+     */
+    List<GiftRankingDto> getGiftFlower(Integer type);
 }
