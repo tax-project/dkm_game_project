@@ -40,7 +40,6 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
     @Select("select family_id,family_name from tb_family")
     List<FamilyGoldInfoVo> selectFamilyGoldInfo();
 
-
-    @Select("SELECT family_id,family_name,family_introduce,family_welcome_words FROM tb_family WHERE union_id = #{unionId}")
+    @Select("SELECT family_id,family_user_number,family_name,family_introduce,family_welcome_words FROM tb_family WHERE union_id = #{unionId}")
     List<UnionFamilyInfoVo> getUnionFamily(@Param("unionId") Long unionId);
 }

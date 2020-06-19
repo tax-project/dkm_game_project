@@ -55,6 +55,7 @@ public class UnionServiceImpl implements IUnionService {
         Map<String, Object> map = new HashMap<>();
         map.put("users",unionUser);
         map.put("familys",unionFamily);
+        map.put("unionName",unionEntity.getUnionName());
         return map;
     }
 }
