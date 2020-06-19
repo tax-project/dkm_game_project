@@ -138,7 +138,7 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
-    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String boxId){
+    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
           return tbBoxService.selectByBoxIdTwo(boxId);
     }
 
