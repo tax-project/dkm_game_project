@@ -32,11 +32,40 @@ public class TbBox extends Model<TbBox> {
 	@TableField("box_no")
 	private String boxNo;
     /**
-     * 箱子类型 1为普通箱子 2为VIP箱子
+     * 箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip
      */
 	@TableField("box_type")
 	private Integer boxType;
+	/**
+	 * 继续开箱子 要花费的钻石数量
+	 */
+	@TableField("box_money")
+	private Integer boxMoney;
+	/**
+	 * 种子的id
+	 */
+	@TableField("box_bid")
+	private Long boxBid;
 
+	public Long getBoxBid() {
+		return boxBid;
+	}
+
+	public void setBoxBid(Long boxBid) {
+		this.boxBid = boxBid;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Integer getBoxMoney() {
+		return boxMoney;
+	}
+
+	public void setBoxMoney(Integer boxMoney) {
+		this.boxMoney = boxMoney;
+	}
 
 	public Long getBoxId() {
 		return boxId;

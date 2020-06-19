@@ -7,6 +7,8 @@
 		<id column="box_id" property="boxId" />
 		<result column="box_no" property="boxNo" />
 		<result column="box_type" property="boxType" />
+		<result column="box_money" property="boxMoney" />
+		<result column="box_bid" property="boxBid" />
 	</resultMap>
 
 	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentVo">
@@ -23,6 +25,8 @@
 		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
 		<result column="box_no" property="boxNo" />
 		<result column="box_type" property="boxType" />
+		<result column="box_money" property="boxMoney" />
+		<result column="box_bid" property="boxBid" />
 	</resultMap>
 
 	<select id="selectByBoxId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">

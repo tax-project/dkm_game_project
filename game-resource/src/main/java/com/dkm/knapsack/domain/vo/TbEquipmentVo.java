@@ -115,8 +115,16 @@ public class TbEquipmentVo{
 	 */
 	private String boxNo;
 	/**
-	 * 箱子类型 1为普通箱子 2为VIP箱子
+	 * 箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip
 	 */
 	private Integer boxType;
+	/**
+	 * 继续开箱子 要花费的钻石数量
+	 */
+	private Integer boxMoney;
+	/**
+	 * 种子的id
+	 */
+	private Long boxBid;
 
 }

@@ -6,6 +6,7 @@ import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -382,5 +383,31 @@ public class TbEquipmentKnapsackController {
         return list;
     }
 
+    /**
+     * 用户使用三条鱼兑换一个蜂蜜的接口
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "用户使用三条鱼兑换一个蜂蜜的接口",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "knapsackId",value = "背包主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "用户id"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "knapsackCapacity",value = "背包容量 默认 30 VIP容纳60")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/addTbKnapsack")
+    @CrossOrigin
+    @CheckToken
+    public Message updateFood(){
+        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodId();
+
+        return null;
+    }
 
 }
