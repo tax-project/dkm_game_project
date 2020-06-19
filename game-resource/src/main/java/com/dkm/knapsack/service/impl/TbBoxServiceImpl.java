@@ -54,9 +54,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
 
     @Override
     public List<TbBox> selectAll() {
-        QueryWrapper<TbBox> queryWrapper=new QueryWrapper();
-        queryWrapper.eq("box_type",1);
-        return tbBoxMapper.selectList(queryWrapper);
+        return tbBoxMapper.selectList(null);
     }
 
     @Override

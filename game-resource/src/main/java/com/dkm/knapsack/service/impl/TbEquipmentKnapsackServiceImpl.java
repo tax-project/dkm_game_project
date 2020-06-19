@@ -106,6 +106,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 //传入背包主键
                 tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
             }
+
             int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
             if(rows <= 0){
                 //如果失败将回滚
