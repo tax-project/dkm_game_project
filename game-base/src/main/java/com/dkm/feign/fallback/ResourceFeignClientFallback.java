@@ -33,7 +33,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
 
 
    @Override
-   public Result<List<TbEquipmentVo>> selectByBoxIdTwo(List<Long> boxId) {
+   public Result<List<TbEquipmentVo>> selectByBoxIdTwo(String boxId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
