@@ -5,9 +5,11 @@ import lombok.Data;
 
 /**
  * 神秘商店下夺宝物品的信息
+ * @author OpenE
  */
 @Data
 public class LotteryItemVo {
+
     /**
      * 宝物 ID
      */
@@ -32,4 +34,5 @@ public class LotteryItemVo {
      * 用户已经购买的次数
      */
     private long userBoughtSize;
+
 }

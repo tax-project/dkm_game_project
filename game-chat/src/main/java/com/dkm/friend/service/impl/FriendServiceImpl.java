@@ -132,6 +132,10 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
 
       List<Friend> friendList = baseMapper.selectList(wrapper);
 
+      if (null == friendList || friendList.size() == 0) {
+         return null;
+      }
+
       List<IdVo> list = new ArrayList<>();
       for (Friend friend : friendList) {
          IdVo vo = new IdVo();

@@ -1,7 +1,6 @@
 package com.dkm.task.entity.vo;
 
 import com.dkm.task.entity.TaskEntity;
-import javafx.concurrent.Task;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
