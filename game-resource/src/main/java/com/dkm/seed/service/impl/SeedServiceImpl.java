@@ -257,7 +257,9 @@ public class SeedServiceImpl implements ISeedService {
             //如果查询出来长度等于0说明是新种植 添加到数据库 ，第一个种子持续1分钟产出红包
             if(list1.size()==0){
 
-                int num=0;
+
+
+               /* int num=0;
 
                 LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
                         .eq(LandSeed::getUserId, user.getId());
@@ -276,6 +278,7 @@ public class SeedServiceImpl implements ISeedService {
                         landSeed.setSeedId(seedPlantVo.getSeedId());
                         //根据token得到用户id
                         landSeed.setUserId(user.getId());
+
                         if(i==0){
                             //结束时间
                             landSeed.setPlantTime(localDateTime);
@@ -307,6 +310,7 @@ public class SeedServiceImpl implements ISeedService {
                         }
                     }
 
+                    //查询已经收取的种子
                     LambdaQueryWrapper<LandSeed> queryWrapperTwo = new LambdaQueryWrapper<LandSeed>()
                             .eq(LandSeed::getUserId, user.getId())
                             .eq(LandSeed::getLeStatus, 3);
@@ -409,7 +413,7 @@ public class SeedServiceImpl implements ISeedService {
                     if (i <= 0) {
                         throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
                     }
-                }
+                }*/
 
             }
 
