@@ -339,7 +339,9 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         if (userDataBO.getUserSex() != 1 && userDataBO.getUserSex() != 2) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "修改的性别参数有误");
         }
-        user.setUserSex(userDataBO.getUserSex());
+        if (userDataBO.getUserSex() != null) {
+            user.setUserSex(userDataBO.getUserSex());
+        }
         user.setWeChatNickName(userDataBO.getNickName());
         user.setWeChatHeadImgUrl(userDataBO.getHeardUrl());
         if (StringUtils.isNotBlank(userDataBO.getUserSign())) {

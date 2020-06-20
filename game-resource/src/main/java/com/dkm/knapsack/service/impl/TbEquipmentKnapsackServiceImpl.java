@@ -26,6 +26,7 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,32 +97,52 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
-        TbKnapsack tbKnapsack=new TbKnapsack();
-        tbKnapsack.setUserId(localUser.getUser().getId());
-        tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
-        List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
 
-        if(!StringUtils.isEmpty(list)){
-            for (TbKnapsack knapsack : list) {
-                //传入背包主键
-                tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
+        //首先判断食物id不为空 然后查询出该用户是否有这个食物
+        if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0){
+            TbKnapsack tbKnapsack=new TbKnapsack();
+            tbKnapsack.setUserId(localUser.getUser().getId());
+            List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
+            //背包主键
+            Long knapsackId=null;
+            if(!StringUtils.isEmpty(list1)) {
+                for (TbKnapsack knapsack : list1) {
+                    //传入背包主键
+                    knapsackId =knapsack.getKnapsackId();
+                }
             }
-
-            int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
-            if(rows <= 0){
-                //如果失败将回滚
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+            QueryWrapper queryWrapper=new QueryWrapper();
+            queryWrapper.eq("knapsack_id",knapsackId);
+            queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
+            List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+            if(!StringUtils.isEmpty(list)){
+                //食物背包表主键
+                Long tekId=null;
+                Integer number=null;
+                for (TbEquipmentKnapsack equipmentKnapsackOne : list) {
+                    tekId=equipmentKnapsackOne.getTekId();
+                    number=equipmentKnapsackOne.getFoodNumber()+tbEquipmentKnapsack.getFoodNumber();
+                }
+                QueryWrapper queryWrapper1=new QueryWrapper();
+                queryWrapper1.eq("tek_id",tekId);
+                TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack1.setFoodNumber(number);
+                int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                if(rows <= 0){
+                    //如果失败将回滚
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+                }
+            }else{
+                fz(tbEquipmentKnapsack);
             }
+        //没有就给它增加
         }else{
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "该用户没有背包");
+            fz(tbEquipmentKnapsack);
         }
-
-
     }
 
     @Override
     public void addTbEquipmentKnapsackTwo(String equipmentId) {
-        System.out.println("=========="+equipmentId);
         if(equipmentId=="" && equipmentId.equals("")){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
@@ -133,7 +154,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 sList.add((Integer) jsonObject.get(i));
             }
         }*/
-       // System.out.println("==="+equipmentId.length);
         String[] athleteId = equipmentId.split(",");
         TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
 
@@ -593,6 +613,27 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 increaseUserInfoBO.setUserInfoDiamonds(0);
                 userFeignClient.cutUserInfo(increaseUserInfoBO);
             }
+        }
+    }
+    public void fz(TbEquipmentKnapsack tbEquipmentKnapsack){
+        TbKnapsack tbKnapsack=new TbKnapsack();
+        tbKnapsack.setUserId(localUser.getUser().getId());
+        tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
+        List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
+
+        if(!StringUtils.isEmpty(list)){
+            for (TbKnapsack knapsack : list) {
+                //传入背包主键
+                tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
+            }
+
+            int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
+            if(rows <= 0){
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+            }
+        }else{
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "该用户没有背包");
         }
     }
 }

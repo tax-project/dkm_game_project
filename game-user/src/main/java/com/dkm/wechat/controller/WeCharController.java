@@ -113,7 +113,7 @@ public class WeCharController {
           @ApiImplicitParam(name = "heardUrl", value = "头像", required = true, dataType = "String", paramType = "path"),
           @ApiImplicitParam(name = "nickName", value = "昵称", required = true, dataType = "String", paramType = "path"),
           @ApiImplicitParam(name = "userAge", value = "年龄日期 例:2020-06-08", required = true, dataType = "String", paramType = "path"),
-          @ApiImplicitParam(name = "userSex", value = "性别 1-男 2-女", required = true, dataType = "int", paramType = "path"),
+          @ApiImplicitParam(name = "userSex", value = "性别 1-男 2-女", required = false, dataType = "int", paramType = "path"),
           @ApiImplicitParam(name = "userSign", value = "个性签名", required = false, dataType = "String", paramType = "path"),
           @ApiImplicitParam(name = "userExplain", value = "个人说明", required = false, dataType = "String", paramType = "path"),
     })
@@ -122,7 +122,7 @@ public class WeCharController {
     @CheckToken
     public void updateUserData (@RequestBody UserDataBO bo) {
 
-        if (bo.getUserSex() == null || StringUtils.isBlank(bo.getHeardUrl()) ||
+        if (StringUtils.isBlank(bo.getHeardUrl()) ||
               StringUtils.isBlank(bo.getNickName()) || StringUtils.isBlank(bo.getUserAge())) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
