@@ -6,6 +6,9 @@ import com.dkm.bill.dao.BillMapper;
 import com.dkm.bill.entity.Bill;
 import com.dkm.bill.entity.vo.BillVo;
 import com.dkm.bill.service.IBillService;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.utils.DateUtils;
 import com.dkm.wallet.entity.Withdrawal;
@@ -14,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -31,15 +36,34 @@ public class BillServiceImpl extends ServiceImpl<BillMapper, Bill> implements IB
     @Autowired
     private LocalUser localUser;
 
+    @Autowired
+    private UserFeignClient userFeignClient;
+
     @Override
-    public List<Bill> queryAllBill(BillVo vo) {
+    public Map<String,Object> queryAllBill(BillVo vo) {
+        Map<String,Object> map=new HashMap<>();
+
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
+        if(vo.getBType()==1){
+            map.put("gold",userInfoQueryBoResult.getData().getUserInfoGold());
+        }
+
+        if(vo.getBType()==2){
+            map.put("Diamonds",userInfoQueryBoResult.getData().getUserInfoDiamonds());
+        }
+
+        if(vo.getBType()==3){
+            map.put("FortuneVolume",1);
+        }
 
         //根据状态id查询
         List<Bill> bills = baseMapper.queryAllBill(vo.getBType(), vo.getBIncomeExpenditure(), localUser.getUser().getId());
 
         bills.forEach(a->a.setTime(DateUtils.formatDateTime(a.getBTime())));
 
-        return bills;
+        map.put("bills",bills);
+
+        return map;
 
     }
 }

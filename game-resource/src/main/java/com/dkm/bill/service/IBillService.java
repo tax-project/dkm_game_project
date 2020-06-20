@@ -4,6 +4,7 @@ import com.dkm.bill.entity.Bill;
 import com.dkm.bill.entity.vo.BillVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface IBillService {
 
-    List<Bill> queryAllBill(BillVo vo);
+    Map<String,Object> queryAllBill(BillVo vo);
 }

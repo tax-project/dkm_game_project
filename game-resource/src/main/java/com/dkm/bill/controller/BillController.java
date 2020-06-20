@@ -3,6 +3,8 @@ package com.dkm.bill.controller;
 import com.dkm.bill.entity.Bill;
 import com.dkm.bill.entity.vo.BillVo;
 import com.dkm.bill.service.IBillService;
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 刘梦祺
@@ -36,7 +39,10 @@ public class BillController {
     )
     @CrossOrigin
     @CheckToken
-    public List<Bill> queryAllBill(@RequestBody BillVo vo){
+    public Map<String,Object> queryAllBill(@RequestBody BillVo vo){
+        if(vo.getBType()==null || vo.getBIncomeExpenditure()==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
        return iBillService.queryAllBill(vo);
     }
 }
