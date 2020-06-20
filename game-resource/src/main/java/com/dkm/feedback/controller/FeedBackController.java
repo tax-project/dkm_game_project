@@ -34,7 +34,7 @@ public class FeedBackController {
 
     @ApiOperation(value = "添加反馈信息",notes = "成功返回数据 反则为空")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "integer",name = "fStatus",value = "问题类型"),
+            @ApiImplicitParam(paramType = "query",dataType = "integer",name = "fStatus",value = "问题类型（1充值问题，2产品问题，3意见与反馈，4实名认证问题，5其他问题）"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "fContent",value = "反馈内容")
     })
     @PostMapping("/insertFeedBack")
