@@ -3,6 +3,7 @@ package com.dkm.land.dao;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.land.entity.Land;
 import com.dkm.land.entity.vo.UserLandUnlock;
+import com.dkm.seed.entity.LandSeed;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * @DATE: 2020/5/9 9:37
  */
 @Component
-public interface LandMapper extends IBaseMapper<Land> {
+public interface LandMapper extends IBaseMapper<LandSeed> {
 
     /**
      * 土地批量增加

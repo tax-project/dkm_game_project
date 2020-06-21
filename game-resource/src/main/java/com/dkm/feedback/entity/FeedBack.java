@@ -27,7 +27,7 @@ public class FeedBack extends Model<FeedBack> {
     private Long userId;
 
     /**
-     *问题类型（1常见问题，2充值问题，3产品问题，4意见与反馈，5实名认证问题，6其他问题）
+     *问题类型（1充值问题，2产品问题，3意见与反馈，4实名认证问题，5其他问题）
      */
     private Integer fStatus;
 

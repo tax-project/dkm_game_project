@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 神秘商店的信息
+ * @author fkl
  */
 @Data
 public class LotteryInfoVo {

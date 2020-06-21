@@ -77,8 +77,8 @@ public class GiftServiceImpl implements GiftService {
         MedalEntity medalEntity = medalDao.selectOne(new QueryWrapper<MedalEntity>().lambda().eq(MedalEntity::getGiId, sendGiftVo.getGiftId()));
         //更新送礼排行表
         List<GiftRankingEntity> giftRankingEntities = giftRankingDao.list(new LambdaQueryWrapper<GiftRankingEntity>().in(GiftRankingEntity::getUserId,Stream.of(sendGiftVo.getSendId(),sendGiftVo.getReceiveId()).collect(Collectors.toList())));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getSendId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getSendId(),0,0,0,0));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getReceiveId())))giftRankingEntities.add(new GiftRankingEntity(sendGiftVo.getReceiveId(),0,0,0,0));
+        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getSendId())))giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(),sendGiftVo.getSendId(),0,0,0,0));
+        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getReceiveId())))giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(),sendGiftVo.getReceiveId(),0,0,0,0));
         boolean equals = "蓝色妖姬".equals(sendGiftVo.getGiftName());
         giftRankingEntities.forEach(a->{
             if(a.getUserId().equals(sendGiftVo.getSendId())){

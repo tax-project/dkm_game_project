@@ -3,6 +3,7 @@ package com.dkm.friend.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
@@ -49,26 +50,67 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
    @Autowired
    private IFriendService friendService;
 
+   @Autowired
+   private RedisConfig redisConfig;
+
+   private String redisLock = "REDIS::GAME:REQUEST";
+
    @Override
    public void friendRequest(FriendRequestVo vo) {
 
       UserLoginQuery user = localUser.getUser();
 
-      FriendRequest friendRequest = new FriendRequest();
-      friendRequest.setId(idGenerator.getNumberId());
+      try {
+         Boolean aBoolean = redisConfig.redisLock(redisLock);
 
-      friendRequest.setFromId(user.getId());
-      friendRequest.setToId(vo.getToId());
-      friendRequest.setRequestRemark(vo.getRequestRemark());
+         if (!aBoolean) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙,请稍后再试");
+         }
 
-      friendRequest.setRequestTime(LocalDateTime.now());
-      //申请中
-      friendRequest.setStatus(0);
+         LambdaQueryWrapper<FriendRequest> wrapper = new LambdaQueryWrapper<FriendRequest>()
+               .eq(FriendRequest::getFromId, user.getId())
+               .eq(FriendRequest::getToId,vo.getToId());
 
-      int insert = baseMapper.insert(friendRequest);
+         FriendRequest request = baseMapper.selectOne(wrapper);
 
-      if (insert <= 0) {
-         throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
+         if (request == null) {
+            FriendRequest friendRequest = new FriendRequest();
+            friendRequest.setId(idGenerator.getNumberId());
+
+            friendRequest.setFromId(user.getId());
+            friendRequest.setToId(vo.getToId());
+            friendRequest.setRequestRemark(vo.getRequestRemark());
+
+            friendRequest.setRequestTime(LocalDateTime.now());
+            //申请中
+            friendRequest.setStatus(0);
+
+            int insert = baseMapper.insert(friendRequest);
+
+            if (insert <= 0) {
+               throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
+            }
+         } else {
+
+            if (!request.getRequestRemark().equals(vo.getRequestRemark())) {
+
+               FriendRequest friendRequest = new FriendRequest();
+               friendRequest.setId(request.getId());
+
+               friendRequest.setRequestRemark(vo.getRequestRemark());
+
+               friendRequest.setRequestTime(LocalDateTime.now());
+
+               int updateById = baseMapper.updateById(friendRequest);
+
+               if (updateById <= 0) {
+                  throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
+               }
+            }
+         }
+
+      } finally {
+         redisConfig.deleteLock(redisLock);
       }
 
       //通知客户端收到好友申请的通知
@@ -97,6 +139,10 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
             .eq(FriendRequest::getToId,user.getId());
 
       List<FriendRequest> list = baseMapper.selectList(wrapper);
+
+      if (null == list || list.size() == 0) {
+         return null;
+      }
 
       List<IdVo> voList = new ArrayList<>();
       for (FriendRequest request : list) {
