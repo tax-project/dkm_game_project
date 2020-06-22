@@ -15,9 +15,6 @@ public class AttendantImgVo {
     */
     private String weChatHeadImgUrl;
 
-    /**
-     *跟班id
-     */
-    private Integer attendantId;
+
 
 }
