@@ -15,12 +15,13 @@ import java.time.LocalDateTime;
 @TableName("tb_apparel_market")
 public class ApparelMarketEntity {
 
-    private Long apparel_market_id;
+    private Long apparelMarketId;
 
     private Long userId;
 
-    private Long apparel_detail_id;
+    private Long apparelDetailId;
 
-    private LocalDateTime maturity_time;
+    private LocalDateTime maturityTime;
 
+    private Integer gold;
 }
