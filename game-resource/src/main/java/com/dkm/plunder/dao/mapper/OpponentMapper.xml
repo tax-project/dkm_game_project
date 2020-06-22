@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.plunder.dao.UserProduceMapper">
+
+
+    <select id="queryOpponent" parameterType="java.lang.Long" resultType="com.dkm.plunder.entity.vo.OpponentVo">
+        select b.we_chat_head_img_url,b.we_chat_nick_name,c.user_info_grade,c.user_info_renown from tb_opponent a,tb_user b,tb_user_info c
+        where a.user_id=#{userId} and a.opponent_id=b.user_id and b.user_id=c.user_id
+    </select>
+
+
+</mapper>

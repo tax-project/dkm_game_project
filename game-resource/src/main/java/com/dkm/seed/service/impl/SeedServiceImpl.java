@@ -348,15 +348,19 @@ public class SeedServiceImpl implements ISeedService {
                 }
 
                 for (int i = 0; i < PlantingTimes; i++) {
-                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getId,list2.get(i).getId());
+                    //判断list2的长度是否为0
+                    if(list2.size()!=0) {
+                        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+                                .eq(LandSeed::getId, list2.get(i).getId());
 
-                    LandSeed landSeed=new LandSeed();
-                    landSeed.setLeStatus(1);
-                    landSeed.setPlantTime(time2);
-                    int update = landSeedMapper.update(landSeed, wrapper);
-                    if (update <= 0) {
+                        LandSeed landSeed=new LandSeed();
+                        landSeed.setLeStatus(1);
+                        landSeed.setPlantTime(time2);
+
+                        int update = landSeedMapper.update(landSeed, wrapper);
+                        if (update <= 0) {
                         throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+                        }
                     }
                 }
             }

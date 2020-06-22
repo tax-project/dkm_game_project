@@ -6,13 +6,11 @@ import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
-import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.service.IProduceService;
-import com.dkm.seed.entity.vo.LandYesVo;
+import com.dkm.seed.entity.vo.SeedUnlockVo;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.skill.service.ISkillService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +51,7 @@ public class PersonalCenterController {
         /**
          * 查询已经解锁种子
          */
-        List<LandYesVo> landYesVos = iSeedService.queryAlreadyPlantSd();
+        List<SeedUnlockVo> seedUnlockVos = iSeedService.queryAreUnlocked(userId);
         /**
          *查询我的技能
          */
@@ -61,7 +59,7 @@ public class PersonalCenterController {
         /**
          *查询跟班产出的产物
          */
-        List<AttendantGoods> attendantGoods = iProduceService.queryJoinOutPutGoods(userId);
+        Map<String, Object> map1 = iProduceService.queryImgFood(userId);
 
 
         /**
@@ -73,9 +71,9 @@ public class PersonalCenterController {
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
 
 
-        map.put("Seed",landYesVos);
+        map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillBos);
-        map.put("AttendantGoods",attendantGoods);
+        map.put("AttendantGoods",map1);
         map.put("equipment",tbEquipmentKnapsackVos);
         map.put("blackHouse",houseVo);
         return map;

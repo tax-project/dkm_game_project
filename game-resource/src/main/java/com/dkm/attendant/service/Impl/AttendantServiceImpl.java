@@ -2,8 +2,10 @@ package com.dkm.attendant.service.Impl;
 
 
 import com.dkm.attendant.dao.AttendantMapper;
+import com.dkm.plunder.dao.OpponentMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.plunder.entity.Opponent;
 import com.dkm.attendant.entity.bo.*;
 import com.dkm.attendant.entity.vo.*;
 import com.dkm.attendant.service.IAttendantService;
@@ -11,13 +13,10 @@ import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
-import com.dkm.entity.bo.ParamBo;
-import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.event.dao.EventMapper;
 import com.dkm.event.entity.Event;
-import com.dkm.event.service.IEventService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
@@ -81,6 +80,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private EventMapper eventMapper;
+
+    @Autowired
+    private OpponentMapper opponentMapper;
 
 
     private String redisLock = "REDIS::LOCK:ATTENDANT";
@@ -273,6 +275,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public Map<String, Object> petBattle(Long caughtPeopleId) {
+
         //我方随机上场的宠物
         String myPet=null;
 
@@ -321,6 +324,17 @@ public class AttendantServiceImpl implements IAttendantService {
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
 
+        //增加对手信息
+        Opponent opponent=new Opponent();
+        opponent.setId(idGenerator.getNumberId());
+        opponent.setUserId(userInfoQueryBoResult.getData().getUserId());
+        opponent.setOpponentId(userInfoQueryBoResultCaughtPeopleId.getData().getUserId());
+
+        int insert = opponentMapper.insert(opponent);
+        if(insert<=0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"添加对手信息异常");
+        }
+
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
@@ -367,8 +381,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     //没有加成的的话 直接将装备的生命赋值
                     heEquipBonus = heEquipBonus + tbEquipmentKnapsackVos1.get(i).getEdLife().intValue();
                 }
-/*
-                double heEquipmentBonus = 0;*/
+
                 /**
                  * 属性加成 1就代表有加成 0代表没有加成
                  * 如果有加成在判断是生命还是才华
@@ -556,7 +569,6 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("ourHealth1",heEquipBonus+heDefense);
         //我方战力
         map.put("ourCapabilities",myRipetime);
-        //System.out.println("他方战斗力 = " + otherForce);
         //他方战力
         map.put("heRipetime1",heRipetime1);
         return map;
