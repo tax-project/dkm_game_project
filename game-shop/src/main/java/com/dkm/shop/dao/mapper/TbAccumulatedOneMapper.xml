@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbAccumulatedOneMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbAccumulatedOne">
+		<id column="talo_id" property="taloId" />
+		<result column="user_id" property="userId" />
+		<result column="tal_id" property="talId" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+	</resultMap>
+
+</mapper>
