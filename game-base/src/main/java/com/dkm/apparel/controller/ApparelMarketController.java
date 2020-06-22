@@ -24,7 +24,7 @@ import java.util.List;
  * @author: zhd
  * @create: 2020-06-19 15:59
  **/
-@Api(tags = "服饰集市")
+@Api(tags = "服饰集市api")
 @RestController
 @RequestMapping("/apparelMarket")
 public class ApparelMarketController {

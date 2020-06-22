@@ -7,10 +7,12 @@ import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.medal.service.MedalService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +28,13 @@ import java.util.Map;
 public class PersonalCenterController {
     @Autowired
     LocalUser localUser;
-    @Autowired
+    @Resource
     ResourceFeignClient resourceFeignClient;
-    @Autowired
+    @Resource
     UserFeignClient userFeignClient;
+    @Resource
+    private MedalService medalService;
+
     @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据 blackHouse 为黑屋的用户信息对象 Seed为查询用户解锁的种子" +
             "  queryMySkill 查询我的技能  AttendantGoods 查询跟班产出的产物  queryUser 为用户总体力和当前体力" +
             "queryAidUser 为用户的主人")
@@ -43,6 +48,8 @@ public class PersonalCenterController {
         map.put("personal",resourceFeignClient.personalCenterAll(user.getId()));
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(user.getId()));
+        //用户勋章数
+        map.put("medalNumber",medalService.getUserMadelNumber(user.getId()));
         return map;
 
     }
@@ -69,7 +76,8 @@ public class PersonalCenterController {
 
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(userId));
-
+        //用户勋章数
+        map.put("medalNumber",medalService.getUserMadelNumber(userId));
         return map;
     }
 }
