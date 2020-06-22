@@ -23,4 +23,9 @@ eureka:
 file:
   url: http://192.168.10.133:7000/game-file/img
 
+hystrix:
+  metrics:
+    enabled: true
+    polling-interval-ms: 4000
+
 

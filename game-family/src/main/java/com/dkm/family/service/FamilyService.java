@@ -3,6 +3,7 @@ package com.dkm.family.service;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
+import com.dkm.family.entity.vo.UserCenterFamilyVo;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -106,4 +107,12 @@ public interface FamilyService {
      * @return
      */
     boolean familyExists(Long familyId);
+
+
+    /**
+     * 用户主页家族信息
+     * @param userId
+     * @return
+     */
+    UserCenterFamilyVo getUserCenterFamily(Long userId);
 }

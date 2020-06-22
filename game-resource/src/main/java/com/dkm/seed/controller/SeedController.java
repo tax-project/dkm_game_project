@@ -115,35 +115,6 @@ public class SeedController {
     }
 
 
-
-/*
-
-    @ApiOperation(value = "收取种子", notes = "收取种子")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种植等级"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNowExperience", value = "种子当前经验"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
-    })
-    @PostMapping("/gather")
-    @CrossOrigin
-    @CheckToken
-    public Message gather(@RequestBody UserInIf userInIf) {
-        System.out.println("userInIf = " + userInIf);
-        if (userInIf.getUserInfoPacketBalance() == null || userInIf.getUserInfoNextExperience()==null || userInIf.getUserInfoNowExperience()==null || userInIf.getUserInfoGrade()==null || userInIf.getSeedGrade()==null) {
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数为空");
-        }
-        int i = iSeedService.updateUser(userInIf);
-        Message message=new Message();
-        if(i>0){
-            message.setMsg("修改成功");
-            message.setNum(1);
-        }
-        return message;
-    }*/
-
-
     /**
      * 查询已经种植的种子
      */
@@ -183,7 +154,7 @@ public class SeedController {
     @ApiOperation(value = "根据种植id查询种植信息", notes = "根据种植id查询种植信息")
     @GetMapping("/querySeedById")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种植id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
     })
     @CrossOrigin
     @CheckToken

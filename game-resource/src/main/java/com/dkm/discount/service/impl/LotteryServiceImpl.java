@@ -1,6 +1,6 @@
 package com.dkm.discount.service.impl;
 
-import com.dkm.discount.entity.vo.LotteryInfoVo;
+import com.dkm.discount.bean.vo.LotteryInfoVo;
 import com.dkm.discount.service.ILotteryService;
 import lombok.val;
 import org.springframework.stereotype.Service;

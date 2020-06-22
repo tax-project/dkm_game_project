@@ -1,8 +1,7 @@
 package com.dkm.discount.controller;
 
-import com.dkm.discount.entity.vo.LotteryInfoVo;
+import com.dkm.discount.bean.vo.LotteryInfoVo;
 import com.dkm.discount.service.ILotteryService;
-import com.dkm.discount.service.impl.LotteryServiceImpl;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

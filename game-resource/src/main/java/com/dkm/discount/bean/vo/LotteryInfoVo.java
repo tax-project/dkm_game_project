@@ -1,4 +1,4 @@
-package com.dkm.discount.entity.vo;
+package com.dkm.discount.bean.vo;
 
 import lombok.Data;
 
