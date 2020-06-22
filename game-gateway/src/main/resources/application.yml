@@ -17,7 +17,6 @@ zuul:
     api-base:
       path: /*/*/base/**
       serviceId: base
-      strip-prefix: false
     api-family:
       path: /*/*/family/**
       serviceId: family
@@ -41,3 +40,8 @@ zuul:
       path: /*/*/back/**
       serviceId: back
       strip-prefix: false
+  host:
+    connect-timeout-millis: 5000
+    socket-timeout-millis: 12000
+
+
