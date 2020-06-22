@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftRankingEntity {
+    private Long rankingId;
     private Long userId;
     private Integer send;
     private Integer accept;

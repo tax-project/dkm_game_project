@@ -19,7 +19,7 @@ public class Land {
     /**
      * 土地编号
      */
-    private String laNo;
+    private Integer laNo;
     /**
      * 土地名字
      */

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.bill.dao.BillMapper">
+
+    <select id="queryAllBill" resultType="com.dkm.bill.entity.Bill">
+        select id,b_name,b_number,b_time,b_type,b_income_expenditure,b_is_success from tb_bill
+        where b_type=#{bType} and b_income_expenditure=#{bIncomeExpenditure} and user_id=#{userId}
+    </select>
+
+</mapper>

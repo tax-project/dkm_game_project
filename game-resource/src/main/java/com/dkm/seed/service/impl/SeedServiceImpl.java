@@ -37,10 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 刘梦祺
@@ -80,35 +77,55 @@ public class SeedServiceImpl implements ISeedService {
 
 
     /**
-     * 根据用户id得到种子
+     * 根据用户id得到种子信息和是否解锁
      */
     @Override
     public List<SeedPlantUnlock> queryUserIdSeed(Long userId) {
 
-        //查看用户是否是新用户
+        //添加的长度
+        int size=0;
+
         List<SeedUnlock> seedUnlocks = seedMapper.queryIsById(userId);
 
-        if(seedUnlocks.size()==0){
-            List<SeedUnlock> seedUnlocks1=new ArrayList<>();
+        //查询所有的种子
+        List<Seed> attenDants = seedMapper.selectList(null);
 
-            List<Seed> attenDants = seedMapper.selectList(null);
+        //种子长度不等于需要解锁的种子长度 就进行添加后有的种子
+        if(attenDants.size()!=seedUnlocks.size()) {
 
-            if(attenDants.size()==0) {
-               throw new ApplicationException(CodeType.PARAMETER_ERROR,"没有种子");
-            }
+            //种植所有数据的长度减去 种子解锁表的长度
+            size = attenDants.size() - seedUnlocks.size();
 
-            for (int j = 0; j < attenDants.size(); j++) {
+            List<SeedUnlock> seedUnlocks1 = new ArrayList<>();
 
-                SeedUnlock seedUnlock=new SeedUnlock();
+
+            for (int j = 0; j <size; j++) {
+
+                SeedUnlock seedUnlock = new SeedUnlock();
+
                 seedUnlock.setPuId(idGenerator.getNumberId());
                 seedUnlock.setUserId(userId);
 
                 //得到总需要解锁的次数
-                double pow = Math.pow(Math.ceil(attenDants.get(j).getSeedGrade() / 2.0), 2);
+                double pow=0.0;
+                if(seedUnlocks.size()==0){
+                     pow = Math.pow(Math.ceil(attenDants.get(j).getSeedGrade() / 2.0), 2);
+                }else{
+                    //应为下边是从0开始的所以不需要在加一
+                    pow = Math.pow(Math.ceil(attenDants.get(seedUnlocks.size() + j).getSeedGrade() / 2.0), 2);
+                }
+
                 Integer powInteger = Integer.valueOf((int) pow);
 
                 seedUnlock.setSeedAllUnlock(powInteger);
-                seedUnlock.setSeedId(attenDants.get(j).getSeedId());
+
+
+                if(j==0) {
+                    seedUnlock.setSeedId(seedUnlocks.size() + 1);
+                }else{
+                    seedUnlock.setSeedId(seedUnlocks.size() + j+1);
+                }
+
                 seedUnlocks1.add(seedUnlock);
             }
 
@@ -124,17 +141,18 @@ public class SeedServiceImpl implements ISeedService {
             //种植所获得的经验
             double experience = Math.pow(seeds.get(i).getSeedGrade(), 2 / 5.0) * 100;
             Integer experienceInteger = Integer.valueOf((int) experience);
+            seeds.get(i).setSeedExperience(experienceInteger);
 
-            //种植一次所获得的金币
+            //种子种植金币
             double userGold  = Math.pow(seeds.get(i).getSeedGrade(), 2)*50 +500;
             Integer userGoldInteger = Integer.valueOf((int) userGold);
-            seeds.get(i).setSeedExperience(experienceInteger);
             seeds.get(i).setSeedGold(userGoldInteger);
 
         }
 
         return seeds;
     }
+
     /**
      * 根据种子id得到种子
      *
@@ -246,171 +264,101 @@ public class SeedServiceImpl implements ISeedService {
             //当前时间后的一分钟
             LocalDateTime localDateTime = LocalDateTime.now().minusMinutes(-1);
 
+            //查询已种植的种子
+            LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
+                    .eq(LandSeed::getUserId, user.getId())
+                    .eq(LandSeed::getLeStatus, 1);
+
+            List<LandSeed> listLand = landSeedMapper.selectList(queryWrapper1);
+
+
 
             LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
                     .eq(LandSeed::getUserId, user.getId())
-                    //.eq(LandSeed::getLeStatus, 3)
                     .eq(LandSeed::getSeedId,seedPlantVo.getSeedId());
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
 
+            int PlantingTimes=0;
+
+            //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
+            PlantingTimes= userLandUnlocks.size()-listLand.size();
+
             //如果查询出来长度等于0说明是新种植 添加到数据库 ，第一个种子持续1分钟产出红包
             if(list1.size()==0){
 
-                int num=0;
+                for (int i = 0; i < PlantingTimes; i++) {
 
-                LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
-                        .eq(LandSeed::getUserId, user.getId());
-
-                List<LandSeed> listtwo = landSeedMapper.selectList(queryWrapper1);
-                if(listtwo.size()==0){
-                    //循环用户解锁土地，解锁多少多少土地 种植多少种子
-                    for (int i = 0; i < userLandUnlocks.size(); i++) {
-
-                        LandSeed landSeed = new LandSeed();
-                        //生成主键id
-                        landSeed.setId(idGenerator.getNumberId());
-                        //土地编号
-                        landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-                        //种子id
-                        landSeed.setSeedId(seedPlantVo.getSeedId());
-                        //根据token得到用户id
-                        landSeed.setUserId(user.getId());
-                        if(i==0){
-                            //结束时间
-                            landSeed.setPlantTime(localDateTime);
-                            //是否新种子
-                            landSeed.setNewSeedIs(1);
-                        }else{
-                            //结束时间
-                            landSeed.setPlantTime(time2);
-                        }
-
-                        //状态 1为种植
-                        landSeed.setLeStatus(1);
-
-
-                        list.add(landSeed);
-
-                    }
-
-                    //增加要种植种子的信息和用户信息
-                    int i = seedMapper.addPlant(list);
-                    if (i <= 0) {
-                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-                    }
-                }else{
-
-                    for (int i = 0; i <listtwo.size(); i++) {
-                        if(System.currentTimeMillis()/1000>=listtwo.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-                            num=num+1;
-                        }
-                    }
-
-                    LambdaQueryWrapper<LandSeed> queryWrapperTwo = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getUserId, user.getId())
-                            .eq(LandSeed::getLeStatus, 3);
-
-                    List<LandSeed> list2 = landSeedMapper.selectList(queryWrapperTwo);
-
-                    //循环用户解锁土地，解锁多少多少土地 种植多少种子
-                    for (int i = 1; i <=num; i++) {
-
-                        LandSeed landSeed = new LandSeed();
-                        //生成主键id
-                        landSeed.setId(idGenerator.getNumberId());
-                        //土地编号
-                        landSeed.setLaNo(list2.get(0).getLaNo());
-                        //种子id
-                        landSeed.setSeedId(seedPlantVo.getSeedId());
-                        //根据token得到用户id
-                        landSeed.setUserId(user.getId());
-                        if(i==1){
-                            //结束时间
-                            landSeed.setPlantTime(localDateTime);
-                            //是否新种子
-                            landSeed.setNewSeedIs(1);
-                        }else{
-                            //结束时间
-                            landSeed.setPlantTime(time2);
-                        }
-
-                        //状态 1为种植
-                        landSeed.setLeStatus(1);
-
-
-                        list.add(landSeed);
-
-                    }
-
-                    //增加要种植种子的信息和用户信息
-                    int i = seedMapper.addPlant(list);
-                    if (i <= 0) {
-                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-                    }
-                }
-
-            }else{
-                //如果自己种子的数量等于自己解锁的土地数量  则修改种植状态
-                if (list1.size() == userLandUnlocks.size()) {
-
-                    LambdaQueryWrapper<LandSeed> queryWrapperTwo = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getUserId, user.getId())
-                            .eq(LandSeed::getLeStatus, 3)
-                            .eq(LandSeed::getSeedId,seedPlantVo.getSeedId());
-
-                    List<LandSeed> list2 = landSeedMapper.selectList(queryWrapperTwo);
-
-                    for (int i = 0; i < list2.size(); i++) {
-                        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                                .eq(LandSeed::getId,list2.get(i).getId());
-
-                        LandSeed landSeed=new LandSeed();
-                        landSeed.setLeStatus(1);
-                        landSeed.setPlantTime(time2);
-                        int update = landSeedMapper.update(landSeed, wrapper);
-                        if (update <= 0) {
-                            throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
-                        }
-                    }
-
-                } else {
-                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getUserId,user.getId())
-                            .eq(LandSeed::getLeStatus,1);
-
-                    LandSeed landSeed=new LandSeed();
-                    landSeed.setLeStatus(1);
-
-                    //修改用户种子种植状态
-                    int update = landSeedMapper.update(landSeed, wrapper);
-
-
-                    LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getUserId, user.getId());
-                    List<LandSeed> LandSeedList = landSeedMapper.selectList(queryWrapper1);
-
-
+                    LandSeed landSeed = new LandSeed();
                     //生成主键id
                     landSeed.setId(idGenerator.getNumberId());
                     //土地编号
-                    landSeed.setLaNo(LandSeedList.size()+1);
+                    landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
                     //种子id
                     landSeed.setSeedId(seedPlantVo.getSeedId());
                     //根据token得到用户id
                     landSeed.setUserId(user.getId());
-                    //结束时间
-                    landSeed.setPlantTime(time2);
+
+                    if(i==0){
+                        //结束时间
+                        landSeed.setPlantTime(localDateTime);
+                        //是否新种子
+                        landSeed.setNewSeedIs(1);
+                    }else{
+                        //结束时间
+                        landSeed.setPlantTime(time2);
+                    }
+
+                    //状态 1为种植
+                    landSeed.setLeStatus(1);
+
 
                     list.add(landSeed);
 
-                    //增加要种植种子的信息和用户信息
-                    int i = seedMapper.addPlant(list);
-                    if (i <= 0) {
-                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-                    }
                 }
 
+                //增加要种植种子的信息和用户信息
+                int i = seedMapper.addPlant(list);
+                if (i <= 0) {
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+                }
+
+                //如果不是新种子
+            }else{
+
+                //查询已经收取种子的数量  作为种植的次数
+                LambdaQueryWrapper<LandSeed> queryWrapper2 = new LambdaQueryWrapper<LandSeed>()
+                        .eq(LandSeed::getUserId, user.getId())
+                        .eq(LandSeed::getLeStatus, 3)
+                        .eq(LandSeed::getSeedId,seedPlantVo.getSeedId());
+
+                List<LandSeed> list2 = landSeedMapper.selectList(queryWrapper2);
+
+                //如果土地的长度大于种子已经种植的次数
+                if(userLandUnlocks.size()>list2.size()){
+                   LandSeed landSeed=new LandSeed();
+                   landSeed.setId(idGenerator.getNumberId());
+                   landSeed.setPlantTime(LocalDateTime.now());
+                   landSeed.setUserId(localUser.getUser().getId());
+                   landSeed.setSeedId(seedPlantVo.getSeedId());
+                   landSeed.setLeStatus(3);
+                   landSeed.setLaNo(userLandUnlocks.size());
+                   landSeed.setNewSeedIs(null);
+                   landMapper.insert(landSeed);
+                }
+
+                for (int i = 0; i < PlantingTimes; i++) {
+                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+                            .eq(LandSeed::getId,list2.get(i).getId());
+
+                    LandSeed landSeed=new LandSeed();
+                    landSeed.setLeStatus(1);
+                    landSeed.setPlantTime(time2);
+                    int update = landSeedMapper.update(landSeed, wrapper);
+                    if (update <= 0) {
+                        throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+                    }
+                }
             }
 
         }
