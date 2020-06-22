@@ -11,6 +11,7 @@ import com.dkm.gift.entity.GiftRankingEntity;
 import com.dkm.gift.entity.dto.GiftRankingDto;
 import com.dkm.gift.entity.dto.UserInfoDto;
 import com.dkm.gift.entity.vo.SendGiftVo;
+import com.dkm.gift.entity.vo.UserCenterGiftVo;
 import com.dkm.gift.service.GiftService;
 import com.dkm.medal.dao.MedalDao;
 import com.dkm.medal.dao.MedalUserDao;
@@ -160,5 +161,19 @@ public class GiftServiceImpl implements GiftService {
             }
         }
         return send;
+    }
+
+    @Override
+    public UserCenterGiftVo getUserCenterGift(Long userId) {
+        GiftRankingEntity one = giftRankingDao.getOne(new LambdaQueryWrapper<GiftRankingEntity>().eq(GiftRankingEntity::getUserId, userId));
+        UserCenterGiftVo userCenterGiftVo = new UserCenterGiftVo();
+        if(one==null){
+            userCenterGiftVo.setAccept(0);
+            userCenterGiftVo.setSend(0);
+        }else {
+            userCenterGiftVo.setSend(one.getSend());
+            userCenterGiftVo.setAccept(one.getAccept());
+        }
+        return userCenterGiftVo;
     }
 }
