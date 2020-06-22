@@ -1,5 +1,6 @@
 package com.dkm.personalCenter.controller;
 
+import com.dkm.feign.FamilyFeiginClient;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
@@ -40,6 +41,8 @@ public class PersonalCenterController {
     private MountService mountService;
     @Resource
     private GiftService giftService;
+    @Resource
+    private FamilyFeiginClient familyFeiginClient;
 
     @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据 blackHouse 为黑屋的用户信息对象 Seed为查询用户解锁的种子" +
             "  queryMySkill 查询我的技能  AttendantGoods 查询跟班产出的产物  queryUser 为用户总体力和当前体力" +
@@ -60,6 +63,8 @@ public class PersonalCenterController {
         map.put("mounts",mountService.getUserCenterMounts(user.getId()));
         //礼物信息
         map.put("gift",giftService.getUserCenterGift(user.getId()));
+        //家族信息
+        map.put("family",familyFeiginClient.getUserCenterFamily(user.getId()));
         return map;
 
     }
@@ -92,6 +97,8 @@ public class PersonalCenterController {
         map.put("mounts",mountService.getUserCenterMounts(userId));
         //礼物信息
         map.put("gift",giftService.getUserCenterGift(userId));
+        //家族信息
+        map.put("family",familyFeiginClient.getUserCenterFamily(userId));
         return map;
     }
 }
