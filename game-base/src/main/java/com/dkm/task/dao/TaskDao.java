@@ -25,7 +25,7 @@ public interface TaskDao extends BaseMapper<TaskEntity> {
      * @param userId
      * @return
      */
-    @Select("SELECT t.*,tu.tu_process FROM ( " +
+    @Select("SELECT t.*,IFNULL(tu.tu_process,0) as tu_process FROM ( " +
             "SELECT*FROM tb_task WHERE task_type=#{type}) t LEFT JOIN ( " +
             "SELECT task_id,tu_process FROM tb_task_user WHERE user_id=#{userId}) tu ON t.task_id=tu.task_id")
     List<TaskUserDetailVo> selectUserTask(@Param("type") Integer type,@Param("userId") Long userId);

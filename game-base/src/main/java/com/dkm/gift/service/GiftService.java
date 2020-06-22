@@ -3,6 +3,7 @@ package com.dkm.gift.service;
 import com.dkm.gift.entity.GiftEntity;
 import com.dkm.gift.entity.dto.GiftRankingDto;
 import com.dkm.gift.entity.vo.SendGiftVo;
+import com.dkm.gift.entity.vo.UserCenterGiftVo;
 
 import java.util.List;
 
@@ -40,4 +41,11 @@ public interface GiftService {
      * @return
      */
     List<GiftRankingDto> getGiftFlower(Integer type);
+
+    /**
+     * 用户主页信息
+     * @param userId
+     * @return
+     */
+    UserCenterGiftVo getUserCenterGift(Long userId);
 }
