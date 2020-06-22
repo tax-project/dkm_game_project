@@ -57,39 +57,17 @@ public class TbEquipmentKnapsack extends Model<TbEquipmentKnapsack> {
 	@TableField("tek_isva")
 	private Integer tekIsva;
 	/**
-	 * 食物主键
+	 * 物品主键
 	 */
 	@TableField("food_id")
 	private Long foodId;
 	/**
-	 * 食物数量
+	 * 物品拥有数量
 	 */
 	@TableField("food_number")
 	private Integer foodNumber;
-	/**
-	 * 特权道具主键
-	 */
-	private Long priId;
-	/**
-	 * 特权道具数量
-	 */
-	private Integer priNumber;
 
-	public Long getPriId() {
-		return priId;
-	}
 
-	public void setPriId(Long priId) {
-		this.priId = priId;
-	}
-
-	public Integer getPriNumber() {
-		return priNumber;
-	}
-
-	public void setPriNumber(Integer priNumber) {
-		this.priNumber = priNumber;
-	}
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
