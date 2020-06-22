@@ -1,6 +1,7 @@
 package com.dkm.mounts.service;
 
 import com.dkm.mounts.entity.MountsDetailEntity;
+import com.dkm.mounts.entity.UserCenterMountsVo;
 import com.dkm.mounts.entity.dto.MountsDetailDto;
 import com.dkm.mounts.entity.dto.UserInfoDto;
 
@@ -46,4 +47,11 @@ public interface MountService {
      * @return
      */
     UserInfoDto getUserInfo(Long userId);
+
+    /**
+     * 用户中心座驾信息
+     * @param userId
+     * @return
+     */
+    UserCenterMountsVo getUserCenterMounts(Long userId);
 }

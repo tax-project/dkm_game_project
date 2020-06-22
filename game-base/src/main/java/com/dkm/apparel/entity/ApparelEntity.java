@@ -35,4 +35,8 @@ public class ApparelEntity {
      * 布料
      */
     private Integer apparelFabric;
+    /**
+     * 0 女 1男
+     */
+    private Integer apparelSex;
 }

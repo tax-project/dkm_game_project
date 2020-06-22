@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.shop.dao.TbThedailyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbThedaily">
+		<result column="thd_id" property="thdId" />
+		<result column="thd_name" property="thdName" />
+		<result column="thd_discount" property="thdDiscount" />
+		<result column="thd_img" property="thdImg" />
+		<result column="thd_money" property="thdMoney" />
+		<result column="thd_content" property="thdContent" />
+		<result column="thd_contenttwo" property="thdContenttwo" />
+		<result column="thd_isva" property="thdIsva" />
+		<result column="exp1" property="exp1" />
+		<result column="exp2" property="exp2" />
+	</resultMap>
+
+</mapper>

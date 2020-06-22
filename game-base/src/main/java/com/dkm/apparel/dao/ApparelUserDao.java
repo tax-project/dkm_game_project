@@ -3,6 +3,7 @@ package com.dkm.apparel.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.apparel.entity.ApparelUserEntity;
 import com.dkm.apparel.entity.dto.ApparelDto;
+import com.dkm.apparel.entity.vo.ApparelMarketDetailVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -42,4 +43,12 @@ public interface ApparelUserDao extends BaseMapper<ApparelUserEntity> {
      */
     @Select("SELECT ad.*,au.apparel_user_id FROM (SELECT apparel_user_id,apparel_detail_id FROM tb_apparel_user WHERE user_id = #{userId} and is_equip = 1) au LEFT JOIN tb_apparel_detail ad on ad.apparel_id = au.apparel_detail_id")
     List<ApparelDto> getEquip(@Param("userId") Long userId);
+
+    /**
+     * 获取摆摊服饰
+     * @param userId
+     * @param type
+     * @return
+     */
+    List<ApparelMarketDetailVo> getApparelMarket(@Param("userId")Long userId,@Param("type")Integer type);
 }

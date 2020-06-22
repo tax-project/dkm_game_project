@@ -27,4 +27,10 @@ public interface MedalService {
      * @return
      */
     MedalUserInfoVo getOneUserMedal(Long userId,Long medalId);
+
+    /**
+     * 获取用户勋章数量
+     * @param userId
+     */
+    Integer getUserMadelNumber(Long userId);
 }

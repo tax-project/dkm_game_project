@@ -10,10 +10,7 @@ import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.family.entity.vo.FamilyGoldInfoVo;
-import com.dkm.family.entity.vo.FamilyImgsVo;
-import com.dkm.family.entity.vo.FamilyUsersVo;
-import com.dkm.family.entity.vo.HotFamilyVo;
+import com.dkm.family.entity.vo.*;
 import com.dkm.family.service.FamilyService;
 import com.dkm.union.dao.UnionMapper;
 import com.dkm.union.entity.UnionEntity;
@@ -315,5 +312,18 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public boolean familyExists(Long familyId) {
         return familyDao.selectById(familyId) != null;
+    }
+
+    @Override
+    public UserCenterFamilyVo getUserCenterFamily(Long userId) {
+        UserCenterFamilyVo userCenterFamilyVo = new UserCenterFamilyVo();
+        FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new LambdaQueryWrapper<FamilyDetailEntity>().eq(FamilyDetailEntity::getUserId, userId));
+        if(familyDetailEntity==null)return null;
+        List<String> familyHeadImg = familyDetailDao.getFamilyHeadImg(familyDetailEntity.getFamilyId());
+        FamilyEntity familyEntity = familyDao.selectOne(new LambdaQueryWrapper<FamilyEntity>().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        userCenterFamilyVo.setFamilyName(familyEntity.getFamilyName());
+        userCenterFamilyVo.setFamilyId(familyDetailEntity.getFamilyId());
+        userCenterFamilyVo.setImgs(familyHeadImg);
+        return userCenterFamilyVo;
     }
 }
