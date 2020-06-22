@@ -161,13 +161,20 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         List<AttendantImgVo> AttendantImg=new ArrayList();
 
         LambdaQueryWrapper<AttendantUser> queryWrapper = new LambdaQueryWrapper<AttendantUser>()
-                        .eq(AttendantUser::getUserId,localUser.getUser().getId());
+                        .eq(AttendantUser::getUserId,userId);
 
 
         List<AttendantUser> attendantUsers = attendantUserMapper.selectList(queryWrapper);
+        System.out.println("attendantUsers = " + attendantUsers.size());
+
+
+        //查询出所有用户跟班
+        List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
+
         for (int i = 0; i < attendantUsers.size(); i++) {
             //不等于0说明是系统跟班 随机查询出一个跟班  放入集合
             if(attendantUsers.get(i).getAttendantId()!=0){
+
                 AttendantImgVo attendantImgVo=new AttendantImgVo();
                 //随机查询一个跟班
                 AttenDant attenDant = attendantMapper.queryAttendant();
@@ -178,24 +185,31 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                 AttendantImg.add(attendantImgVo);
             }
 
+
             //等于0就是用户跟班
             if(attendantUsers.get(i).getAttendantId()==0){
 
-                //查询出所有用户跟班
-                List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
-
-                for (int j = 0; j < attendantGoods.size(); j++) {
                     AttendantImgVo attendantImgVo=new AttendantImgVo();
                     attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
                     AttendantImg.add(attendantImgVo);
-                }
             }
 
         }
 
+
+
+
+        //统计出所有物品的数量
+        List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
+       /* for (int i = 0; i < attendantPutVos.size(); i++) {
+            if(attendantPutVos.get(i).getGoodName()=="蜂蜜"){
+
+            }
+        }*/
+
         map.put("AttendantImg",AttendantImg);
 
-
+        map.put("attendantPutVos",attendantPutVos);
 
         return map;
     }

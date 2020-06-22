@@ -67,8 +67,8 @@ public class ProduceController {
      * @param userId
      * @return
      */
-    @GetMapping("/queryImgFood/{userId}")
-    public Map<String,Object> queryImgFood(@PathVariable("userId") Long userId){
+    @GetMapping("/queryImgFood")
+    public Map<String,Object> queryImgFood(@RequestParam(value = "userId") Long userId){
         return produceService.queryImgFood(userId);
     }
 
