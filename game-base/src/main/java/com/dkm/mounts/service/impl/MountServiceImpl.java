@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.mounts.dao.MountsMapper;
 import com.dkm.mounts.entity.MountsDetailEntity;
+import com.dkm.mounts.entity.UserCenterMountsVo;
 import com.dkm.mounts.entity.dto.MountsDetailDto;
 import com.dkm.mounts.entity.dto.UserInfoDto;
 import com.dkm.mounts.service.MountService;
@@ -60,5 +61,13 @@ public class MountServiceImpl implements MountService {
     @Override
     public UserInfoDto getUserInfo(Long userId) {
         return mountsMapper.getUserInfo(userId);
+    }
+
+    @Override
+    public UserCenterMountsVo getUserCenterMounts(Long userId) {
+        UserCenterMountsVo userCenterMountsVo = new UserCenterMountsVo();
+        userCenterMountsVo.setMountsNumber(mountsMapper.getMountNumber(userId));
+        userCenterMountsVo.setMountsUrl(mountsMapper.getMountImg(userId));
+        return userCenterMountsVo;
     }
 }

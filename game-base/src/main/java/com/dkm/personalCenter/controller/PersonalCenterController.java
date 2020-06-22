@@ -8,6 +8,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.medal.service.MedalService;
+import com.dkm.mounts.service.MountService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ public class PersonalCenterController {
     UserFeignClient userFeignClient;
     @Resource
     private MedalService medalService;
+    @Resource
+    private MountService mountService;
 
     @ApiOperation(value = "个人中心的查询接口",notes = "equipment 为装备的数据 blackHouse 为黑屋的用户信息对象 Seed为查询用户解锁的种子" +
             "  queryMySkill 查询我的技能  AttendantGoods 查询跟班产出的产物  queryUser 为用户总体力和当前体力" +
@@ -50,6 +53,8 @@ public class PersonalCenterController {
         map.put("queryUser",userFeignClient.queryUser(user.getId()));
         //用户勋章数
         map.put("medalNumber",medalService.getUserMadelNumber(user.getId()));
+        //座驾信息
+        map.put("mounts",mountService.getUserCenterMounts(user.getId()));
         return map;
 
     }
@@ -78,6 +83,8 @@ public class PersonalCenterController {
         map.put("queryUser",userFeignClient.queryUser(userId));
         //用户勋章数
         map.put("medalNumber",medalService.getUserMadelNumber(userId));
+        //座驾信息
+        map.put("mounts",mountService.getUserCenterMounts(userId));
         return map;
     }
 }
