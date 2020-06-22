@@ -38,6 +38,18 @@ public class TaskEntity {
      */
     private Integer taskExperience;
 
+    /**
+     * 标题
+     */
+    private String taskTitle;
+    /**
+     * 标题
+     */
+    private String taskUrl;
 
+    /**
+     * 挑战页面类型
+     */
+    private Integer taskUrlType;
 
 }
