@@ -13,9 +13,10 @@ import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
-import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.AttendantImgVo;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.ProduceSelectVo;
+import com.dkm.produce.entity.vo.SysAttendantImgVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -144,8 +145,27 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public List<AttendantGoods> queryJoinOutPutGoods(Long userId) {
-        return produceMapper.queryJoinOutPutGoods(userId);
+    public Map<String,Object> queryImgFood(Long userId) {
+        Map<String,Object> map=new HashMap<>(16);
+
+        //装系统跟班
+        List<SysAttendantImgVo> sysAttendant=new ArrayList();
+
+        //查询出用户跟班图片
+        List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
+        for (int i = 0; i < attendantGoods.size(); i++) {
+            //如果跟班id不等于0说明不是系统跟班
+            if(attendantGoods.get(i).getAttendantId()!=0){
+                AttendantImgVo attendantImgVo=new AttendantImgVo();
+                attendantImgVo.setAttendantId(attendantGoods.get(i).getAttendantId());
+                attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
+                attendantGoods.add(attendantImgVo);
+            }
+        }
+
+        map.put("attendantGoods",attendantGoods);
+
+        return map;
     }
 
     @Override
