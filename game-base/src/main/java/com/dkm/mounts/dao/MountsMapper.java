@@ -79,4 +79,21 @@ public interface MountsMapper extends IBaseMapper<MountsDetailEntity> {
      */
     @Update("update tb_user_info set user_info_gold = user_info_gold-#{gold} ,user_info_diamonds=user_info_diamonds-#{diamond} where user_id = #{userId}")
     Integer updateUser(@Param("gold") Integer gold,@Param("diamond") Integer diamond,@Param("userId") Long userId);
+
+
+    /**
+     * 用户座驾数量
+     * @param userId
+     * @return
+     */
+    @Select("SELECT count(*) FROM tb_mounts WHERE user_id = #{userId}")
+    Integer getMountNumber(@Param("userId")Long userId);
+
+    /**
+     * 用户装备座驾图片
+     * @param userId
+     * @return
+     */
+    @Select("SELECT md.mounts_image FROM (SELECT mounts_id FROM tb_mounts WHERE user_id = #{userId} and equip = 1) m LEFT JOIN tb_mounts_detail md on md.mounts_id = m.mounts_id")
+    String getMountImg(@Param("userId")Long userId);
 }

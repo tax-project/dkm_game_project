@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.HotFamilyVo;
+import com.dkm.family.entity.vo.UserCenterFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -149,5 +150,15 @@ public class FamilyController {
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         familyService.kickOutUser(localUser.getUser().getId(),outUserId);
+    }
+
+
+    @GetMapping("/getUserCenterFamily")
+    @CrossOrigin
+    public UserCenterFamilyVo getUserCenterFamily(@RequestParam("userId") Long userId){
+        if(userId==null){
+            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return familyService.getUserCenterFamily(userId);
     }
 }
