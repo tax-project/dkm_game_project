@@ -33,16 +33,22 @@ zuul:
       path: /*/*/chat/**
       serviceId: chat
       strip-prefix: false
-    api-file:
-      path: /*/*/game-file/**
-      serviceId: file
-      strip-prefix: false
+#    api-file:
+#      path: /*/*/game-file/**
+#      serviceId: file
+#      strip-prefix: false
     api-back:
       path: /*/*/back/**
       serviceId: back
       strip-prefix: false
+    traditional-url:
+      path: /file/**
+      url: http://${service.ip}:7000/game-file/
   host:
     connect-timeout-millis: 5000
     socket-timeout-millis: 12000
+
+service:
+  ip: 192.168.10.133
 
 
