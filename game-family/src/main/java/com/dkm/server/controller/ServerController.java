@@ -2,9 +2,7 @@ package com.dkm.server.controller;
 
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.server.service.IServerService;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

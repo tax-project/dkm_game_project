@@ -15,6 +15,7 @@
         <module>game-chat</module>
         <module>game-base</module>
         <module>game-file</module>
+        <module>game-back</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
