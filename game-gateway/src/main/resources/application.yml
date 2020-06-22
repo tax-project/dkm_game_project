@@ -34,8 +34,9 @@ zuul:
       serviceId: chat
       strip-prefix: false
     api-file:
-      path: /*/*/file/**
+      path: /*/*/game-file/**
       serviceId: file
+      strip-prefix: false
     api-back:
       path: /*/*/back/**
       serviceId: back
