@@ -1,6 +1,6 @@
 package com.dkm.discount.service;
 
-import com.dkm.discount.entity.vo.LotteryInfoVo;
+import com.dkm.discount.bean.vo.LotteryInfoVo;
 
 public interface ILotteryService {
 
