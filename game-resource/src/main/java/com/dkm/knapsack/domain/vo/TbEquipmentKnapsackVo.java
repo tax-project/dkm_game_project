@@ -49,30 +49,21 @@ public class TbEquipmentKnapsackVo {
     private Integer tekIsva;
 
     /**
-     * 食物主键
+     * 道具主键
      */
     private Long foodId;
     /**
-     * 食物数量
+     * 道具拥有数量
      */
     private Integer foodNumber;
-
     /**
-     * 特权道具主键
+     * 物品前端跳转路径
      */
-    private Long priId;
+    private String tabUrl;
     /**
-     * 特权道具数量
+     * 物品类型
      */
-    private Integer priNumber;
-    /**
-     * 特权道具图片
-     */
-    private Integer priImg;
-    /**
-     * 特权道具名字
-     */
-    private Integer priName;
+    private Integer goodType;
     /**
      * 宝箱主键
      */
@@ -164,15 +155,15 @@ public class TbEquipmentKnapsackVo {
     /**
      * 食物名字
      */
-    private String foodName;
+    private String name;
     /**
      * 食物图片地址
      */
-    private String foodUrl;
+    private String url;
     /**
      * 售价
      */
-    private Integer foodGold;
+    private Integer goodMoney;
 
 
 }

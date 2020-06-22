@@ -3,7 +3,6 @@ package com.dkm.produce.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.service.IProduceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,11 +61,15 @@ public class ProduceController {
     }
 
 
-
-
-    @GetMapping("/queryJoinOutPutGoods/{userId}")
-    public List<AttendantGoods> queryJoinOutPutGoods(@PathVariable("userId") Long userId){
-        return produceService.queryJoinOutPutGoods(userId);
+    /**
+     *  内部调用
+     *  查询跟班图片和跟班产出的所有物品
+     * @param userId
+     * @return
+     */
+    @GetMapping("/queryImgFood/{userId}")
+    public Map<String,Object> queryImgFood(@PathVariable("userId") Long userId){
+        return produceService.queryImgFood(userId);
     }
 
 

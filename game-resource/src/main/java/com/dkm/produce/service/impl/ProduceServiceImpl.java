@@ -1,6 +1,10 @@
 package com.dkm.produce.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.attendant.dao.AttendantMapper;
+import com.dkm.attendant.dao.AttendantUserMapper;
+import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
@@ -13,7 +17,7 @@ import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
-import com.dkm.produce.entity.vo.AttendantGoods;
+import com.dkm.produce.entity.vo.AttendantImgVo;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.entity.vo.ProduceSelectVo;
 import com.dkm.produce.service.IProduceService;
@@ -56,6 +60,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Autowired
     private IAttendantUserService attendantUserService;
+
+    @Autowired
+    private AttendantUserMapper attendantUserMapper;
+
+    @Autowired
+    private AttendantMapper attendantMapper;
 
     @Override
     public Map<String,Object> insertProduce(Long attendantId, Long attUserId) {
@@ -144,15 +154,56 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     }
 
     @Override
-    public List<AttendantGoods> queryJoinOutPutGoods(Long userId) {
-        return produceMapper.queryJoinOutPutGoods(userId);
+    public Map<String,Object> queryImgFood(Long userId) {
+        Map<String,Object> map=new HashMap<>(16);
+
+        //跟班
+        List<AttendantImgVo> AttendantImg=new ArrayList();
+
+        LambdaQueryWrapper<AttendantUser> queryWrapper = new LambdaQueryWrapper<AttendantUser>()
+                        .eq(AttendantUser::getUserId,localUser.getUser().getId());
+
+
+        List<AttendantUser> attendantUsers = attendantUserMapper.selectList(queryWrapper);
+        for (int i = 0; i < attendantUsers.size(); i++) {
+            //不等于0说明是系统跟班 随机查询出一个跟班  放入集合
+            if(attendantUsers.get(i).getAttendantId()!=0){
+                AttendantImgVo attendantImgVo=new AttendantImgVo();
+                //随机查询一个跟班
+                AttenDant attenDant = attendantMapper.queryAttendant();
+
+                //放入对象
+                attendantImgVo.setWeChatHeadImgUrl(attenDant.getAtImg());
+
+                AttendantImg.add(attendantImgVo);
+            }
+
+            //等于0就是用户跟班
+            if(attendantUsers.get(i).getAttendantId()==0){
+
+                //查询出所有用户跟班
+                List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
+
+                for (int j = 0; j < attendantGoods.size(); j++) {
+                    AttendantImgVo attendantImgVo=new AttendantImgVo();
+                    attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
+                    AttendantImg.add(attendantImgVo);
+                }
+            }
+
+        }
+
+        map.put("AttendantImg",AttendantImg);
+
+
+
+        return map;
     }
 
     @Override
     public  List<AttendantPutVo> queryOutput(Long userId) {
         //查询所有要返回的跟班数据
         return produceMapper.queryOutput(userId);
-
     }
 
     @Override

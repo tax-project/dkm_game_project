@@ -67,7 +67,7 @@ public class TbEquipmentKnapsackController {
      * 增加特权商品到背包的方法
      * 自动判断这个商品有没有进背包 没有则增加 否则修改
      */
-    @ApiOperation(value = "增加特权商品的接口  input都是需要传递的参数",notes = "成功返回成功")
+    /*@ApiOperation(value = "增加特权商品的接口  input都是需要传递的参数",notes = "成功返回成功")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekSell",value = "我的装备 1为装备上了 2为背包装备",required = true),
@@ -90,7 +90,7 @@ public class TbEquipmentKnapsackController {
     @CrossOrigin
     public void addTbPrivilegeMall(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
         tbEquipmentKnapsackService.addTbPrivilegeMall(tbEquipmentKnapsack);
-    }
+    }*/
 
     /**
      * 批量增加装备到背包的接口
@@ -120,8 +120,7 @@ public class TbEquipmentKnapsackController {
      * 查登录用户的装备
      * @return
      */
-    @ApiOperation(value = "查当前登录用户的装备",notes = "成功返回数据 反则为空 data为装备 dataOne为食物" +
-            "dataTwo 为特权道具")
+    @ApiOperation(value = "查当前登录用户的装备",notes = "成功返回数据 反则为空 data为装备 dataOne为道具")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "用户背包装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备的外键"),
@@ -147,14 +146,12 @@ public class TbEquipmentKnapsackController {
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypevalue",value = "生命或才华的值"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypeone",value = "1为踢出群聊 2为胡言乱语闪避"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypeonevalue",value = "踢出群聊和胡言乱语闪避的值"),
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "食物主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodName",value = "食物名字"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodUrl",value = "食物图片地址"),
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priId",value = "特殊道具主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priNumber",value = "特殊道具数量"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priNname",value = "特殊道具名字"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priImg",value = "特殊道具图片地址")
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "物品主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "物品数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "name",value = "物品名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "url",value = "物品图片地址"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "tabUrl",value = "物品使用跳转地址"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "goodType",value = "物品类型"),
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -169,11 +166,9 @@ public class TbEquipmentKnapsackController {
     public Map<String,Object> selectUserId(){
         Map<String,Object> map=new HashMap<>();
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
-        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodId();
-        List<TbEquipmentKnapsackVo> listTwo=tbEquipmentKnapsackService.selectProps();
+        List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodIdTwo();
         map.put("data",list);
         map.put("dataOne",listOne);
-        map.put("dataTwo",listTwo);
         return map;
     }
 
@@ -208,11 +203,11 @@ public class TbEquipmentKnapsackController {
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypevalue",value = "生命或才华的值"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypeone",value = "1为踢出群聊 2为胡言乱语闪避"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "edTypeonevalue",value = "踢出群聊和胡言乱语闪避的值"),
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "食物主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodName",value = "食物名字"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "foodUrl",value = "食物图片地址"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodGold",value = "食物售价")
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "foodId",value = "物品主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "物品数量"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "name",value = "物品名字"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "url",value = "物品图片地址"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "goodMoney",value = "物品售价")
     })
     @GetMapping("/selectUserIdAndFoodId")
     @CrossOrigin

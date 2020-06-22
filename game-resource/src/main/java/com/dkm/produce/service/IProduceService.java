@@ -1,6 +1,5 @@
 package com.dkm.produce.service;
 
-import com.dkm.produce.entity.vo.AttendantGoods;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public interface IProduceService {
     /**
      * 根据用户id查询跟班和跟班产生的物品
      */
-    List<AttendantGoods> queryJoinOutPutGoods(Long userId);
+    Map<String,Object> queryImgFood(Long userId);
 
     /**
      *  查询所有跟班产出的物品
