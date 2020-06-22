@@ -11,30 +11,33 @@ spring:
 zuul:
   routes:
     api-user:
-      path: /*/*/game-user/**
+      path: /*/*/user/**
       serviceId: user
       strip-prefix: false
     api-base:
-      path: /*/*/game-base/**
+      path: /*/*/base/**
       serviceId: base
       strip-prefix: false
     api-family:
-      path: /*/*/game-family/**
+      path: /*/*/family/**
       serviceId: family
       strip-prefix: false
     api-resource:
-      path: /*/*/game-resource/**
+      path: /*/*/resource/**
       serviceId: resource
       strip-prefix: false
     api-shop:
-      path: /*/*/game-shop/**
+      path: /*/*/shop/**
       serviceId: shop
       strip-prefix: false
     api-chat:
-      path: /*/*/game-chat/**
+      path: /*/*/chat/**
       serviceId: chat
       strip-prefix: false
     api-file:
-      path: /*/*/game-file/**
+      path: /*/*/file/**
       serviceId: file
+    api-back:
+      path: /*/*/back/**
+      serviceId: back
       strip-prefix: false
