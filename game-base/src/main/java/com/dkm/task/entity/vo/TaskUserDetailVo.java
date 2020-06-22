@@ -17,6 +17,6 @@ public class TaskUserDetailVo extends TaskEntity {
     /**
      * 用户当前进度
      */
-    private Integer taskProcess;
+    private Integer tuProcess;
 
 }
