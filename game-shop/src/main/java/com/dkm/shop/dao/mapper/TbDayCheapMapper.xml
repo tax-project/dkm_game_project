@@ -5,13 +5,21 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.dkm.shop.domain.TbDayCheap">
 		<id column="cheap_id" property="cheapId" />
-		<result column="good_id" property="goodId" />
+		<result column="cheap_img" property="cheapImg" />
 		<result column="cheap_name" property="cheapName" />
 		<result column="cheap_info" property="cheapInfo" />
+		<result column="cheap_name" property="cheapName" />
 		<result column="cheap_money" property="cheapMoney" />
-		<result column="cheap_gold" property="cheapGold" />
+		<result column="food_id" property="foodId" />
+		<result column="food_fm" property="foodFm" />
 		<result column="cheap_dm" property="cheapDm" />
-		<result column="cheap_fm" property="cheapFm" />
+		<result column="cheap_gold" property="cheapGold" />
+		<result column="lan_id" property="lanId" />
+		<result column="lan_num" property="lanNum" />
+		<result column="yu_id" property="yuId" />
+		<result column="yu_num" property="yuNum" />
+		<result column="sd_id" property="sdId" />
+		<result column="sd_num" property="sdNum" />
 	</resultMap>
 
 </mapper>
