@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
+import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
+
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: dkm_game
@@ -183,6 +185,7 @@ public class SeedServiceImpl implements ISeedService {
     public Message unlockPlant(SeedVo seedVo) {
         UserLoginQuery user = localUser.getUser();
 
+        //判断前面的种子是否解锁
         LambdaQueryWrapper<SeedUnlock> wrapper = new LambdaQueryWrapper<SeedUnlock>()
                 .eq(SeedUnlock::getUserId, user.getId());
 
@@ -201,6 +204,22 @@ public class SeedServiceImpl implements ISeedService {
             }
         }
 
+        //限制一天只能解锁7次
+        if(TackBackLimit(user.getId(),7)){
+           return unlockSeed(seedVo);
+        }else{
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"今天解锁的次数已超出");
+        }
+
+    }
+
+    /**
+     * 解锁种子
+     * @param seedVo
+     * @return
+     */
+    public Message unlockSeed(SeedVo seedVo){
+        UserLoginQuery user = localUser.getUser();
 
         //得到用户金币
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
@@ -217,23 +236,30 @@ public class SeedServiceImpl implements ISeedService {
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),null,1);
         }
 
-            //种子等级除以10 得出声望
-            //等级余10大于0则进一
-            //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
-            //修改当前种子解锁进度
-            seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
+        //种子等级除以10 得出声望
+        //等级余10大于0则进一
+        //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
+        //修改当前种子解锁进度
+        seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
 
-            //修改用户的金币和声望
-            int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
+        //修改用户的金币和声望
+        int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
 
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
-            }
+        if(i<=0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
+        }
 
-            message.setMsg("解锁碎片成功");
+        message.setMsg("解锁碎片成功");
 
-            return message;
+        return message;
     }
+
+
+
+
+
+
+
     /**
      * 种植种子
      * 收取种子

@@ -165,7 +165,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
 
         List<AttendantUser> attendantUsers = attendantUserMapper.selectList(queryWrapper);
-        System.out.println("attendantUsers = " + attendantUsers.size());
 
 
         //查询出所有用户跟班
@@ -195,8 +194,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             }
 
         }
-
-
 
 
         //统计出所有物品的数量
