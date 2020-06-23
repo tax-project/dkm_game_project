@@ -28,4 +28,6 @@ public interface GiftRankingDao extends IService<GiftRankingEntity> {
     @Select("SELECT gr.*,u.we_chat_nick_name,u.we_chat_head_img_url FROM (SELECT * FROM tb_gift_ranking where send_flower>0 ORDER BY send_flower desc LIMIT 20) gr LEFT JOIN tb_user u on u.user_id = gr.user_id")
     List<GiftRankingDto> getGiftRankingSendFlower();
 
+    @Select("select * from tb_gift_ranking where user_id = #{userId}")
+    GiftRankingEntity selectOne(@Param("userId") Long userId);
 }

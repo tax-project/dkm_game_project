@@ -1,13 +1,12 @@
 package com.dkm.pets.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
-import com.dkm.pets.dao.FoodDetailMapper;
 import com.dkm.pets.dao.PetsMapper;
-import com.dkm.pets.entity.FoodDetailEntity;
 import com.dkm.pets.entity.PetUserEntity;
 import com.dkm.pets.entity.dto.EatFoodDto;
 import com.dkm.pets.entity.dto.PetsDto;
@@ -15,11 +14,11 @@ import com.dkm.pets.entity.dto.UserInfo;
 import com.dkm.pets.entity.vo.FeedPetInfoVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import com.dkm.pets.service.PetService;
+import com.dkm.turntable.dao.GoodsMapper;
+import com.dkm.turntable.entity.GoodsEntity;
 import com.dkm.utils.IdGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -39,16 +38,15 @@ public class PetServiceImpl implements PetService {
     @Resource
     private PetsMapper petsMapper;
 
-    @Resource
-    private FoodDetailMapper foodDetailMapper;
 
     @Resource
     private IdGenerator idGenerator;
 
     @Resource
-    private ResourceFeignClient resourceFeignClient;
+    private GoodsMapper goodsMapper;
 
-    private static List<FoodDetailEntity> foodDetailEntities;
+    @Resource
+    private ResourceFeignClient resourceFeignClient;
 
     /**
      * 获取宠物页面所需信息
@@ -65,24 +63,22 @@ public class PetServiceImpl implements PetService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"获取不到食物信息");
         }
         //食物信息
-        if(foodDetailEntities==null){
-            foodDetailEntities = foodDetailMapper.selectList(null);
-        }
+        List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 3));
         if(listResult.getData()==null||listResult.getData().size()<3){
-            List<FoodDetailEntity> a = foodDetailEntities;
+            List<GoodsEntity> a = goodsEntities;
             //有部分食物>>添加完整
             if(listResult.getData()!=null){
                 for (TbEquipmentKnapsackVo foodInfo : listResult.getData()) {
-                    a = a.stream().filter(food -> !food.getFoodId().equals(foodInfo.getFoodId())).collect(Collectors.toList());
+                    a = a.stream().filter(food -> !food.getId().equals(foodInfo.getFoodId())).collect(Collectors.toList());
                 }
             }
             //没有食物
             a.forEach(foodDetailEntity -> {
                 TbEquipmentKnapsackVo foodInfo = new TbEquipmentKnapsackVo();
-                foodInfo.setFoodId(foodDetailEntity.getFoodId());
-                foodInfo.setFoodName(foodDetailEntity.getFoodName());
+                foodInfo.setFoodId(foodDetailEntity.getId());
+                foodInfo.setName(foodDetailEntity.getName());
                 foodInfo.setFoodNumber(0);
-                foodInfo.setFoodUrl(foodDetailEntity.getFoodUrl());
+                foodInfo.setUrl(foodDetailEntity.getUrl());
                 listResult.getData().add(foodInfo);
             });
         }
@@ -118,14 +114,14 @@ public class PetServiceImpl implements PetService {
             List<EatFoodDto> role = new ArrayList<>();
             if (petsDto.getSchedule() >= 100) {
                 //升级
-                FoodDetailEntity foodDetailEntity = foodDetailEntities.get(foodDetailEntities.size()-1);
+                GoodsEntity foodDetailEntity = goodsEntities.get(goodsEntities.size()-1);
                 EatFoodDto eatFoodDto = new EatFoodDto();
-                eatFoodDto.setFoodUrl(foodDetailEntity.getFoodUrl());
-                eatFoodDto.setFoodName(foodDetailEntity.getFoodName());
-                eatFoodDto.setFoodId(foodDetailEntity.getFoodId());
+                eatFoodDto.setFoodUrl(foodDetailEntity.getUrl());
+                eatFoodDto.setFoodName(foodDetailEntity.getName());
+                eatFoodDto.setFoodId(foodDetailEntity.getId());
                 //奶瓶数量
                 eatFoodDto.setENumber(1);
-                Integer foodNumber = listResult.getData().stream().filter(item -> item.getFoodId()==foodDetailEntities.size()-1).collect(Collectors.toList()).get(0).getFoodNumber();
+                Integer foodNumber = listResult.getData().stream().filter(item -> item.getFoodId()==goodsEntities.size()-1).collect(Collectors.toList()).get(0).getFoodNumber();
                 eatFoodDto.setFoodNumber(foodNumber);
                 role.add(eatFoodDto);
             } else {
@@ -136,14 +132,14 @@ public class PetServiceImpl implements PetService {
                 //喂食
                 listResult.getData().forEach(food->{
                     for (int i = 0; i < feed; i++) {
-                        FoodDetailEntity foodDetailEntity = foodDetailEntities.get(i);
+                        GoodsEntity foodDetailEntity = goodsEntities.get(i);
                         EatFoodDto eatFoodDto = new EatFoodDto();
-                        eatFoodDto.setFoodUrl(foodDetailEntity.getFoodUrl());
-                        eatFoodDto.setFoodName(foodDetailEntity.getFoodName());
-                        eatFoodDto.setFoodId(foodDetailEntity.getFoodId());
+                        eatFoodDto.setFoodUrl(foodDetailEntity.getUrl());
+                        eatFoodDto.setFoodName(foodDetailEntity.getName());
+                        eatFoodDto.setFoodId(foodDetailEntity.getId());
                         //食物数量
                         eatFoodDto.setENumber(i == 0 ? c : c - 1);
-                        if(foodDetailEntity.getFoodId().equals(food.getFoodId())){
+                        if(foodDetailEntity.getId().equals(food.getFoodId())){
                             eatFoodDto.setFoodNumber(food.getFoodNumber());
                             role.add(eatFoodDto);
                         }
