@@ -1,9 +1,6 @@
 package com.dkm.seed.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.kotlin.KtUpdateWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
@@ -20,20 +17,17 @@ import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.seed.dao.LandSeedMapper;
 import com.dkm.seed.dao.SeedMapper;
 import com.dkm.seed.dao.SeedsFallMapper;
-import com.dkm.seed.dao.UserLandUnlockMapper;
+import com.dkm.seed.dao.mapper.SeedUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
-import com.dkm.seed.entity.SeedsFall;
+import com.dkm.seed.entity.SeedUnlock;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
-import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -74,6 +68,9 @@ public class SeedServiceImpl implements ISeedService {
 
     @Autowired
     private SeedsFallMapper seedsFallMapper;
+
+    @Autowired
+    private SeedUnlockMapper seedUnlockMapper;
 
 
     /**
@@ -186,11 +183,30 @@ public class SeedServiceImpl implements ISeedService {
     public Message unlockPlant(SeedVo seedVo) {
         UserLoginQuery user = localUser.getUser();
 
+        LambdaQueryWrapper<SeedUnlock> wrapper = new LambdaQueryWrapper<SeedUnlock>()
+                .eq(SeedUnlock::getUserId, user.getId());
+
+        List<SeedUnlock> seedUnlocks = seedUnlockMapper.selectList(wrapper);
+        for (int i = 0; i < seedUnlocks.size(); i++) {
+            if(seedUnlocks.get(i).getSeedId()==seedVo.getSeedId()){
+                //第一个次解锁才进行判断
+                if(seedUnlocks.get(i).getSeedPresentUnlock()==0) {
+                    //不是第一个种子 才让他判断前面的种子是否解锁
+                    if (seedVo.getSeedId() != 1) {
+                        if (seedUnlocks.get(i - 1).getSeedStatus() != 1) {
+                            throw new ApplicationException(CodeType.SERVICE_ERROR, "请先解锁前面的种子");
+                        }
+                    }
+                }
+            }
+        }
+
+
         //得到用户金币
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
 
         if(user1.getUserInfoGold()<seedVo.getUnlockMoney()){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "金币不足");
         }
 
         Message message=new Message();
