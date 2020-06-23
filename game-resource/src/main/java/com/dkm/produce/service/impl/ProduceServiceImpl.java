@@ -205,7 +205,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             if(attendantPutVos.get(i).getGoodName()=="蜂蜜"){
 
             }
-        }*/
+         }*/
 
         map.put("AttendantImg",AttendantImg);
 
