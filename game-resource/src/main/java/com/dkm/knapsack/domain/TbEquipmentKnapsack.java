@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ import java.io.Serializable;
  * @since 2020-05-14
  */
 @TableName("tb_equipment_knapsack")
+@Data
 public class TbEquipmentKnapsack extends Model<TbEquipmentKnapsack> {
 
     private static final long serialVersionUID = 1L;
@@ -67,83 +69,10 @@ public class TbEquipmentKnapsack extends Model<TbEquipmentKnapsack> {
 	@TableField("food_number")
 	private Integer foodNumber;
 
-
-
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
-	public Long getFoodId() {
-		return foodId;
-	}
-
-	public void setFoodId(Long foodId) {
-		this.foodId = foodId;
-	}
-
-	public Integer getFoodNumber() {
-		return foodNumber;
-	}
-
-	public void setFoodNumber(Integer foodNumber) {
-		this.foodNumber = foodNumber;
-	}
-
-	public Long getTekId() {
-		return tekId;
-	}
-
-	public void setTekId(Long tekId) {
-		this.tekId = tekId;
-	}
-
-	public Long getEquipmentId() {
-		return equipmentId;
-	}
-
-	public void setEquipmentId(Long equipmentId) {
-		this.equipmentId = equipmentId;
-	}
-
-	public Long getKnapsackId() {
-		return knapsackId;
-	}
-
-	public void setKnapsackId(Long knapsackId) {
-		this.knapsackId = knapsackId;
-	}
-
-	public Integer getTekSell() {
-		return tekSell;
-	}
-
-	public void setTekSell(Integer tekSell) {
-		this.tekSell = tekSell;
-	}
-
-	public Integer getTekMoney() {
-		return tekMoney;
-	}
-
-	public void setTekMoney(Integer tekMoney) {
-		this.tekMoney = tekMoney;
-	}
-
-	public Integer getTekDaoju() {
-		return tekDaoju;
-	}
-
-	public void setTekDaoju(Integer tekDaoju) {
-		this.tekDaoju = tekDaoju;
-	}
-
-	public Integer getTekIsva() {
-		return tekIsva;
-	}
-
-	public void setTekIsva(Integer tekIsva) {
-		this.tekIsva = tekIsva;
-	}
+	/**
+	 * 用户外键
+	 */
+	private Long userId;
 
 	@Override
 	protected Serializable pkVal() {

@@ -31,7 +31,7 @@
 
 
 
-    <select id="queryIsById" resultType="com.dkm.seed.entity.vo.SeedUnlock">
+    <select id="queryIsById" resultType="com.dkm.seed.entity.SeedUnlock">
         select user_id from tb_plant_unlock where user_id=#{userId}
     </select>
 
@@ -101,7 +101,7 @@
 
 
 
-    <insert id="insertSeedUnlock" parameterType="com.dkm.seed.entity.vo.SeedUnlock">
+    <insert id="insertSeedUnlock" parameterType="com.dkm.seed.entity.SeedUnlock">
         insert into tb_plant_unlock(pu_id,seed_id,seed_present_unlock,seed_all_unlock,seed_status,user_id)
         <foreach collection="list" item="lists" index="index" separator="union all">
             select #{lists.puId},#{lists.seedId},#{lists.seedPresentUnlock},#{lists.seedAllUnlock},#{lists.seedStatus},#{lists.userId}
