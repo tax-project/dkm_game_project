@@ -1,4 +1,4 @@
-package com.dkm.seed.entity.vo;
+package com.dkm.seed.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
