@@ -54,4 +54,6 @@ public interface ITbEquipmentKnapsackService{
      * @return
      */
     int updateFood(TbNumberVo tbNumberVo);
+
+    void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack);
 }
