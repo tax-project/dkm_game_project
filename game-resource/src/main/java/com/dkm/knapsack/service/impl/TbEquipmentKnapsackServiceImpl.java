@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +65,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     ITbEquipmentService tbEquipmentService;
     @Autowired
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
-    @Autowired
+    @Resource
     private UserFeignClient userFeignClient;
     @Override
     public List<TbEquipmentKnapsackVo> selectUserId() {
@@ -99,7 +100,49 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     public List<TbEquipmentKnapsackVo> selectFoodIdTwo() {
         return tbEquipmentKnapsackMapper.selectFoodIdTwo(localUser.getUser().getId());
     }
-
+    @Override
+    public void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack) {
+        //首先判断食物id不为空 然后查询出该用户是否有这个食物
+        if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0) {
+            TbKnapsack tbKnapsack = new TbKnapsack();
+            tbKnapsack.setUserId(localUser.getUser().getId());
+            List<TbKnapsack> list1 = tbKnapsackService.findById(tbKnapsack);
+            //背包主键
+            Long knapsackId = null;
+            if (!StringUtils.isEmpty(list1)) {
+                for (TbKnapsack knapsack : list1) {
+                    //传入背包主键
+                    knapsackId = knapsack.getKnapsackId();
+                }
+            }
+            QueryWrapper queryWrapper=new QueryWrapper();
+            queryWrapper.eq("knapsack_id",knapsackId);
+            queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
+            List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+            if(!StringUtils.isEmpty(list)){
+                //食物背包表主键
+                Long tekId=null;
+                Integer number=null;
+                for (TbEquipmentKnapsack equipmentKnapsackOne : list) {
+                    tekId=equipmentKnapsackOne.getTekId();
+                    number=equipmentKnapsackOne.getFoodNumber()+tbEquipmentKnapsack.getFoodNumber();
+                }
+                QueryWrapper queryWrapper1=new QueryWrapper();
+                queryWrapper1.eq("tek_id",tekId);
+                TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack1.setFoodNumber(number);
+                int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                if(rows <= 0){
+                    //如果失败将回滚
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+                }
+            }else{
+                fz(tbEquipmentKnapsack,2);
+            }
+        }else{
+            fz(tbEquipmentKnapsack,2);
+        }
+    }
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
 
@@ -138,11 +181,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
                 }
             }else{
-                fz(tbEquipmentKnapsack);
+                fz(tbEquipmentKnapsack,1);
             }
         //没有就给它增加
         }else{
-            fz(tbEquipmentKnapsack);
+            fz(tbEquipmentKnapsack,1);
         }
     }
 
@@ -551,6 +594,8 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+
+
     public void too(Long tekId){
         Integer userInfoRenown;
         //根据tekId 查到装备的主键
@@ -591,9 +636,18 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             }
         }
     }
-    public void fz(TbEquipmentKnapsack tbEquipmentKnapsack){
+    public void fz(TbEquipmentKnapsack tbEquipmentKnapsack,int type){
         TbKnapsack tbKnapsack=new TbKnapsack();
-        tbKnapsack.setUserId(localUser.getUser().getId());
+        //==2 代表是老钟的增加
+        if(type==2){
+            tbEquipmentKnapsack.setTekIsva(1);
+            tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setTekDaoju(3);
+            tbKnapsack.setUserId(tbEquipmentKnapsack.getUserId());
+        }else if(type==1){
+            tbKnapsack.setUserId(localUser.getUser().getId());
+        }
+
         tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
 

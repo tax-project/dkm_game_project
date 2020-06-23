@@ -63,6 +63,12 @@ public class TbEquipmentKnapsackController {
         tbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
     }
 
+    @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功")
+    @PostMapping("/addTbEquipmentKnapsackThree")
+    public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
+        tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack);
+    }
+
     /**
      * 增加特权商品到背包的方法
      * 自动判断这个商品有没有进背包 没有则增加 否则修改
