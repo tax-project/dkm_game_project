@@ -488,15 +488,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId) {
-        if(StringUtils.isEmpty(tbEquipmentKnapsackMapper.selectFoodId(userId))){
-            List<TbEquipmentKnapsackVo> list=new ArrayList<>();
-            TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
-            list.add(tbEquipmentKnapsackVo);
-            return list;
-        }else{
-            return tbEquipmentKnapsackMapper.selectFoodId(userId);
-        }
-
+        return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
 
     @Override
