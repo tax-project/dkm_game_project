@@ -19,13 +19,12 @@ public class MineItemEntity {
     private Long goldItemId;
     @TableId
     private Long familyId;
-    private Long battleId; // 内部使用
+    private Long battleId;
+    // 内部使用
     private Long userId;
     private Integer local;
     private LocalDateTime fightEndDate;
     private LocalDateTime fightStartDate;
     private Integer level;
     private Integer itemIndex;
-    private Integer locationX;
-    private Integer locationY;
 }
