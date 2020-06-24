@@ -7,7 +7,7 @@
 		<id column="shop_id" property="shopId" />
 		<result column="shop_name" property="shopName" />
 		<result column="shop_money" property="shopMoney" />
-		<result column="exp1" property="exp1" />
+		<result column="ts_id" property="tsId" />
 		<result column="exp2" property="exp2" />
 		<result column="exp3" property="exp3" />
 		<result column="shop_image" property="shopImage" />
