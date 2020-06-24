@@ -74,7 +74,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/Attendant/queryAidMaster")
-    Map<String,Object> queryAidMaster();
+    Result<Map<String,Object>> queryAidMaster();
 
     /**
      * 根据用户id查看主人
@@ -82,6 +82,6 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/queryAid")
-    Map<String,Object> queryAid(@RequestParam(value = "userId") Long userId);
+    Result<Map<String,Object>> queryAid(@RequestParam(value = "userId") Long userId);
 
 }
