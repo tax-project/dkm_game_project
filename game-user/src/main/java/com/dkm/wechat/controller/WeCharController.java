@@ -98,7 +98,6 @@ public class WeCharController {
         return weChatService.queryUser(id);
     }
 
-
     @PostMapping("/queryAllHeardByUserId")
     public List<UserHeardUrlBo> queryAllHeardByUserId (@RequestBody ParamBo bo) {
         if (bo.getList() == null) {
