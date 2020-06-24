@@ -52,5 +52,15 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
+   @Override
+   public Result<Map<String, Object>> queryAidMaster() {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result<Map<String, Object>> queryAid(Long userId) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
 
 }

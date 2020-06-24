@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -47,6 +48,9 @@ public class MineServiceImpl implements IMineService {
     @Resource
     private FamilyDao familyDao;
 
+    @Autowired
+    UserFeignClient userFeignClient;
+
     @Override
     public GoldMineVo getFamilyGoldMine(Long familyId) {
         if (!familyService.familyExists(familyId)) {
@@ -62,7 +66,8 @@ public class MineServiceImpl implements IMineService {
         }
         GoldMineVo goldMineVo = new GoldMineVo();
         goldMineVo.setFamilyId(familyId);
-        val familyGrade = familyDao.selectById(familyId).getFamilyGrade(); //等级
+        val familyGrade = familyDao.selectById(familyId).getFamilyGrade();
+        //等级
         goldMineVo.setFamilyLevel(familyGrade);
         goldMineVo.setGoldMineId(mineEntity.getId());
         val goldItems = goldMineVo.getGoldItems();
@@ -71,8 +76,6 @@ public class MineServiceImpl implements IMineService {
             itemVo.setGoldItemId(item.getGoldItemId());
             itemVo.setOccupied(item.getUserId() != 0);
             itemVo.setIndex(item.getItemIndex());
-            itemVo.setLocationX(item.getLocationX());
-            itemVo.setLocationY(item.getLocationY());
             itemVo.setLevel(item.getLevel());
             itemVo.setPrivateItem(item.getLocal() == 0);
             goldItems.add(itemVo);
@@ -82,35 +85,37 @@ public class MineServiceImpl implements IMineService {
     }
 
 
+    @Override
     public void createNewMineByFamilyId(Long familyId) {
         val entity = new MineEntity();
         entity.setFamilyId(familyId);
         val battleId = idGenerator.getNumberId();
         entity.setId(battleId);
         mineMapper.insert(entity);
-        val levelList = Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 12, 13, 14, 14);
-        val pairSet = new HashSet<DataPair>();
-        for (int i = 0; i < 5; i++) {
-            pairSet.add(randomLocation(true));
-
+        val privateList = Arrays.asList(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4);
+        val items = new ArrayList<Pair<Boolean, Integer>>();
+        for (Integer level : privateList) {
+            items.add(Pair.of(false, level));
         }
-        while (pairSet.size() != levelList.size()) {
-            pairSet.add(randomLocation(false));
+        for (int i = 0; i < 41; i++) {
+            items.add(Pair.of(true, randomLevel(3, 10)));
         }
-        val pairArr = pairSet.toArray(new DataPair[0]);
-        for (int i = 0; i < pairArr.length; i++) {
+        for (int i = 0; i < items.size(); i++) {
+            val integerPair = items.get(i);
             val mineItemEntity = new MineItemEntity();
             mineItemEntity.setGoldItemId(idGenerator.getNumberId());
             mineItemEntity.setFamilyId(familyId);
             mineItemEntity.setBattleId(battleId);
-            mineItemEntity.setLevel(levelList.get(i));
-            val dataPair = pairArr[i];
-            mineItemEntity.setLocal(checkLocal(dataPair) ? 0 : 1);
+            mineItemEntity.setLevel(integerPair.getSecond());
+            mineItemEntity.setLocal(integerPair.getFirst() ? 0 : 1);
             mineItemEntity.setItemIndex(i);
-            mineItemEntity.setLocationX(dataPair.getX());
-            mineItemEntity.setLocationY(dataPair.getY());
             mineItemMapper.insert(mineItemEntity);
         }
+
+    }
+
+    private int randomLevel(int min, int max) {
+        return new Random().nextInt(max - min) + min;
     }
 
     @Override
@@ -125,7 +130,8 @@ public class MineServiceImpl implements IMineService {
         npcVo.getProfitPerHour().setGold(goldItemLevel.getGoldYield());
         npcVo.getProfitPerHour().setIntegral(goldItemLevel.getIntegralYield());
         npcVo.setUserId(itemEntity.getUserId());
-        val familyGrade = familyDao.selectById(familyId).getFamilyGrade(); //等级
+        val familyGrade = familyDao.selectById(familyId).getFamilyGrade();
+        //等级
         npcVo.setOurLevel(familyGrade);
         npcVo.setUserFamilyId(itemEntity.getFamilyId());
         if (itemEntity.getUserId() == 0) {
@@ -135,7 +141,7 @@ public class MineServiceImpl implements IMineService {
             npcVo.setNpcLevel(goldItemLevel.getNpcLevel());
             npcVo.setOccupiedStartDate("");
             npcVo.setOccupiedEndDate("");
-            npcVo.setSuccessRate((((npcVo.getOurLevel() * 100.0) / (npcVo.getNpcLevel() * 100.0 + npcVo.getOurLevel() * 100.0))* 100.0)/1 + "%");
+            npcVo.setSuccessRate((((npcVo.getOurLevel() * 100.0) / (npcVo.getNpcLevel() * 100.0 + npcVo.getOurLevel() * 100.0)) * 100.0) / 1 + "%");
 
         } else {
             npcVo.setNpc(false);
@@ -175,14 +181,13 @@ public class MineServiceImpl implements IMineService {
         val itemEntity = mineItemMapper.selectByBattleIdAndGoldItemId(familyId, goldItemId);
 
         val familyEntity = familyDao.selectById(familyId);
-        if (familyEntity == null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR,"用户不属于此家族");
+        if (familyEntity == null) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "用户不属于此家族");
         }
         val familyGrade = familyEntity.getFamilyGrade(); //等级
-
-        if (itemEntity.getLevel() > familyGrade &&(itemEntity.getLevel() - familyGrade) > 3 ){
+        if (itemEntity.getLevel() > familyGrade && (itemEntity.getLevel() - familyGrade) > 3) {
             fightVo.setFightStatus(false);
-        }else {
+        } else {
             fightVo.setFightStatus(true);
             itemEntity.setUserId(userId);
             itemEntity.setFightStartDate(LocalDateTime.now());
@@ -196,15 +201,15 @@ public class MineServiceImpl implements IMineService {
     public FightKillVo fightKill(Long familyId, Long goldItemId, Long userId) {
         val fightKillVo = new FightKillVo();
         val itemEntity = mineItemMapper.selectByBattleIdAndGoldItemId(familyId, goldItemId);
-        if (!itemEntity.getUserId().equals(userId)){
+        if (!itemEntity.getUserId().equals(userId)) {
             fightKillVo.setKill(false);
             fightKillVo.setKillMessage("呐，你不能阻止其他人挖矿啊");
-        }else {
-            Pair<Long, Long>  longLongPair;
+        } else {
+            Pair<Long, Long> longLongPair;
             try {
                 longLongPair = disOccupied(itemEntity);
             } catch (ParseException e) {
-                throw new ApplicationException(CodeType.SERVICE_ERROR,e.getMessage());
+                throw new ApplicationException(CodeType.SERVICE_ERROR, e.getMessage());
             }
             fightKillVo.setAddIntegral(Math.toIntExact(longLongPair.getSecond()));
             fightKillVo.setAddMoney(Math.toIntExact(longLongPair.getFirst()));
@@ -213,13 +218,10 @@ public class MineServiceImpl implements IMineService {
         return fightKillVo;
     }
 
-    @Autowired
-    UserFeignClient userFeignClient;
-
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private  Pair<Long, Long> disOccupied(MineItemEntity itemEntity) throws ParseException {
+    private Pair<Long, Long> disOccupied(MineItemEntity itemEntity) throws ParseException {
         //数据结束，销毁！
         val moneyAndIntegral = getMoneyAndIntegral(itemEntity);
         val userInfoBO = new UserInfoBO();
@@ -254,35 +256,6 @@ public class MineServiceImpl implements IMineService {
 
     }
 
-
-    /**
-     * 是否为私有地址
-     *
-     * @param dataPair
-     * @return
-     */
-    private Boolean checkLocal(DataPair dataPair) {
-        return dataPair.getX() < 6 && dataPair.getY() < 6;
-    }
-
-    /**
-     * 随机地址生成
-     *
-     * @param local 是否生成私有地址
-     * @return
-     */
-    private DataPair randomLocation(boolean local) {
-        int x;
-        int y;
-        if (local) {
-            x = new Random().nextInt(4) + 2;
-            y = new Random().nextInt(4) + 2;
-        } else {
-            x = new Random().nextInt(15) + 2;
-            y = new Random().nextInt(16) + 2;
-        }
-        return new DataPair(x, y);
-    }
 
     private boolean goldMineNotExists(Long familyId) {
         return mineMapper.selectMineByFamilyId(familyId) == null;
