@@ -9,6 +9,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.utils.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -77,7 +78,11 @@ public class ApparelMarketController {
     @CheckToken
     @GetMapping("/getPuttingApparel")
     public List<ApparelMarketDetailVo> puttingApparel(){
-        return apparelMarketService.puttingApparel(localUser.getUser().getId());
+        List<ApparelMarketDetailVo> apparelMarketDetailVos = apparelMarketService.puttingApparel(localUser.getUser().getId());
+        for (ApparelMarketDetailVo a : apparelMarketDetailVos) {
+            a.setTime(DateUtils.formatDateTime(a.getMaturityTime()));
+        }
+        return apparelMarketDetailVos;
     }
 
     @ApiOperation("交易记录")
@@ -88,4 +93,11 @@ public class ApparelMarketController {
         return apparelMarketService.getApparelOrders(localUser.getUser().getId());
     }
 
+//    @ApiOperation("交易记录")
+//    @CrossOrigin
+//    @CheckToken
+//    @GetMapping("/getOrders")
+//    public List<ApparelOrderVo> getOrders(){
+//        return apparelMarketService.getApparelOrders(localUser.getUser().getId());
+//    }
 }

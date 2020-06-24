@@ -1,10 +1,9 @@
 package com.dkm.turntable.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.dkm.pets.dao.FoodDetailMapper;
-import com.dkm.pets.entity.FoodDetailEntity;
+import com.dkm.turntable.dao.GoodsMapper;
 import com.dkm.turntable.dao.TurntableDao;
-import com.dkm.turntable.entity.TurntableEntity;
+import com.dkm.turntable.entity.GoodsEntity;
 import com.dkm.turntable.entity.vo.TurntableInfoVo;
 import com.dkm.turntable.service.ITurntableService;
 import org.springframework.stereotype.Service;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @program: game_project
@@ -29,19 +26,19 @@ public class TurntableServiceImpl implements ITurntableService {
     private TurntableDao turntableDao;
 
     @Resource
-    private FoodDetailMapper foodDetailMapper;
+    private GoodsMapper goodsMapper;
 
     @Override
     public List<TurntableInfoVo> getTurntable(Long userId, Integer type) {
-        List<FoodDetailEntity> foodDetailEntities = foodDetailMapper.selectList(null);
+        List<GoodsEntity> foodDetailEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType,3));
         List<TurntableInfoVo> result = new ArrayList<>();
         foodDetailEntities.forEach(a->{
             TurntableInfoVo b = new TurntableInfoVo();
-            b.setName(a.getFoodName());
+            b.setName(a.getName());
             b.setNumber(type);
-            b.setUrl(a.getFoodUrl());
+            b.setUrl(a.getUrl());
             result.add(b);
-            if("蜂蜜".equals(a.getFoodName())) {
+            if("蜂蜜".equals(a.getName())) {
                 TurntableInfoVo c = b;
                 c.setNumber(type*3);
                 result.add(c);
