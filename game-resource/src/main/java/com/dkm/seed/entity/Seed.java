@@ -28,38 +28,28 @@ public class Seed {
      * 种子等级
      */
     private Integer seedGrade;
-    /**
-     * 种子成熟时间
-     */
-    private LocalDateTime seedGrowuptime;
+
+
     /**
      *种子产出的金币
      */
     private Integer seedProdgold;
+
     /**
      *
      */
     private Integer seedProdred;
+
     /**
      *种子产出的经验
      */
     private Integer seedExperience;
+
     /**
      *种子种植金币
      */
     private Integer seedGold;
-    /**
-     *
-     */
-    private String exp1;
-    /**
-     *种子解锁金币
-     */
-    private Integer exp2;
-    /**
-     *
-     */
-    private String exp3;
+
     /**
      *种子图片
      */

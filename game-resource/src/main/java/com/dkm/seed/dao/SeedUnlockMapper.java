@@ -1,4 +1,4 @@
-package com.dkm.seed.dao.mapper;
+package com.dkm.seed.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.seed.entity.SeedUnlock;
