@@ -51,7 +51,7 @@ public class PersonalCenterController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> selectAll(){
-        Map<String,Object> map=new HashMap<>(2);
+        Map<String,Object> map=new HashMap<>(6);
         UserLoginQuery user = localUser.getUser();
         //黑屋的用户信息对象
         map.put("personal",resourceFeignClient.personalCenterAll(user.getId()));
@@ -85,7 +85,7 @@ public class PersonalCenterController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> findById(@PathVariable("userId") Long userId){
-        Map<String,Object> map=new HashMap<>(2);
+        Map<String,Object> map=new HashMap<>(6);
 
         map.put("personal",resourceFeignClient.personalCenterAll(userId));
 
