@@ -5,6 +5,7 @@ import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.FamilyGoldInfoVo;
 import com.dkm.family.entity.vo.FamilyImgsVo;
 import com.dkm.family.entity.vo.HotFamilyVo;
+import com.dkm.family.entity.vo.UserInfoVo;
 import com.dkm.union.entity.vo.UnionFamilyInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -42,4 +43,8 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
 
     @Select("SELECT family_id,family_user_number,family_name,family_introduce,family_welcome_words FROM tb_family WHERE union_id = #{unionId}")
     List<UnionFamilyInfoVo> getUnionFamily(@Param("unionId") Long unionId);
+
+
+    @Select("SELECT we_chat_nick_name,we_chat_head_img_url from tb_user WHERE user_id = #{userId}")
+    UserInfoVo getUserinfoById(@Param("userId")Long userId);
 }

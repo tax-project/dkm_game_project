@@ -165,7 +165,7 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public UserCenterGiftVo getUserCenterGift(Long userId) {
-        GiftRankingEntity one = giftRankingDao.getOne(new LambdaQueryWrapper<GiftRankingEntity>().eq(GiftRankingEntity::getUserId, userId));
+        GiftRankingEntity one = giftRankingDao.selectOne(userId);
         UserCenterGiftVo userCenterGiftVo = new UserCenterGiftVo();
         if(one==null){
             userCenterGiftVo.setAccept(0);

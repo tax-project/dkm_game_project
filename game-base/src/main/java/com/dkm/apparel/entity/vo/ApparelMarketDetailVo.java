@@ -1,6 +1,7 @@
 package com.dkm.apparel.entity.vo;
 
 import com.dkm.apparel.entity.ApparelEntity;
+import com.dkm.apparel.entity.ApparelMarketEntity;
 import com.dkm.apparel.entity.ApparelUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,9 +14,10 @@ import lombok.EqualsAndHashCode;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ApparelMarketDetailVo extends ApparelUserEntity {
+public class ApparelMarketDetailVo extends ApparelMarketEntity {
     private String apparelUrl;
     private Integer apparelGold;
     private Integer apparelSex;
     private String apparelName;
+    private String time;
 }
