@@ -894,11 +894,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
 
     @Override
-    public Map<String,Object> queryAidUser(Long userId) {
+    public Map<String,Object> queryAidUser() {
         //得到用户登录的token信息
+        UserLoginQuery query = localUser.getUser();
+
         Map<String,Object> map=new HashMap<>();
         //主人信息
-        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(userId);
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
         if(attendantUserVo == null){
             map.put("msg","没有主人");
         }else{

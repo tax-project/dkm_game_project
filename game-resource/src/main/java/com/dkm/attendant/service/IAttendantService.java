@@ -88,7 +88,7 @@ public interface IAttendantService {
      * 查询自己的一个主人信息
      * @return
      */
-    Map<String,Object> queryAidUser(Long userId);
+    Map<String,Object> queryAidUser();
 
 
     /**
