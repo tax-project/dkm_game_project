@@ -55,6 +55,8 @@ public class PersonalCenterController {
         UserLoginQuery user = localUser.getUser();
         //黑屋的用户信息对象
         map.put("personal",resourceFeignClient.personalCenterAll(user.getId()));
+        //主人信息
+        map.put("queryAidUser",resourceFeignClient.queryAidMaster());
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(user.getId()));
         //用户勋章数
@@ -88,6 +90,9 @@ public class PersonalCenterController {
         Map<String,Object> map=new HashMap<>(6);
 
         map.put("personal",resourceFeignClient.personalCenterAll(userId));
+
+        //主人信息
+        map.put("queryAid",resourceFeignClient.queryAid(userId));
 
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(userId));

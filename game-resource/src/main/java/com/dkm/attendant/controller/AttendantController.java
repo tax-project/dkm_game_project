@@ -199,5 +199,14 @@ public class AttendantController {
         return iAttendantService.queryAidUser();
     }
 
+    /**
+     * 内部调用
+     * @return
+     */
+    @GetMapping("/queryAid")
+    public Map<String,Object> queryAid(@RequestParam(value = "userId") Long userId){
+        return iAttendantService.queryAid(userId);
+    }
+
 
 }

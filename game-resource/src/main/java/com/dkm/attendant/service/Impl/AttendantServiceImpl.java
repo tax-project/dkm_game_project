@@ -911,6 +911,19 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
+    public Map<String, Object> queryAid(Long userId) {
+        Map<String,Object> map=new HashMap<>();
+        //主人信息
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(userId);
+        if(attendantUserVo == null){
+            map.put("msg","没有主人");
+        }else{
+            map.put("attendantUserVo",attendantUserVo);
+        }
+        return null;
+    }
+
+    @Override
     public List<AttenDant> listAttenDant() {
         return attendantMapper.selectList(null);
     }
