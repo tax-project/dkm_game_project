@@ -158,7 +158,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         Map<String,Object> map=new HashMap<>(16);
 
         //跟班
-        List<AttendantImgVo> AttendantImg=new ArrayList();
+        List<AttendantImgVo> attendantImg= new ArrayList<>();
 
         LambdaQueryWrapper<AttendantUser> queryWrapper = new LambdaQueryWrapper<AttendantUser>()
                         .eq(AttendantUser::getUserId,userId);
@@ -181,16 +181,16 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                 //放入对象
                 attendantImgVo.setWeChatHeadImgUrl(attenDant.getAtImg());
 
-                AttendantImg.add(attendantImgVo);
+                attendantImg.add(attendantImgVo);
             }
 
 
             //等于0就是用户跟班
             if(attendantUsers.get(i).getAttendantId()==0){
 
-                    AttendantImgVo attendantImgVo=new AttendantImgVo();
-                    attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
-                    AttendantImg.add(attendantImgVo);
+                AttendantImgVo attendantImgVo=new AttendantImgVo();
+                attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
+                attendantImg.add(attendantImgVo);
             }
 
         }
@@ -198,11 +198,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
-        for (int i = 0; i < attendantPutVos.size(); i++) {
 
-        }
 
-        map.put("AttendantImg",AttendantImg);
+        map.put("attendantImg",attendantImg);
 
         if(attendantPutVos.size()==0){
             map.put("attendantPutVos","暂无产出，快去抓跟班吧");
