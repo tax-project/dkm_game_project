@@ -69,4 +69,7 @@ public interface ResourceFeignClient {
     @GetMapping("/Seed/queryUserIdSeeds")
     Result<List<SeedPlantUnlock>>  queryUserIdSeed(Long userId);
 
+    @GetMapping("/Attendant/queryAidUser")
+    Map<String,Object> queryAidUser(@RequestParam(value = "userId") Long userId);
+
 }

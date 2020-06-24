@@ -180,14 +180,13 @@ public class AttendantController {
 
     /**
      * 查询自己的一个主人信息
+     * userid 主人的userid
+     *
      * @return
      */
-    @ApiOperation(value = "查询自己的一个主人信息",notes = "成功返回数据 反则为空")
     @GetMapping("/queryAidUser")
-    @CrossOrigin
-    @CheckToken
-    public Map<String,Object> queryAidUser(){
-        return iAttendantService.queryAidUser();
+    public Map<String,Object> queryAidUser(@RequestParam(value = "userId") Long userId){
+        return iAttendantService.queryAidUser(userId);
     }
 
 

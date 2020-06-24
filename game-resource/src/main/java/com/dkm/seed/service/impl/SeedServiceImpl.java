@@ -199,6 +199,7 @@ public class SeedServiceImpl implements ISeedService {
                     if (seedVo.getSeedId() != 1) {
                         //下标减一 就得到当前种子前面一个种子的状态是否解锁 如果没有解锁就不能解锁当前种子
                         if (seedUnlocks.get(i - 1).getSeedStatus() != 1) {
+                            System.out.println("请先解锁前面的种子 ="   + "请先解锁前面的种子");
                             throw new ApplicationException(CodeType.SERVICE_ERROR, "请先解锁前面的种子");
                         }
                     }
@@ -208,6 +209,7 @@ public class SeedServiceImpl implements ISeedService {
 
         //限制一天只能解锁7次
         if(TackBackLimit(user.getId(),7)){
+            System.out.println("解锁 = " + "解锁");
            return unlockSeed(seedVo);
         }else{
             throw new ApplicationException(CodeType.SERVICE_ERROR,"今天解锁的次数已超出");
