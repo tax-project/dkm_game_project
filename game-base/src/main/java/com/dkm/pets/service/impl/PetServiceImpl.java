@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -121,8 +118,7 @@ public class PetServiceImpl implements PetService {
                 eatFoodDto.setFoodId(foodDetailEntity.getId());
                 //奶瓶数量
                 eatFoodDto.setENumber(1);
-                Integer foodNumber = listResult.getData().stream().filter(item -> item.getFoodId()==goodsEntities.size()-1).collect(Collectors.toList()).get(0).getFoodNumber();
-                eatFoodDto.setFoodNumber(foodNumber);
+                eatFoodDto.setFoodNumber(listResult.getData().stream().filter(item -> item.getFoodId()==3).collect(Collectors.toList()).get(0).getFoodNumber());
                 role.add(eatFoodDto);
             } else {
                 //10级之后才喂食鱼干 >> 喂食种类

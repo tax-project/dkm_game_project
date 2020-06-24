@@ -3,6 +3,7 @@ package com.dkm.gift.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @program: game_project
@@ -12,6 +13,8 @@ import lombok.Data;
  **/
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SendGiftVo {
     /**
      * 送礼人userId

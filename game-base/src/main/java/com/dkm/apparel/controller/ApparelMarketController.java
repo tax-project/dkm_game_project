@@ -93,4 +93,11 @@ public class ApparelMarketController {
         return apparelMarketService.getApparelOrders(localUser.getUser().getId());
     }
 
+//    @ApiOperation("交易记录")
+//    @CrossOrigin
+//    @CheckToken
+//    @GetMapping("/getOrders")
+//    public List<ApparelOrderVo> getOrders(){
+//        return apparelMarketService.getApparelOrders(localUser.getUser().getId());
+//    }
 }

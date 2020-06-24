@@ -23,7 +23,5 @@ public class GoodsEntity {
     private Integer goodType;
     private String goodContent;
     private Integer goodMoney;
-    private String exp1;
-    private String exp2;
     private String tabUrl;
 }
