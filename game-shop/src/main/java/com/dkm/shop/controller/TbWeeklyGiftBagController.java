@@ -37,16 +37,24 @@ public class TbWeeklyGiftBagController {
      */
     @ApiOperation(value = "查询所有每周礼包的数据",notes = "如果查询成功返回每周礼包商据的json,没有则返回空")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priId",value = "特权商城主键"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priName",value = "商品名字"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priContent",value = "商品详情"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priType",value = "商品购买类型 1为财富卷 2为钻石"),
-            @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "priMoney",value = "商品价格"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp1",value = "需要财富十级购买 1代表十级"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "拓展字段2"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "拓展字段3"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "priImg",value = "商品图片"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "prContentOne",value = "小详情")
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgId",value = "每周礼包主键"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "twgTitle",value = "商品标题"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "twgImg",value = "商品图片"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "twgContnet",value = "商品描述"),
+            @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "twgMoney",value = "价格花费钻石"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgQuan",value = "商品所得卷"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twiQid",value = "物品表外键 卷的外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgJinbi",value = "商品所得金币"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgTiliId",value = "物品表外键 体力瓶外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgTili",value = "商品所得体力瓶"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgJinId",value = "物品表外键 技能外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgJin",value = "商品所得技能道具"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgLuckyId",value = "物品表外键 幸运星外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgLucky",value = "商品幸运星"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgSpId",value = "物品表外键万能碎片外键"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgSp",value = "商品万能碎片"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "twgWnsp",value = "商品传奇碎片"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "twgWnspId",value = "物品表外键传奇碎片外键"),
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
