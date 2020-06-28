@@ -131,18 +131,6 @@ public class SeedController {
     }
 
 
-    @GetMapping("/testTime")
-    public void testTime(@RequestParam("userId") Long userId){
-
-        if(TackBackLimit(userId,7)){
-            System.out.println("正常重置密码！");
-        }else{
-            System.out.println("今天已经超出次数限制！");
-        }
-    }
-
-
-
     /**
      * 根据用户id查询已解锁的种子
      */

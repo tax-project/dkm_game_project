@@ -95,7 +95,7 @@ public interface IAttendantService {
      * @param userId
      * @return
      */
-    Map<String,Object> queryAid(Long userId);
+    Map<String,Object> queryUserIdMaster(Long userId);
 
 
     /**
