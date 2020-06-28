@@ -27,7 +27,7 @@ public class TimeLimit {
 
         if(todayMap==null){
 
-            todayMap = new HashMap<Long,Integer>();
+            todayMap = new HashMap<Long,Integer>(16);
             todayMap.put(userId, 1);
             accountPwdCount.put(oneKey, todayMap);
 
