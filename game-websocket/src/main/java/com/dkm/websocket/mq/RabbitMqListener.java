@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.utils.StringUtils;
+import com.dkm.websocket.entity.SenMsg;
 import com.dkm.websocket.utils.ChannelManyGroups;
 import com.dkm.websocket.utils.GroupUtils;
 import io.netty.channel.Channel;
@@ -13,6 +14,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.Header;
@@ -120,9 +122,12 @@ public class RabbitMqListener {
          //将建立群聊的channel管理起来
          channelManyGroups.addList(channels);
 
+         SenMsg senMsg = new SenMsg();
+         BeanUtils.copyProperties(msgInfo, senMsg);
+
          //将消息群发
-         log.info("消息群发:" +msgInfo);
-         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         log.info("消息群发:" +senMsg);
+         channelManyGroups.broadcast(new TextWebSocketFrame(JSON.toJSONString(senMsg)));
 
          try {
             mqChannel.basicAck(deliveryTag,true);

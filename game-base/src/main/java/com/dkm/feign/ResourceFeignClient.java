@@ -81,7 +81,7 @@ public interface ResourceFeignClient {
      * @param userId
      * @return
      */
-    @GetMapping("/queryAid")
-    Result<Map<String,Object>> queryAid(@RequestParam(value = "userId") Long userId);
+    @GetMapping("/Attendant/queryUserIdMaster")
+    Result<Map<String,Object>> queryUserIdMaster(@RequestParam(value = "userId") Long userId);
 
 }

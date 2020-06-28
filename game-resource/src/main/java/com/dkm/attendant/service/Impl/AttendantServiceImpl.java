@@ -899,6 +899,7 @@ public class AttendantServiceImpl implements IAttendantService {
         UserLoginQuery query = localUser.getUser();
 
         Map<String,Object> map=new HashMap<>();
+
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
         if(attendantUserVo == null){
@@ -911,8 +912,9 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public Map<String, Object> queryAid(Long userId) {
+    public Map<String, Object> queryUserIdMaster(Long userId) {
         Map<String,Object> map=new HashMap<>();
+        System.out.println("query = " + userId);
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(userId);
         if(attendantUserVo == null){
@@ -920,7 +922,7 @@ public class AttendantServiceImpl implements IAttendantService {
         }else{
             map.put("attendantUserVo",attendantUserVo);
         }
-        return null;
+        return map;
     }
 
     @Override

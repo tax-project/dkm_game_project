@@ -203,9 +203,10 @@ public class AttendantController {
      * 内部调用
      * @return
      */
-    @GetMapping("/queryAid")
-    public Map<String,Object> queryAid(@RequestParam(value = "userId") Long userId){
-        return iAttendantService.queryAid(userId);
+    @GetMapping("/queryUserIdMaster")
+    @CrossOrigin
+    public Map<String,Object> queryUserIdMaster(Long userId){
+        return iAttendantService.queryUserIdMaster(userId);
     }
 
 

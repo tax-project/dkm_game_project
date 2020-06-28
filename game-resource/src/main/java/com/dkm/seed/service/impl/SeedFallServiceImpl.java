@@ -23,6 +23,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dkm.seed.vilidata.RandomUtils.*;
+
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: game_project
@@ -100,9 +102,9 @@ public class SeedFallServiceImpl implements ISeedFallService {
             }
 
             //true 掉落红包   false 没有红包掉落
-            boolean produceGoldRed = randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
+            boolean produceGoldRed =isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
             if(produceGoldRed){
-                money = randomUtils.NumberRedPacketsDropped();
+                money = NumberRedPacketsDropped();
 
                 seedsFall.setDropRedEnvelope(money);
 
@@ -111,7 +113,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
             }
 
             //掉落花
-            Integer integer = randomUtils.fallingFlowers();
+            Integer integer =fallingFlowers();
             seedsFall.setDropFallingFlowers(integer);
 
             goldOrMoneyVo.setDropFallingFlowers(integer);
@@ -128,6 +130,8 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
         return GoldOrMoneyVolist;
     }
+
+
 
     @Override
     public List<Double> redBagDroppedSeparately(Double money) {
