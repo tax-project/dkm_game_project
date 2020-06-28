@@ -67,4 +67,9 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      */
      Integer updateProduceStatus (List<Long> list);
 
+    /**
+     * 随机查询一个跟班
+     */
+    AttenDant queryAttendant();
+
 }

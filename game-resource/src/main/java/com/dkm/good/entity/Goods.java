@@ -36,4 +36,10 @@ public class Goods extends Model<Goods> {
     *  3--食物
     */
    private Integer goodType;
+
+   private String goodContent;
+
+   private Integer goodMoney;
+
+   private String tabUrl;
 }

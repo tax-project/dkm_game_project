@@ -4,16 +4,14 @@ import lombok.Data;
 
 @Data
 public class MineItemVo {
-    int index;
-    Long goldItemId;
-    boolean privateItem;
-    int level;
-    int locationX;
-    int locationY;
+    private int index;
+    private Long goldItemId;
+    private boolean privateItem;
+    private int level;
     /**
      * 被占领
      */
-    boolean occupied;
+    private boolean occupied;
 
 
 }

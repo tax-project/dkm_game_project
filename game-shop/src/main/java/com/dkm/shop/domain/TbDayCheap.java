@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 
 
-import java.io.Serializable;
 
 /**
  * <p>
@@ -22,6 +22,7 @@ import java.io.Serializable;
  * @since 2020-05-09
  */
 @TableName("tb_day_cheap")
+@Data
 public class TbDayCheap extends Model<TbDayCheap> {
 
     private static final long serialVersionUID = 1L;
@@ -31,113 +32,75 @@ public class TbDayCheap extends Model<TbDayCheap> {
      */
     @TableId("cheap_id")
 	private Long cheapId;
-	@TableField("good_id")
-	private Long goodId;
-    /**
-     * 特惠名称
-     */
+	/**
+	 * 特惠图片
+	 */
+	@TableField("cheap_img")
+	private String cheapImg;
+	/**
+	 * 特惠名称
+	 */
 	@TableField("cheap_name")
 	private String cheapName;
-    /**
-     * 特惠内容
-     */
+	/**
+	 * 特惠内容
+	 */
 	@TableField("cheap_info")
 	private String cheapInfo;
-    /**
-     * 特惠价格
-     */
+	/**
+	 * 特惠价格
+	 */
 	@TableField("cheap_money")
 	private BigDecimal cheapMoney;
-	@TableField("cheap_gold")
-	private Integer cheapGold;
+	/**
+	 * 蜂蜜id
+	 */
+	@TableField("food_id")
+	private Long foodId;
+	/**
+	 * 蜂蜜数量
+	 */
+	@TableField("food_fm")
+	private Integer foodFm;
+	/**
+	 * 钻石数量
+	 */
 	@TableField("cheap_dm")
 	private Integer cheapDm;
-	@TableField("cheap_fm")
-	private Integer cheapFm;
+	/**
+	 * 金币数量
+	 */
+	@TableField("cheap_gold")
+	private Integer cheapGold;
+	/**
+	 * 蓝卷id
+	 */
+	@TableField("lan_id")
+	private Long lanId;
+	/**
+	 * 蓝卷数量
+	 */
+	@TableField("lan_num")
+	private Integer lanNum;
+	/**
+	 * 鱼的id
+	 */
+	@TableField("yu_id")
+	private Long yuId;
+	/**
+	 * 鱼的数量
+	 */
+	@TableField("yu_num")
+	private Integer yuNum;
+	/**
+	 * 闪电id
+	 */
+	@TableField("sd_id")
+	private Long sdId;
+	/**
+	 * 闪电数量
+	 */
+	@TableField("sd_num")
+	private Integer sdNum;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
-
-	public Integer getCheapFm() {
-		return cheapFm;
-	}
-
-	public void setCheapFm(Integer cheapFm) {
-		this.cheapFm = cheapFm;
-	}
-
-	public Long getCheapId() {
-		return cheapId;
-	}
-
-	public void setCheapId(Long cheapId) {
-		this.cheapId = cheapId;
-	}
-
-	public Long getGoodId() {
-		return goodId;
-	}
-
-	public void setGoodId(Long goodId) {
-		this.goodId = goodId;
-	}
-
-	public String getCheapName() {
-		return cheapName;
-	}
-
-	public void setCheapName(String cheapName) {
-		this.cheapName = cheapName;
-	}
-
-	public String getCheapInfo() {
-		return cheapInfo;
-	}
-
-	public void setCheapInfo(String cheapInfo) {
-		this.cheapInfo = cheapInfo;
-	}
-
-	public BigDecimal getCheapMoney() {
-		return cheapMoney;
-	}
-
-	public void setCheapMoney(BigDecimal cheapMoney) {
-		this.cheapMoney = cheapMoney;
-	}
-
-	public Integer getCheapGold() {
-		return cheapGold;
-	}
-
-	public void setCheapGold(Integer cheapGold) {
-		this.cheapGold = cheapGold;
-	}
-
-	public Integer getCheapDm() {
-		return cheapDm;
-	}
-
-	public void setCheapDm(Integer cheapDm) {
-		this.cheapDm = cheapDm;
-	}
-
-	@Override
-	protected Serializable pkVal() {
-		return this.cheapId;
-	}
-
-	@Override
-	public String toString() {
-		return "TbDayCheap{" +
-			"cheapId=" + cheapId +
-			", goodId=" + goodId +
-			", cheapName=" + cheapName +
-			", cheapInfo=" + cheapInfo +
-			", cheapMoney=" + cheapMoney +
-			", cheapGold=" + cheapGold +
-			", cheapDm=" + cheapDm +
-			"}";
-	}
 }

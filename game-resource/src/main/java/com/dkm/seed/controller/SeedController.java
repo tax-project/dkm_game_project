@@ -10,12 +10,15 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
+import com.dkm.seed.vilidata.TimeLimit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,7 @@ public class SeedController {
 
     @Autowired
     private LocalUser localUser;
+
 
     /**
      * 根据用户id得到种子信息
@@ -124,6 +128,17 @@ public class SeedController {
     @CheckToken
     public  List<LandYesVo> queryAlreadyPlantSd(){
         return iSeedService.queryAlreadyPlantSd();
+    }
+
+
+    @GetMapping("/testTime")
+    public void testTime(@RequestParam("userId") Long userId){
+
+        if(TackBackLimit(userId,7)){
+            System.out.println("正常重置密码！");
+        }else{
+            System.out.println("今天已经超出次数限制！");
+        }
     }
 
 

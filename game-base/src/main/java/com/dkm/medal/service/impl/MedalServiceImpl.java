@@ -44,6 +44,6 @@ public class MedalServiceImpl implements MedalService {
 
     @Override
     public Integer getUserMadelNumber(Long userId) {
-        return medalUserDao.count(new QueryWrapper<MedalUserEntity>().lambda().eq(MedalUserEntity::getUserId, userId).gt(MedalUserEntity::getMedalLevel, 0));
+        return medalUserDao.getMedalCount(userId);
     }
 }

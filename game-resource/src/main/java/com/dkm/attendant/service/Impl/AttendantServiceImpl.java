@@ -906,14 +906,21 @@ public class AttendantServiceImpl implements IAttendantService {
         }else{
             map.put("attendantUserVo",attendantUserVo);
         }
-        //自己的信息
-        //Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
-       /* if (userInfoQueryBoResult.getCode() != 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "你他妈就是个傻逼");
-        }
-        map.put("UserInfoQueryBo",userInfoQueryBoResult.getData());*/
 
         return map;
+    }
+
+    @Override
+    public Map<String, Object> queryAid(Long userId) {
+        Map<String,Object> map=new HashMap<>();
+        //主人信息
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(userId);
+        if(attendantUserVo == null){
+            map.put("msg","没有主人");
+        }else{
+            map.put("attendantUserVo",attendantUserVo);
+        }
+        return null;
     }
 
     @Override

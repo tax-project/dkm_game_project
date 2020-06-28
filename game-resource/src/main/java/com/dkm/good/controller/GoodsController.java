@@ -23,8 +23,8 @@ public class GoodsController {
    @Autowired
    private IGoodsService goodsService;
 
-   @PostMapping("/insertGoods")
-   public void insertGoods (@RequestBody GoodsVo vo) {
-      goodsService.insertGood(vo);
-   }
+//   @PostMapping("/insertGoods")
+//   public void insertGoods (@RequestBody GoodsVo vo) {
+//      goodsService.insertGood(vo);
+//   }
 }

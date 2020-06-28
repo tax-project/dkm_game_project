@@ -30,8 +30,7 @@ CREATE TABLE IF NOT EXISTS `tb_family_mine_item`
     fight_start_date DATETIME   NOT NULL DEFAULT '2000-1-1 00:00:00',
     level            INT        NOT NULL COMMENT '等级',
     item_index       INT        NOT NULL COMMENT '位置索引',
-    location_x       INT        NOT NULL COMMENT 'X 轴坐标',
-    location_y       INT        NOT NULL COMMENT 'Y 轴坐标',
+
     primary key (gold_item_id, family_id),
     foreign key (battle_id) references tb_family_mine (id)
         on update cascade

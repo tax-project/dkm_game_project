@@ -33,10 +33,10 @@ public class TbEquipmentKnapsackVo {
     /**
      * 食物名字
      */
-    private String foodName;
+    private String name;
     /**
      * 食物图片地址
      */
-    private String foodUrl;
+    private String url;
 
 }

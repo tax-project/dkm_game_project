@@ -76,19 +76,18 @@ public class FamilyServiceImpl implements FamilyService {
         familyDetailEntity.setFamilyId(family.getFamilyId());
         //工会
         UnionEntity unionEntity = unionMapper.selectOne(new LambdaQueryWrapper<UnionEntity>().eq(UnionEntity::getUserId, userId));
-        int union=0;
         if(unionEntity==null){
             unionEntity = new UnionEntity();
             unionEntity.setCreateTime(now);
             unionEntity.setUnionId(idGenerator.getNumberId());
             unionEntity.setUserId(userId);
             unionEntity.setUnionName(family.getFamilyName());
-            union = unionMapper.insert(unionEntity);
+            if(unionMapper.insert(unionEntity)<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"关联工会失败");
         }
         family.setUnionId(unionEntity.getUnionId());
         int insertFamily = familyDao.insert(family);
         int insertFamilyDetailEntity = familyDetailDao.insert(familyDetailEntity);
-        if(insertFamily<1||insertFamilyDetailEntity<1||union<1){
+        if(insertFamily<1||insertFamilyDetailEntity<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"创建家族失败");
         }
     }
@@ -145,9 +144,6 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity==null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"你不是该家族成员");
         }
-        if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
-        }
         if(familyDetailEntity.getIsAdmin()==2){
             int i = familyDao.deleteById(familyDetailEntity.getFamilyId());
             int delete = familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyDetailEntity.getFamilyId()));
@@ -155,6 +151,9 @@ public class FamilyServiceImpl implements FamilyService {
                 throw new ApplicationException(CodeType.SERVICE_ERROR,"解散家族失败");
             }
             return;
+        }
+        if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
         }
         FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
         familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()-1);

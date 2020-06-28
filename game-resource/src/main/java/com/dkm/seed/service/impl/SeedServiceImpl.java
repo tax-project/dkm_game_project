@@ -1,9 +1,6 @@
 package com.dkm.seed.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.kotlin.KtUpdateWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
@@ -20,24 +17,23 @@ import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.seed.dao.LandSeedMapper;
 import com.dkm.seed.dao.SeedMapper;
 import com.dkm.seed.dao.SeedsFallMapper;
-import com.dkm.seed.dao.UserLandUnlockMapper;
+import com.dkm.seed.dao.SeedUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
-import com.dkm.seed.entity.SeedsFall;
+import com.dkm.seed.entity.SeedUnlock;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
-import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+
+import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
 
 /**
  * @author 刘梦祺
@@ -74,6 +70,9 @@ public class SeedServiceImpl implements ISeedService {
 
     @Autowired
     private SeedsFallMapper seedsFallMapper;
+
+    @Autowired
+    private SeedUnlockMapper seedUnlockMapper;
 
 
     /**
@@ -166,6 +165,7 @@ public class SeedServiceImpl implements ISeedService {
 
         //int sum=(int)Math.ceil(seedDetailsVo.getSeedGrade()/10.00)*10;
         seedDetailsVo.setPrestige(18);
+        //算出种子解锁消耗的金币
         seedDetailsVo.setUnlockFragmentedGoldCoins(seedDetailsVo.getSeedGrade()*1000);
 
         return seedDetailsVo;
@@ -186,11 +186,49 @@ public class SeedServiceImpl implements ISeedService {
     public Message unlockPlant(SeedVo seedVo) {
         UserLoginQuery user = localUser.getUser();
 
+        //判断前面的种子是否解锁
+        LambdaQueryWrapper<SeedUnlock> wrapper = new LambdaQueryWrapper<SeedUnlock>()
+                .eq(SeedUnlock::getUserId, user.getId());
+
+        List<SeedUnlock> seedUnlocks = seedUnlockMapper.selectList(wrapper);
+        for (int i = 0; i < seedUnlocks.size(); i++) {
+            if(seedUnlocks.get(i).getSeedId()==seedVo.getSeedId()){
+                //第一个次解锁才进行判断
+                if(seedUnlocks.get(i).getSeedPresentUnlock()==0) {
+                    //不是第一个种子 才让他判断前面的种子是否解锁
+                    if (seedVo.getSeedId() != 1) {
+                        //下标减一 就得到当前种子前面一个种子的状态是否解锁 如果没有解锁就不能解锁当前种子
+                        if (seedUnlocks.get(i - 1).getSeedStatus() != 1) {
+                            throw new ApplicationException(CodeType.SERVICE_ERROR, "请先解锁前面的种子");
+                        }
+                    }
+                }
+            }
+        }
+
+        //限制一天只能解锁7次
+        if(TackBackLimit(user.getId(),7)){
+            //解锁种子
+           return unlockSeed(seedVo);
+        }else{
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"今天解锁的次数已超出");
+        }
+
+    }
+
+    /**
+     * 解锁种子
+     * @param seedVo
+     * @return
+     */
+    public Message unlockSeed(SeedVo seedVo){
+        UserLoginQuery user = localUser.getUser();
+
         //得到用户金币
         User user1 = attendantMapper.queryUserReputationGold(user.getId());
 
         if(user1.getUserInfoGold()<seedVo.getUnlockMoney()){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "金币不足");
         }
 
         Message message=new Message();
@@ -201,23 +239,30 @@ public class SeedServiceImpl implements ISeedService {
             seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),null,1);
         }
 
-            //种子等级除以10 得出声望
-            //等级余10大于0则进一
-            //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
-            //修改当前种子解锁进度
-            seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
+        //种子等级除以10 得出声望
+        //等级余10大于0则进一
+        //int sum=(int)Math.ceil(seedVo.getGrade()/10.00);
+        //修改当前种子解锁进度
+        seedMapper.updateSeedPresentUnlock(user.getId(),seedVo.getSeedId(),seedVo.getSeedPresentUnlock(),null);
 
-            //修改用户的金币和声望
-            int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
+        //修改用户的金币和声望
+        int i= seedMapper.uploadUnlockMoneyAndPrestige(seedVo.getUnlockMoney(), 18, user.getId());
 
-            if(i<=0){
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
-            }
+        if(i<=0){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "解锁碎片异常");
+        }
 
-            message.setMsg("解锁碎片成功");
+        message.setMsg("解锁碎片成功");
 
-            return message;
+        return message;
     }
+
+
+
+
+
+
+
     /**
      * 种植种子
      * 收取种子
@@ -255,9 +300,9 @@ public class SeedServiceImpl implements ISeedService {
             Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
 
             //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
-            double ripetime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
+            double ripeTime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
             //将秒数转换成整数类型
-            Integer integer = Integer.valueOf((int) ripetime);
+            Integer integer = Integer.valueOf((int) ripeTime);
             //得到时间戳转换成时间格式，最后得到种子成熟的时间
             LocalDateTime time2 = LocalDateTime.ofEpochSecond(System.currentTimeMillis() / 1000 + integer, 0, ZoneOffset.ofHours(8));
 
@@ -283,6 +328,7 @@ public class SeedServiceImpl implements ISeedService {
 
             //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
             PlantingTimes= userLandUnlocks.size()-listLand.size();
+
 
             //如果查询出来长度等于0说明是新种植 添加到数据库 ，第一个种子持续1分钟产出红包
             if(list1.size()==0){
@@ -344,14 +390,30 @@ public class SeedServiceImpl implements ISeedService {
                    landSeed.setLeStatus(3);
                    landSeed.setLaNo(userLandUnlocks.size());
                    landSeed.setNewSeedIs(null);
-                   landMapper.insert(landSeed);
+                    int insert = landMapper.insert(landSeed);
+                    if(insert<=0){
+                        throw new ApplicationException(CodeType.SERVICE_ERROR,"添加失败");
+                    }
                 }
 
-                for (int i = 0; i < PlantingTimes; i++) {
-                    //判断list2的长度是否为0
-                    if(list2.size()!=0) {
+
+                /**
+                 * 添加后在进行查询一次
+                 *
+                 * 查询已经收取种子的数量  作为种植的次数
+                 */
+                LambdaQueryWrapper<LandSeed> queryWrapper3 = new LambdaQueryWrapper<LandSeed>()
+                        .eq(LandSeed::getUserId, user.getId())
+                        .eq(LandSeed::getLeStatus, 3)
+                        .eq(LandSeed::getSeedId,seedPlantVo.getSeedId());
+
+                List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
+
+
+                for (int i = 0; i <PlantingTimes; i++) {
+
                         LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                                .eq(LandSeed::getId, list2.get(i).getId());
+                                .eq(LandSeed::getId, list3.get(i).getId());
 
                         LandSeed landSeed=new LandSeed();
                         landSeed.setLeStatus(1);
@@ -361,7 +423,7 @@ public class SeedServiceImpl implements ISeedService {
                         if (update <= 0) {
                         throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
                         }
-                    }
+
                 }
             }
 

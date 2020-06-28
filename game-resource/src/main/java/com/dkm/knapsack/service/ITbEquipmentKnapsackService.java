@@ -24,6 +24,7 @@ public interface ITbEquipmentKnapsackService{
     List<TbEquipmentKnapsackVo> selectProps();
     List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectFoodId();
+    List<TbEquipmentKnapsackVo> selectFoodIdTwo();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
 
     void addTbEquipmentKnapsackTwo(String equipmentId);
@@ -53,4 +54,6 @@ public interface ITbEquipmentKnapsackService{
      * @return
      */
     int updateFood(TbNumberVo tbNumberVo);
+
+    void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack);
 }

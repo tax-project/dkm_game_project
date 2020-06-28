@@ -85,10 +85,17 @@ public interface IAttendantService {
    Map<String,Object>  combatResults(AttendantVo vo);
 
     /**
-     * 查询自己的一个主人信息
+     * 根据登录人id查询主人
      * @return
      */
     Map<String,Object> queryAidUser();
+
+    /**
+     * 根据用户id查看主人
+     * @param userId
+     * @return
+     */
+    Map<String,Object> queryAid(Long userId);
 
 
     /**
