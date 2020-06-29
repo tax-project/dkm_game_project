@@ -37,7 +37,7 @@ public class TbEquipmentKnapsackController {
      * 增加用户装备的接口文档
      * @param tbEquipmentKnapsack
      */
-    @ApiOperation(value = "增加用户装备接口  input都是需要传递的参数",notes = "成功返回成功")
+    @ApiOperation(value = "增加用户装备接口  input都是需要传递的参数",notes = "成功返回成功  背包满了返回code=1003")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekSell",value = "我的装备 1为装备上了 2为背包装备"),
@@ -63,7 +63,7 @@ public class TbEquipmentKnapsackController {
         tbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
     }
 
-    @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功")
+    @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功 背包满了返回code=1003")
     @PostMapping("/addTbEquipmentKnapsackThree")
     public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
         tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack);
@@ -102,7 +102,7 @@ public class TbEquipmentKnapsackController {
      * 批量增加装备到背包的接口
      * @param equipmentId 装备主键
      */
-    @ApiOperation(value = "批量增加装备到背包的接口  input都是需要传递的参数",notes = "成功返回成功")
+    @ApiOperation(value = "批量增加装备到背包的接口  input都是需要传递的参数",notes = "成功返回成功 背包满了返回code=1003")
     @GetMapping("/addTbEquipmentKnapsackTwo")
     @CrossOrigin
     @CheckToken
