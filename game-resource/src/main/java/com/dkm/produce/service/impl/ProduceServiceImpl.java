@@ -62,10 +62,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private IAttendantUserService attendantUserService;
 
     @Autowired
-    private AttendantUserMapper attendantUserMapper;
-
-    @Autowired
     private AttendantMapper attendantMapper;
+
+    /**
+     *  物品金币
+     */
+    private final String GOOD_NAME = "金币";
 
     @Override
     public Map<String,Object> insertProduce(Long attendantId, Long attUserId) {
@@ -107,22 +109,16 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             produce.setAttendantId(attendantId);
         }
 
-
-        Integer number = 0;
+        int number;
         //算出随机生成的数量
-        if ("金币".equals(goods.getName())) {
-            Random rand = new Random();
-            int randNum = rand.nextInt(5000);
-            if(randNum<2000){
-                randNum = new Random().nextInt(5000);
-                number = randNum;
-            }
+        if (GOOD_NAME.equals(goods.getName())) {
+
+            //随机生成1000-2000的金币
+            number = (int) (Math.random() * (2000 - 1000 + 1)) + 1000;
 
         } else {
-            Random r = new Random();
-            int randNum =r.nextInt(3)+1;
-            //加一个
-            number = randNum;
+            //随机生成1-3的随机数
+            number = (int) (Math.random() * (3 - 1 + 1)) + 1;
         }
          produce.setNumber(number);
 
@@ -144,7 +140,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //返回随机生成的物品给前端
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(2);
 
         map.put("goods", goods);
         map.put("number",number);
@@ -160,11 +156,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //跟班
         List<AttendantImgVo> attendantImg= new ArrayList<>();
 
-        LambdaQueryWrapper<AttendantUser> queryWrapper = new LambdaQueryWrapper<AttendantUser>()
-                        .eq(AttendantUser::getUserId,userId);
-
-
-        List<AttendantUser> attendantUsers = attendantUserMapper.selectList(queryWrapper);
+        List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
 
 
         //查询出所有用户跟班
@@ -203,8 +195,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         map.put("attendantImg",attendantImg);
 
         if(attendantPutVos.size()==0){
+            //1代表没有
+            map.put("status",1);
             map.put("attendantPutVos","暂无产出，快去抓跟班吧");
         }else{
+            //0代表有产出
+            map.put("status",0);
             map.put("attendantPutVos",attendantPutVos);
         }
 
