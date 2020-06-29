@@ -87,8 +87,8 @@ public class TbWeeklyGiftBag extends Model<TbWeeklyGiftBag> {
 	/**
 	 * 物品表外键 幸运星外键
 	 */
-	@TableField("twgLuckyId")
-	private Long twg_lucky_id;
+	@TableField("twg_lucky_id")
+	private Long twgLuckyId;
     /**
      * 商品幸运星
      */

@@ -1,5 +1,6 @@
 package com.dkm.turntable.service;
 
+import com.dkm.turntable.entity.vo.AddGoodsInfoVo;
 import com.dkm.turntable.entity.vo.TurntableInfoVo;
 
 import java.util.List;
@@ -18,4 +19,12 @@ public interface ITurntableService {
      * @return
      */
     List<TurntableInfoVo> getTurntable(Long userId, Integer type);
+
+
+    /**
+     * 增加背包物品
+     * @param userId
+     * @param addGoodsInfoVo
+     */
+    void addGoods(Long userId, AddGoodsInfoVo addGoodsInfoVo);
 }
