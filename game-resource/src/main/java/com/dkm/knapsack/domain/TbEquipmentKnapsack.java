@@ -69,11 +69,6 @@ public class TbEquipmentKnapsack extends Model<TbEquipmentKnapsack> {
 	@TableField("food_number")
 	private Integer foodNumber;
 
-	/**
-	 * 用户外键
-	 */
-	private Long userId;
-
 	@Override
 	protected Serializable pkVal() {
 		return this.tekId;

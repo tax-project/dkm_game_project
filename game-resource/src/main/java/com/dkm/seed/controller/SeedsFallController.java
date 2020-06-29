@@ -30,8 +30,9 @@ public class SeedsFallController {
 
     /**
      * 种子掉落
+     * 金币红包掉落
      */
-    @ApiOperation(value = "种子掉落", notes = "种子掉落")
+    @ApiOperation(value = "种子掉落（金币红包掉落）", notes = "种子掉落（金币红包掉落）")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级")
     @PostMapping("/seedDrop")
     @CrossOrigin
