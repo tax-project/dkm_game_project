@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
+import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.service.ISeedFallService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +61,31 @@ public class SeedsFallController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return iSeedFallService.redBagDroppedSeparately(money);
+    }
+
+
+    /**
+     * 查询已掉落的数据
+     */
+    @ApiOperation(value = "查询已掉落的数据", notes = "查询已掉落的数据")
+    @PostMapping("/queryDroppedItems")
+    @CrossOrigin
+    @CheckToken
+    List<SeedsFallVo> queryDroppedItems(){
+        return iSeedFallService.queryDroppedItems();
+    }
+
+    @ApiOperation(value = " 修改种子状态为2 待收取", notes = " 修改种子状态为2 待收取")
+    @PostMapping("/updateLeStatus")
+    @CrossOrigin
+    @CheckToken
+    public int updateLeStatus(@RequestParam(value = "id[]")Integer[] id){
+
+        List<Long> list=new ArrayList<>();
+        for (int i = 0; i < id.length; i++) {
+            list.add(Long.valueOf(id[i]));
+        }
+        return iSeedFallService.updateLeStatus(list);
     }
 
 

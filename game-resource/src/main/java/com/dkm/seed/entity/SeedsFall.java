@@ -35,6 +35,6 @@ public class SeedsFall extends Model<SeedsFall> {
     /**
      * 掉落的花
      */
-    private Integer dropFallingFlowers;
+    private Integer dropFallingFlowers=0;
 
 }
