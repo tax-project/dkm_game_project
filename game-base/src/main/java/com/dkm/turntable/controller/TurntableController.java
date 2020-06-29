@@ -44,7 +44,7 @@ public class TurntableController {
      * @return
      */
     @GetMapping("/getGoods")
-    @ApiOperation("获取转盘物品")
+    @ApiOperation("获取转盘物品信息")
     @ApiImplicitParam(value = "转盘类型",name = "type",dataType = "int",paramType = "path",required = true)
     @CrossOrigin
     @CheckToken
@@ -69,7 +69,7 @@ public class TurntableController {
      * @return
      */
     @PostMapping("/addGoods")
-    @ApiOperation("获取抽中物品")
+    @ApiOperation("获取抽中物品到背包")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "抽中物品id",name = "id",dataType = "long",paramType = "path",required = true),
             @ApiImplicitParam(value = "抽中物品数量",name = "number",dataType = "int",paramType = "path",required = true)
@@ -78,6 +78,6 @@ public class TurntableController {
     @CheckToken
     public void addGoods(@RequestBody AddGoodsInfoVo addGoodsInfoVo){
         if(addGoodsInfoVo==null||addGoodsInfoVo.getId()==null||addGoodsInfoVo.getNumber()<1)throw new ApplicationException(CodeType.PARAMETER_ERROR);
-        turntableCouponService.addGoods(localUser.getUser().getId(),addGoodsInfoVo);
+        turntableService.addGoods(localUser.getUser().getId(),addGoodsInfoVo);
     }
 }
