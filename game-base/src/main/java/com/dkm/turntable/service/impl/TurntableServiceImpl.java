@@ -44,8 +44,8 @@ public class TurntableServiceImpl implements ITurntableService {
                 result.add(c);
             }
         });
-        result.add(new TurntableInfoVo(1234*type,"https://ae01.alicdn.com/kf/H9af2f2605a3d4402a75e0261cc75812fv.jpg","金币"));
-        result.add(new TurntableInfoVo(666*type,"https://ae01.alicdn.com/kf/H1bf1f90e52745c9843fa1d5fdbf339d0.jpg","经验"));
+        result.add(new TurntableInfoVo(1234*type,"https://ae01.alicdn.com/kf/H9af2f2605a3d4402a75e0261cc75812fv.jpg","金币",0L));
+        result.add(new TurntableInfoVo(666*type,"https://ae01.alicdn.com/kf/H1bf1f90e52745c9843fa1d5fdbf339d0.jpg","经验",0L));
         return result;
     }
 }
