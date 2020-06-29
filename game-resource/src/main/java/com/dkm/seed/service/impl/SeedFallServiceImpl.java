@@ -102,9 +102,9 @@ public class SeedFallServiceImpl implements ISeedFallService {
             }
 
             //true 掉落红包   false 没有红包掉落
-            boolean produceGoldRed =isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
+            boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
             if(produceGoldRed){
-                money = NumberRedPacketsDropped();
+                money =randomUtils.NumberRedPacketsDropped();
 
                 seedsFall.setDropRedEnvelope(money);
 
