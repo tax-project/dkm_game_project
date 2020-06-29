@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS `tb_family_mine_item`;
-DROP TABLE IF EXISTS tb_family_mine_user;
-DROP TABLE IF EXISTS tb_family_mine;
+DROP TABLE IF EXISTS `tb_family_mines_item`;
+DROP TABLE IF EXISTS tb_family_mines_user;
+DROP TABLE IF EXISTS tb_family_mines;
 
-CREATE TABLE IF NOT EXISTS tb_family_mine
+CREATE TABLE IF NOT EXISTS tb_family_mines
 (
     id        BIGINT(20) PRIMARY KEY NOT NULL,
     family_id BIGINT(20)             NOT NULL COMMENT '家族id'
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tb_family_mine
     COMMENT '家族金矿表'
 ;
 
-CREATE TABLE IF NOT EXISTS tb_family_mine_user
+CREATE TABLE IF NOT EXISTS tb_family_mines_user
 (
     user_id         BIGINT(20) PRIMARY KEY NOT NULL,
     fight_size      INT                    NOT NULL DEFAULT 3,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS tb_family_mine_user
     COMMENT '家族用户 id 表';
 
 
-CREATE TABLE IF NOT EXISTS `tb_family_mine_item`
+CREATE TABLE IF NOT EXISTS `tb_family_mines_item`
 (
     gold_item_id     BIGINT(20) NOT NULL COMMENT '金矿ID',
     family_id        BIGINT(20) NOT NULL COMMENT '家族 ID',
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `tb_family_mine_item`
     item_index       INT        NOT NULL COMMENT '位置索引',
 
     primary key (gold_item_id, family_id),
-    foreign key (battle_id) references tb_family_mine (id)
+    foreign key (battle_id) references tb_family_mines (id)
         on update cascade
         on delete cascade
 )
