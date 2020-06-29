@@ -203,9 +203,14 @@ public class AttendantController {
      * 内部调用
      * @return
      */
-    @GetMapping("/queryAid")
-    public Map<String,Object> queryAid(@RequestParam(value = "userId") Long userId){
-        return iAttendantService.queryAid(userId);
+    @GetMapping("/queryUserIdMaster")
+    @CrossOrigin
+    public Map<String,Object> queryUserIdMaster(Long userId){
+        if (userId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"用户id不能为空");
+        }
+
+        return iAttendantService.queryUserIdMaster(userId);
     }
 
 

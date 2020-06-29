@@ -10,12 +10,18 @@
 		<result column="twg_contnet" property="twgContnet" />
 		<result column="twg_money" property="twgMoney" />
 		<result column="twg_quan" property="twgQuan" />
+		<result column="twi_qid" property="twiQid" />
 		<result column="twg_jinbi" property="twgJinbi" />
+		<result column="twg_tili_id" property="twgTiliId" />
 		<result column="twg_tili" property="twgTili" />
+		<result column="twg_jin_id" property="twgJinId" />
 		<result column="twg_jin" property="twgJin" />
+		<result column="twg_lucky_id" property="twgLuckyId" />
 		<result column="twg_lucky" property="twgLucky" />
+		<result column="twg_sp_id" property="twgSpId" />
 		<result column="twg_sp" property="twgSp" />
 		<result column="twg_wnsp" property="twgWnsp" />
+		<result column="twg_wnsp_id" property="twgWnspId" />
 	</resultMap>
 
 </mapper>

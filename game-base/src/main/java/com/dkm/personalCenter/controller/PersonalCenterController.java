@@ -87,12 +87,12 @@ public class PersonalCenterController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> findById(@PathVariable("userId") Long userId){
-        Map<String,Object> map=new HashMap<>(6);
+        Map<String,Object> map=new HashMap<>(16);
 
         map.put("personal",resourceFeignClient.personalCenterAll(userId));
 
         //主人信息
-        map.put("queryAid",resourceFeignClient.queryAid(userId));
+        map.put("queryUserIdMaster",resourceFeignClient.queryUserIdMaster(userId));
 
         //查询出用户的总体力和当前体力
         map.put("queryUser",userFeignClient.queryUser(userId));
