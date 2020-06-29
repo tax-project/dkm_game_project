@@ -898,14 +898,20 @@ public class AttendantServiceImpl implements IAttendantService {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
 
+        if(query==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"调用失败token为空  请登录拿到token！");
+        }
+
         Map<String,Object> map=new HashMap<>();
 
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
         if(attendantUserVo == null){
             map.put("msg","没有主人");
+            map.put("num",0);
         }else{
             map.put("attendantUserVo",attendantUserVo);
+            map.put("num",1);
         }
 
         return map;
@@ -914,13 +920,14 @@ public class AttendantServiceImpl implements IAttendantService {
     @Override
     public Map<String, Object> queryUserIdMaster(Long userId) {
         Map<String,Object> map=new HashMap<>();
-        System.out.println("query = " + userId);
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(userId);
         if(attendantUserVo == null){
             map.put("msg","没有主人");
+            map.put("num",0);
         }else{
             map.put("attendantUserVo",attendantUserVo);
+            map.put("num",1);
         }
         return map;
     }
