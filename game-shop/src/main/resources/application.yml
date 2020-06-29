@@ -1,8 +1,3 @@
-logging:
-  level:
-    org.springframework: WARN
-    org.spring.springboot.dao: DEBUG
-    com.dkm.shop.dao: DEBUG
 server:
   port: 8004
   max-http-header-size: 102400
