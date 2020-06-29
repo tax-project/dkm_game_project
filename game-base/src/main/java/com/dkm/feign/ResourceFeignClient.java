@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.feign.entity.SeedPlantVo;
+import com.dkm.feign.entity.TbEquipmentKnapsack;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
@@ -84,4 +85,10 @@ public interface ResourceFeignClient {
     @GetMapping("/Attendant/queryUserIdMaster")
     Result<Map<String,Object>> queryUserIdMaster(@RequestParam(value = "userId") Long userId);
 
+    /**
+     * 更新背包物品
+     * @param tbEquipmentKnapsack
+     */
+    @PostMapping("/dkm/tbEquipmentKnapsack/addTbEquipmentKnapsackThree")
+    Result addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack);
 }

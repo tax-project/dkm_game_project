@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
-@TableName("tb_family_mine_user")
+@TableName("tb_family_mines_user")
 public class MineUserEntity {
     @TableId
     private Long userId;

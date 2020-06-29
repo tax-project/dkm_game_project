@@ -18,5 +18,5 @@ public class TurntableInfoVo {
     private Integer number;
     private String url;
     private String name;
-
+    private Long id;
 }

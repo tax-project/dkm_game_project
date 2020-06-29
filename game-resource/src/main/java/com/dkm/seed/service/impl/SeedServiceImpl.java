@@ -386,10 +386,10 @@ public class SeedServiceImpl implements ISeedService {
                    landSeed.setLeStatus(3);
                    landSeed.setLaNo(userLandUnlocks.size());
                    landSeed.setNewSeedIs(null);
-                    int insert = landMapper.insert(landSeed);
-                    if(insert<=0){
-                        throw new ApplicationException(CodeType.SERVICE_ERROR,"添加失败");
-                    }
+                   int insert = landMapper.insert(landSeed);
+                   if(insert<=0){
+                       throw new ApplicationException(CodeType.SERVICE_ERROR,"添加失败");
+                   }
                 }
 
 
