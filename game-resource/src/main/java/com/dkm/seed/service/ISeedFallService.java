@@ -14,7 +14,7 @@ public interface ISeedFallService {
     /**
      * 种子掉落(金币  红包)
      */
-    List<GoldOrMoneyVo> seedDrop(Integer seedGrade);
+    List<GoldOrMoneyVo> seedDrop();
     /**
      * 单独掉落红包
      */

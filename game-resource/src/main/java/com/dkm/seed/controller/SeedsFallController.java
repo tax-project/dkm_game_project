@@ -41,7 +41,7 @@ public class SeedsFallController {
         if (seedGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.seedDrop(seedGrade);
+        return iSeedFallService.seedDrop();
     }
 
 

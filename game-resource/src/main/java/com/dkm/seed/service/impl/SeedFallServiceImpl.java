@@ -1,8 +1,10 @@
 package com.dkm.seed.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
@@ -53,7 +55,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
 
     @Override
-    public List<GoldOrMoneyVo> seedDrop(Integer seedGrade) {
+    public List<GoldOrMoneyVo> seedDrop() {
 
         List<GoldOrMoneyVo> GoldOrMoneyVolist=new ArrayList<>();
 
@@ -69,7 +71,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
         if(landSeedList.size()==0){
-            return null;
+           throw new ApplicationException(CodeType.SERVICE_ERROR,"没有种植的种子");
         }
 
         Integer gold=0;
@@ -89,11 +91,9 @@ public class SeedFallServiceImpl implements ISeedFallService {
             seedsFall.setSeedId(seed.getSeedId());
 
             //true掉落金币   false 没有金币掉落
-            boolean dropCoins = randomUtils.probabilityDroppingGold(seedGrade);
+            boolean dropCoins = randomUtils.probabilityDroppingGold(landSeedList.get(landSeedList.size()).getSeedId());
             if(dropCoins){
-                double userGold  = Math.pow(userInfoQueryBoResult.getData().getUserInfoGrade(), 2)*50 +1000;
-                Integer userGoldInteger = (int) userGold;
-                gold = randomUtils.NumberCoinsDropped(userGoldInteger,seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
+                gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
 
                 seedsFall.setDropCoins(gold);
 
@@ -104,6 +104,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
             //true 掉落红包   false 没有红包掉落
             boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
             if(produceGoldRed){
+                //掉落的红包数量
                 money =randomUtils.NumberRedPacketsDropped();
 
                 seedsFall.setDropRedEnvelope(money);
