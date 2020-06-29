@@ -49,7 +49,6 @@ public class RabbitMqListener {
    @RabbitHandler
    public void rabbitHandle (String msg, com.rabbitmq.client.Channel mqChannel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) {
 
-      System.out.println("-->" + msg);
       MsgInfo msgInfo = null;
       try {
          msgInfo = JSONObject.parseObject(msg, MsgInfo.class);
