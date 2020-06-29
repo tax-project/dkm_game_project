@@ -1,12 +1,16 @@
 package com.dkm.turntable.controller;
 
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.turntable.entity.vo.AddGoodsInfoVo;
 import com.dkm.turntable.entity.vo.TurntableInfoVo;
 import com.dkm.turntable.service.ITurntableCouponService;
 import com.dkm.turntable.service.ITurntableService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,5 +62,22 @@ public class TurntableController {
     @CheckToken
     public Map<String,Object> getCoupons(){
         return turntableCouponService.getUserCoupon(localUser.getUser().getId());
+    }
+
+    /**
+     * 用户卷数量信息
+     * @return
+     */
+    @PostMapping("/addGoods")
+    @ApiOperation("获取抽中物品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "抽中物品id",name = "id",dataType = "long",paramType = "path",required = true),
+            @ApiImplicitParam(value = "抽中物品数量",name = "number",dataType = "int",paramType = "path",required = true)
+    })
+    @CrossOrigin
+    @CheckToken
+    public void addGoods(@RequestBody AddGoodsInfoVo addGoodsInfoVo){
+        if(addGoodsInfoVo==null||addGoodsInfoVo.getId()==null||addGoodsInfoVo.getNumber()<1)throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        turntableCouponService.addGoods(localUser.getUser().getId(),addGoodsInfoVo);
     }
 }
