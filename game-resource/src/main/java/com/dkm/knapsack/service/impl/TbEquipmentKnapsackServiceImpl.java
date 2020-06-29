@@ -637,6 +637,12 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
     public void fz(TbEquipmentKnapsack tbEquipmentKnapsack,int type){
+        //查询背包容量是否够
+        int one= tbEquipmentKnapsackService.selectCount();
+        if(one==0){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "背包已经没容量了,不能添加");
+        }
         TbKnapsack tbKnapsack=new TbKnapsack();
         //==2 代表是老钟的增加
         if(type==2){

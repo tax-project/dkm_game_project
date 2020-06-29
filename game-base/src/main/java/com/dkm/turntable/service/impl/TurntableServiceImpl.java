@@ -1,9 +1,15 @@
 package com.dkm.turntable.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.exception.ApplicationException;
+import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.entity.TbEquipmentKnapsack;
 import com.dkm.turntable.dao.GoodsMapper;
 import com.dkm.turntable.dao.TurntableDao;
 import com.dkm.turntable.entity.GoodsEntity;
+import com.dkm.turntable.entity.vo.AddGoodsInfoVo;
 import com.dkm.turntable.entity.vo.TurntableInfoVo;
 import com.dkm.turntable.service.ITurntableService;
 import org.springframework.stereotype.Service;
@@ -23,29 +29,28 @@ public class TurntableServiceImpl implements ITurntableService {
 
 
     @Resource
-    private TurntableDao turntableDao;
+    private ResourceFeignClient resourceFeignClient;
 
     @Resource
     private GoodsMapper goodsMapper;
 
     @Override
     public List<TurntableInfoVo> getTurntable(Long userId, Integer type) {
-        List<GoodsEntity> foodDetailEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType,3));
-        List<TurntableInfoVo> result = new ArrayList<>();
-        foodDetailEntities.forEach(a->{
-            TurntableInfoVo b = new TurntableInfoVo();
-            b.setName(a.getName());
-            b.setNumber(type);
-            b.setUrl(a.getUrl());
-            result.add(b);
-            if("蜂蜜".equals(a.getName())) {
-                TurntableInfoVo c = b;
-                c.setNumber(type*3);
-                result.add(c);
-            }
+        List<GoodsEntity> goodsEntities = goodsMapper.selectList(null);
+        List<TurntableInfoVo> list = new ArrayList<>();
+        goodsEntities.forEach(a->{
+            list.add(new TurntableInfoVo(type,a.getUrl(),a.getName(),a.getId()));
         });
-        result.add(new TurntableInfoVo(1234*type,"https://ae01.alicdn.com/kf/H9af2f2605a3d4402a75e0261cc75812fv.jpg","金币"));
-        result.add(new TurntableInfoVo(666*type,"https://ae01.alicdn.com/kf/H1bf1f90e52745c9843fa1d5fdbf339d0.jpg","经验"));
-        return result;
+        return list;
+    }
+
+    @Override
+    public void addGoods(Long userId, AddGoodsInfoVo addGoodsInfoVo) {
+        TbEquipmentKnapsack tbEquipmentKnapsack = new TbEquipmentKnapsack();
+        tbEquipmentKnapsack.setFoodId(addGoodsInfoVo.getId());
+        tbEquipmentKnapsack.setFoodNumber(addGoodsInfoVo.getNumber());
+        tbEquipmentKnapsack.setUserId(userId);
+        Result result = resourceFeignClient.addTbEquipmentKnapsackThree(tbEquipmentKnapsack);
+        if(result.getCode()!=0)throw  new ApplicationException(CodeType.FEIGN_CONNECT_ERROR,result.getMsg());
     }
 }

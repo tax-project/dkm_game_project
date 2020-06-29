@@ -19,7 +19,7 @@ public class RandomUtils {
      * @param userInfoGrade  用户等级
      * @return
      */
-    public boolean isProduceGoldRed(Integer userInfoGrade){
+    public static boolean isProduceGoldRed(Integer userInfoGrade){
         //红包掉落概率
         int pow = (int) (Math.pow(userInfoGrade, -1 / 2.0) * 100);
 
@@ -36,7 +36,7 @@ public class RandomUtils {
      * 红包掉落的数量
      * @return
      */
-    public double NumberRedPacketsDropped(){
+    public static double NumberRedPacketsDropped(){
         int random = new Random().nextInt(100) + 1;
         if(random<=10){
             return 0.01;
@@ -54,7 +54,7 @@ public class RandomUtils {
      * @param seedGrade  种子等级
      * @return
      */
-    public boolean probabilityDroppingGold(Integer seedGrade){
+    public static boolean probabilityDroppingGold(Integer seedGrade){
         //金币掉落概率
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
         //生产1-100的随机数
@@ -71,7 +71,7 @@ public class RandomUtils {
      * 金币掉落的数量
      *
      */
-    public Integer NumberCoinsDropped(Integer gold,Long time){
+    public static Integer NumberCoinsDropped(Integer gold,Long time){
 /*        double start = time / gold / 2 * 0.5/100;
 
         int start1 = (int) start;
@@ -90,7 +90,7 @@ public class RandomUtils {
      * 花朵掉落
      *
      */
-    public Integer fallingFlowers(){
+    public static Integer fallingFlowers(){
 
         Random random=new Random();
         int i = random.nextInt(100) + 1;
