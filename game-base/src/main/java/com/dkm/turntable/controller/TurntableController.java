@@ -45,7 +45,7 @@ public class TurntableController {
      */
     @GetMapping("/getGoods")
     @ApiOperation("获取转盘物品信息")
-    @ApiImplicitParam(value = "转盘类型",name = "type",dataType = "int",paramType = "path",required = true)
+    @ApiImplicitParam(value = "转盘类型1绿券2蓝券以此类推",name = "type",dataType = "int",paramType = "path",required = true)
     @CrossOrigin
     @CheckToken
     public List<TurntableInfoVo> getGoods(Integer type){
