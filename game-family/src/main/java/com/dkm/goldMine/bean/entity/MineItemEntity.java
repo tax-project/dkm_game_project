@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  *  对照 tb_family_mine_item 数据表
  */
 @Data
-@TableName("tb_family_mine_item")
+@TableName("tb_family_mines_item")
 public class MineItemEntity {
     /**
      * 金矿 ID
