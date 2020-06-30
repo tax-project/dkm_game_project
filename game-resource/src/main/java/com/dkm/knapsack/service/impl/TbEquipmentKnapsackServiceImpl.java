@@ -166,12 +166,14 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
             List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
             if(!StringUtils.isEmpty(list)){
+                System.out.println("进来了list集合=============");
                 //食物背包表主键
                 Long tekId=null;
                 Integer number=null;
                 for (TbEquipmentKnapsack equipmentKnapsackOne : list) {
                     tekId=equipmentKnapsackOne.getTekId();
                     number=equipmentKnapsackOne.getFoodNumber()+tbEquipmentKnapsack.getFoodNumber();
+                    System.out.println(tekId+"进来了list集合============="+number);
                 }
                 QueryWrapper queryWrapper1=new QueryWrapper();
                 queryWrapper1.eq("tek_id",tekId);
