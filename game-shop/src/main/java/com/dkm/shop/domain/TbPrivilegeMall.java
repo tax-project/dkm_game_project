@@ -69,7 +69,23 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
      */
 	@TableField("pr_content_one")
 	private String prContentOne;
+	/**
+	 * 物品外键
+	 */
+	@TableId("pri_id_one")
+	private Long priIdOne;
 
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public Long getPriIdOne() {
+		return priIdOne;
+	}
+
+	public void setPriIdOne(Long priIdOne) {
+		this.priIdOne = priIdOne;
+	}
 
 	public Long getPriId() {
 		return priId;

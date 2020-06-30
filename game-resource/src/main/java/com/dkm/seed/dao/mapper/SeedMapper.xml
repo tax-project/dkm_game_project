@@ -39,6 +39,8 @@
         update tb_user_info set user_info_gold=user_info_gold-#{unlockmoeny},user_info_renown=user_info_renown+#{prestige} where user_id=#{userId}
     </update>
 
+
+
     <update id="updateSeedPresentUnlock">
         update tb_plant_unlock
         <set>

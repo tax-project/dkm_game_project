@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldRedVo;
+import com.dkm.seed.entity.vo.SeedsFallVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,4 +29,16 @@ public interface SeedsFallMapper extends BaseMapper<SeedsFall> {
      * @return
      */
     GoldRedVo queryGoldAndRed(Long userId);
+
+    /**
+     * 查询已经掉落的金币红包和花
+     */
+    List<SeedsFallVo> queryDroppedItems(Long userId);
+
+    /**
+     * 批量修改种子状态为2 待收取状态
+     * @param list
+     * @return
+     */
+    int updateLeStatus(List<Long> list);
 }

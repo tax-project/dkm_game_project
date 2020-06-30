@@ -27,6 +27,7 @@ import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 import io.swagger.models.auth.In;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +102,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectFoodIdTwo(localUser.getUser().getId());
     }
     @Override
-    public void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack) {
+    public void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack,Long userId) {
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0) {
             TbKnapsack tbKnapsack = new TbKnapsack();
@@ -137,10 +138,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
                 }
             }else{
-                fz(tbEquipmentKnapsack,2);
+                fz(tbEquipmentKnapsack,2,userId);
             }
         }else{
-            fz(tbEquipmentKnapsack,2);
+            fz(tbEquipmentKnapsack,2,userId);
         }
     }
     @Override
@@ -181,11 +182,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
                 }
             }else{
-                fz(tbEquipmentKnapsack,1);
+                fz(tbEquipmentKnapsack,1,null);
             }
         //没有就给它增加
         }else{
-            fz(tbEquipmentKnapsack,1);
+            fz(tbEquipmentKnapsack,1,null);
         }
     }
 
@@ -636,7 +637,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             }
         }
     }
-    public void fz(TbEquipmentKnapsack tbEquipmentKnapsack,int type){
+    public void fz(TbEquipmentKnapsack tbEquipmentKnapsack,int type,Long userId){
         //查询背包容量是否够
         int one= tbEquipmentKnapsackService.selectCount();
         if(one==0){
@@ -649,7 +650,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             tbEquipmentKnapsack.setTekIsva(1);
             tbEquipmentKnapsack.setTekSell(2);
             tbEquipmentKnapsack.setTekDaoju(3);
-            tbKnapsack.setUserId(tbEquipmentKnapsack.getUserId());
+            tbKnapsack.setUserId(userId);
         }else if(type==1){
             tbKnapsack.setUserId(localUser.getUser().getId());
         }
@@ -662,7 +663,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 //传入背包主键
                 tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
             }
-
             int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
             if(rows <= 0){
                 //如果失败将回滚

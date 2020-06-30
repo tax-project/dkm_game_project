@@ -39,10 +39,11 @@ public class TbPrivilegeMallController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priType",value = "商品购买类型 1为财富卷 2为钻石"),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "priMoney",value = "商品价格"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp1",value = "需要财富十级购买 1代表十级"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "1为商品物品 2为别的地方物品"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "拓展字段2"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "拓展字段3"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "priImg",value = "商品图片"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "prContentOne",value = "小详情")
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "prContentOne",value = "小详情"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priIdOne",value = "物品外键")
     })
     @ApiResponses({
             @ApiResponse(code = 401,message="没有权限"),
@@ -70,10 +71,11 @@ public class TbPrivilegeMallController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "priType",value = "商品购买类型 1为财富卷 2为钻石",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "BigDecimal",name = "priMoney",value = "商品价格",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp1",value = "需要财富十级购买 1代表十级"),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "1为商品物品 2为别的地方物品"),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp2",value = "拓展字段2"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "exp3",value = "拓展字段3"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "priImg",value = "商品图片",required = true),
-            @ApiImplicitParam(paramType = "query",dataType = "String",name = "prContentOne",value = "小详情")
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "prContentOne",value = "小详情"),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "priIdOne",value = "物品外键")
     })
     @PostMapping("addTbPrivilegeMall")
     @CrossOrigin
