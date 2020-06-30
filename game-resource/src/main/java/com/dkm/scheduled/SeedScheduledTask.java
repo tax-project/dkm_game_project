@@ -32,35 +32,8 @@ public class SeedScheduledTask {
    @Autowired
    private ISeedFallService iSeedFallService;
 
-   @Autowired
-   private SeedsFallMapper seedsFallMapper;
-
-   @Autowired
-   private LandSeedMapper landSeedMapper;
-
-
    @Scheduled(cron = "0 */1 * * * ?")
    public void toDeleteApply () {
-    /*  //查询已经种植的种子
-      LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
-              .eq(LandSeed::getLeStatus, 1);
-
-      List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
-
-      List<Long> list=new ArrayList<>();
-
-      for (int i = 0; i < landSeedList.size(); i++) {
-         if(System.currentTimeMillis()/1000>landSeedList.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-            list.add(landSeedList.get(i).getId());
-         }
-      }
-
-      if(list.size()!=0){
-         //批量修改
-         seedsFallMapper.updateLeStatus(list);
-      }*/
-
-
       iSeedFallService.seedDrop();
    }
 }
