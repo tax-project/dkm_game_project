@@ -4,6 +4,7 @@ package com.dkm.wechat.service;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
@@ -58,4 +59,11 @@ public interface IWeChatService {
      * @param userDataBO 修改的参数
      */
     void updateUserData (UserDataBO userDataBO);
+
+    /**
+     *  根据用户名或者昵称查询好友
+     * @param userName
+     * @return
+     */
+    User queryUserByName (String userName);
 }

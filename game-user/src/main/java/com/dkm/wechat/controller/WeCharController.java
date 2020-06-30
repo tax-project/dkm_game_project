@@ -8,6 +8,7 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
+import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.ResultVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
@@ -127,6 +128,19 @@ public class WeCharController {
         }
 
         weChatService.updateUserData(bo);
+    }
+
+
+    @ApiOperation(value = "根据用户名或者昵称查询好友", notes = "根据用户名或者昵称查询好友")
+    @ApiImplicitParam(name = "userName", value = "账号", required = true, dataType = "String", paramType = "path")
+    @GetMapping("/queryUserByName")
+    @CrossOrigin
+    public User queryUserByName (@RequestParam("userName") String userName) {
+
+        if (StringUtils.isBlank(userName)) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        return weChatService.queryUserByName(userName);
     }
 
 }

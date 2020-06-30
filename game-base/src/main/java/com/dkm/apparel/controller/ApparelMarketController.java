@@ -1,6 +1,8 @@
 package com.dkm.apparel.controller;
 
 import com.dkm.apparel.entity.ApparelOrderEntity;
+import com.dkm.apparel.entity.dto.ApparelMarketDto;
+import com.dkm.apparel.entity.dto.BuyMarketApparelDto;
 import com.dkm.apparel.entity.vo.ApparelMarketDetailVo;
 import com.dkm.apparel.entity.vo.ApparelOrderVo;
 import com.dkm.apparel.entity.vo.ApparelPutVo;
@@ -56,7 +58,7 @@ public class ApparelMarketController {
     @CrossOrigin
     @CheckToken
     @PostMapping("/downApparel")
-    public void putOnSell(Long apparelMarketId){
+    public void putOnSell(@RequestBody Long apparelMarketId){
         if(apparelMarketId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
@@ -93,11 +95,27 @@ public class ApparelMarketController {
         return apparelMarketService.getApparelOrders(localUser.getUser().getId());
     }
 
-//    @ApiOperation("交易记录")
-//    @CrossOrigin
-//    @CheckToken
-//    @GetMapping("/getOrders")
-//    public List<ApparelOrderVo> getOrders(){
-//        return apparelMarketService.getApparelOrders(localUser.getUser().getId());
-//    }
+    @ApiOperation("集市服饰信息")
+    @ApiImplicitParam(value = "type",name="1上衣2裤子",paramType = "path",dataType = "int",required = true)
+    @CrossOrigin
+    @CheckToken
+    @GetMapping("/getMarketInfo")
+    public List<ApparelMarketDto> getMarketInfo(Integer type){
+        return apparelMarketService.getApparelMarketInfo(localUser.getUser().getId(),type);
+    }
+
+    @ApiOperation("购买集市服饰")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "apparelMarketId",name="服饰id",paramType = "path",dataType = "long",required = true),
+            @ApiImplicitParam(value = "sellUserId",name="出售人userId",paramType = "path",dataType = "long",required = true)
+    })
+    @CrossOrigin
+    @CheckToken
+    @PostMapping("/buyMarketApparel")
+    public void buyMarketApparel(@RequestBody BuyMarketApparelDto buyMarketApparelDto){
+        if(buyMarketApparelDto==null||buyMarketApparelDto.getSellUserId()==null||buyMarketApparelDto.getApparelMarketId()==null)
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        buyMarketApparelDto.setBuyUserId(localUser.getUser().getId());
+        apparelMarketService.buyMarketApparel(buyMarketApparelDto);
+    }
 }

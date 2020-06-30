@@ -357,4 +357,15 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
             throw new ApplicationException(CodeType.SERVICE_ERROR, "保存失败..");
         }
     }
+
+    @Override
+    public User queryUserByName(String userName) {
+
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
+              .eq(User::getWeChatOpenId,userName)
+              .or()
+              .eq(User::getWeChatNickName,userName);
+
+        return baseMapper.selectOne(wrapper);
+    }
 }
