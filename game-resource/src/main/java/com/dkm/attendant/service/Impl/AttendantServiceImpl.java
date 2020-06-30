@@ -112,87 +112,6 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("put", outputList);
 
         return map;
-
-
-//        List<Long> longList = new ArrayList<>();
-//        for (AttUserAllInfoVo vo : list1) {
-//            longList.add(vo.getCaughtPeopleId());
-//        }
-//
-//        //去查询用户的详细信息
-//        ParamBo bo = new ParamBo();
-//        bo.setList(longList);
-//        Result<List<UserHeardUrlBo>> listResult = userFeignClient.queryAllHeardByUserId(bo);
-//
-//        if (listResult.getCode() != 0) {
-//            throw new ApplicationException(CodeType.SERVICE_ERROR, "feign有误");
-//        }
-//
-//        List<UserHeardUrlBo> resultData = listResult.getData();
-//
-//        if (null == resultData || resultData.size() == 0) {
-//            return null;
-//        }
-//
-//        Map<Long, UserHeardUrlBo> urlBoMap = resultData.stream().
-//              collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo ->
-//                    userHeardUrlBo
-//              ));
-//
-//        List<AttUserAllInfoVo> collect = list1.stream().map(attUserAllInfoVo -> {
-//            AttUserAllInfoVo result = new AttUserAllInfoVo();
-//            BeanUtils.copyProperties(attUserAllInfoVo, result);
-//            result.setAtImg(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeadUrl());
-//            result.setAtName(urlBoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
-//            result.setSysStatus(1);
-//            return result;
-//        }).collect(Collectors.toList());
-//
-//        for (AttUserAllInfoVo vo : list) {
-//            vo.setSysStatus(0);
-//            collect.add(vo);
-//        }
-//
-//        List<AttPutBo> userAtt = new ArrayList<>();
-//        List<AttPutBo> sysAtt1 = new ArrayList<>();
-//        List<AttPutBo> sysAtt2 = new ArrayList<>();
-//        List<AttPutBo> sysAtt3 = new ArrayList<>();
-//        for (AttUserAllInfoVo vo : collect) {
-//            for (AttendantPutVo putVo : outputList) {
-//                if (vo.getAId() == 0) {
-//                    //用户跟班
-//                    if (vo.getCaughtPeopleId().equals(putVo.getCaughtPeopleId())) {
-//                        AttPutBo attPutBo = new AttPutBo();
-//                        BeanUtils.copyProperties(putVo,attPutBo);
-//                        userAtt.add(attPutBo);
-//                        vo.setList(userAtt);
-//                    }
-//                }
-//
-//                if (vo.getAId() == 1) {
-//                    AttPutBo attPutBo = new AttPutBo();
-//                    BeanUtils.copyProperties(putVo,attPutBo);
-//                    sysAtt1.add(attPutBo);
-//                    vo.setList(userAtt);
-//                }
-//
-//                if (vo.getAId() == 2) {
-//                    AttPutBo attPutBo = new AttPutBo();
-//                    BeanUtils.copyProperties(putVo,attPutBo);
-//                    sysAtt2.add(attPutBo);
-//                    vo.setList(userAtt);
-//                }
-//
-//                if (vo.getAId() == 3) {
-//                    AttPutBo attPutBo = new AttPutBo();
-//                    BeanUtils.copyProperties(putVo,attPutBo);
-//                    sysAtt3.add(attPutBo);
-//                    vo.setList(userAtt);
-//                }
-//            }
-//        }
-//
-//        return collect;
     }
 
 
@@ -561,6 +480,8 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId);
         //随机生成我方宠物信息
         map.put("myPetsDto",myPetsDto);
+        //我方所有宠物
+        map.put("petInfo",petInfo);
         //随机生成我他方宠物信息
         map.put("hePetsDto",hePetsDto);
         //我方血量             我方血量加上我方防御力得到最终血量

@@ -55,5 +55,5 @@ public interface ITbEquipmentKnapsackService{
      */
     int updateFood(TbNumberVo tbNumberVo);
 
-    void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack);
+    void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack,Long userId);
 }

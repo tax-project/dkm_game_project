@@ -10,7 +10,6 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -65,8 +64,8 @@ public class TbEquipmentKnapsackController {
 
     @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功 背包满了返回code=1003")
     @PostMapping("/addTbEquipmentKnapsackThree")
-    public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
-        tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack);
+    public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack,@RequestParam("userId") String userId){
+        tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack,Long.valueOf(userId));
     }
 
     /**

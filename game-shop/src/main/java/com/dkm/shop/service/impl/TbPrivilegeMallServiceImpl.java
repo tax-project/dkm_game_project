@@ -31,9 +31,7 @@ public class TbPrivilegeMallServiceImpl implements ITbPrivilegeMallService {
     private IdGenerator idGenerator;
     @Override
     public List<TbPrivilegeMall> selectAll() {
-        QueryWrapper queryWrapper=new QueryWrapper();
-        queryWrapper.eq("exp2",1);
-        return tbPrivilegeMallMapper.selectList(queryWrapper);
+        return tbPrivilegeMallMapper.selectList(null);
     }
 
     @Override

@@ -9,12 +9,12 @@
 
 
     <select id="queryOutput" resultType="com.dkm.produce.entity.vo.AttendantPutVo" parameterType="java.lang.Long">
-        select max(b.attendant_id) as 'attendantId',sum(b.number) as 'number',max(c.id) as 'goodId'
-              ,max(c.name) as 'goodName',max(c.url) as 'imgUrl',d.caught_people_id
+        select b.attendant_id as 'attendantId',sum(b.number) as 'number',c.id as 'goodId'
+              ,c.name as 'goodName',c.url as 'imgUrl',d.caught_people_id
               from tb_user_produce a join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
               join tb_attendant_user d on b.attendant_id = d.attendant_id
-              where a.user_id= #{userId}
+              where a.user_id= #{userId} and b.status = 0
               group by b.attendant_id,d.caught_people_id,c.id
     </select>
 

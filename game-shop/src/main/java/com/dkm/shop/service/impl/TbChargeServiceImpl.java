@@ -1,7 +1,6 @@
 package com.dkm.shop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.shop.dao.TbChargeMapper;
@@ -11,7 +10,6 @@ import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -39,7 +37,7 @@ public class TbChargeServiceImpl implements TbChargeService {
     public List<TbCharge> selectAll() {
         QueryWrapper<TbCharge>  queryWrapper=new QueryWrapper();
         List<TbCharge> list=tbChargeMapper.selectList(queryWrapper);
-        if(!StringUtils.isEmpty(list)){
+        if(list.size()!=0 &&list!=null){
             return list;
         }else{
             return null;

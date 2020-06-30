@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("tb_family_mine")
+@TableName("tb_family_mines")
 public class MineEntity {
     @TableId
     private Long id;
