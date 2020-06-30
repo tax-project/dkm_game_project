@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.goldMine.bean.vo.*;
 import com.dkm.goldMine.service.IMineService;
+import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,6 +39,7 @@ public class MineController {
     })
     @GetMapping("/{familyId}/getInfo")
     @CrossOrigin
+    @CheckToken
     public GoldMineVo getFamilyGoldMine(@PathVariable String familyId) {
         long familyIdInt;
         try {
@@ -62,6 +64,7 @@ public class MineController {
     })
     @GetMapping("/{familyId}/{goldItemId}/getStatus")
     @CrossOrigin
+    @CheckToken
     public MineItemFightVo getFamilyGoldMine(@PathVariable Long familyId, @PathVariable Long goldItemId) {
        return mineService.getGoldMineItemInfo(familyId,goldItemId);
     }
@@ -77,6 +80,7 @@ public class MineController {
     })
     @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/now")
     @CrossOrigin
+    @CheckToken
     public FightVo fight(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
         return mineService.fight(familyId,goldItemId,userId);
     }
@@ -92,6 +96,7 @@ public class MineController {
     })
     @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/kill")
     @CrossOrigin
+    @CheckToken
     public FightKillVo fightKill(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
         return mineService.fightKill(familyId,goldItemId,userId);
     }
