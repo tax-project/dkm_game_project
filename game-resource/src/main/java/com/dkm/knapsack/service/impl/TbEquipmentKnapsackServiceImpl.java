@@ -146,9 +146,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
-
+        System.out.println("==========="+tbEquipmentKnapsack.getFoodId());
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0){
+            System.out.println("进来了==================");
             TbKnapsack tbKnapsack=new TbKnapsack();
             tbKnapsack.setUserId(localUser.getUser().getId());
             List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
