@@ -1,11 +1,6 @@
 package com.dkm.knapsack.controller;
 
 
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.dkm.constanct.CodeType;
-import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbBox;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
@@ -13,10 +8,8 @@ import com.dkm.knapsack.service.ITbBoxService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,7 +99,7 @@ public class TbBoxController {
     @CheckToken
     public TbEquipmentVo selectByBoxId(String boxId){
         TbEquipmentVo list=tbBoxService.selectByBoxId(boxId);
-        if(!StringUtils.isEmpty(list)){
+        if(list!=null){
             return list;
         }else{
             return null;
@@ -172,7 +165,7 @@ public class TbBoxController {
     @CheckToken
     public List<TbBox> selectAll(){
         List<TbBox> list=tbBoxService.selectAll();
-        if(!StringUtils.isEmpty(list)){
+        if(list!=null&&list.size()!=0){
             return list;
         }else{
             return null;

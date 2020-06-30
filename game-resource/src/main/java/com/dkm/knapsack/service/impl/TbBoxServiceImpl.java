@@ -69,7 +69,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
-        if(!StringUtils.isEmpty(list)){
+        if(list.size()!=0&&list!=null){
             return list;
         }else{
             return null;

@@ -56,7 +56,7 @@ public class ApparelMarketController {
     @CrossOrigin
     @CheckToken
     @PostMapping("/downApparel")
-    public void putOnSell(Long apparelMarketId){
+    public void putOnSell(@RequestBody Long apparelMarketId){
         if(apparelMarketId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }

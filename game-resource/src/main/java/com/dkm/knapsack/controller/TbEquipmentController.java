@@ -2,8 +2,6 @@ package com.dkm.knapsack.controller;
 
 
 
-import com.dkm.constanct.CodeType;
-import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
@@ -11,7 +9,6 @@ import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -108,7 +105,7 @@ public class TbEquipmentController {
     @CheckToken
     public List<TbEquipmentVo> selectByEquipmentId(@PathVariable("equipmentId") String equipmentId){
        List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(Long.valueOf(equipmentId));
-       if(!StringUtils.isEmpty(list)){
+       if(list.size()!=0&&list!=null){
            return list;
        }else{
            return null;
