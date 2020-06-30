@@ -8,9 +8,9 @@
 <!--    </select>-->
 
         <select id="selectByBattleId" resultType="com.dkm.goldMine.bean.entity.MineItemEntity">
-            select * from tb_family_mine_item where battle_id = ${battle_id}
+            select * from tb_family_mines_item where battle_id = ${battle_id}
         </select>
     <select id="selectByBattleIdAndGoldItemId" resultType="com.dkm.goldMine.bean.entity.MineItemEntity">
-        select * from tb_family_mine_item where family_id = ${family_id} AND gold_item_id = ${gold_item_id}
+        select * from tb_family_mines_item where family_id = ${family_id} AND gold_item_id = ${gold_item_id}
     </select>
 </mapper>
