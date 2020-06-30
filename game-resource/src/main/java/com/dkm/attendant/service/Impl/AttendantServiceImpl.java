@@ -480,6 +480,8 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId);
         //随机生成我方宠物信息
         map.put("myPetsDto",myPetsDto);
+        //我方所有宠物
+        map.put("petInfo",petInfo);
         //随机生成我他方宠物信息
         map.put("hePetsDto",hePetsDto);
         //我方血量             我方血量加上我方防御力得到最终血量

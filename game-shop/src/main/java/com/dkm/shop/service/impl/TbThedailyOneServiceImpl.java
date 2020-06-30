@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class TbThedailyOneServiceImpl  implements ITbThedailyOneService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         List<TbThedaily> list=tbThedailyService.findById(Long.valueOf(thdId));
-        if( StringUtils.isEmpty(list) ){
+        if( list==null &&list.size()==0 ){
             //如果失败将回滚
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "找不到数据");
         }
