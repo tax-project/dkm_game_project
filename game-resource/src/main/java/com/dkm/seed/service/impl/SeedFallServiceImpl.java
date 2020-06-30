@@ -1,8 +1,11 @@
 package com.dkm.seed.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
@@ -11,6 +14,7 @@ import com.dkm.seed.dao.SeedsFallMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
+import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.service.ISeedFallService;
 import com.dkm.seed.vilidata.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +38,7 @@ import static com.dkm.seed.vilidata.RandomUtils.*;
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
-public class SeedFallServiceImpl implements ISeedFallService {
+public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall> implements ISeedFallService {
 
     @Autowired
     private LocalUser localUser;
@@ -53,23 +57,18 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
 
     @Override
-    public List<GoldOrMoneyVo> seedDrop(Integer seedGrade) {
+    public List<GoldOrMoneyVo> seedDrop() {
 
-        List<GoldOrMoneyVo> GoldOrMoneyVolist=new ArrayList<>();
-
-        UserLoginQuery user = localUser.getUser();
-
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+        List<GoldOrMoneyVo> goldOrMoneyVos=new ArrayList<>();
 
         //查询已经种植的种子
-        LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
-                .eq(LandSeed::getUserId, user.getId())
+        LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
                 .eq(LandSeed::getLeStatus, 1);
 
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
         if(landSeedList.size()==0){
-            return null;
+           throw new ApplicationException(CodeType.SERVICE_ERROR,"当前没有用户种植");
         }
 
         Integer gold=0;
@@ -88,12 +87,12 @@ public class SeedFallServiceImpl implements ISeedFallService {
             seedsFall.setId(seed.getId());
             seedsFall.setSeedId(seed.getSeedId());
 
+            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(seed.getUserId());
+
             //true掉落金币   false 没有金币掉落
-            boolean dropCoins = randomUtils.probabilityDroppingGold(seedGrade);
+            boolean dropCoins = randomUtils.probabilityDroppingGold(seed.getSeedId());
             if(dropCoins){
-                double userGold  = Math.pow(userInfoQueryBoResult.getData().getUserInfoGrade(), 2)*50 +1000;
-                Integer userGoldInteger = (int) userGold;
-                gold = randomUtils.NumberCoinsDropped(userGoldInteger,seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
+                gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
 
                 seedsFall.setDropCoins(gold);
 
@@ -104,6 +103,7 @@ public class SeedFallServiceImpl implements ISeedFallService {
             //true 掉落红包   false 没有红包掉落
             boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
             if(produceGoldRed){
+                //掉落的红包数量
                 money =randomUtils.NumberRedPacketsDropped();
 
                 seedsFall.setDropRedEnvelope(money);
@@ -118,18 +118,26 @@ public class SeedFallServiceImpl implements ISeedFallService {
 
             goldOrMoneyVo.setDropFallingFlowers(integer);
 
-            //将对象添加到集合  然后批量添加
-            list.add(seedsFall);
+            /**
+             * 将对象添加到集合  然后批量添加
+             * 只要有掉落的数据不等于0 则添加到集合中
+             */
+            if(seedsFall.getDropCoins()!=0 || seedsFall.getDropRedEnvelope()!=0.0 || seedsFall.getDropFallingFlowers()!=0){
+                list.add(seedsFall);
+            }
             //将值封装到vo
-            GoldOrMoneyVolist.add(goldOrMoneyVo);
+            goldOrMoneyVos.add(goldOrMoneyVo);
 
         }
 
         //将掉落的金币和红包存入数据库
         seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
 
-        return GoldOrMoneyVolist;
+        return goldOrMoneyVos;
     }
+
+
+
 
 
 
@@ -176,6 +184,27 @@ public class SeedFallServiceImpl implements ISeedFallService {
         list.add(a.subtract(bd).doubleValue());
 
         return list;
+    }
+
+    /**
+     * 查询已掉落的数据
+     * @return
+     */
+    @Override
+    public List<SeedsFallVo> queryDroppedItems() {
+        List<SeedsFallVo> seedsFallVos = baseMapper.queryDroppedItems(localUser.getUser().getId());
+        return seedsFallVos;
+    }
+
+
+    /**
+     * 修改种子状态为2 待收取
+     * @param list
+     * @return
+     */
+    @Override
+    public int updateLeStatus(List<Long> list) {
+        return baseMapper.updateLeStatus(list);
     }
 
 

@@ -22,7 +22,7 @@ public class SeedsFall extends Model<SeedsFall> {
     /**
      * 种子id
      */
-    private Long seedId;
+    private Integer seedId;
     /**
      * 掉落的金币
      */
@@ -35,6 +35,6 @@ public class SeedsFall extends Model<SeedsFall> {
     /**
      * 掉落的花
      */
-    private Integer dropFallingFlowers;
+    private Integer dropFallingFlowers=0;
 
 }

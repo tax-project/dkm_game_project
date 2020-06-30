@@ -17,7 +17,7 @@ public class SeedPlantVo {
     /**
      * 种子id
      */
-    private Long seedId;
+    private Integer seedId;
     /**
      * 等级
      */

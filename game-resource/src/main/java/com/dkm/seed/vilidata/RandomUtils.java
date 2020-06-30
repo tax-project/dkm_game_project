@@ -71,7 +71,7 @@ public class RandomUtils {
      * 金币掉落的数量
      *
      */
-    public Integer NumberCoinsDropped(Integer gold,Long time){
+    public Integer NumberCoinsDropped(Long time){
 /*        double start = time / gold / 2 * 0.5/100;
 
         int start1 = (int) start;
