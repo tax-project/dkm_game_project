@@ -37,6 +37,7 @@ public class MineController {
             @ApiImplicitParam(value = "家族ID",name="familyId",paramType = "path",dataType = "Long",required = true),
     })
     @GetMapping("/{familyId}/getInfo")
+    @CrossOrigin
     public GoldMineVo getFamilyGoldMine(@PathVariable String familyId) {
         long familyIdInt;
         try {
@@ -60,6 +61,7 @@ public class MineController {
             @ApiImplicitParam(value = "矿区ID",name="goldItemId",paramType = "path",dataType = "Long",required = true),
     })
     @GetMapping("/{familyId}/{goldItemId}/getStatus")
+    @CrossOrigin
     public MineItemFightVo getFamilyGoldMine(@PathVariable Long familyId, @PathVariable Long goldItemId) {
        return mineService.getGoldMineItemInfo(familyId,goldItemId);
     }
@@ -74,6 +76,7 @@ public class MineController {
             @ApiImplicitParam(value = "用户ID",name="userId",paramType = "path",dataType = "Long",required = true),
     })
     @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/now")
+    @CrossOrigin
     public FightVo fight(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
         return mineService.fight(familyId,goldItemId,userId);
     }
@@ -88,6 +91,7 @@ public class MineController {
             @ApiImplicitParam(value = "用户ID",name="userId",paramType = "path",dataType = "Long",required = true),
     })
     @GetMapping("/{familyId}/{goldItemId}/fight/{userId}/kill")
+    @CrossOrigin
     public FightKillVo fightKill(@PathVariable Long familyId, @PathVariable Long goldItemId,@PathVariable Long userId) {
         return mineService.fightKill(familyId,goldItemId,userId);
     }
