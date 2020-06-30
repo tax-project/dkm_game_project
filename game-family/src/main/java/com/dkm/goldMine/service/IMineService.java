@@ -7,7 +7,7 @@ public interface IMineService {
     void createNewMineByFamilyId(Long familyId);
     MineItemFightVo getGoldMineItemInfo(Long familyId, Long goldItemId);
 
-    FightVo fight(Long id, Long familyId, Long goldItemId);
+    FightVo fight( Long familyId, Long goldItemId,Long userId);
 
     FightKillVo fightKill(Long familyId, Long goldItemId, Long userId);
 }

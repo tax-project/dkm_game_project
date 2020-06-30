@@ -176,15 +176,15 @@ public class MineServiceImpl implements IMineService {
     }
 
     @Override
-    public FightVo fight(Long userId, Long familyId, Long goldItemId) {
+    public FightVo fight( Long familyId, Long goldItemId,Long userId) {
         FightVo fightVo = new FightVo();
         val itemEntity = mineItemMapper.selectByBattleIdAndGoldItemId(familyId, goldItemId);
-
         val familyEntity = familyDao.selectById(familyId);
         if (familyEntity == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "用户不属于此家族");
         }
-        val familyGrade = familyEntity.getFamilyGrade(); //等级
+        val familyGrade = familyEntity.getFamilyGrade();
+        //等级
         if (itemEntity.getLevel() > familyGrade && (itemEntity.getLevel() - familyGrade) > 3) {
             fightVo.setFightStatus(false);
         } else {
