@@ -6,6 +6,9 @@ import com.dkm.apparel.dao.ApparelMarketMapper;
 import com.dkm.apparel.dao.ApparelOrderMapper;
 import com.dkm.apparel.dao.ApparelUserDao;
 import com.dkm.apparel.entity.ApparelMarketEntity;
+import com.dkm.apparel.entity.ApparelOrderEntity;
+import com.dkm.apparel.entity.dto.ApparelMarketDto;
+import com.dkm.apparel.entity.dto.BuyMarketApparelDto;
 import com.dkm.apparel.entity.vo.ApparelMarketDetailVo;
 import com.dkm.apparel.entity.vo.ApparelOrderVo;
 import com.dkm.apparel.entity.vo.ApparelPutVo;
@@ -69,11 +72,11 @@ public class ApparelMarketImpl implements IApparelMarketService {
     public void downApparel(Long apparelMarketId) {
         ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
         if(marketEntity==null)throw new ApplicationException(CodeType.SERVICE_ERROR,"该商品未上架");
-        int i = apparelMarketMapper.deleteById(apparelMarketId);
+        int delete = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
         ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, marketEntity.getUserId()).eq(ApparelUserEntity::getApparelDetailId, marketEntity.getApparelDetailId()));
         apparelUserEntity.setIsEquip(0);
         int i1 = apparelUserDao.updateById(apparelUserEntity);
-        if(i!=1||i1!=1)throw new ApplicationException(CodeType.SERVICE_ERROR,"下架失败");
+        if(delete!=1||i1!=1)throw new ApplicationException(CodeType.SERVICE_ERROR,"下架失败");
     }
 
     @Override
@@ -83,11 +86,55 @@ public class ApparelMarketImpl implements IApparelMarketService {
 
     @Override
     public List<ApparelMarketDetailVo> puttingApparel(Long userId) {
-        return apparelMarketMapper.getPuttingApparel(userId);
+        List<ApparelMarketDetailVo> puttingApparel = apparelMarketMapper.getPuttingApparel(userId);
+        LocalDateTime now = LocalDateTime.now();
+        puttingApparel.forEach(a->{
+            if(now.isAfter(a.getMaturityTime())){
+                puttingApparel.remove(a);
+                apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,a.getApparelMarketId()));
+            }
+        });
+        return puttingApparel;
     }
 
     @Override
     public List<ApparelOrderVo> getApparelOrders(Long userId) {
         return apparelOrderMapper.getApparelOrders(userId);
+    }
+
+    @Override
+    public List<ApparelMarketDto> getApparelMarketInfo(Long userId,Integer type) {
+        return apparelMarketMapper.getApparelMarketInfo(userId, type);
+    }
+
+    @Override
+    public void buyMarketApparel(BuyMarketApparelDto buyMarketApparelDto) {
+        ApparelMarketEntity marketEntity = apparelMarketMapper.selectById(buyMarketApparelDto.getApparelMarketId());
+        if(marketEntity==null)throw new ApplicationException(CodeType.SERVICE_ERROR,"该服饰已售出！");
+        //删除上架信息
+        int i = apparelMarketMapper.deleteById(buyMarketApparelDto.getApparelMarketId());
+        ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, buyMarketApparelDto.getSellUserId()).eq(ApparelUserEntity::getIsEquip, 2));
+        apparelUserEntity.setUserId(buyMarketApparelDto.getBuyUserId());
+        //修改服饰用户归属
+        int i1 = apparelUserDao.updateById(apparelUserEntity);
+        //更新购买记录
+        LocalDateTime now = LocalDateTime.now();
+        ApparelOrderEntity apparelOrderEntity = new ApparelOrderEntity();
+        apparelOrderEntity.setUserId(buyMarketApparelDto.getBuyUserId());
+        apparelOrderEntity.setApparelPayTime(now);
+        apparelOrderEntity.setApparelPayMoney(marketEntity.getGold());
+        apparelOrderEntity.setApparelDetailId(marketEntity.getApparelDetailId());
+        apparelOrderEntity.setApparelOrderType(0);
+        apparelOrderEntity.setApparelOrderId(idGenerator.getNumberId());
+        //更新购买者订单
+        int insert = apparelOrderMapper.insert(apparelOrderEntity);
+        apparelOrderEntity.setApparelOrderId(idGenerator.getNumberId());
+        apparelOrderEntity.setApparelOrderType(1);
+        apparelOrderEntity.setUserId(buyMarketApparelDto.getSellUserId());
+        int insert1 = apparelOrderMapper.insert(apparelOrderEntity);
+        //跟新用户金币
+        Integer integer = apparelOrderMapper.updateUserGold(-marketEntity.getGold(), buyMarketApparelDto.getSellUserId());
+        Integer integer1 = apparelOrderMapper.updateUserGold(marketEntity.getGold(), buyMarketApparelDto.getBuyUserId());
+        if(i<1||i1<1||insert<1||insert1<1||integer<1||integer1<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"购买失败！");
     }
 }

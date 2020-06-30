@@ -1,5 +1,7 @@
 package com.dkm.apparel.service;
 
+import com.dkm.apparel.entity.dto.ApparelMarketDto;
+import com.dkm.apparel.entity.dto.BuyMarketApparelDto;
 import com.dkm.apparel.entity.vo.ApparelMarketDetailVo;
 import com.dkm.apparel.entity.vo.ApparelOrderVo;
 import com.dkm.apparel.entity.vo.ApparelPutVo;
@@ -47,4 +49,18 @@ public interface IApparelMarketService {
      * @return
      */
     List<ApparelOrderVo> getApparelOrders(Long userId);
+
+    /**
+     * 集市数据
+     * @param userId
+     * @param type
+     * @return
+     */
+    List<ApparelMarketDto> getApparelMarketInfo(Long userId,Integer type);
+
+    /**
+     * 购买集市服饰
+     * @param buyMarketApparelDto
+     */
+    void buyMarketApparel(BuyMarketApparelDto buyMarketApparelDto);
 }

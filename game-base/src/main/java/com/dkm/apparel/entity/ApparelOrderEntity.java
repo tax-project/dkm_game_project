@@ -17,26 +17,26 @@ import java.time.LocalDateTime;
 public class ApparelOrderEntity {
 
     @TableId
-    private Long apparel_order_id;
+    private Long apparelOrderId;
 
     /**
      * 0金币1钻石
      */
-    private Integer apparel_pay_type;
+    private Integer apparelPayType;
 
     /**
      * 支付金币或钻石
      */
-    private Integer apparel_pay_money;
+    private Integer apparelPayMoney;
 
     /**
      * 类型0购买1卖出
      */
-    private Integer apparel_order_type;
+    private Integer apparelOrderType;
 
     private Long userId;
 
-    private LocalDateTime apparel_pay_time;
+    private LocalDateTime apparelPayTime;
 
     private Long apparelDetailId;
 }
