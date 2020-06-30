@@ -82,6 +82,7 @@ public class SeedsFallController {
     public int updateLeStatus(@RequestParam(value = "id[]")Integer[] id){
 
         List<Long> list=new ArrayList<>();
+
         for (int i = 0; i < id.length; i++) {
             list.add(Long.valueOf(id[i]));
         }

@@ -110,7 +110,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             List<TbKnapsack> list1 = tbKnapsackService.findById(tbKnapsack);
             //背包主键
             Long knapsackId = null;
-            if (!StringUtils.isEmpty(list1)) {
+            if (list1.size()!=0&&list1!=null) {
                 for (TbKnapsack knapsack : list1) {
                     //传入背包主键
                     knapsackId = knapsack.getKnapsackId();
@@ -120,7 +120,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             queryWrapper.eq("knapsack_id",knapsackId);
             queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
             List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
-            if(!StringUtils.isEmpty(list)){
+            if(list.size()!=0&&list!=null){
                 //食物背包表主键
                 Long tekId=null;
                 Integer number=null;
@@ -146,7 +146,6 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
-
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0){
             TbKnapsack tbKnapsack=new TbKnapsack();
@@ -154,7 +153,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
             //背包主键
             Long knapsackId=null;
-            if(!StringUtils.isEmpty(list1)) {
+            if(list1.size()!=0&&list1!=null) {
                 for (TbKnapsack knapsack : list1) {
                     //传入背包主键
                     knapsackId =knapsack.getKnapsackId();
@@ -164,7 +163,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             queryWrapper.eq("knapsack_id",knapsackId);
             queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
             List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
-            if(!StringUtils.isEmpty(list)){
+            if(list.size()!=0&&list!=null){
                 //食物背包表主键
                 Long tekId=null;
                 Integer number=null;
@@ -212,7 +211,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
         //背包主键
         Long knapsackId=null;
-        if(!StringUtils.isEmpty(list)) {
+        if(list.size()!=0&&list!=null) {
             for (TbKnapsack knapsack : list) {
 
                 //传入背包主键
@@ -276,7 +275,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
         tbEquipmentKnapsackVo.setUserId(localUser.getUser().getId());
         List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackMapper.selectPropsTwo(tbEquipmentKnapsackVo);
-        if(!StringUtils.isEmpty(list)){
+        if(list.size()!=0&&list!=null){
             Long id=null;
             for (TbEquipmentKnapsackVo equipmentKnapsack : list) {
                 id=equipmentKnapsack.getTekId();
@@ -658,7 +657,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         tbEquipmentKnapsack.setTekId(idGenerator.getNumberId());
         List<TbKnapsack> list=tbKnapsackService.findById(tbKnapsack);
 
-        if(!StringUtils.isEmpty(list)){
+        if(list.size()!=0&&list!=null){
             for (TbKnapsack knapsack : list) {
                 //传入背包主键
                 tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
