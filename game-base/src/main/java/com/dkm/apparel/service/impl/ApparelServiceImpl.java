@@ -1,5 +1,6 @@
 package com.dkm.apparel.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.apparel.dao.ApparelMapper;
 import com.dkm.apparel.dao.ApparelUserDao;
@@ -52,7 +53,7 @@ public class ApparelServiceImpl implements ApparelService {
 
     @Override
     public void doApparel(Long apparelId,Long userId) {
-        Integer count = apparelUserDao.selectCount(new QueryWrapper<ApparelUserEntity>().lambda().gt(ApparelUserEntity::getApparelCompleteTime, LocalDateTime.now()));
+        Integer count = apparelUserDao.selectCount(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId,userId).gt(ApparelUserEntity::getApparelCompleteTime, LocalDateTime.now()));
         if(count!=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"当前服饰还未制作完成！");
         }

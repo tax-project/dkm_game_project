@@ -16,6 +16,7 @@ import com.dkm.apparel.entity.ApparelUserEntity;
 import com.dkm.apparel.service.IApparelMarketService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +100,9 @@ public class ApparelMarketImpl implements IApparelMarketService {
 
     @Override
     public List<ApparelOrderVo> getApparelOrders(Long userId) {
-        return apparelOrderMapper.getApparelOrders(userId);
+        List<ApparelOrderVo> apparelOrders = apparelOrderMapper.getApparelOrders(userId);
+        apparelOrders.forEach(a-> a.setTime(DateUtils.formatDateTime(a.getApparelPayTime())));
+        return apparelOrders;
     }
 
     @Override
@@ -109,12 +112,13 @@ public class ApparelMarketImpl implements IApparelMarketService {
 
     @Override
     public void buyMarketApparel(BuyMarketApparelDto buyMarketApparelDto) {
-        ApparelMarketEntity marketEntity = apparelMarketMapper.selectById(buyMarketApparelDto.getApparelMarketId());
+        ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,buyMarketApparelDto.getApparelMarketId()));
         if(marketEntity==null)throw new ApplicationException(CodeType.SERVICE_ERROR,"该服饰已售出！");
         //删除上架信息
-        int i = apparelMarketMapper.deleteById(buyMarketApparelDto.getApparelMarketId());
+        int i = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,buyMarketApparelDto.getApparelMarketId()));
         ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, buyMarketApparelDto.getSellUserId()).eq(ApparelUserEntity::getIsEquip, 2));
         apparelUserEntity.setUserId(buyMarketApparelDto.getBuyUserId());
+        apparelUserEntity.setIsEquip(0);
         //修改服饰用户归属
         int i1 = apparelUserDao.updateById(apparelUserEntity);
         //更新购买记录
