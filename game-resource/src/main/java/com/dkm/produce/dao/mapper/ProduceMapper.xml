@@ -14,7 +14,7 @@
               from tb_user_produce a join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
               join tb_attendant_user d on b.attendant_id = d.attendant_id
-              where a.user_id= #{userId}
+              where a.user_id= #{userId} and b.status = 0
               group by b.attendant_id,d.caught_people_id,c.id
     </select>
 
