@@ -26,15 +26,13 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
-import io.swagger.models.auth.In;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
