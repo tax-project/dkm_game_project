@@ -146,9 +146,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
-
+        System.out.println("==========="+tbEquipmentKnapsack.getFoodId());
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0){
+            System.out.println("进来了==================");
             TbKnapsack tbKnapsack=new TbKnapsack();
             tbKnapsack.setUserId(localUser.getUser().getId());
             List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
@@ -165,12 +166,14 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             queryWrapper.eq("food_id",tbEquipmentKnapsack.getFoodId());
             List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
             if(!StringUtils.isEmpty(list)){
+                System.out.println("进来了list集合=============");
                 //食物背包表主键
                 Long tekId=null;
                 Integer number=null;
                 for (TbEquipmentKnapsack equipmentKnapsackOne : list) {
                     tekId=equipmentKnapsackOne.getTekId();
                     number=equipmentKnapsackOne.getFoodNumber()+tbEquipmentKnapsack.getFoodNumber();
+                    System.out.println(tekId+"进来了list集合============="+number);
                 }
                 QueryWrapper queryWrapper1=new QueryWrapper();
                 queryWrapper1.eq("tek_id",tekId);
