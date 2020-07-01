@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.seed.dao.PirateMapper">
+
+    <select id="queryUserIdSeed" resultType="com.dkm.seed.entity.vo.PirateVo" parameterType="java.lang.Long">
+        select b.we_chat_nick_name,b.we_chat_head_img_url from tb_pirate a,tb_user b where a.pirate_from_id=#{userId} and a.pirate_to_id=b.user_id
+    </select>
+
+
+</mapper>
