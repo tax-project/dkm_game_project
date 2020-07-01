@@ -68,7 +68,7 @@ public interface ResourceFeignClient {
      * @return
      */
     @GetMapping("/Seed/queryUserIdSeeds")
-    Result<List<SeedPlantUnlock>>  queryUserIdSeed(Long userId);
+    Result<List<SeedPlantUnlock>>  queryUserIdSeed(@RequestParam("userId")Long userId);
 
     /**
      * 根据登录人id查看自己主人

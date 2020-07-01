@@ -258,6 +258,13 @@ public class AttendantServiceImpl implements IAttendantService {
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
         //随机获取他方宠物
+        if (petInfo1.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "fegin有误");
+        }
+
+        if (petInfo1.getData() == null || petInfo1.getData().size() == 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "数据异常");
+        }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
@@ -476,8 +483,8 @@ public class AttendantServiceImpl implements IAttendantService {
             }
         }
 
-        map.put("userInfoQueryBoResult",userInfoQueryBoResult);
-        map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId);
+        map.put("userInfoQueryBoResult",userInfoQueryBoResult.getData());
+        map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId.getData());
         //随机生成我方宠物信息
         map.put("myPetsDto",myPetsDto);
         //我方所有宠物
@@ -487,7 +494,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //我方血量             我方血量加上我方防御力得到最终血量
         map.put("ourHealth",ourHealth+ourDefenses);
         //他方血量
-        map.put("ourHealth1",heEquipBonus+heDefense);
+        map.put("heHealth",heEquipBonus+heDefense);
         //我方战力
         map.put("ourCapabilities",myRipetime);
         //他方战力
@@ -670,7 +677,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         UserLoginQuery user = localUser.getUser();
         //得到产出的物品集合
-        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attId);
+        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attUserId);
 
         List<Long> idList = new ArrayList<>();
 

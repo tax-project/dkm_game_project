@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class TimeLimit {
 
-    public static Map<String,Map<Long,Integer>> accountPwdCount = new HashMap<String,Map<Long,Integer>>();
+    public static Map<String,Map<Long,Integer>> accountPwdCount = new HashMap<>();
 
     public static synchronized boolean TackBackLimit(Long userId,Integer number){
         boolean isPass = true;
@@ -27,27 +27,27 @@ public class TimeLimit {
 
         if(todayMap==null){
 
-            todayMap = new HashMap<Long,Integer>(16);
+            todayMap = new HashMap<>(16);
             todayMap.put(userId, 1);
             accountPwdCount.put(oneKey, todayMap);
 
         }else{
 
-            Integer acountCount = todayMap.get(userId);
-            if(acountCount==null){
+            Integer accountCount = todayMap.get(userId);
+            if(accountCount==null){
                 todayMap.put(userId, 1);
             }else{
-                if(acountCount>=number){
+                if(accountCount>=number){
                     isPass=false;
                 }else{
-                    todayMap.put(userId, acountCount+1);
+                    todayMap.put(userId, accountCount+1);
                 }
             }
         }
         /**
          * 清理历史数据start
          */
-        accountPwdCount = new HashMap<String,Map<Long,Integer>>();
+        accountPwdCount = new HashMap<>(10);
         accountPwdCount.put(oneKey, todayMap);
         /**
          * 清理历史数据end
