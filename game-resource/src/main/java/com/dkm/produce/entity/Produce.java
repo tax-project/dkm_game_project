@@ -23,9 +23,9 @@ public class Produce extends Model<Produce> {
     private Long id;
 
     /**
-     *  跟班id
+     *  跟班用户id
      */
-    private Long attendantId;
+    private Long attUserId;
 
     /**
      * 物品id
