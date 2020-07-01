@@ -670,7 +670,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         UserLoginQuery user = localUser.getUser();
         //得到产出的物品集合
-        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attId);
+        List<CollectResultBo> list = attendantMapper.collect(user.getId(), attUserId);
 
         List<Long> idList = new ArrayList<>();
 

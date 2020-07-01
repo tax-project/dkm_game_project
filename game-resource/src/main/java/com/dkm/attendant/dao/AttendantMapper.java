@@ -45,12 +45,13 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
     void dismissal(@Param("caughtPeopleId") Long caughtPeopleId, @Param("aId") Long aId);
 
     /**
-     *  收取产出
+     * 收取产出
      * @param userId 用户id
-     * @param attId 跟班id
+     * @param attUserId 跟班用户id
      * @return 返回产出集合
      */
-    List<CollectResultBo> collect(@Param("userId") Long userId, @Param("attId") Long attId);
+    List<CollectResultBo> collect(@Param("userId") Long userId,
+                                  @Param("attUserId") Long attUserId);
 
 
     /**

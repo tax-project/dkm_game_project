@@ -194,9 +194,9 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         int count =(int) l / integer-housekeeperEntity.getSeedCount();
         housekeeperEntity.setSeedCount(housekeeperEntity.getSeedCount()+count);
         //收取的经验
-        int exp = count * data.size() * data.get(0).getSeedExperience();
+        int exp = count * size * data.get(0).getSeedExperience();
         //收取的金币
-        int gold = count * data.size() * data.get(0).getSeedGold();
+        int gold = count * size * data.get(0).getSeedGold();
         //调用收取种子的接口
         housekeeperEntity.setSeedGold(housekeeperEntity.getSeedGold()+gold);
         housekeeperEntity.setSeedExp(housekeeperEntity.getSeedExp()+exp);

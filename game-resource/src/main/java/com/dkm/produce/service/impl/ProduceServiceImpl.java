@@ -102,12 +102,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         produce.setId(produceId);
 
-        if (attendantId != 1 && attendantId != 2 && attendantId != 3) {
-            //放进用户跟班表
-            produce.setAttendantId(0L);
-        } else {
-            produce.setAttendantId(attendantId);
-        }
+        produce.setAttUserId(attUserId);
 
         int number;
         //算出随机生成的数量

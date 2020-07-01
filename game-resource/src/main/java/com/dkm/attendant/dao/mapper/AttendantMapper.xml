@@ -48,7 +48,7 @@
                 from tb_user_produce a join tb_produce b
                 on a.produce_id = b.id join tb_goods c on b.good_id = c.id
                 where a.user_id = #{userId}
-                and b.attendant_id = #{attId} and b.status = 0
+                and b.att_user_id = #{attUserId} and b.status = 0
     </select>
 
 
