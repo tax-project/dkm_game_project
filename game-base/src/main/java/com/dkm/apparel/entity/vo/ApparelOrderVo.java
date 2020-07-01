@@ -15,4 +15,5 @@ import lombok.EqualsAndHashCode;
 public class ApparelOrderVo extends ApparelOrderEntity {
     private String apparelUrl;
     private String apparelName;
+    private String time;
 }

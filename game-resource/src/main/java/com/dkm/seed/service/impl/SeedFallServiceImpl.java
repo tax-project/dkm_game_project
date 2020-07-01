@@ -122,7 +122,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
              * 将对象添加到集合  然后批量添加
              * 只要有掉落的数据不等于0 则添加到集合中
              */
-            System.out.println("integer = " + seedsFall.getDropCoins()+"=="+seedsFall.getDropRedEnvelope()+"=========="+seedsFall.getDropFallingFlowers());
             if(seedsFall.getDropCoins()!=0 || seedsFall.getDropRedEnvelope()!=0.0 || seedsFall.getDropFallingFlowers()!=0){
                 list.add(seedsFall);
             }

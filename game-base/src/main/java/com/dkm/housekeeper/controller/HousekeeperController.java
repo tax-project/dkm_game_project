@@ -84,6 +84,18 @@ public class HousekeeperController {
     }
 
     /**
+     * 获取宝箱装备
+     * @return
+     */
+    @ApiOperation("获取种植经验金币")
+    @GetMapping("/getSeed")
+    @CrossOrigin
+    @CheckToken
+    public Map<String,Integer> getSeed(){
+        return housekeeperService.getSeed(localUser.getUser().getId());
+    }
+
+    /**
      * 判断是否能偷取
      * @return
      */
