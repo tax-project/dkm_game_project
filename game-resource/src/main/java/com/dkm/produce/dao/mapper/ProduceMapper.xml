@@ -4,7 +4,8 @@
 <mapper namespace="com.dkm.produce.dao.ProduceMapper">
 
     <select id="queryImgFood" resultType="com.dkm.produce.entity.vo.AttendantImgVo" parameterType="java.lang.Long">
-        select b.we_chat_head_img_url,a.attendant_id from tb_attendant_user a,tb_user b where a.user_id=712025696226152448 and a.caught_people_id=b.user_id
+        select b.we_chat_head_img_url,a.attendant_id from tb_attendant_user a,tb_user b
+        where a.user_id=712025696226152448 and a.caught_people_id=b.user_id
     </select>
 
 
@@ -13,9 +14,9 @@
               ,c.name as 'goodName',c.url as 'imgUrl',d.caught_people_id
               from tb_user_produce a join tb_produce b
               on a.produce_id = b.id join tb_goods c on b.good_id = c.id
-              join tb_attendant_user d on b.attendant_id = d.attendant_id
+              join tb_attendant_user d on b.att_user_id = d.atu_id
               where a.user_id= #{userId} and b.status = 0
-              group by b.attendant_id,d.caught_people_id,c.id
+              group by b.att_user_id,d.caught_people_id,c.id
     </select>
 
 

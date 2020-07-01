@@ -258,6 +258,13 @@ public class AttendantServiceImpl implements IAttendantService {
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
         //随机获取他方宠物
+        if (petInfo1.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "fegin有误");
+        }
+
+        if (petInfo1.getData() == null || petInfo1.getData().size() == 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "数据有问题  找梦琪");
+        }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 

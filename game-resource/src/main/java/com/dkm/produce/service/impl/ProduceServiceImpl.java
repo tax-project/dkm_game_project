@@ -102,6 +102,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         produce.setId(produceId);
 
+        if (1L == attendantId || 2L == attendantId || 3L == attendantId) {
+            produce.setAttendantId(attendantId);
+        } else {
+            produce.setAttendantId(0L);
+        }
+
         produce.setAttUserId(attUserId);
 
         int number;
