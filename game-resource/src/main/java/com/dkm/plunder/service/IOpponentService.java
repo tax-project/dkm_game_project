@@ -1,5 +1,7 @@
 package com.dkm.plunder.service;
 
+import com.dkm.plunder.entity.Opponent;
+
 import java.util.Map;
 
 /**
@@ -16,6 +18,8 @@ public interface IOpponentService {
      */
     Map<String,Object> queryOpponent();
 
-
-
+    /**
+     * 添加对手信息
+     */
+    int addOpponent(Opponent opponent);
 }

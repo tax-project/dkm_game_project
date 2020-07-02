@@ -27,6 +27,7 @@ import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.plunder.service.IOpponentService;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
@@ -82,7 +83,7 @@ public class AttendantServiceImpl implements IAttendantService {
     private EventMapper eventMapper;
 
     @Autowired
-    private OpponentMapper opponentMapper;
+    private IOpponentService iOpponentService;
 
 
     private String redisLock = "REDIS::LOCK:ATTENDANT";
@@ -249,7 +250,7 @@ public class AttendantServiceImpl implements IAttendantService {
         opponent.setUserId(userInfoQueryBoResult.getData().getUserId());
         opponent.setOpponentId(userInfoQueryBoResultCaughtPeopleId.getData().getUserId());
 
-        int insert = opponentMapper.insert(opponent);
+        int insert = iOpponentService.addOpponent(opponent);
         if(insert<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"添加对手信息异常");
         }
@@ -258,6 +259,13 @@ public class AttendantServiceImpl implements IAttendantService {
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
         //随机获取他方宠物
+        if (petInfo1.getCode() != 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "fegin有误");
+        }
+
+        if (petInfo1.getData() == null || petInfo1.getData().size() == 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "数据异常");
+        }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 

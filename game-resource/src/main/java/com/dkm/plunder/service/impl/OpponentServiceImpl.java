@@ -38,4 +38,9 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         return map;
     }
+
+    @Override
+    public int addOpponent(Opponent opponent) {
+        return baseMapper.insert(opponent);
+    }
 }
