@@ -3,6 +3,9 @@ package com.dkm.mine2.bean.other;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * @author 符凯龙
+ */
 @AllArgsConstructor
 @Data
 public class User2FamilyId {
