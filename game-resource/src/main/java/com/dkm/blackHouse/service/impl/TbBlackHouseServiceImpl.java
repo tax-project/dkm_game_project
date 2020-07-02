@@ -93,12 +93,12 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         //首先根据传过来的登录用户的id查询出被关人的id
         List<TbBlackHouse> selectById=tbBlackHouseService.selectById(userId);
         if(ObjectUtils.isEmpty(selectById)){
-            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
+            return null;
         }
         TbBlackHouse tbBlackHouse=new TbBlackHouse();
 
         if(selectById.size()>1){
-            throw new ApplicationException(CodeType.RESOURCES_EXISTING, "该用户黑屋关了两个");
+            return null;
         }
         for (TbBlackHouse blackHouse : selectById) {
             tbBlackHouse.setToId(blackHouse.getToId());
