@@ -97,14 +97,13 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         }
         TbBlackHouse tbBlackHouse=new TbBlackHouse();
 
+        if(selectById.size()>1){
+            throw new ApplicationException(CodeType.RESOURCES_EXISTING, "该用户黑屋关了两个");
+        }
         for (TbBlackHouse blackHouse : selectById) {
-
-            if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
-            }
             tbBlackHouse.setToId(blackHouse.getToId());
             tbBlackHouse.setFromId(blackHouse.getFromId());
         }
-
         return tbBlackHouseMapper.selectIsBlackTwo(tbBlackHouse);
     }
 
