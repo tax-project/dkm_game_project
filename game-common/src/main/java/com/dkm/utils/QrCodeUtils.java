@@ -1,5 +1,6 @@
 package com.dkm.utils;
 
+
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -40,7 +41,7 @@ public class QrCodeUtils {
       //指定字符编码为“utf-8”
       hints.put(EncodeHintType.CHARACTER_SET,"utf-8");
       //指定二维码的纠错等级为中级
-      hints.put(EncodeHintType.ERROR_CORRECTION,ErrorCorrectionLevel.M);
+      hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
       //设置图片的边距
       hints.put(EncodeHintType.MARGIN, 2);
 
@@ -57,7 +58,7 @@ public class QrCodeUtils {
         }
         return true;
 	}
-	
+
 	public String getContentFromQrCode(String filePath) {
 		MultiFormatReader formatReader=new MultiFormatReader();
         File file=new File(filePath);

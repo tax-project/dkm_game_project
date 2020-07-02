@@ -13,6 +13,7 @@ import com.dkm.land.entity.Land;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -91,17 +92,18 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     public TbBlackHouseVo selectIsBlackTwo(Long userId) {
         //首先根据传过来的登录用户的id查询出被关人的id
         List<TbBlackHouse> selectById=tbBlackHouseService.selectById(userId);
+        if(ObjectUtils.isEmpty(selectById)){
+            return null;
+        }
         TbBlackHouse tbBlackHouse=new TbBlackHouse();
 
+        if(selectById.size()>1){
+            return null;
+        }
         for (TbBlackHouse blackHouse : selectById) {
-
-            if( StringUtils.isEmpty(blackHouse.getToId()) || StringUtils.isEmpty(blackHouse.getFromId()) && blackHouse.getIsBlack()==1 ){
-                throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "该用户的黑屋没人被关");
-            }
             tbBlackHouse.setToId(blackHouse.getToId());
             tbBlackHouse.setFromId(blackHouse.getFromId());
         }
-
         return tbBlackHouseMapper.selectIsBlackTwo(tbBlackHouse);
     }
 
