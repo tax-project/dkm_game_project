@@ -4,11 +4,11 @@ DROP TABLE IF EXISTS `tb_mine_battle_level`;
 
 CREATE TABLE IF NOT EXISTS `tb_mine_battle`
 (
-    id               BIGINT(20) PRIMARY KEY NOT NULL,
-    first_family_id  BIGINT(20) COMMENT '第一个家族位置',
-    second_family_id BIGINT(20) COMMENT '第二个家族位置',
-    third_family_id  BIGINT(20) COMMENT '第三个家族位置',
-    fourth_family_id BIGINT(20) COMMENT '第四个家族位置'
+    id               BIGINT(20) NOT NULL PRIMARY KEY,
+    first_family_id  BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第一个家族位置',
+    second_family_id BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第二个家族位置',
+    third_family_id  BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第三个家族位置',
+    fourth_family_id BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第四个家族位置'
 )
     COMMENT '家族矿区表，一个矿区4个家族，至少存在一个家族';
 
@@ -53,3 +53,45 @@ CREATE TABLE IF NOT EXISTS `tb_mine_battle_item`
         on delete cascade
 )
     COMMENT '矿场表';
+
+DROP TABLE IF EXISTS tb_mine_user_skill_level;
+DROP TABLE IF EXISTS tb_mine_skill;
+
+
+CREATE TABLE IF NOT EXISTS `tb_mine_skill`
+(
+    id   INT          NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '技能ID',
+    name VARCHAR(255) NOT NULL COMMENT '技能名称',
+    week INT          NOT NULL COMMENT '技能的星期'
+)
+    COMMENT '矿区技能';
+
+INSERT INTO `tb_mine_skill`
+    (name, week)
+    VALUE
+    ('顶猪头', 1),
+    ('胡言乱语', 2),
+    ('顺手牵羊', 3),
+    ('踢出家族', 4),
+    ('禁言', 5),
+    ('幸运之吻', 6),
+    ('声望', 7);
+
+
+CREATE TABLE IF NOT EXISTS `tb_mine_user_skill_level`
+(
+    user_id       BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
+    family_id     BIGINT(20) NOT NULL COMMENT '家族 ID',
+    mine_skill_id INT        NOT NULL COMMENT '技能 ID',
+    level         INT        NOT NULL DEFAULT 0 COMMENT '等级',
+    foreign key (mine_skill_id) references tb_mine_skill (id)
+        on update cascade
+        on delete cascade
+)
+    COMMENT '矿区用户的技能信息';
+CREATE TABLE IF NOT EXISTS `tb_mine_user_info`
+(
+    user_id   BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
+    family_id BIGINT(20) NOT NULL COMMENT '家族 ID'
+)
+COMMENT '家族用户的信息'
