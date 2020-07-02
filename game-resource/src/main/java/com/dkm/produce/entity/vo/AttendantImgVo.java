@@ -15,6 +15,11 @@ public class AttendantImgVo {
     */
     private String weChatHeadImgUrl;
 
+    /**
+     * id
+     */
+    private Long AttendantId;
+
 
 
 }
