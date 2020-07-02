@@ -187,8 +187,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
                 //等于0就是用户跟班
                 if(attendantUsers.get(i).getAttendantId()==0){
-                    System.out.println("attendantGoods = " + attendantGoods);
-                    System.out.println("attendantGoods.get(i).getWeChatHeadImgUrl() = " + attendantGoods.get(i).getWeChatHeadImgUrl());
                     AttendantImgVo attendantImgVo=new AttendantImgVo();
                     attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
                     attendantImg.add(attendantImgVo);
