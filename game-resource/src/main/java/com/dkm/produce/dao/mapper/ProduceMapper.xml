@@ -5,7 +5,7 @@
 
     <select id="queryImgFood" resultType="com.dkm.produce.entity.vo.AttendantImgVo" parameterType="java.lang.Long">
         select b.we_chat_head_img_url,a.attendant_id from tb_attendant_user a,tb_user b
-        where a.user_id=712025696226152448 and a.caught_people_id=b.user_id
+        where a.user_id=#{userId} and a.caught_people_id=b.user_id
     </select>
 
 
