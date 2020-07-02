@@ -15,4 +15,7 @@ public interface IOpponentService {
      * @return
      */
     Map<String,Object> queryOpponent();
+
+
+
 }
