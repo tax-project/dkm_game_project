@@ -157,12 +157,19 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //跟班
         List<AttendantImgVo> attendantImg= new ArrayList<>();
 
+        //查询所有跟班
         List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
 
 
-        //查询出所有用户跟班
+
+        //查询出所有用户跟班图片
         List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
 
+        if(attendantGoods.size()==0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"无跟班  去抓跟班吧");
+        }
+
+        if(attendantUsers.size()!=0){
         for (int i = 0; i < attendantUsers.size(); i++) {
             //不等于0说明是系统跟班 随机查询出一个跟班  放入集合
             if(attendantUsers.get(i).getAttendantId()!=0){
@@ -178,20 +185,38 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             }
 
 
-            //等于0就是用户跟班
-            if(attendantUsers.get(i).getAttendantId()==0){
-
-                AttendantImgVo attendantImgVo=new AttendantImgVo();
-                attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
-                attendantImg.add(attendantImgVo);
+                //等于0就是用户跟班
+                if(attendantUsers.get(i).getAttendantId()==0){
+                    System.out.println("attendantGoods = " + attendantGoods);
+                    System.out.println("attendantGoods.get(i).getWeChatHeadImgUrl() = " + attendantGoods.get(i).getWeChatHeadImgUrl());
+                    AttendantImgVo attendantImgVo=new AttendantImgVo();
+                    attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
+                    attendantImg.add(attendantImgVo);
+                }
             }
-
         }
 
+
+        String honey="蜂蜜";
+        Integer honyNum=0;
+
+        String driedFish="鱼干";
+        Integer driedFishNum=0;
 
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
 
+        for (int i = 0; i < attendantPutVos.size(); i++) {
+            if(attendantPutVos.get(i).getGoodName().equals(honey)){
+                honyNum+=attendantPutVos.get(i).getNumber();
+            }
+
+            if(attendantPutVos.get(i).getGoodName().equals(driedFish)){
+                driedFishNum+=attendantPutVos.get(i).getNumber();
+            }
+
+
+        }
 
         map.put("attendantImg",attendantImg);
 

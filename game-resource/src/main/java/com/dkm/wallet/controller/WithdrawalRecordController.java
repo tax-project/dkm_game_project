@@ -1,7 +1,5 @@
 package com.dkm.wallet.controller;
 
-import com.dkm.constanct.CodeType;
-import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.vo.SeedVo;

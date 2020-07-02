@@ -8,7 +8,6 @@ import com.dkm.family.entity.vo.UserCenterFamilyVo;
 import com.dkm.family.service.FamilyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.utils.QrCodeUtils;
 import com.dkm.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
