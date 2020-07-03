@@ -104,7 +104,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0) {
             TbKnapsack tbKnapsack = new TbKnapsack();
-            tbKnapsack.setUserId(localUser.getUser().getId());
+            tbKnapsack.setUserId(userId);
             List<TbKnapsack> list1 = tbKnapsackService.findById(tbKnapsack);
             //背包主键
             Long knapsackId = null;
@@ -322,7 +322,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
                 if(count>0){
                     //查询为装备上的装备数据
-                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
+                    TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
                     TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
                     tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
                     tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
@@ -334,7 +334,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     map.put("dataTwo",list2);
                 }else{
                     //查询为装备上的装备数据
-                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
+                    TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
                     map.put("code",2);
                     map.put("dataThree",list3);
                     map.put("msg","此装备没有装备上过");

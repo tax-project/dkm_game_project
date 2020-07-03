@@ -36,4 +36,9 @@
 	<select id="selectByEquipmentId" resultMap="BaseResultMapVo" parameterType="java.lang.Long">
 		SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.equipment_id=td.equipment_id AND te.equipment_id=#{equipmentId}
 	</select>
+
+	<select id="selectByEquipmentIdTwo" resultMap="BaseResultMapVo" parameterType="java.lang.String">
+		SELECT *FROM tb_equipment te,tb_equipment_details td WHERE te.equipment_id=td.equipment_id AND te.exp1=#{exp1}
+		ORDER BY RAND() LIMIT  1
+	</select>
 </mapper>

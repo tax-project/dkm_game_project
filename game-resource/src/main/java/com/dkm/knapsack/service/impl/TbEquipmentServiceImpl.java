@@ -101,4 +101,12 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
         }
         return tbEquipmentMapper.selectByEquipmentId(equipmentId);
     }
+
+    @Override
+    public TbEquipmentVo selectByEquipmentIdTwo(String exp1) {
+        if(StringUtils.isEmpty(exp1)){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        return tbEquipmentMapper.selectByEquipmentIdTwo(exp1);
+    }
 }
