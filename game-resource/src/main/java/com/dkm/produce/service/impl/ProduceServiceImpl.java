@@ -204,7 +204,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
 
-        for (int i = 0; i < attendantPutVos.size(); i++) {
+        /*for (int i = 0; i < attendantPutVos.size(); i++) {
             goodName=attendantPutVos.get(i).getGoodName();
             for (int j = 0; j < attendantPutVos.size(); j++) {
                 if(j!=i){
@@ -213,10 +213,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                     }
                 }
             }
-
-
-
-        }
+        }*/
 
         map.put("attendantImg",attendantImg);
 
