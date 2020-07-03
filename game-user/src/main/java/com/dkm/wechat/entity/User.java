@@ -77,4 +77,10 @@ public class User {
      * 个人二维码
      */
     private String qrCode;
+
+    /**
+     *  用户地区
+     *  国家-省-市
+     */
+    private String userAddress;
 }
