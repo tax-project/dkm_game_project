@@ -78,9 +78,9 @@
     <select id="listOpponent" resultType="com.dkm.entity.vo.OpponentVo" parameterType="com.dkm.entity.vo.IdVo">
         select a.user_id,a.we_chat_head_img_url as 'imgUrl',a.we_chat_nick_name as 'nickName',
         b.user_info_grade as 'grade',b.user_info_renown as 'userInfoRenown'
-        from tb_user a join tb_user_info b on a.user_id = b.user_id
+        from tb_user a join tb_user_info b on a.user_id = b.user_id where
         <foreach collection="list" item="item" index="index" separator="or">
-            where a.user_id = #{item.userId}
+             a.user_id = #{item.userId}
         </foreach>
     </select>
 

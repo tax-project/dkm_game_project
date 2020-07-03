@@ -106,6 +106,12 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         Result<List<com.dkm.entity.vo.OpponentVo>> listResult = userFeignClient.listOpponent(listVo);
 
+        System.out.println("--->" + listResult);
+
+        for (com.dkm.entity.vo.OpponentVo datum : listResult.getData()) {
+            System.out.println(datum.getUserId());
+        }
+
         if (listResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "对手feign有误");
         }
