@@ -5,6 +5,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.pay.service.IAiliService;
 import com.dkm.utils.StringUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020/6/18
  * @vesion 1.0
  **/
+@Api(tags = "支付宝支付")
 @RestController
 @RequestMapping("/ali")
 public class AliPayController {
