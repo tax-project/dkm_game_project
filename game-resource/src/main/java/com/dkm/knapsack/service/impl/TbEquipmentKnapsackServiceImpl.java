@@ -322,7 +322,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
                 if(count>0){
                     //查询为装备上的装备数据
-                    TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
+                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
                     TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
                     tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
                     tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
@@ -334,7 +334,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     map.put("dataTwo",list2);
                 }else{
                     //查询为装备上的装备数据
-                    TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
+                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
                     map.put("code",2);
                     map.put("dataThree",list3);
                     map.put("msg","此装备没有装备上过");
