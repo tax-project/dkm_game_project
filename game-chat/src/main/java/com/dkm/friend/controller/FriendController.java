@@ -69,4 +69,13 @@ public class FriendController {
    public List<FriendBo> listAllProblemFriend () {
       return friendService.listAllProblemFriend();
    }
+
+
+   @ApiOperation(value = "触发离线消息(当连上ws时候调用)", notes = "触发离线消息(当连上ws时候调用)")
+   @GetMapping("/getOntOnlineInfo")
+   @CrossOrigin
+   @CheckToken
+   public void getOntOnlineInfo () {
+      friendService.getOntOnlineInfo();
+   }
 }
