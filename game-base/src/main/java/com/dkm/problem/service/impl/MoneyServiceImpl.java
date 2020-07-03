@@ -207,10 +207,11 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
          MoneyBo moneyBo = new MoneyBo();
          BeanUtils.copyProperties(money, moneyBo);
          moneyBo.setHeadUrl(heardMap.get(money.getUserId()).getHeadUrl());
+         moneyBo.setUserNickName(heardMap.get(money.getUserId()).getNickName());
          return moneyBo;
       }).collect(Collectors.toList());
 
-      Map<String, Object> map = new HashMap<>(3);
+      Map<String, Object> map = new HashMap<>(4);
       //分页数据
       map.put("data",resultList);
       //正在进行的红包人数
@@ -226,7 +227,13 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       redBagVo.setRedEnvelopesNumber(result.getData().getUserInfoEnvelopeMuch());
       redBagVo.setAllRedEnvelopesNumber(result.getData().getUserInfoAllEnvelopeMuch());
 
+      UserLoginInfoVo loginUserInfo = new UserLoginInfoVo();
+      loginUserInfo.setUserId(result.getData().getUserId());
+      loginUserInfo.setNickName(result.getData().getWeChatNickName());
+      loginUserInfo.setHeardUrl(result.getData().getWeChatHeadImgUrl());
+
       map.put("redMuch",redBagVo);
+      map.put("loginUserInfo", loginUserInfo);
 
       return map;
    }
