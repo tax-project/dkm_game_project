@@ -88,6 +88,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             seedsFall.setSeedId(seed.getSeedId());
 
             Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(seed.getUserId());
+            if(userInfoQueryBoResult.getCode()!=0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"feign异常");
+            }
 
             //true掉落金币   false 没有金币掉落
             boolean dropCoins = randomUtils.probabilityDroppingGold(seed.getSeedId());

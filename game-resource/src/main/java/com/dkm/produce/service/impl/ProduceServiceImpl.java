@@ -195,23 +195,25 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         }
 
 
-        String honey="蜂蜜";
-        Integer honyNum=0;
 
-        String driedFish="鱼干";
-        Integer driedFishNum=0;
+         String goodName=null;
+
+
+
 
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
 
         for (int i = 0; i < attendantPutVos.size(); i++) {
-            if(attendantPutVos.get(i).getGoodName().equals(honey)){
-                honyNum+=attendantPutVos.get(i).getNumber();
+            goodName=attendantPutVos.get(i).getGoodName();
+            for (int j = 0; j < attendantPutVos.size(); j++) {
+                if(j!=i){
+                    if(goodName.equals(attendantPutVos.get(i).getGoodName())){
+                         map.put("num",attendantPutVos.get(j).getNumber());
+                    }
+                }
             }
 
-            if(attendantPutVos.get(i).getGoodName().equals(driedFish)){
-                driedFishNum+=attendantPutVos.get(i).getNumber();
-            }
 
 
         }
