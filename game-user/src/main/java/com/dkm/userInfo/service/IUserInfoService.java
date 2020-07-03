@@ -3,6 +3,8 @@ package com.dkm.userInfo.service;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.entity.vo.IdVo;
+import com.dkm.entity.vo.OpponentVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 
@@ -77,4 +79,11 @@ public interface IUserInfoService {
     * @return 排行结果
     */
    List<ReputationRankingBO> reputationRanking();
+
+   /**
+    *  查询所有对手的用户信息
+    * @param list
+    * @return
+    */
+   List<OpponentVo> listOpponent (List<IdVo> list);
 }
