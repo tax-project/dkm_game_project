@@ -725,7 +725,7 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUserService.updateAttTime(expTime, attUserId);
 
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("expTime",expTime);
 
         //得到产出的物品返回
@@ -743,9 +743,16 @@ public class AttendantServiceImpl implements IAttendantService {
 
         map.put("myMuch", result.getMyMuch());
         map.put("otherMuch",result.getOtherMuch());
-        //我方打对方一次掉的血量
+        /**
+         * 我方打对方一次掉的血量
+         * vo.getMyCapabilities() 我方战斗力
+         */
         map.put("myHealth", vo.getMyCapabilities());
-        //对方打我方掉的血量
+
+        /**
+         * 对方打我方掉的血量
+         * vo.getOtherForce() 对方战斗力
+         */
         map.put("otherHealth", vo.getOtherForce());
 
         //0--我方赢了
