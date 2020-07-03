@@ -3,8 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.feign.entity.SeedPlantVo;
-import com.dkm.feign.entity.TbEquipmentKnapsack;
-import com.dkm.feign.fallback.ResourceFeignClientFallback;
+import com.dkm.feign.entity.TbEquipmentVoTwo;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +18,7 @@ import java.util.Map;
  * @author: zhd
  * @create: 2020-05-16 15:25
  **/
-@FeignClient(value = "resource",fallback = ResourceFeignClientFallback.class)
+@FeignClient(value = "resource")
 public interface ResourceFeignClient {
     /**
      * 更新背包
@@ -90,5 +89,5 @@ public interface ResourceFeignClient {
      * @param tbEquipmentKnapsack
      */
     @PostMapping("/dkm/tbEquipmentKnapsack/addTbEquipmentKnapsackThree")
-    Result addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack);
+    Result addTbEquipmentKnapsackThree(@RequestBody TbEquipmentVoTwo tbEquipmentKnapsack);
 }

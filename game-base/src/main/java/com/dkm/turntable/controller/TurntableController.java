@@ -72,7 +72,8 @@ public class TurntableController {
     @ApiOperation("获取抽中物品到背包")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "抽中物品id",name = "id",dataType = "long",paramType = "path",required = true),
-            @ApiImplicitParam(value = "抽中物品数量",name = "number",dataType = "int",paramType = "path",required = true)
+            @ApiImplicitParam(value = "抽中物品数量",name = "number",dataType = "int",paramType = "path",required = true),
+            @ApiImplicitParam(value = "抽奖类型",name = "type",dataType = "int",paramType = "path",required = true)
     })
     @CrossOrigin
     @CheckToken
