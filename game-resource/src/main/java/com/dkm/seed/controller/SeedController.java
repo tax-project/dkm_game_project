@@ -97,7 +97,7 @@ public class SeedController {
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "1为种植，2为收取"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "1为种植，3为收取"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "种子土地id"),
