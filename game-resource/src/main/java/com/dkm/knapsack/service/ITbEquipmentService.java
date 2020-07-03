@@ -20,4 +20,5 @@ public interface ITbEquipmentService{
 
 	List<TbEquipmentVo> selectByEquipmentId(Long equipmentId);
 
+	TbEquipmentVo selectByEquipmentIdTwo(String exp1);
 }
