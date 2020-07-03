@@ -3,6 +3,8 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.*;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.entity.vo.ListVo;
+import com.dkm.entity.vo.OpponentVo;
 import com.dkm.feign.entity.ReputationRankingBO;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
@@ -87,4 +89,12 @@ public interface UserFeignClient {
 
    @GetMapping("/v1/userInfo/reputation/ranking")
    Result<List<ReputationRankingBO>>  reputationRanking();
+
+   /**
+    *  查询用户对手信息
+    * @param listVo
+    * @return
+    */
+   @PostMapping("/v1/userInfo/listOpponent")
+   Result<List<OpponentVo>> listOpponent(@RequestBody ListVo listVo);
 }

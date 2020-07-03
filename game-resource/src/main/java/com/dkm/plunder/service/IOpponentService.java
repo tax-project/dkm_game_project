@@ -22,4 +22,10 @@ public interface IOpponentService {
      * 添加对手信息
      */
     int addOpponent(Opponent opponent);
+
+    /**
+     *  根据自己的用户id查询数据
+     * @return 返回对手信息
+     */
+    Map<String, Object> getOpponentInfo ();
 }
