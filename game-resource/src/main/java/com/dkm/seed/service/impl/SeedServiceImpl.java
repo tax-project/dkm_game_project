@@ -359,6 +359,7 @@ public class SeedServiceImpl implements ISeedService {
 
                 }
 
+                System.out.println(list);
                 //增加要种植种子的信息和用户信息
                 int i = seedMapper.addPlant(list);
                 if (i <= 0) {
@@ -405,24 +406,23 @@ public class SeedServiceImpl implements ISeedService {
 
                 List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
 
+                for (int i = 0; i <PlantingTimes; i++) {
 
-               /* for (int i = 0; i <PlantingTimes; i++) {*/
-
-                  /*      LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+                        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                                 .eq(LandSeed::getId, list3.get(i).getId());
 
                         LandSeed landSeed=new LandSeed();
                         landSeed.setLeStatus(1);
-                        landSeed.setPlantTime(time2);*/
+                        landSeed.setPlantTime(time2);
 
-                        int update = seedMapper.updateLeStatusTime(list3,time2);
+                        int update = landMapper.update(landSeed,wrapper);
 
 
                         if (update <= 0) {
                             throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
                         }
 
-             /*   }*/
+               }
             }
 
         }
@@ -438,21 +438,21 @@ public class SeedServiceImpl implements ISeedService {
 
 
     public void updateUser(SeedPlantVo seedPlantVo) {
-
+        System.out.println(123);
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
 
-        /*int sizes=1;*/
+        int sizes=1;
 
         //得到用户已经种植的数据
         List<LandYesVo> landYesVos = seedMapper.queryAlreadyPlantSd(localUser.getUser().getId());
-        /*if(landYesVos.size()==1){
+        if(landYesVos.size()==1){
             sizes=0;
-        }*/
+        }
 
            //当前时间必须大于等于种植种植结束时间 才能收取
-            if(System.currentTimeMillis()/1000>=landYesVos.get(0).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-
+            if(System.currentTimeMillis()/1000>=landYesVos.get(sizes).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+                System.out.println(456);
                 //根据用户查询解锁的土地
                 List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
@@ -466,6 +466,8 @@ public class SeedServiceImpl implements ISeedService {
                 List<LandSeed> LandSeedList = landSeedMapper.selectList(queryWrapper1);
                 for (int i = 0; i < LandSeedList.size(); i++) {
                     if(System.currentTimeMillis()/1000>=LandSeedList.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+                        System.out.println("收取进来");
+                        System.out.println(LandSeedList.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
                         //收取种子后 修改当前用户土地种子的状态
                         LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                                 .eq(LandSeed::getId,LandSeedList.get(i).getId());
@@ -493,12 +495,17 @@ public class SeedServiceImpl implements ISeedService {
 
 
                 //种植一次所获得的金币
-                double userGold  = Math.pow(seedPlantVo.getSeedGrade(), 2)*50 +1000*list1.size();
+                System.out.println("9999999yyyy "+seedPlantVo.getSeedGrade());
+                double userGold  = Math.pow(seedPlantVo.getSeedGrade(), 2.0)*50 +1000*list1.size();
                 Integer userGoldInteger = Integer.valueOf((int) userGold);
+                System.out.println("hhhhhhhhhhhhh"+userGold);
+                System.out.println("==============="+userGoldInteger);
 
                 //判断当前经验是否等级下一级的等级 如果等于等级加一
+                System.out.println("seedPlantVo.getUserInfoNextExperience() = " + seedPlantVo.getUserInfoNextExperience());
+                System.out.println("seedPlantVo.getUserInfoNowExperience()+experienceInteger"+seedPlantVo.getUserInfoNowExperience()+experienceInteger);
                 if(seedPlantVo.getUserInfoNowExperience()+experienceInteger>=seedPlantVo.getUserInfoNextExperience()){
-
+                    System.out.println("进来了");
                     seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNextExperience()+experienceInteger);
                     //当前经验减去总经验
                     seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNowExperience()-seedPlantVo.getUserInfoNextExperience());
@@ -528,7 +535,7 @@ public class SeedServiceImpl implements ISeedService {
                     }
 
                     //随便传值 sql语句只是加了1
-                    seedPlantVo.setSeedGrade(seedPlantVo.getUserGold()+1);
+                    seedPlantVo.setSeedGrade(1);
                     seedPlantVo.setUserId(user.getId());
 
                     //修改用户信息
