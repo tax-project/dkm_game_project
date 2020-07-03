@@ -103,8 +103,8 @@ public class TbEquipmentController {
     @GetMapping("/selectByEquipmentId/{equipmentId}")
     @CrossOrigin
     @CheckToken
-    public List<TbEquipmentVo> selectByEquipmentId(@PathVariable("equipmentId") String equipmentId){
-       List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(Long.valueOf(equipmentId));
+    public List<TbEquipmentVo> selectByEquipmentId(@RequestParam("equipmentId") Long equipmentId){
+       List<TbEquipmentVo> list = tbEquipmentService.selectByEquipmentId(equipmentId);
        if(list.size()!=0&&list!=null){
            return list;
        }else{
