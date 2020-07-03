@@ -5,10 +5,12 @@ package com.dkm.knapsack.controller;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentVoTwo;
 import com.dkm.knapsack.domain.vo.TbNumberVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,8 +66,10 @@ public class TbEquipmentKnapsackController {
 
     @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功 背包满了返回code=1003")
     @PostMapping("/addTbEquipmentKnapsackThree")
-    public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack,@RequestParam("userId") Long userId){
-        tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack,userId);
+    public void addTbEquipmentKnapsackThree(@RequestBody TbEquipmentVoTwo tbEquipmentKnapsack){
+        TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+        BeanUtils.copyProperties(tbEquipmentKnapsack,tbEquipmentKnapsack1);
+        tbEquipmentKnapsackService.addTbEquipmentKnapsackThree(tbEquipmentKnapsack1,tbEquipmentKnapsack.getUserId());
     }
 
     /**
