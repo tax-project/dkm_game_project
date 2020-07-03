@@ -6,6 +6,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.entity.vo.IdVo;
+import com.dkm.entity.vo.OpponentVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.userInfo.dao.UserInfoMapper;
@@ -33,8 +35,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Autowired
    private IdGenerator idGenerator;
-   @Autowired
-   private LocalUser localUser;
 
    @Override
    public void insertUserInfo(Long userId) {
@@ -146,5 +146,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
          throw new ApplicationException(CodeType.SERVICE_ERROR, "数据库查询失败");
       }
       return reputationRankingBoS;
+   }
+
+   @Override
+   public List<OpponentVo> listOpponent(List<IdVo> list) {
+
+      if (null == list || list.size() == 0) {
+         return null;
+      }
+
+      return baseMapper.listOpponent(list);
    }
 }
