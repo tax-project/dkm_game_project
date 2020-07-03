@@ -26,6 +26,7 @@ import com.dkm.wechat.dao.UserMapper;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserBO;
 import com.dkm.wechat.entity.bo.UserDataBO;
+import com.dkm.wechat.entity.vo.UserChatInfoVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 import com.dkm.wechat.service.IWeChatService;
@@ -67,12 +68,6 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     private IUserInfoService userInfoService;
 
     @Autowired
-    private FriendFeignClient friendFeignClient;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
     private RedisConfig redisConfig;
 
     @Autowired
@@ -109,6 +104,11 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                     user.setUserSex(2);
                 }
 
+                //地区
+                String address = weChatUtilBO.getWeChatCountry() + weChatUtilBO.getWeChatProvince() + weChatUtilBO.getWeChatCity();
+
+                user.setUserAddress(address);
+
                 //生成属于自己的二维码
                 Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?userId=" + userId);
 
@@ -135,29 +135,29 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                 BeanUtils.copyProperties(userBO, resultBO);
 
                 //查询用户是否有未在线消息
-                Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
-
-                List<FriendNotOnlineVo> list = result.getData();
-
-                if (null != list && list.size() != 0) {
-                    //有离线消息,当前该账号未在线，将未在线消息发送给客户端
-                    List<Long> longList = new ArrayList<>();
-                    for (FriendNotOnlineVo onlineVo : list) {
-                        MsgInfo msgInfo = new MsgInfo();
-                        msgInfo.setFromId(onlineVo.getFromId());
-                        msgInfo.setToId(onlineVo.getToId());
-                        msgInfo.setMsg(onlineVo.getContent());
-                        msgInfo.setSendDate(onlineVo.getCreateDate());
-                        //离线信息
-                        msgInfo.setType(onlineVo.getType());
-                        //将消息更改成已读
-                        longList.add(onlineVo.getToId());
-                        rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
-                    }
-
-                    //删除数据库的信息
-                    friendFeignClient.deleteLookStatus(longList);
-                }
+//                Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
+//
+//                List<FriendNotOnlineVo> list = result.getData();
+//
+//                if (null != list && list.size() != 0) {
+//                    //有离线消息,当前该账号未在线，将未在线消息发送给客户端
+//                    List<Long> longList = new ArrayList<>();
+//                    for (FriendNotOnlineVo onlineVo : list) {
+//                        MsgInfo msgInfo = new MsgInfo();
+//                        msgInfo.setFromId(onlineVo.getFromId());
+//                        msgInfo.setToId(onlineVo.getToId());
+//                        msgInfo.setMsg(onlineVo.getContent());
+//                        msgInfo.setSendDate(onlineVo.getCreateDate());
+//                        //离线信息
+//                        msgInfo.setType(onlineVo.getType());
+//                        //将消息更改成已读
+//                        longList.add(onlineVo.getToId());
+//                        rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+//                    }
+//
+//                    //删除数据库的信息
+//                    friendFeignClient.deleteLookStatus(longList);
+//                }
             }
                 //拷贝新的微信信息，如果是创建用户的话还有新的ID
                 BeanUtils.copyProperties(user, resultBO);
@@ -199,6 +199,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         user1.setUserId(id);
         user1.setUserIsEffective(0);
         user1.setUserSex(1);
+        user1.setUserAddress("中国湖南娄底");
         user1.setWeChatOpenId(vo.getUserName());
         user1.setWeChatNickName(vo.getNickName());
         user1.setUserRemark(ShaUtils.getSha1(vo.getPassword()));
@@ -244,29 +245,29 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         }
 
         //查询用户是否有未在线消息
-        Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
-
-        List<FriendNotOnlineVo> list = result.getData();
-
-        if (null != list && list.size() != 0) {
-            //有离线消息,当前该账号未在线，将未在线消息发送给客户端
-            List<Long> longList = new ArrayList<>();
-            for (FriendNotOnlineVo onlineVo : list) {
-                MsgInfo msgInfo = new MsgInfo();
-                msgInfo.setFromId(onlineVo.getFromId());
-                msgInfo.setToId(onlineVo.getToId());
-                msgInfo.setMsg(onlineVo.getContent());
-                msgInfo.setSendDate(onlineVo.getCreateDate());
-                //离线信息
-                msgInfo.setType(onlineVo.getType());
-                //将消息更改成已读
-                longList.add(onlineVo.getToId());
-                rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
-            }
-
-            //删除数据库的信息
-            friendFeignClient.deleteLookStatus(longList);
-        }
+//        Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
+//
+//        List<FriendNotOnlineVo> list = result.getData();
+//
+//        if (null != list && list.size() != 0) {
+//            //有离线消息,当前该账号未在线，将未在线消息发送给客户端
+//            List<Long> longList = new ArrayList<>();
+//            for (FriendNotOnlineVo onlineVo : list) {
+//                MsgInfo msgInfo = new MsgInfo();
+//                msgInfo.setFromId(onlineVo.getFromId());
+//                msgInfo.setToId(onlineVo.getToId());
+//                msgInfo.setMsg(onlineVo.getContent());
+//                msgInfo.setSendDate(onlineVo.getCreateDate());
+//                //离线信息
+//                msgInfo.setType(onlineVo.getType());
+//                //将消息更改成已读
+//                longList.add(onlineVo.getToId());
+//                rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+//            }
+//
+//            //删除数据库的信息
+//            friendFeignClient.deleteLookStatus(longList);
+//        }
 
         //将设备Id和用户Id存入redis中
         String cid = idGenerator.getUuid();
@@ -367,5 +368,17 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
               .eq(User::getWeChatNickName,userName);
 
         return baseMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public UserChatInfoVo queryUserQrInfo() {
+        UserLoginQuery user = localUser.getUser();
+
+        User user1 = baseMapper.selectById(user.getId());
+
+        UserChatInfoVo vo = new UserChatInfoVo();
+        BeanUtils.copyProperties(user1, vo);
+
+        return vo;
     }
 }
