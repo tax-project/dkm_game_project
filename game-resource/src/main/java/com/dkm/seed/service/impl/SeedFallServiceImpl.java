@@ -67,8 +67,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
+
         if(landSeedList.size()==0){
-           throw new ApplicationException(CodeType.SERVICE_ERROR,"当前没有用户种植");
+           return null;
         }
 
         Integer gold=0;

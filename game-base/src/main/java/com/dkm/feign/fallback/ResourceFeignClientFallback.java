@@ -63,7 +63,7 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
-   public Result addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack) {
+   public Result addTbEquipmentKnapsackThree(TbEquipmentVoTwo tbEquipmentKnapsack) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 

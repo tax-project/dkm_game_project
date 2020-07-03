@@ -20,15 +20,6 @@
         where a.user_id=#{userId} and a.id=b.id
     </select>
 
-    <update id="updateLeStatus">
-        <foreach collection="list" item="lists" index="index" separator="union all">
-            update tb_land_seed
-            <set>
-                le_status=2
-            </set>
-            where id=${lists.id}
-        </foreach>
-    </update>
 
 
 

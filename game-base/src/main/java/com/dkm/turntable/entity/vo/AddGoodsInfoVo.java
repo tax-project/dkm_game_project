@@ -12,4 +12,5 @@ import lombok.Data;
 public class AddGoodsInfoVo {
     private Long id;
     private Integer number;
+    private Integer type;
 }

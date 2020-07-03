@@ -8,6 +8,7 @@ import com.dkm.seed.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -96,6 +97,14 @@ public interface SeedMapper extends BaseMapper<Seed> {
     SeedDetailsVo querySeedById(Integer seedId ,Long userId);
 
     List<CountIdVo> queryStatus(@Param("userId") Long userId,@Param("list")List<Integer> list);
+
+    /**
+     * 批量修改种植状态时间
+     * @param list
+     * @param plantTime
+     * @return
+     */
+    int updateLeStatusTime(@Param("list") List<LandSeed> list, @Param("plantTime") LocalDateTime plantTime);
 
 
 }
