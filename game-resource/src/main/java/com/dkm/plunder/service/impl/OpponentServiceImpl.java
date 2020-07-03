@@ -18,8 +18,11 @@ import com.dkm.plunder.entity.Opponent;
 import com.dkm.plunder.entity.vo.OpponentResultVo;
 import com.dkm.plunder.entity.vo.OpponentVo;
 import com.dkm.plunder.service.IOpponentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,9 @@ import java.util.stream.Collectors;
  * @DESCRIPTION:
  * @DATE: 2020/6/22 14:49
  */
+@Slf4j
+@Service
+@Transactional(rollbackFor = Exception.class)
 public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> implements IOpponentService {
 
     @Autowired
@@ -74,9 +80,14 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         LambdaQueryWrapper<Opponent> wrapper = new LambdaQueryWrapper<Opponent>()
               .eq(Opponent::getUserId, user.getId())
-              .last("limit20");
+              .last("ORDER BY RAND() limit 20");
 
         List<Opponent> opponents = baseMapper.selectList(wrapper);
+
+        if (null == opponents || opponents.size() == 0) {
+            log.info("查询对手表为空");
+            return null;
+        }
 
         ListVo listVo = new ListVo();
         List<IdVo> list = new ArrayList<>();

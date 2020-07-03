@@ -27,11 +27,11 @@ public class OpponentController {
    @Autowired
    private IOpponentService opponentService;
 
-   @ApiOperation(value = "展示掠夺物品的列表", notes = "展示掠夺物品的列表")
+   @ApiOperation(value = "查询对手信息", notes = "查询对手信息")
    @GetMapping("/getOpponentInfo")
    @CrossOrigin
    @CheckToken
    public Map<String,Object> getOpponentInfo () {
-      return plunderService.queryPlunderList();
+      return opponentService.getOpponentInfo();
    }
 }
