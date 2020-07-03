@@ -223,9 +223,11 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
    }
 
    @Override
-   public void getOntOnlineInfo() {
+   public List<MsgInfo> getOntOnlineInfo() {
 
       UserLoginQuery user = localUser.getUser();
+
+      List<MsgInfo> result = new ArrayList<>();
       List<FriendNotOnlineVo> list = friendNotOnlineService.queryOne(user.getId());
 
       if (null != list && list.size() != 0) {
@@ -241,12 +243,14 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
             msgInfo.setType(onlineVo.getType());
             //将消息更改成已读
             longList.add(onlineVo.getToId());
-            rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+            result.add(msgInfo);
          }
 
          //删除数据库的信息
          friendNotOnlineService.deleteLook(longList);
       }
+
+      return result;
 
    }
 }
