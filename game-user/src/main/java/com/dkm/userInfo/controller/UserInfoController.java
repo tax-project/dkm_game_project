@@ -4,6 +4,9 @@ import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.entity.vo.IdVo;
+import com.dkm.entity.vo.ListVo;
+import com.dkm.entity.vo.OpponentVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
@@ -67,5 +70,11 @@ public class UserInfoController {
    @GetMapping("/reputation/ranking")
    public List<ReputationRankingBO> reputationRanking(){
       return userInfoService.reputationRanking();
+   }
+
+
+   @PostMapping("/listOpponent")
+   public List<OpponentVo> listOpponent(@RequestBody ListVo listVo){
+      return userInfoService.listOpponent(listVo.getList());
    }
 }

@@ -4,6 +4,8 @@ import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
+import com.dkm.entity.vo.IdVo;
+import com.dkm.entity.vo.OpponentVo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
@@ -70,5 +72,12 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 排行集合
      */
     List<ReputationRankingBO> reputationRanking();
+
+    /**
+     *  查询所有对手用户信息
+     * @param list
+     * @return
+     */
+    List<OpponentVo> listOpponent(List<IdVo> list);
 
 }

@@ -27,6 +27,7 @@ import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.plunder.service.IOpponentService;
 import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
@@ -82,7 +83,7 @@ public class AttendantServiceImpl implements IAttendantService {
     private EventMapper eventMapper;
 
     @Autowired
-    private OpponentMapper opponentMapper;
+    private IOpponentService iOpponentService;
 
 
     private String redisLock = "REDIS::LOCK:ATTENDANT";
@@ -249,7 +250,7 @@ public class AttendantServiceImpl implements IAttendantService {
         opponent.setUserId(userInfoQueryBoResult.getData().getUserId());
         opponent.setOpponentId(userInfoQueryBoResultCaughtPeopleId.getData().getUserId());
 
-        int insert = opponentMapper.insert(opponent);
+        int insert = iOpponentService.addOpponent(opponent);
         if(insert<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"添加对手信息异常");
         }
@@ -724,7 +725,7 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUserService.updateAttTime(expTime, attUserId);
 
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("expTime",expTime);
 
         //得到产出的物品返回
@@ -742,9 +743,16 @@ public class AttendantServiceImpl implements IAttendantService {
 
         map.put("myMuch", result.getMyMuch());
         map.put("otherMuch",result.getOtherMuch());
-        //我方打对方一次掉的血量
+        /**
+         * 我方打对方一次掉的血量
+         * vo.getMyCapabilities() 我方战斗力
+         */
         map.put("myHealth", vo.getMyCapabilities());
-        //对方打我方掉的血量
+
+        /**
+         * 对方打我方掉的血量
+         * vo.getOtherForce() 对方战斗力
+         */
         map.put("otherHealth", vo.getOtherForce());
 
         //0--我方赢了

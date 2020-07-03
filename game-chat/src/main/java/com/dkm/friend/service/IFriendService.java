@@ -37,4 +37,9 @@ public interface IFriendService {
     * @return 返回所有可能认识的人的集合
     */
    List<FriendBo> listAllProblemFriend ();
+
+   /**
+    *  触发离线消息
+    */
+   void getOntOnlineInfo ();
 }

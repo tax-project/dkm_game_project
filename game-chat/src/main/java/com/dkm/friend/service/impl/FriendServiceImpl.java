@@ -1,8 +1,10 @@
 package com.dkm.friend.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.friend.dao.FriendMapper;
 import com.dkm.friend.entity.Friend;
@@ -10,14 +12,17 @@ import com.dkm.friend.entity.bo.FriendAllQueryBo;
 import com.dkm.friend.entity.bo.FriendBo;
 import com.dkm.friend.entity.bo.FriendToWithBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
+import com.dkm.friend.entity.vo.FriendNotOnlineVo;
 import com.dkm.friend.entity.vo.FriendVo;
 import com.dkm.friend.entity.vo.IdVo;
+import com.dkm.friend.service.IFriendNotOnlineService;
 import com.dkm.friend.service.IFriendRequestService;
 import com.dkm.friend.service.IFriendService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +52,12 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
 
    @Autowired
    private IFriendRequestService friendRequestService;
+
+   @Autowired
+   private IFriendNotOnlineService friendNotOnlineService;
+
+   @Autowired
+   private RabbitTemplate rabbitTemplate;
 
    /**
     * 成为好友
@@ -209,5 +220,33 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
 
          return bo;
       }).collect(Collectors.toList());
+   }
+
+   @Override
+   public void getOntOnlineInfo() {
+
+      UserLoginQuery user = localUser.getUser();
+      List<FriendNotOnlineVo> list = friendNotOnlineService.queryOne(user.getId());
+
+      if (null != list && list.size() != 0) {
+         //有离线消息,当前该账号未在线，将未在线消息发送给客户端
+         List<Long> longList = new ArrayList<>();
+         for (FriendNotOnlineVo onlineVo : list) {
+            MsgInfo msgInfo = new MsgInfo();
+            msgInfo.setFromId(onlineVo.getFromId());
+            msgInfo.setToId(onlineVo.getToId());
+            msgInfo.setMsg(onlineVo.getContent());
+            msgInfo.setSendDate(onlineVo.getCreateDate());
+            //离线信息
+            msgInfo.setType(onlineVo.getType());
+            //将消息更改成已读
+            longList.add(onlineVo.getToId());
+            rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
+         }
+
+         //删除数据库的信息
+         friendNotOnlineService.deleteLook(longList);
+      }
+
    }
 }
