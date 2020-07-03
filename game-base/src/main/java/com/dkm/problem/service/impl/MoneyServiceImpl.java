@@ -178,6 +178,10 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
       List<Money> list = baseMapper.selectList(wrapper);
 
+      if (null == list || list.size() == 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "没有发布的红包");
+      }
+
       List<Long> longList = new ArrayList<>();
 
       int peopleNumber = 0;
