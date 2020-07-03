@@ -104,7 +104,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
         if(tbEquipmentKnapsack.getFoodId()!=null &&tbEquipmentKnapsack.getFoodId()>0) {
             TbKnapsack tbKnapsack = new TbKnapsack();
-            tbKnapsack.setUserId(localUser.getUser().getId());
+            tbKnapsack.setUserId(userId);
             List<TbKnapsack> list1 = tbKnapsackService.findById(tbKnapsack);
             //背包主键
             Long knapsackId = null;
