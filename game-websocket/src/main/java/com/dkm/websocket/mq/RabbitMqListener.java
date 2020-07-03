@@ -70,6 +70,7 @@ public class RabbitMqListener {
             } catch (IOException e) {
                e.printStackTrace();
             }
+            rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
             return;
          }
          Channel channel = groupUtils.getChannel(cid);
