@@ -30,7 +30,6 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
 
     @Override
     public Map<String,Object> getUserCoupon(Long userId) {
-        System.out.println(userId);
         TurntableCouponEntity turntableCouponEntity = turntableCouponDao.selectOne(new LambdaQueryWrapper<TurntableCouponEntity>().eq(TurntableCouponEntity::getUserId, userId));
         LocalDateTime now = LocalDateTime.now();
         Map<String,Object> map = new HashMap<>();
@@ -40,7 +39,7 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
             turntableCouponEntity.setCouponBlue(0);
             turntableCouponEntity.setCouponPurple(0);
             turntableCouponEntity.setCouponGreen(20);
-            turntableCouponEntity.setTurntable_coupon_id(idGenerator.getNumberId());
+            turntableCouponEntity.setTurntableCouponId(idGenerator.getNumberId());
             turntableCouponEntity.setCouponTime(now);
             turntableCouponEntity.setUserId(userId);
             turntableCouponDao.insert(turntableCouponEntity);
