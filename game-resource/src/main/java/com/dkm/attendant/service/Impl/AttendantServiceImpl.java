@@ -496,9 +496,9 @@ public class AttendantServiceImpl implements IAttendantService {
         //随机生成我他方宠物信息
         map.put("hePetsDto",hePetsDto);
         //我方血量             我方血量加上我方防御力得到最终血量
-        map.put("ourHealth",ourHealth+ourDefenses);
+        map.put("ourHealth",(int)ourHealth+ourDefenses);
         //他方血量
-        map.put("heHealth",heEquipBonus+heDefense);
+        map.put("heHealth",(int)heEquipBonus+heDefense);
         //我方战力
         map.put("ourCapabilities",myRipetime);
         //他方战力
@@ -750,16 +750,14 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("myMuch", result.getMyMuch());
         map.put("otherMuch",result.getOtherMuch());
         /**
-         * 我方打对方一次掉的血量
-         * vo.getMyCapabilities() 我方战斗力
+         * 他方的战斗力减去我方血量  就是我方剩下来的血量
          */
-        map.put("myHealth", vo.getMyCapabilities());
+        map.put("myHealth", vo.getOtherForce()-vo.getMyHealth());
 
         /**
-         * 对方打我方掉的血量
-         * vo.getOtherForce() 对方战斗力
+         * 我方战斗力减去他方血量 就是他方剩下的血量
          */
-        map.put("otherHealth", vo.getOtherForce());
+        map.put("otherHealth", vo.getMyCapabilities()-vo.getOtherHealth());
 
         //0--我方赢了
         //1--对面赢了
