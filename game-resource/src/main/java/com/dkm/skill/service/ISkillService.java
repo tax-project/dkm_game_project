@@ -1,7 +1,7 @@
 package com.dkm.skill.service;
 
 import com.dkm.entity.bo.SkillBo;
-import com.dkm.skill.entity.Skill;
+import com.dkm.meskill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillInsertVo;
 
 import java.util.List;

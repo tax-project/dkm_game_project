@@ -5,7 +5,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.skill.dao.SkillMapper;
-import com.dkm.skill.entity.Skill;
+import com.dkm.meskill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillInsertVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.utils.IdGenerator;

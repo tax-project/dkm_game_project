@@ -2,8 +2,7 @@ package com.dkm.skill.controller;
 
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.skill.entity.Skill;
-import com.dkm.skill.entity.vo.SkillInsertVo;
+import com.dkm.meskill.entity.Skill;
 import com.dkm.skill.service.ISkillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,11 +25,6 @@ public class SkillController {
 
    @Autowired
    private ISkillService skillService;
-
-//   @PostMapping("/insertSkill")
-//   public void insertSkill (@RequestBody SkillInsertVo vo) {
-//      skillService.insertSkill(vo);
-//   }
 
 
    @ApiOperation(value = "展示所有技能", notes = "展示所有技能")

@@ -2,7 +2,7 @@ package com.dkm.skill.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.entity.bo.SkillBo;
-import com.dkm.skill.entity.Skill;
+import com.dkm.meskill.entity.Skill;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

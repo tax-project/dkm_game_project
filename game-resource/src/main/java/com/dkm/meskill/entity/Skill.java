@@ -1,4 +1,4 @@
-package com.dkm.skill.entity;
+package com.dkm.meskill.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -17,6 +17,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Skill extends Model<Skill> {
 
+   /**
+    * 技能主键id
+    */
    private Long id;
 
    /**
