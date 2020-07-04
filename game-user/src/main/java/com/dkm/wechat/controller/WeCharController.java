@@ -75,7 +75,6 @@ public class WeCharController {
         return resultVo;
     }
 
-
     @ApiOperation(value = "登录", notes = "登录")
     @ApiImplicitParams({
           @ApiImplicitParam(name = "userName", value = "账号", required = true, dataType = "String", paramType = "path"),
