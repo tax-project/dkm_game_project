@@ -1,4 +1,4 @@
-package com.dkm.meskill.entity;
+package com.dkm.skill.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;

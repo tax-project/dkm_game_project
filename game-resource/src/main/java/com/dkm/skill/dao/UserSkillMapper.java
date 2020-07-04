@@ -1,7 +1,7 @@
 package com.dkm.skill.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
-import com.dkm.meskill.entity.UserSkill;
+import com.dkm.skill.entity.UserSkill;
 import org.springframework.stereotype.Component;
 
 /**
