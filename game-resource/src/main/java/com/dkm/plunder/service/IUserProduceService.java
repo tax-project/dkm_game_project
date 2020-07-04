@@ -13,14 +13,14 @@ import java.util.List;
 public interface IUserProduceService {
 
    /**
-    *  批量增加一个用户所有的产出信息
-    * @param list 用户产出信息
-    */
-   void insertAllProduceInfo (List<UserProduceVo> list);
-
-   /**
     *  增加产出信息
     * @param userProduce
     */
    void insertProduce (UserProduce userProduce);
+
+   /**
+    *  批量增加用户产出信息
+    * @param list 参数集合
+    */
+   void allInsertUserProduce (List<UserProduce> list);
 }

@@ -50,4 +50,11 @@ public interface ProduceMapper extends IBaseMapper<Produce> {
      */
     Integer deleteProduceUser (List<ProduceSelectVo> list);
 
+    /**
+     *  批量增加产出表
+     * @param list
+     * @return
+     */
+    Integer allInsertProduce (List<Produce> list);
+
 }

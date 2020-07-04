@@ -74,4 +74,12 @@ public class ProduceController {
 
 
 
+    @ApiOperation(value = "产出的信息(上线调用的接口)", notes = "产出的信息(上线调用的接口)")
+    @GetMapping("/getPut")
+    @CrossOrigin
+    @CheckToken
+    public void getPut(){
+       produceService.getPut();
+    }
+
 }

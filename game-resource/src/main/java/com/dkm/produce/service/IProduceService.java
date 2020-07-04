@@ -46,4 +46,10 @@ public interface IProduceService {
      * @param aId
      */
    void deletePut (Long userId, Long aId);
+
+   /**
+    *  上线调用的接口
+    *  产出的信息
+    */
+   void getPut ();
 }

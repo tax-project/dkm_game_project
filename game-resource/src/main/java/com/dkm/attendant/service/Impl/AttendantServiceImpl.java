@@ -1,6 +1,7 @@
 package com.dkm.attendant.service.Impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.plunder.dao.OpponentMapper;
 import com.dkm.attendant.entity.AttenDant;
@@ -75,6 +76,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private RedisConfig redisConfig;
+
+    private final String put = "PUT::REDIS::";
 
     @Autowired
     private IProduceService produceService;
@@ -731,6 +734,9 @@ public class AttendantServiceImpl implements IAttendantService {
         //得到产出的物品返回
         map.put("goods",list);
 
+        //清空redis的跟班产出状态
+        redisConfig.remove(put + user.getId());
+
         return map;
     }
 
@@ -871,6 +877,20 @@ public class AttendantServiceImpl implements IAttendantService {
     @Override
     public List<AttenDant> listAttenDant() {
         return attendantMapper.selectList(null);
+    }
+
+    @Override
+    public void updateMuch(Long attUserId, Integer status) {
+        Integer integer = attendantMapper.updateMuch(attUserId, status);
+
+        if (integer <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+        }
+    }
+
+    @Override
+    public AttenDant queryAttendant() {
+        return attendantMapper.queryAttendant();
     }
 
 

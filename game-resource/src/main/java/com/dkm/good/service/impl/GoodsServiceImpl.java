@@ -74,18 +74,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodMapper, Goods> implements 
     */
    @Override
    public Goods queryRandomGoods() {
-
-      List<Goods> list = baseMapper.selectList(null);
-
-      //生成一个随机数
-      Set<Integer> set = randomData.getList(list.size(), 1);
-
-      Goods goods = null;
-      for (Integer integer : set) {
-         goods = list.get(integer);
-      }
-
-      return goods;
+      return baseMapper.queryRandomGoods();
    }
 
    @Override

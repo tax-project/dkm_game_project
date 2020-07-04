@@ -63,6 +63,7 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
 
         attendantUser.setAtuId(id);
         attendantUser.setEndDate(endDate);
+        attendantUser.setAttMuch(0);
 
         int updateById = baseMapper.updateById(attendantUser);
 

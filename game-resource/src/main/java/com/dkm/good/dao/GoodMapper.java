@@ -29,4 +29,10 @@ public interface GoodMapper extends IBaseMapper<Goods> {
     * @return
     */
    List<GoodQueryVo> getGoodList (Long userId);
+
+   /**
+    *  随机返回一个物品
+    * @return 物品信息
+    */
+   Goods queryRandomGoods();
 }
