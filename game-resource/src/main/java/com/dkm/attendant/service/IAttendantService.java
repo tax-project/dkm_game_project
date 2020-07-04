@@ -104,4 +104,17 @@ public interface IAttendantService {
      */
     List<AttenDant> listAttenDant ();
 
+   /**
+    *  修改产出的次数
+    * @param attUserId 用户跟班id
+    * @param status 0--产出次数+1   1--清0
+    */
+   void updateMuch (Long attUserId, Integer status);
+
+   /**
+    *  随机查询一个跟班
+    * @return 返回跟班信息
+    */
+   AttenDant queryAttendant();
+
 }

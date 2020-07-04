@@ -39,8 +39,9 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
             turntableCouponEntity.setCouponBlue(0);
             turntableCouponEntity.setCouponPurple(0);
             turntableCouponEntity.setCouponGreen(20);
-            turntableCouponEntity.setTurntable_coupon_id(idGenerator.getNumberId());
+            turntableCouponEntity.setTurntableCouponId(idGenerator.getNumberId());
             turntableCouponEntity.setCouponTime(now);
+            turntableCouponEntity.setUserId(userId);
             turntableCouponDao.insert(turntableCouponEntity);
         }else if(turntableCouponEntity.getCouponBlue()<20){
             //计算获得多少张 20分钟一张

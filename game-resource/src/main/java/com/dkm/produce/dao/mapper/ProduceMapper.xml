@@ -41,4 +41,12 @@
         </foreach>
     </delete>
 
+    <insert id="allInsertProduce" parameterType="com.dkm.produce.entity.Produce">
+        insert into tb_produce (id, attendant_id, good_id, number, att_user_id, status)
+        <foreach collection="list" index="index" item="item" separator="union all">
+            select #{item.id},#{item.attendantId},#{item.goodId},#{item.number},
+            #{item.attUserId},#{item.status}
+        </foreach>
+    </insert>
+
 </mapper>

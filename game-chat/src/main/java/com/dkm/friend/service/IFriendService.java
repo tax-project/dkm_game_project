@@ -1,5 +1,6 @@
 package com.dkm.friend.service;
 
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.friend.entity.bo.FriendBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
 import com.dkm.friend.entity.vo.FriendVo;
@@ -37,4 +38,10 @@ public interface IFriendService {
     * @return 返回所有可能认识的人的集合
     */
    List<FriendBo> listAllProblemFriend ();
+
+   /**
+    *  触发离线消息
+    * @return 返回离线消息
+    */
+   List<MsgInfo> getOntOnlineInfo ();
 }

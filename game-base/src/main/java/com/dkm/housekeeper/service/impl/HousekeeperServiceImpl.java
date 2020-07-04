@@ -6,7 +6,6 @@ import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.SeedPlantUnlock;
-import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;

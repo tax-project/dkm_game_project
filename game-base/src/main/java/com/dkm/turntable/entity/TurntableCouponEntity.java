@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class TurntableCouponEntity {
 
     @TableId
-    private Long turntable_coupon_id;
+    private Long turntableCouponId;
 
     /**
      * userId

@@ -18,7 +18,9 @@ import com.dkm.plunder.entity.Opponent;
 import com.dkm.plunder.entity.vo.OpponentResultVo;
 import com.dkm.plunder.entity.vo.OpponentVo;
 import com.dkm.plunder.service.IOpponentService;
+import com.dkm.utils.TransformationUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,12 +108,6 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         Result<List<com.dkm.entity.vo.OpponentVo>> listResult = userFeignClient.listOpponent(listVo);
 
-        System.out.println("--->" + listResult);
-
-        for (com.dkm.entity.vo.OpponentVo datum : listResult.getData()) {
-            System.out.println(datum.getUserId());
-        }
-
         if (listResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "对手feign有误");
         }
@@ -124,8 +120,8 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
         //根据用户id查询物品
         List<GoodQueryVo> voList = goodsService.queryGoodsList(idList);
 
-        Map<Long, List<GoodQueryVo>> map = voList.stream().
-              collect(Collectors.toMap(GoodQueryVo::getUserId, goodQueryVo
+        Map<Long, List<GoodQueryVo>> map = userInfo.stream().
+              collect(Collectors.toMap(com.dkm.entity.vo.OpponentVo::getUserId, goodQueryVo
               -> new ArrayList<>()));
 
         for (GoodQueryVo vo : voList) {

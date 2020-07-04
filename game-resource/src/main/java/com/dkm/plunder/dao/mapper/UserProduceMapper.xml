@@ -4,10 +4,10 @@
 <mapper namespace="com.dkm.plunder.dao.UserProduceMapper">
 
 
-    <insert id="insertAllProduceInfo" parameterType="com.dkm.plunder.entity.vo.UserProduceVo">
-        insert into tb_user_produce (user_id, produce_id)
+    <insert id="allInsertUserProduce" parameterType="com.dkm.plunder.entity.UserProduce">
+        insert into tb_user_produce (id, user_id, produce_id)
         <foreach collection="list" item="item" index="index" separator="union all">
-            select #{item.userId},#{item.produceId}
+            select #{item.id},#{item.userId},#{item.produceId}
         </foreach>
     </insert>
 

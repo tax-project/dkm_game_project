@@ -21,6 +21,11 @@ public class MoneyBo {
    private Long userId;
 
    /**
+    * 用户昵称
+    */
+   private String userNickName;
+
+   /**
     * （红包金额）
     * 钻石数量
     */

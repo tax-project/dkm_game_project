@@ -1,6 +1,7 @@
 package com.dkm.friend.controller;
 
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.friend.entity.bo.FriendBo;
 import com.dkm.friend.entity.vo.FriendAllListVo;
@@ -68,5 +69,14 @@ public class FriendController {
    @CheckToken
    public List<FriendBo> listAllProblemFriend () {
       return friendService.listAllProblemFriend();
+   }
+
+
+   @ApiOperation(value = "触发离线消息(当连上ws时候调用)", notes = "触发离线消息(当连上ws时候调用)")
+   @GetMapping("/getOntOnlineInfo")
+   @CrossOrigin
+   @CheckToken
+   public List<MsgInfo> getOntOnlineInfo () {
+      return friendService.getOntOnlineInfo();
    }
 }

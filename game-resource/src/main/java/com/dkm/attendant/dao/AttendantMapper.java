@@ -69,8 +69,17 @@ public interface AttendantMapper extends BaseMapper<AttenDant> {
      Integer updateProduceStatus (List<Long> list);
 
     /**
-     * 随机查询一个跟班
+     *  随机查询一个跟班
+     * @return 返回跟班信息
      */
     AttenDant queryAttendant();
+
+    /**
+     *  修改产出的次数
+     * @param attUserId 用户跟班id
+     * @param status 0--产出次数+1   1--清0
+     * @return 返回修改结果
+     */
+    Integer updateMuch(@Param("attUserId") Long attUserId, @Param("status") Integer status);
 
 }

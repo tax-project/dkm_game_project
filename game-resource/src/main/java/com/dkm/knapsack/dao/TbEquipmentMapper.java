@@ -19,4 +19,6 @@ import java.util.List;
 @Service
 public interface TbEquipmentMapper extends BaseMapper<TbEquipment> {
     List<TbEquipmentVo> selectByEquipmentId(Long equipmentId);
+
+    TbEquipmentVo selectByEquipmentIdTwo(String exp1);
 }

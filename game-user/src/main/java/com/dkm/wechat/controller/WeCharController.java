@@ -11,6 +11,7 @@ import com.dkm.utils.StringUtils;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.ResultVo;
+import com.dkm.wechat.entity.vo.UserChatInfoVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
 import com.dkm.wechat.service.IWeChatService;
@@ -140,6 +141,15 @@ public class WeCharController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return weChatService.queryUserByName(userName);
+    }
+
+
+    @ApiOperation(value = "查询个人信息", notes = "查询个人信息")
+    @GetMapping("/queryUserQrInfo")
+    @CrossOrigin
+    @CheckToken
+    public UserChatInfoVo queryUserQrInfo () {
+        return weChatService.queryUserQrInfo();
     }
 
 }
