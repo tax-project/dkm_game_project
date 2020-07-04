@@ -4,6 +4,7 @@ import com.dkm.data.Result;
 import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.feign.entity.SeedPlantVo;
 import com.dkm.feign.entity.TbEquipmentVoTwo;
+import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author: zhd
  * @create: 2020-05-16 15:25
  **/
-@FeignClient(value = "resource")
+@FeignClient(value = "resource",fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
     /**
      * 更新背包
