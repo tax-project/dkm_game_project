@@ -38,9 +38,9 @@ public class AttendantUser extends Model<AttendantUser> {
     private Long caughtPeopleId;
 
     /**
-     * 时间
+     * 产出次数
      */
-    private long exp1;
+    private Integer attMuch;
 
     /**
      * 跟班产出过期时间

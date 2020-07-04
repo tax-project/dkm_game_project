@@ -6,7 +6,9 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.dao.AttendantUserMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.good.entity.Goods;
@@ -19,6 +21,7 @@ import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
 import com.dkm.produce.entity.vo.AttendantImgVo;
 import com.dkm.produce.entity.vo.AttendantPutVo;
+import com.dkm.produce.entity.vo.MuchVo;
 import com.dkm.produce.entity.vo.ProduceSelectVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
@@ -62,7 +65,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private IAttendantUserService attendantUserService;
 
     @Autowired
-    private AttendantMapper attendantMapper;
+    private IAttendantService attendantService;
+
+    @Autowired
+    private RedisConfig redisConfig;
+
+    private final String put = "PUT::REDIS::";
 
     /**
      *  物品金币
@@ -139,6 +147,10 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         userProduceService.insertProduce(userProduce);
 
+
+        //增加产出次数
+        attendantService.updateMuch(attUserId, 0);
+
         //返回随机生成的物品给前端
 
         Map<String, Object> map = new HashMap<>(2);
@@ -160,8 +172,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //查询所有跟班
         List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
 
-
-
         //查询出所有用户跟班图片
         List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
 
@@ -176,7 +186,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
                 AttendantImgVo attendantImgVo=new AttendantImgVo();
                 //随机查询一个跟班
-                AttenDant attenDant = attendantMapper.queryAttendant();
+                AttenDant attenDant = attendantService.queryAttendant();
 
                 //放入对象
                 attendantImgVo.setWeChatHeadImgUrl(attenDant.getAtImg());
@@ -194,26 +204,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             }
         }
 
-
-
-         String goodName=null;
-
-
-
-
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
-
-        /*for (int i = 0; i < attendantPutVos.size(); i++) {
-            goodName=attendantPutVos.get(i).getGoodName();
-            for (int j = 0; j < attendantPutVos.size(); j++) {
-                if(j!=i){
-                    if(goodName.equals(attendantPutVos.get(i).getGoodName())){
-                         map.put("num",attendantPutVos.get(j).getNumber());
-                    }
-                }
-            }
-        }*/
 
         map.put("attendantImg",attendantImg);
 
@@ -264,6 +256,122 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
          throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
       }
    }
+
+    @Override
+    public void getPut() {
+        UserLoginQuery user = localUser.getUser();
+
+        Object value = redisConfig.getString(put + user.getId());
+
+        if (value != null) {
+            //说明上线过了
+            return;
+        }
+
+        redisConfig.setString(put + user.getId(), "attPutInfo");
+
+        int much = 12;
+
+        //获取当前时间
+        LocalDateTime now = LocalDateTime.now();
+
+        List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(user.getId());
+
+        List<Produce> produceList = new ArrayList<>();
+
+        List<UserProduce> userProduceList = new ArrayList<>();
+
+        for (AttendantUser attendantUser : attendantUsers) {
+            LocalDateTime time = DateUtils.parseDateTime(attendantUser.getEndDate());
+
+            Integer until = (int)now.until(time, ChronoUnit.HOURS);
+
+            if (until <= 0) {
+                //查看数据库之前产出的次数
+                for (int i = 0; i < much - attendantUser.getAttMuch(); i++) {
+                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = (Produce) put.get("produce");
+                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    produceList.add(produce);
+                    userProduceList.add(userProduce);
+                }
+            }
+
+            if (until > 0) {
+                for (int i = 0; i < much - attendantUser.getAttMuch() - until; i++) {
+                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = (Produce) put.get("produce");
+                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    produceList.add(produce);
+                    userProduceList.add(userProduce);
+                }
+            }
+        }
+
+
+        //批量增加到数据库
+        Integer integer = baseMapper.allInsertProduce(produceList);
+
+        if (integer <= 0) {
+            log.info("上线时批量增加产量出错");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "添加出错");
+        }
+
+
+        //批量增加用户产量
+        userProduceService.allInsertUserProduce(userProduceList);
+
+    }
+
+
+
+    public Map<String, Object> put(Long userId, Long attendantId, Long attUserId) {
+        Goods goods = goodsService.queryRandomGoods();
+
+
+        Produce produce = new Produce();
+        Long produceId = idGenerator.getNumberId();
+
+
+        produce.setId(produceId);
+
+        if (1L == attendantId || 2L == attendantId || 3L == attendantId) {
+            produce.setAttendantId(attendantId);
+        } else {
+            produce.setAttendantId(0L);
+        }
+
+        produce.setAttUserId(attUserId);
+
+        int number;
+        //算出随机生成的数量
+        if (GOOD_NAME.equals(goods.getName())) {
+
+            //随机生成1000-2000的金币
+            number = (int) (Math.random() * (2000 - 1000 + 1)) + 1000;
+
+        } else {
+            //随机生成1-3的随机数
+            number = (int) (Math.random() * (3 - 1 + 1)) + 1;
+        }
+        produce.setNumber(number);
+
+        produce.setGoodId(goods.getId());
+
+        //默认0
+        produce.setStatus(0);
+
+        UserProduce userProduce = new UserProduce();
+        userProduce.setUserId(userId);
+        userProduce.setProduceId(produceId);
+
+        Map<String, Object> map = new HashMap<>(2);
+
+        map.put("produce",produce);
+        map.put("userProduce", userProduce);
+
+        return map;
+    }
 
 
 }

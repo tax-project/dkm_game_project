@@ -59,4 +59,20 @@
         </foreach>
     </update>
 
+
+    <update id="updateMuch">
+        update tb_attendant_user
+        <if test="status == 0">
+            <set>
+                att_much = att_much + 1
+            </set>
+        </if>
+        <if test="status == 1">
+            att_much = 0
+        </if>
+        <where>
+            atu_id = #{attUserId}
+        </where>
+    </update>
+
 </mapper>

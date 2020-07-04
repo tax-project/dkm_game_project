@@ -16,11 +16,10 @@ import java.util.List;
 @Component
 public interface UserProduceMapper extends IBaseMapper<UserProduce> {
 
-
    /**
     *  批量增加用户产出信息
-    * @param list 用户产出信息
+    * @param list
     * @return
     */
-   Integer insertAllProduceInfo(List<UserProduceVo> list);
+   Integer allInsertUserProduce(List<UserProduce> list);
 }

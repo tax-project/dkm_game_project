@@ -29,21 +29,21 @@ public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserP
    private IdGenerator idGenerator;
 
    @Override
-   public void insertAllProduceInfo(List<UserProduceVo> list) {
-      Integer integer = baseMapper.insertAllProduceInfo(list);
-
-      if (integer <= 0) {
-         log.info("批量增加用户产出失败");
-         throw new ApplicationException(CodeType.SERVICE_ERROR);
-      }
-   }
-
-   @Override
    public void insertProduce(UserProduce userProduce) {
       userProduce.setId(idGenerator.getNumberId());
       int insert = baseMapper.insert(userProduce);
 
       if (insert <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
+   }
+
+   @Override
+   public void allInsertUserProduce(List<UserProduce> list) {
+      Integer integer = baseMapper.allInsertUserProduce(list);
+
+      if (integer <= 0) {
+         log.info("批量增加用户产出失败");
          throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
    }
