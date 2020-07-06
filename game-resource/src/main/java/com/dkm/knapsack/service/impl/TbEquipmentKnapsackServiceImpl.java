@@ -163,7 +163,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
         if(rows>0){
             //减少声望
-            too(Long.valueOf(tbEquipmentKnapsackTwoVo.getTekId()));
+            too(tbEquipmentKnapsackTwoVo.getTekId());
             TbEquipmentKnapsack tbEquipmentKnapsackTwo=new TbEquipmentKnapsack();
             tbEquipmentKnapsackTwo.setTekId(idGenerator.getNumberId());
             tbEquipmentKnapsackTwo.setTekSell(1);
