@@ -94,7 +94,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       }
       List<SkillUserSkillVo> skillUserSkillVo = baseMapper.queryAllSkillByUserId(user.getId());
       for (int i = 0; i < skillUserSkillVo.size(); i++) {
-
+            skillUserSkillVo.get(i).setSkCurrentConsume(8);
       }
 
 
