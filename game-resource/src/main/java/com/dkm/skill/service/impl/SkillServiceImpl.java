@@ -85,7 +85,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userSkill.setSkAddPrestige(100);
             userSkill.setSkDegreeProficiency(0);
             userSkill.setSkAllConsume(1);
-            userSkill.setSkCurrentConsume(userSkill.getSkAllConsume());
+            userSkill.setSkCurrentConsume(0);
             list.add(userSkill);
          }
 
