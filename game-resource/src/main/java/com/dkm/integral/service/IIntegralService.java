@@ -22,7 +22,7 @@ public interface IIntegralService {
      * 根据用户id查询用户积分
      * @return
      */
-    int queryUserIdIntegral();
+    Integer queryUserIdIntegral();
 
     /**
      * 根据用户id修改用户积分

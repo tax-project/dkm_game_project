@@ -2,6 +2,7 @@ package com.dkm.integral.dao;
 
 import com.dkm.integral.entity.Integral;
 import com.dkm.integral.entity.Stars;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface IntegralMapper {
      * @param userId
      * @return
      */
-    int queryUserIdIntegral(long userId);
+    Integer queryUserIdIntegral(Long userId);
 
     /**
      * 根据用户id修改用户积分
@@ -33,7 +34,7 @@ public interface IntegralMapper {
      * @param userId
      * @return
      */
-    int updateUserIntegral(Integer iMyIntegral,long userId);
+    int updateUserIntegral(@Param("iMyIntegral") Integer iMyIntegral, @Param("userId") Long userId);
 
     /**
      * 根据用户id修改用户所拥有的消耗数量

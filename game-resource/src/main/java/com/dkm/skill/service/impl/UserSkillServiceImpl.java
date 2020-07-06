@@ -29,4 +29,9 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
    public int addUserSkill(List<UserSkill> list) {
       return baseMapper.addUserSkill(list);
    }
+
+   @Override
+   public UserSkill querySkillById(Long id) {
+      return baseMapper.selectById(id);
+   }
 }

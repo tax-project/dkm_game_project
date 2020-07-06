@@ -7,7 +7,7 @@
         select i_id,i_product_name,i_img,i_product_number,i_Integral_number from tb_integral
     </select>
 
-    <select id="queryUserIdIntegral" parameterType="java.lang.Long">
+    <select id="queryUserIdIntegral" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select i_myintegral from tb_user_integral where user_id=#{userId}
     </select>
 
