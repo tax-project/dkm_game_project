@@ -367,7 +367,7 @@ public class TbEquipmentKnapsackController {
     @PostMapping("/updateAndInsert")
     @CrossOrigin
     @CheckToken
-    public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo){
+    public void updateAndInsert(@RequestBody TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo){
        tbEquipmentKnapsackService.updateAndInsert(tbEquipmentKnapsackTwoVo);
     }
 

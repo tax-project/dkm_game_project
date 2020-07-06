@@ -146,12 +146,12 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo) {
-        if(tbEquipmentKnapsackTwoVo.getEquipmentId().equals("")
-                || tbEquipmentKnapsackTwoVo.getTekId().equals("") || tbEquipmentKnapsackTwoVo.getTekIsva().equals("") ){
+        if(tbEquipmentKnapsackTwoVo.getEquipmentId()==null
+                || tbEquipmentKnapsackTwoVo.getTekId()==null || tbEquipmentKnapsackTwoVo.getTekIsva()==null ){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "必传参数不能为空");
         }
         QueryWrapper queryWrapper=new QueryWrapper();
-        queryWrapper.eq("tek_id",Long.valueOf(tbEquipmentKnapsackTwoVo.getTekId()));
+        queryWrapper.eq("tek_id",tbEquipmentKnapsackTwoVo.getTekId());
         TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
         //等于0 代表要卖掉
         if(tbEquipmentKnapsackTwoVo.getTekIsva()==0){
@@ -168,7 +168,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             tbEquipmentKnapsackTwo.setTekId(idGenerator.getNumberId());
             tbEquipmentKnapsackTwo.setTekSell(1);
             tbEquipmentKnapsackTwo.setTekDaoju(1);
-            tbEquipmentKnapsackTwo.setEquipmentId(Long.valueOf(tbEquipmentKnapsackTwoVo.getEquipmentId()));
+            tbEquipmentKnapsackTwo.setEquipmentId(tbEquipmentKnapsackTwoVo.getEquipmentId());
             TbKnapsack tbKnapsack=new TbKnapsack();
             tbKnapsack.setUserId(localUser.getUser().getId());
             List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
@@ -189,7 +189,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
                 increaseUserInfoBO.setUserId(localUser.getUser().getId());
                 increaseUserInfoBO.setUserInfoGold(5);
-                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(Long.valueOf(tbEquipmentKnapsackTwoVo.getEquipmentId()));
+                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsackTwoVo.getEquipmentId());
                 for (TbEquipmentVo equipmentVo : list5) {
                     increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
                 }
