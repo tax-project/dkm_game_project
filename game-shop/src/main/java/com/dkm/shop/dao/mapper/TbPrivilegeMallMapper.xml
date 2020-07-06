@@ -10,8 +10,6 @@
 		<result column="pri_type" property="priType" />
 		<result column="pri_money" property="priMoney" />
 		<result column="exp1" property="exp1" />
-		<result column="exp2" property="exp2" />
-		<result column="exp3" property="exp3" />
 		<result column="pri_img" property="priImg" />
 		<result column="pr_content_one" property="prContentOne" />
 	</resultMap>

@@ -1,5 +1,9 @@
 package com.dkm.skill.service;
 
+import com.dkm.skill.entity.UserSkill;
+
+import java.util.List;
+
 /**
  * @author qf
  * @date 2020/5/27
@@ -7,5 +11,11 @@ package com.dkm.skill.service;
  **/
 public interface IUserSkillService {
 
+    /**
+     * 批量增加用户技能
+     * @param list
+     * @return
+     */
+    int addUserSkill(List<UserSkill> list);
 
 }

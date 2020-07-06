@@ -19,10 +19,7 @@ import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
-import com.dkm.produce.entity.vo.AttendantImgVo;
-import com.dkm.produce.entity.vo.AttendantPutVo;
-import com.dkm.produce.entity.vo.MuchVo;
-import com.dkm.produce.entity.vo.ProduceSelectVo;
+import com.dkm.produce.entity.vo.*;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -34,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author 刘梦祺
@@ -206,17 +205,20 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //统计出所有物品的数量
         List<AttendantPutVo> attendantPutVos = produceMapper.queryOutput(userId);
+               List<ImgNumVo> collect = attendantPutVos.stream()
+                .collect(Collectors.groupingBy(AttendantPutVo::getImgUrl, Collectors.summingInt(AttendantPutVo::getNumber)))
+                .entrySet().stream().map(a -> new ImgNumVo(a.getKey(), a.getValue())).collect(Collectors.toList());
 
         map.put("attendantImg",attendantImg);
 
         if(attendantPutVos.size()==0){
             //1代表没有
-            map.put("status",1);
+            map.put("status",0);
             map.put("attendantPutVos","暂无产出，快去抓跟班吧");
         }else{
             //0代表有产出
-            map.put("status",0);
-            map.put("attendantPutVos",attendantPutVos);
+            map.put("status",1);
+            map.put("attendantPutVos",collect);
         }
 
         return map;

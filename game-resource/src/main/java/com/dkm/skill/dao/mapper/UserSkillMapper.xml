@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.skill.dao.UserSkillMapper">
+
+
+    <insert id="addUserSkill" parameterType="com.dkm.skill.entity.UserSkill">
+        insert into tb_user_skill(id,user_id,sk_id,sk_grade,sk_degree_proficiency,sk_Current_success_rate,sk_add_prestige)
+        <foreach collection="list" item="lists" index="index" separator="union all">
+            select #{lists.id},#{lists.userId},#{lists.skId},#{lists.skGrade},#{lists.skCurrentSuccessRate},#{lists.skDegreeProficiency},#{lists.skAddPrestige}
+        </foreach>
+    </insert>
+
+</mapper>

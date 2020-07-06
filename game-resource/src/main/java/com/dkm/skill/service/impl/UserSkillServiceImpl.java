@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author qf
  * @date 2020/5/27
@@ -23,4 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill> implements IUserSkillService {
 
 
+   @Override
+   public int addUserSkill(List<UserSkill> list) {
+      return baseMapper.addUserSkill(list);
+   }
 }
