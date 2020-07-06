@@ -138,12 +138,12 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         long time = now.toEpochSecond(ZoneOffset.of("+8"))- housekeeperEntity.getStartWorkTime().toEpochSecond(ZoneOffset.of("+8"));
         //宝箱15分钟开一次 计算次数
         long count = time / (15 * 60);
+        if(count<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"暂无装备产出！");
         List<Long> boxId =new ArrayList<>();
         for (long i = 0; i < count; i++) {
             boxId.addAll(allBoxId);
         }
         String replace = boxId.toString().replace("[", "").replace("]", "").replace(" ","");
-        System.out.println(replace);
         Result<List<TbEquipmentVo>> listResult = resourceFeignClient.selectByBoxIdTwo(replace);
         if(listResult.getCode()!=0){
             throw  new ApplicationException(CodeType.SERVICE_ERROR,listResult.getMsg());
@@ -197,8 +197,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         //收取的金币
         int gold = count * size * data.get(0).getSeedGold();
         //调用收取种子的接口
-        housekeeperEntity.setSeedGold(housekeeperEntity.getSeedGold()+gold);
-        housekeeperEntity.setSeedExp(housekeeperEntity.getSeedExp()+exp);
+        housekeeperEntity.setSeedGold(gold);
+        housekeeperEntity.setSeedExp(exp);
         housekeeperMapper.updateById(housekeeperEntity);
         map.put("gold",housekeeperEntity.getSeedGold());
         map.put("exp",housekeeperEntity.getSeedExp());
