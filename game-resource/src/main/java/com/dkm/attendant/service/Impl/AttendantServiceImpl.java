@@ -272,7 +272,7 @@ public class AttendantServiceImpl implements IAttendantService {
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
-        //得到装备信息
+        //得到他方装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
         //如果没有装备
         if(tbEquipmentKnapsackVos1.size()==0){
@@ -356,12 +356,16 @@ public class AttendantServiceImpl implements IAttendantService {
             }
 
             //得到他方的战力
-            double heRipetime = StrictMath.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
+            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
                     (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
 
-           //得到最终他方的战力
+            //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
         }
+
+
+
+
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
@@ -371,7 +375,7 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到自己装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-        if(tbEquipmentKnapsackVos.size()==0){
+        if(tbEquipmentKnapsackVos.size()==0 || tbEquipmentKnapsackVos==null){
             //血量
             ourHealth=500;
             //得到我方装备防御力
@@ -412,34 +416,43 @@ public class AttendantServiceImpl implements IAttendantService {
                  * 如果有加成在判断是生命还是才华
                  */
                 //我方装备加成
-                if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
-                    // 1 为生命加成 2 为才华加成
-                    if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
-                        // 生命加成
-                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                    } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
-                        //才华加成
-                        myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                    }
-                }
-
-                //他方装备属性加成等于0 在查询一遍赋值
-                if(heEquipBonus==0){
-                     /**
-                     * 属性加成 1就代表有加成 0代表没有加成
-                     * 如果有加成在判断是生命还是才华
-                     */
-                    if (tbEquipmentKnapsackVos1.get(i).getEdAttribute().intValue() == 1) {
+                if(myEquipmentBonus==0){
+                    if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
                         // 1 为生命加成 2 为才华加成
-                        if (tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 1) {
+                        if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
                             // 生命加成
-                            heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
-                        } else {
+                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                        } else if(tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 2){
                             //才华加成
-                            heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
+                            myEquipmentBonus =myEquipmentBonus+ tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
                         }
                     }
                 }
+
+
+                //判断他方是否有装备
+                if(tbEquipmentKnapsackVos1.size()!=0){
+                    //他方装备属性加成等于0 在查询一遍赋值
+                    if(heEquipmentBonus==0){
+                        /**
+                         * 属性加成 1就代表有加成 0代表没有加成
+                         * 如果有加成在判断是生命还是才华
+                         */
+
+                        if (tbEquipmentKnapsackVos1.get(i).getEdAttribute().intValue() == 1) {
+                            // 1 为生命加成 2 为才华加成
+                            if (tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 1) {
+                                // 生命加成
+                                heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
+                            } else {
+                                //才华加成
+                                heEquipmentBonus =heEquipmentBonus+tbEquipmentKnapsackVos1.get(i).getEdTypevalue().doubleValue();
+                            }
+                        }
+                    }
+                }
+
+
 
                 /**
                  * 装备防御力*各个装备属性加成
@@ -448,8 +461,8 @@ public class AttendantServiceImpl implements IAttendantService {
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
             //得到我方的战力
-            double heRipetime = StrictMath.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
-                    (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() *myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
+            double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
+                    (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
             //得到最终我方的战力
             myRipetime= (int) heRipetime;
 
@@ -505,6 +518,106 @@ public class AttendantServiceImpl implements IAttendantService {
         map.put("heRipetime1",heRipetime1);
         return map;
     }
+
+    @Override
+    public Map<String, Object> combatResults(AttendantVo vo) {
+
+        Map<String, Object> map = new HashMap<>(7);
+
+        ResultAttendeantVo result = getResult(vo.getMyHealth(),vo.getOtherHealth(),vo.getMyCapabilities(), vo.getOtherForce(), vo.getStatus());
+
+        map.put("myMuch", result.getMyMuch());
+        map.put("otherMuch",result.getOtherMuch());
+
+        map.put("otherForce",vo.getOtherForce());
+
+        map.put("myCapabilities",vo.getMyCapabilities());
+        /**
+         *
+         */
+        map.put("myHealth", vo.getMyHealth());
+
+        /**
+         *
+         */
+        map.put("otherHealth", vo.getOtherHealth());
+
+        //0--我方赢了
+        //1--对面赢了
+        map.put("result",result);
+
+        return map;
+    }
+
+
+    public ResultAttendeantVo getResult (Integer allMyHealth, Integer allOtherHealth, Integer myCapabilities, Integer otherForce, Integer status) {
+
+        ResultAttendeantVo vo = new ResultAttendeantVo();
+
+        Integer myMuch = 0;
+        Integer otherMuch = 0;
+
+        if (status == 0) {
+            //我先动手
+            while (true) {
+                Integer other = allOtherHealth - myCapabilities;
+                //得到被攻击后的血量    在赋值给总血量
+                allOtherHealth=other;
+                myMuch += 1;
+                if (other <= 0) {
+                    //我方赢了
+                    vo.setMyMuch(myMuch);
+                    vo.setOtherMuch(otherMuch);
+                    vo.setResult(0);
+                    return vo;
+                }
+                Integer my = allMyHealth - otherForce;
+                //得到被攻击后的血量    在赋值给总血量
+                allMyHealth=my;
+                otherMuch += 1;
+                if (my <= 0) {
+                    //对方赢了
+                    vo.setMyMuch(myMuch);
+                    vo.setOtherMuch(otherMuch);
+                    vo.setResult(1);
+                    return vo;
+                }
+            }
+
+
+        }
+
+        //对面先动手
+        while (true) {
+            Integer my = allMyHealth - otherForce;
+            //得到被攻击后的血量    在赋值给总血量
+            allMyHealth=my;
+            otherMuch += 1;
+            if (my <= 0) {
+                //对方赢了
+                vo.setMyMuch(myMuch);
+                vo.setOtherMuch(otherMuch);
+                vo.setResult(1);
+                return vo;
+            }
+            Integer other = allOtherHealth - myCapabilities;
+            //得到被攻击后的血量    在赋值给总血量
+            allOtherHealth=other;
+            myMuch += 1;
+            if (other <= 0) {
+                //我方赢了
+                vo.setMyMuch(myMuch);
+                vo.setOtherMuch(otherMuch);
+                vo.setResult(0);
+                return vo;
+            }
+        }
+
+    }
+
+
+
+
 
 
     @Override
@@ -740,97 +853,6 @@ public class AttendantServiceImpl implements IAttendantService {
         return map;
     }
 
-    @Override
-    public Map<String, Object> combatResults(AttendantVo vo) {
-
-        Map<String, Object> map = new HashMap<>();
-
-        ResultAttendeantVo result = getResult(vo.getMyHealth(),vo.getOtherHealth(),vo.getMyCapabilities(), vo.getOtherForce(), vo.getStatus());
-
-        map.put("myMuch", result.getMyMuch());
-        map.put("otherMuch",result.getOtherMuch());
-        /**
-         * 他方的战斗力减去我方血量  就是我方剩下来的血量
-         */
-        map.put("myHealth", vo.getOtherForce());
-
-        /**
-         * 我方战斗力减去他方血量 就是他方剩下的血量
-         */
-        map.put("otherHealth", vo.getMyCapabilities());
-
-        //0--我方赢了
-        //1--对面赢了
-        map.put("result",result);
-
-        return map;
-    }
-
-
-    public ResultAttendeantVo getResult (Integer allMyHealth, Integer allOtherHealth, Integer myCapabilities, Integer otherForce, Integer status) {
-
-        ResultAttendeantVo vo = new ResultAttendeantVo();
-
-        Integer myMuch = 0;
-        Integer otherMuch = 0;
-
-        if (status == 0) {
-            //我先动手
-            while (true) {
-                Integer other = allOtherHealth - myCapabilities;
-                //得到被攻击后的血量    在赋值给总血量
-                allOtherHealth=other;
-                myMuch += 1;
-                if (other <= 0) {
-                    //我方赢了
-                    vo.setMyMuch(myMuch);
-                    vo.setOtherMuch(otherMuch);
-                    vo.setResult(0);
-                    return vo;
-                }
-                Integer my = allMyHealth - otherForce;
-                //得到被攻击后的血量    在赋值给总血量
-                allMyHealth=my;
-                otherMuch += 1;
-                if (my <= 0) {
-                    //对方赢了
-                    vo.setMyMuch(myMuch);
-                    vo.setOtherMuch(otherMuch);
-                    vo.setResult(1);
-                    return vo;
-                }
-            }
-
-
-        }
-
-        //对面先动手
-        while (true) {
-            Integer my = allMyHealth - otherForce;
-            //得到被攻击后的血量    在赋值给总血量
-            allMyHealth=my;
-            otherMuch += 1;
-            if (my <= 0) {
-                //对方赢了
-                vo.setMyMuch(myMuch);
-                vo.setOtherMuch(otherMuch);
-                vo.setResult(1);
-                return vo;
-            }
-            Integer other = allOtherHealth - myCapabilities;
-            //得到被攻击后的血量    在赋值给总血量
-            allOtherHealth=other;
-            myMuch += 1;
-            if (other <= 0) {
-                //我方赢了
-                vo.setMyMuch(myMuch);
-                vo.setOtherMuch(otherMuch);
-                vo.setResult(0);
-                return vo;
-            }
-        }
-
-    }
 
 
     @Override

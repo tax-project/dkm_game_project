@@ -60,6 +60,10 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 
       UserLoginQuery user = localUser.getUser();
 
+      if (vo.getToId().equals(user.getId())) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "你不能添加自己..");
+      }
+
       try {
          Boolean aBoolean = redisConfig.redisLock(redisLock);
 
@@ -150,8 +154,9 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
          vo.setFromId(request.getFromId());
          voList.add(vo);
       }
+      Long userId = user.getId();
 
-      return baseMapper.listAllRequestFriend(voList);
+      return baseMapper.listAllRequestFriend(voList, userId);
    }
 
    /**
