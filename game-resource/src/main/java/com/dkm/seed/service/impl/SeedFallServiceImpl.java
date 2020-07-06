@@ -128,14 +128,13 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
              */
             if(seedsFall.getDropCoins()!=0 || seedsFall.getDropRedEnvelope()!=0.0 || seedsFall.getDropFallingFlowers()!=0){
                 list.add(seedsFall);
+                //将掉落的金币和红包存入数据库
+                seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
             }
             //将值封装到vo
             goldOrMoneyVos.add(goldOrMoneyVo);
 
         }
-
-        //将掉落的金币和红包存入数据库
-        seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
 
         return goldOrMoneyVos;
     }
