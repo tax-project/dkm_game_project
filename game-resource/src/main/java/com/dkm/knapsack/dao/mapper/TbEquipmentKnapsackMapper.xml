@@ -75,7 +75,7 @@
 	</select>
 	<select id="selectCountMy" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM tb_equipment_knapsack tk,tb_equipment te
-		WHERE te.`equipment_id`=tk.equipment_id AND   tk.tek_sell=1  AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
+		WHERE te.`equipment_id`=tk.equipment_id AND   tk.tek_sell=1 AND tk.tek_isva=1  AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
 	</select>
 	<select id="selectAll" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultMap="BaseResultMapVo">
 		SELECT tk.tek_id,td.*,te.* FROM tb_equipment_knapsack tk,tb_equipment te,tb_equipment_details td
