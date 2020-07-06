@@ -5,10 +5,10 @@
 
 
     <select id="listAllRequestFriend" parameterType="com.dkm.friend.entity.vo.IdVo" resultType="com.dkm.friend.entity.vo.FriendRequestInfoVo">
-        select f.id as 'id',u.nick_name as 'fromNick',u.id as 'fromId',
+        select f.id as 'id',u.we_chat_nick_name as 'fromNick',u.user_id as 'fromId',
         DATE_FORMAT(f.request_time, '%Y-%m-%d %H:%i:%s')as 'requestTime',f.status as 'status',
         f.request_remark as 'requestRemark'
-        from tb_friend_request f join tb_user u on f.from_id = u.id where
+        from tb_friend_request f join tb_user u on f.from_id = u.user_id where
         <foreach collection="list" item="item" index="index" separator="or">
             f.from_id = #{item.fromId}
         </foreach>
