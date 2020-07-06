@@ -18,11 +18,11 @@ public class TbEquipmentKnapsackTwoVo {
     /**
      * 装备背包表主键
      */
-    private Long tekId;
+    private String tekId;
     /**
      * 装备主键
      */
-    private Long equipmentId;
+    private String equipmentId;
 
     /**
      * 是否有效
