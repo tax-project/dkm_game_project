@@ -327,7 +327,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
                     tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
                     //查询已经装备上了的装备数据
-                    List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
+                    List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
                     map.put("code",3);
                     map.put("msg","此装备已经装备上了");
                     map.put("dataOne",list3);
