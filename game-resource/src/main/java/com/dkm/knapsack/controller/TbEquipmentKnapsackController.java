@@ -358,15 +358,15 @@ public class TbEquipmentKnapsackController {
      * 声望高就给那个装备卸载下来
      *
      */
-    @PostMapping("/updateAndInsert")
-    @CrossOrigin
-    @CheckToken
     @ApiOperation(value = "开宝箱得到新装备 要替换旧装备接口 ",notes = "成功返回成功")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "新装备外键",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "旧装备主键",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekIsva",value = "旧装备主键 传0代表卖掉 1为放入装备",required = true),
     })
+    @PostMapping("/updateAndInsert")
+    @CrossOrigin
+    @CheckToken
     public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo){
         tbEquipmentKnapsackService.updateAndInsert(tbEquipmentKnapsackTwoVo);
     }
