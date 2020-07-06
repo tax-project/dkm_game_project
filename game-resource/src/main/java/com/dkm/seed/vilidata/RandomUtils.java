@@ -94,7 +94,7 @@ public class RandomUtils {
 
         Random random=new Random();
         int i = random.nextInt(100) + 1;
-        if(i<=3){
+        if(i<=20){
             return 1;
         }
         return 0;
