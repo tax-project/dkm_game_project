@@ -55,7 +55,7 @@ public class PersonalCenterController {
         /**
          *查询我的技能
          */
-        List<SkillBo> skillBos = iSkillService.queryAllSkillByUserId(userId);
+        //List<SkillBo> skillBos = iSkillService.queryAllSkillByUserId(userId);
         /**
          *查询跟班产出的产物
          */
@@ -72,7 +72,7 @@ public class PersonalCenterController {
 
 
         map.put("Seed",seedUnlockVos);
-        map.put("queryMySkill",skillBos);
+        //map.put("queryMySkill",skillBos);
         map.put("AttendantGoods",map1);
         map.put("equipment",tbEquipmentKnapsackVos);
         map.put("blackHouse",houseVo);

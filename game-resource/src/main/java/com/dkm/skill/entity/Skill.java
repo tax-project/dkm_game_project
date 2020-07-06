@@ -17,6 +17,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Skill extends Model<Skill> {
 
+   /**
+    * 技能主键id
+    */
    private Long id;
 
    /**

@@ -17,6 +17,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserSkill extends Model<UserSkill> {
 
+   /**
+    * 主键
+    */
    private Long id;
 
    /**
@@ -34,15 +37,16 @@ public class UserSkill extends Model<UserSkill> {
     */
    private Integer skGrade;
 
+
    /**
     * 当前技能升级成功率
     */
    private Integer skCurrentSuccessRate;
 
    /**
-    * 当前声望累计达到总声望
+    * 熟练度
     */
-   private Integer skAllPrestige;
+   private Integer skDegreeProficiency;
 
    /**
     * 升级一级增加的声望
