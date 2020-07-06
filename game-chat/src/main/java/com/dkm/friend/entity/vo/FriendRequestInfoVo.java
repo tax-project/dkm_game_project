@@ -19,6 +19,11 @@ public class FriendRequestInfoVo {
    private Long fromId;
 
    /**
+    *  头像
+    */
+   private String heardUrl;
+
+   /**
     * 加人ID昵称
     */
    private String fromNick;
