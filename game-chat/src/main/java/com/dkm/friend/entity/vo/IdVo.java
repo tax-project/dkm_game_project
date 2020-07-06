@@ -10,5 +10,8 @@ import lombok.Data;
 @Data
 public class IdVo {
 
+   /**
+    * 谁加我
+    */
    private Long fromId;
 }

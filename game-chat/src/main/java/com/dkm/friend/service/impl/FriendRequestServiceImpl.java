@@ -154,8 +154,9 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
          vo.setFromId(request.getFromId());
          voList.add(vo);
       }
+      Long userId = user.getId();
 
-      return baseMapper.listAllRequestFriend(voList);
+      return baseMapper.listAllRequestFriend(voList, userId);
    }
 
    /**
