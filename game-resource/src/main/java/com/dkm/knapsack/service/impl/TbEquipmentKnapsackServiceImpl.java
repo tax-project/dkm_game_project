@@ -19,6 +19,7 @@ import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.TbKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 import com.dkm.knapsack.domain.vo.TbNumberVo;
@@ -142,6 +143,66 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             fz(tbEquipmentKnapsack,2,userId);
         }
     }
+
+    @Override
+    public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo) {
+        if(StringUtils.isEmpty(tbEquipmentKnapsackTwoVo.getEquipmentId())
+                && StringUtils.isEmpty(tbEquipmentKnapsackTwoVo.getTekId()) ){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "必传参数不能为空");
+        }
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("tek_id",tbEquipmentKnapsackTwoVo.getTekId());
+        TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+        //等于0 代表要卖掉
+        if(tbEquipmentKnapsackTwoVo.getTekIsva()==0){
+            tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setTekIsva(0);
+        }else{
+            tbEquipmentKnapsack.setTekSell(2);
+        }
+        int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
+        if(rows>0){
+            //减少声望
+            too(tbEquipmentKnapsackTwoVo.getTekId());
+            TbEquipmentKnapsack tbEquipmentKnapsackTwo=new TbEquipmentKnapsack();
+            tbEquipmentKnapsackTwo.setTekId(idGenerator.getNumberId());
+            tbEquipmentKnapsackTwo.setTekSell(1);
+            tbEquipmentKnapsackTwo.setTekDaoju(1);
+            tbEquipmentKnapsackTwo.setEquipmentId(tbEquipmentKnapsackTwoVo.getEquipmentId());
+            TbKnapsack tbKnapsack=new TbKnapsack();
+            tbKnapsack.setUserId(localUser.getUser().getId());
+            List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
+            //背包主键
+            Long knapsackId=null;
+            if(list1.size()!=0&&list1!=null) {
+                for (TbKnapsack knapsack : list1) {
+                    //传入背包主键
+                    knapsackId =knapsack.getKnapsackId();
+                }
+            }
+            tbEquipmentKnapsackTwo.setKnapsackId(knapsackId);
+            tbEquipmentKnapsackTwo.setTekMoney(5);
+            tbEquipmentKnapsackTwo.setTekIsva(1);
+            int rowsTwo=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsackTwo);
+            if(rowsTwo>0){
+                //增加的金币类
+                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                increaseUserInfoBO.setUserInfoGold(5);
+                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsackTwoVo.getEquipmentId());
+                for (TbEquipmentVo equipmentVo : list5) {
+                    increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
+                }
+                increaseUserInfoBO.setUserInfoDiamonds(0);
+                userFeignClient.increaseUserInfo(increaseUserInfoBO);
+            }else{
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+            }
+        }else{
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+        }
+    }
+
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
@@ -664,6 +725,17 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             if(rows <= 0){
                 //如果失败将回滚
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
+            }else{
+                //增加的金币类
+                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                increaseUserInfoBO.setUserInfoGold(5);
+                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
+                for (TbEquipmentVo equipmentVo : list5) {
+                    increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
+                }
+                increaseUserInfoBO.setUserInfoDiamonds(0);
+                userFeignClient.increaseUserInfo(increaseUserInfoBO);
             }
         }else{
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "该用户没有背包");
