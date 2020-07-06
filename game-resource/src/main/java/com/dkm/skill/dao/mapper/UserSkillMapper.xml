@@ -5,9 +5,10 @@
 
 
     <insert id="addUserSkill" parameterType="com.dkm.skill.entity.UserSkill">
-        insert into tb_user_skill(id,user_id,sk_id,sk_grade,sk_degree_proficiency,sk_Current_success_rate,sk_add_prestige)
+        insert into tb_user_skill(id,user_id,sk_id,sk_grade,sk_degree_proficiency,sk_Current_success_rate,sk_add_prestige,sk_all_consume,sk_current_consume)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            select #{lists.id},#{lists.userId},#{lists.skId},#{lists.skGrade},#{lists.skCurrentSuccessRate},#{lists.skDegreeProficiency},#{lists.skAddPrestige}
+            select #{lists.id},#{lists.userId},#{lists.skId},#{lists.skGrade},#{lists.skDegreeProficiency},#{lists.skCurrentSuccessRate},#{lists.skAddPrestige},
+                   #{lists.skAllConsume},#{lists.skCurrentConsume}
         </foreach>
     </insert>
 

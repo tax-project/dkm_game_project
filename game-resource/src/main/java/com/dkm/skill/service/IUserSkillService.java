@@ -18,4 +18,9 @@ public interface IUserSkillService {
      */
     int addUserSkill(List<UserSkill> list);
 
+    /**
+     * 升级技能
+     * 根据技能id查询数据
+     */
+    UserSkill querySkillById(Long id);
 }

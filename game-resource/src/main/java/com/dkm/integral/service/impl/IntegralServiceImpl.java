@@ -38,8 +38,12 @@ public class IntegralServiceImpl implements IIntegralService {
     }
 
     @Override
-    public int queryUserIdIntegral() {
-        return integralMapper.queryUserIdIntegral(localUser.getUser().getId());
+    public Integer queryUserIdIntegral() {
+        Integer integer = integralMapper.queryUserIdIntegral(localUser.getUser().getId());
+        if(integer==null){
+            integer=0;
+        }
+        return integer;
     }
 
     @Override

@@ -18,4 +18,9 @@ public interface ISkillService {
      */
     Map<String,Object> queryAllSkillByUserId();
 
+    /**
+     * 技能升级
+     */
+    public int upgradeSkills(Long id,Integer status);
+
 }
