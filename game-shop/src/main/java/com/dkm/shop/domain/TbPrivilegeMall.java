@@ -158,8 +158,6 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
 			", priType=" + priType +
 			", priMoney=" + priMoney +
 			", exp1=" + exp1 +
-			", exp2=" + exp2 +
-			", exp3=" + exp3 +
 			", priImg=" + priImg +
 			", prContentOne=" + prContentOne +
 			"}";
