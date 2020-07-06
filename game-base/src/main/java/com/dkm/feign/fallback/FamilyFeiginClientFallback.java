@@ -5,6 +5,7 @@ import com.dkm.data.Result;
 import com.dkm.feign.FamilyFeiginClient;
 import com.dkm.feign.entity.UserCenterFamilyVo;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @program: game_project
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class FamilyFeiginClientFallback implements FamilyFeiginClient {
+    @GetMapping("/family/getUserCenterFamily")
     @Override
     public Result<UserCenterFamilyVo> getUserCenterFamily(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);

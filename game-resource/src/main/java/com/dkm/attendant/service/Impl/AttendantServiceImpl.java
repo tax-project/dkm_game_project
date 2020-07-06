@@ -752,12 +752,12 @@ public class AttendantServiceImpl implements IAttendantService {
         /**
          * 他方的战斗力减去我方血量  就是我方剩下来的血量
          */
-        map.put("myHealth", vo.getOtherForce()-vo.getMyHealth());
+        map.put("myHealth", vo.getOtherForce());
 
         /**
          * 我方战斗力减去他方血量 就是他方剩下的血量
          */
-        map.put("otherHealth", vo.getMyCapabilities()-vo.getOtherHealth());
+        map.put("otherHealth", vo.getMyCapabilities());
 
         //0--我方赢了
         //1--对面赢了

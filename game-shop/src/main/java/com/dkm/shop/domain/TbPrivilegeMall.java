@@ -51,14 +51,7 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
      * 需要财富十级购买 1代表十级
      */
 	private String exp1;
-    /**
-     * 1为商品物品 2为别的地方物品
-     */
-	private String exp2;
-    /**
-     * 拓展字段3
-     */
-	private String exp3;
+
     /**
      * 商品图片
      */
@@ -135,22 +128,6 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
 		this.exp1 = exp1;
 	}
 
-	public String getExp2() {
-		return exp2;
-	}
-
-	public void setExp2(String exp2) {
-		this.exp2 = exp2;
-	}
-
-	public String getExp3() {
-		return exp3;
-	}
-
-	public void setExp3(String exp3) {
-		this.exp3 = exp3;
-	}
-
 	public String getPriImg() {
 		return priImg;
 	}
@@ -181,8 +158,6 @@ public class TbPrivilegeMall extends Model<TbPrivilegeMall> {
 			", priType=" + priType +
 			", priMoney=" + priMoney +
 			", exp1=" + exp1 +
-			", exp2=" + exp2 +
-			", exp3=" + exp3 +
 			", priImg=" + priImg +
 			", prContentOne=" + prContentOne +
 			"}";

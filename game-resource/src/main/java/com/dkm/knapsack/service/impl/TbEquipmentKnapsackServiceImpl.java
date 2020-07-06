@@ -322,12 +322,12 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
                 if(count>0){
                     //查询为装备上的装备数据
-                    List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(equipmentId);
+                    TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
                     TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
                     tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
                     tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
                     //查询已经装备上了的装备数据
-                    List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
+                    List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
                     map.put("code",3);
                     map.put("msg","此装备已经装备上了");
                     map.put("dataOne",list3);
