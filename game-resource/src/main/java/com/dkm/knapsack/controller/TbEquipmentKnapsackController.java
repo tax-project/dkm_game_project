@@ -368,7 +368,7 @@ public class TbEquipmentKnapsackController {
     @CrossOrigin
     @CheckToken
     public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo){
-        tbEquipmentKnapsackService.updateAndInsert(tbEquipmentKnapsackTwoVo);
+       tbEquipmentKnapsackService.updateAndInsert(tbEquipmentKnapsackTwoVo);
     }
 
     /**
