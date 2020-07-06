@@ -22,7 +22,7 @@ public interface IFriendRequestService {
     * 查询所有加我的申请
     * @return   f
     */
-   List<FriendRequestInfoVo> listAllRequestFriend();
+   List<FriendRequestInfoVo>  listAllRequestFriend();
 
    /**
     *  同意或者拒绝好友
