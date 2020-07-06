@@ -21,7 +21,7 @@ public class FriendRequestInfoVo {
    /**
     * 加人ID昵称
     */
-   private Long fromNick;
+   private String fromNick;
 
    /**
     * 创建时间
