@@ -149,6 +149,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       UserSkill userSkill = iUserSkillService.querySkillById(id);
       int anInt = Integer.parseInt(String.format("%.0f", Math.pow(userSkill.getSkGrade(), 2 / 5.0) * 1000));
 
+      if(userSkill.getSkCurrentConsume()<userSkill.getSkAllConsume()){
+         throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
+      }
+
       if(userSkill.getSkCurrentSuccessRate()==100){
          //手续费为1是消耗10000金币
          if(status==1){
@@ -171,9 +175,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
          userFeignClient.updateInfo(userInfoSkillBo);
 
          userSkill.setSkGrade(userSkill.getSkGrade()+1);
-         if(userSkill.getSkCurrentConsume()<userSkill.getSkAllConsume()){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
-         }
+
          userSkill.setSkCurrentConsume(userSkill.getSkCurrentConsume()-userSkill.getSkAllConsume());
       }
 
