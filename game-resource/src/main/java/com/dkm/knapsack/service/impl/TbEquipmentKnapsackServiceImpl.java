@@ -146,8 +146,8 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     @Override
     public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo) {
-        if(StringUtils.isEmpty(tbEquipmentKnapsackTwoVo.getEquipmentId())
-                && StringUtils.isEmpty(tbEquipmentKnapsackTwoVo.getTekId()) ){
+        if(tbEquipmentKnapsackTwoVo.getEquipmentId().equals("")
+                || tbEquipmentKnapsackTwoVo.getTekId().equals("") || tbEquipmentKnapsackTwoVo.getTekIsva().equals("") ){
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "必传参数不能为空");
         }
         QueryWrapper queryWrapper=new QueryWrapper();
