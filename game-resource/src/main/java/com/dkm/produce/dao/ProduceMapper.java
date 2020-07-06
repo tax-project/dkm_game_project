@@ -23,6 +23,11 @@ public interface ProduceMapper extends IBaseMapper<Produce> {
      */
     List<AttendantImgVo> queryImgFood(Long userId);
 
+    /**
+     * 根据用户id查询跟班产出的物品
+     * @param userId
+     * @return
+     */
     List<AttendantPutVo> queryOutput(Long userId);
 
 
