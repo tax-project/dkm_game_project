@@ -722,20 +722,21 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                 tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
             }
             int rows=tbEquipmentKnapsackMapper.insert(tbEquipmentKnapsack);
+            if(rows>0 && type==1){
+                    //增加的金币类
+                    IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                    increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                    increaseUserInfoBO.setUserInfoGold(5);
+                    List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
+                    for (TbEquipmentVo equipmentVo : list5) {
+                        increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
+                    }
+                    increaseUserInfoBO.setUserInfoDiamonds(0);
+                    userFeignClient.increaseUserInfo(increaseUserInfoBO);
+            }
             if(rows <= 0){
                 //如果失败将回滚
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
-            }else{
-                //增加的金币类
-                IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-                increaseUserInfoBO.setUserId(localUser.getUser().getId());
-                increaseUserInfoBO.setUserInfoGold(5);
-                List<TbEquipmentVo> list5=tbEquipmentService.selectByEquipmentId(tbEquipmentKnapsack.getEquipmentId());
-                for (TbEquipmentVo equipmentVo : list5) {
-                    increaseUserInfoBO.setUserInfoRenown(equipmentVo.getEdEquipmentReputation());
-                }
-                increaseUserInfoBO.setUserInfoDiamonds(0);
-                userFeignClient.increaseUserInfo(increaseUserInfoBO);
             }
         }else{
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "该用户没有背包");
