@@ -225,7 +225,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                 .collect(Collectors.groupingBy(AttendantPutVo::getImgUrl, Collectors.summingInt(AttendantPutVo::getNumber)))
                 .entrySet().stream().map(a -> new ImgNumVo(a.getKey(), a.getValue())).collect(Collectors.toList());
 
-        map.put("attendantImg",attendantImg);
+        Map<String, Object> map1 = attendantService.queryThreeAtt();
+        map.put("Img",map1.get("att"));
 
         if(attendantPutVos.size()==0){
             //1代表没有

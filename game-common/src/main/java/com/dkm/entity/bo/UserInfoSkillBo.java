@@ -21,6 +21,11 @@ public class UserInfoSkillBo {
    private Integer prestige;
 
    /**
+    * 钻石
+    */
+   private Integer diamonds;
+
+   /**
     * 用户id
     */
    private Long userId;

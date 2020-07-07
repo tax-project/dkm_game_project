@@ -18,6 +18,7 @@ import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.SkillUserSkillVo;
+import com.dkm.skill.entity.vo.UserSkillVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.skill.service.IUserSkillService;
 import com.dkm.utils.IdGenerator;
@@ -56,6 +57,8 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Autowired
    private UserFeignClient userFeignClient;
 
+   @Autowired
+   private ISkillService iSkillService;
    @Override
    public Map<String,Object> queryAllSkillByUserId() {
 
@@ -99,33 +102,6 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       List<SkillUserSkillVo> skillUserSkillVo = baseMapper.queryAllSkillByUserId(user.getId());
 
-
-         for (int i = 0; i < skillUserSkillVo.size(); i++) {
-            int anInt = Integer.parseInt(String.format("%.0f", Math.pow(skillUserSkillVo.get(i).getSkGrade(), 2 / 5.0) * 1000));
-            /*//当前声望累计达到总声望
-            skillUserSkillVo.get(i).setSkAllPrestige(anInt + skill.getSkAllPrestige());*/
-            //升级下一级增加的声望
-            skillUserSkillVo.get(i).setSkAddPrestige(anInt);
-            if(skillUserSkillVo.get(i).getSkGrade()>=2 && skillUserSkillVo.get(i).getSkGrade()<10){
-               skillUserSkillVo.get(i).setSkCurrentSuccessRate(80);
-            }else if(skillUserSkillVo.get(i).getSkGrade()>=10 && skillUserSkillVo.get(i).getSkGrade()< 20){
-               skillUserSkillVo.get(i).setSkCurrentSuccessRate(60);
-               skillUserSkillVo.get(i).setSkAllConsume(6);
-            }else if (skillUserSkillVo.get(i).getSkGrade() >= 20 && skillUserSkillVo.get(i).getSkGrade() < 30) {
-               skillUserSkillVo.get(i).setSkCurrentSuccessRate(40);
-               skillUserSkillVo.get(i).setSkAllConsume(8);
-            }else if (skillUserSkillVo.get(i).getSkGrade() >= 30 && skillUserSkillVo.get(i).getSkGrade() < 40) {
-               skillUserSkillVo.get(i).setSkCurrentSuccessRate(20);
-               skillUserSkillVo.get(i).setSkAllConsume(12);
-            }else {
-               skillUserSkillVo.get(i).setSkCurrentSuccessRate(10);
-               skillUserSkillVo.get(i).setSkAllConsume(12);
-            }
-
-
-      }
-
-
       map.put("skillUserSkillVo",skillUserSkillVo);
       map.put("gold",10000);
       map.put("Diamonds",20);
@@ -145,45 +121,165 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
 
    @Override
-   public int upgradeSkills(Long id,Integer status) {
+   public Map<String,Object> upgradeSkills(Long id,Integer status) {
+      Map<String,Object> map=new HashMap<>();
+
       UserSkill userSkill = iUserSkillService.querySkillById(id);
-      int anInt = Integer.parseInt(String.format("%.0f", Math.pow(userSkill.getSkGrade(), 2 / 5.0) * 1000));
 
       if(userSkill.getSkCurrentConsume()<userSkill.getSkAllConsume()){
          throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
       }
 
-      if(userSkill.getSkCurrentSuccessRate()==100){
-         //手续费为1是消耗10000金币
-         if(status==1){
-            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-            increaseUserInfoBO.setUserInfoGold(10000);
-            increaseUserInfoBO.setUserId(localUser.getUser().getId());
-            userFeignClient.cutUserInfo(increaseUserInfoBO);
+      Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
+
+
+      //生成1-100的随机数
+      int random = (int) (Math.random() * 100) + 1;
+
+      //成功率百分百升级成功 或者熟练度百分百也百分百升级成功
+      if(userSkill.getSkCurrentSuccessRate()==100 || userSkill.getSkDegreeProficiency()==100){
+         operation(id,status,userSkill);
+         map.put("msg","升级成功");
+         return map;
+      }
+
+
+      //另外加百分之10成功率
+      if(status==1 || userSkill.getSkCurrentSuccessRate()<100){
+         if(userInfoQueryBoResult.getData().getUserInfoGold()<10000){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"金币不足");
          }
-         //手续费为2是消耗20钻石
-         if(status==2){
-            IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
-            increaseUserInfoBO.setUserId(localUser.getUser().getId());
-            increaseUserInfoBO.setUserInfoDiamonds(20);
-            userFeignClient.cutUserInfo(increaseUserInfoBO);
+         System.out.println(random);
+         if(random<=userSkill.getSkCurrentSuccessRate()+10){
+            operation(id,status,userSkill);
+            map.put("msg","升级成功");
+            return map;
+         }else{
+            //升级失败
+            UserInfoSkillBo bo = new UserInfoSkillBo();
+            bo.setUserId(localUser.getUser().getId());
+            bo.setGold(10000);
+            bo.setPrestige(0);
+            //修改用户信息
+            userFeignClient.updateInfo(bo);
+
+            /**
+             * 积分加8
+             */
+            System.out.println("===="+localUser.getUser().getId());
+            iIntegralService.updateUserByIntegral(localUser.getUser().getId());
+
+            map.put("msg","升级失败 积分加8");
+            return map;
+         }
+      }
+
+      //另外加百分之20成功率
+      if(status==2 || userSkill.getSkCurrentSuccessRate()<100){
+
+         if(userInfoQueryBoResult.getData().getUserInfoDiamonds()<20){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"钻石不足");
          }
 
-         //增加声望
-         UserInfoSkillBo userInfoSkillBo=new UserInfoSkillBo();
-         userInfoSkillBo.setPrestige(userSkill.getSkAddPrestige());
-         userFeignClient.updateInfo(userInfoSkillBo);
+         if(random<=userSkill.getSkCurrentSuccessRate()+20){
+            operation(id,status,userSkill);
+            map.put("msg","升级成功");
+            return map;
+         }else{
+            //升级失败
+            UserInfoSkillBo bo = new UserInfoSkillBo();
+            bo.setUserId(localUser.getUser().getId());
+            bo.setDiamonds(20);
+            bo.setPrestige(0);
+            //修改用户信息
+            userFeignClient.updateInfo(bo);
 
-         userSkill.setSkGrade(userSkill.getSkGrade()+1);
+            /**
+             * 积分加8
+             */
+            iIntegralService.updateUserByIntegral(localUser.getUser().getId());
+            map.put("msg","升级失败 积分加8");
+            return map;
+         }
+      }
 
-         userSkill.setSkCurrentConsume(userSkill.getSkCurrentConsume()-userSkill.getSkAllConsume());
+          return map;
+   }
+
+   @Override
+   public List<UserSkillVo> querySkillByUserId(Long userId) {
+
+      return iSkillService.querySkillByUserId(userId);
+   }
+
+
+   public Integer operation(Long id,Integer status,UserSkill userSkill){
+
+      UserInfoSkillBo bo=new UserInfoSkillBo();
+      //增加声望
+      bo.setPrestige(userSkill.getSkAddPrestige());
+      /**
+       * 手续费为1是消耗10000金币
+       */
+      if(status==1){
+         System.out.println("消耗10000金币");
+         bo.setGold(10000);
+         bo.setUserId(localUser.getUser().getId());
+         Result result = userFeignClient.updateInfo(bo);
+         if(result.getCode()!=0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"用户信息修改异常");
+         }
+      }
+      /**
+       * 手续费为2是消耗20钻石
+       */
+      if(status==2){
+         bo.setUserId(localUser.getUser().getId());
+         bo.setDiamonds(20);
+         userFeignClient.updateInfo(bo);
       }
 
 
 
+      //等级加一
+      userSkill.setSkGrade(userSkill.getSkGrade()+1);
 
-      return 0;
+      if (userSkill.getSkGrade() >= 2 && userSkill.getSkGrade() < 10) {
+         userSkill.setSkCurrentSuccessRate(80);
+      } else if (userSkill.getSkGrade() >= 10 && userSkill.getSkGrade() < 20) {
+         userSkill.setSkCurrentSuccessRate(60);
+         userSkill.setSkAllConsume(6);
+      } else if (userSkill.getSkGrade() >= 20 && userSkill.getSkGrade() < 30) {
+         userSkill.setSkCurrentSuccessRate(40);
+         userSkill.setSkAllConsume(8);
+      } else if (userSkill.getSkGrade() >= 30 && userSkill.getSkGrade() < 40) {
+         userSkill.setSkCurrentSuccessRate(20);
+         userSkill.setSkAllConsume(12);
+      } else {
+         userSkill.setSkCurrentSuccessRate(10);
+         userSkill.setSkAllConsume(15);
+      }
+
+
+      userSkill.setSkCurrentConsume(userSkill.getSkCurrentConsume()-userSkill.getSkAllConsume());
+
+      //数量度加10
+      userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+10);
+
+      if(userSkill.getSkDegreeProficiency()==100){
+         userSkill.setSkDegreeProficiency(0);
+      }
+
+      //算出下一等级的声望
+      int anInt = Integer.parseInt(String.format("%.0f", Math.pow(userSkill.getSkGrade(), 2 / 5.0) * 1000));
+      userSkill.setSkAddPrestige(anInt);
+
+      //修改用户技能信息
+      int i = iUserSkillService.updateUserSkill(id, userSkill);
+      if(i<=0){
+         throw new ApplicationException(CodeType.SERVICE_ERROR,"修改用户技能信息失败");
+      }
+      return i;
    }
-
 
 }

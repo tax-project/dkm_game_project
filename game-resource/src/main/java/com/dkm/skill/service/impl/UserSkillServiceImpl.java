@@ -2,6 +2,7 @@ package com.dkm.skill.service.impl;
 
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.skill.dao.UserSkillMapper;
 import com.dkm.skill.entity.UserSkill;
@@ -33,5 +34,15 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
    @Override
    public UserSkill querySkillById(Long id) {
       return baseMapper.selectById(id);
+   }
+
+   @Override
+   public int updateUserSkill(Long id,UserSkill userSkill) {
+      LambdaQueryWrapper<UserSkill> queryWrapper = new LambdaQueryWrapper<UserSkill>()
+              .eq(UserSkill::getId, id);
+
+
+
+      return baseMapper.update(userSkill,queryWrapper);
    }
 }
