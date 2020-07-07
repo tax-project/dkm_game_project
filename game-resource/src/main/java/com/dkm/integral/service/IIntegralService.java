@@ -31,9 +31,13 @@ public interface IIntegralService {
      */
     int updateUserIntegral(Integer iMyIntegral);
 
+    int updateUserByIntegral(Long userId);
+
+
     /**
      * 根据用户id修改用户所拥有的消耗数量
      * @return
      */
     int updateUserStarsNumber(Integer sCurrentlyHasNum,Integer sStar);
+
 }

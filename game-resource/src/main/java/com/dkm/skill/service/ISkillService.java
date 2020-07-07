@@ -21,6 +21,6 @@ public interface ISkillService {
     /**
      * 技能升级
      */
-    public int upgradeSkills(Long id,Integer status);
+    public Map<String,Object> upgradeSkills(Long id,Integer status);
 
 }

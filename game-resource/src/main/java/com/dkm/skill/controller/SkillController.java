@@ -37,4 +37,22 @@ public class SkillController {
     public Map<String,Object> queryAllSkillByUserId(){
         return iSkillService.queryAllSkillByUserId();
     }
+
+    /**
+     * 技能升级
+     */
+    @ApiOperation(value = "技能升级", notes = "技能升级")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "用户技能主键id"),
+            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "状态 1（消耗金币10000） 2（消耗钻石20）"),
+    })
+    @GetMapping("/upgradeSkills")
+    @CrossOrigin
+    @CheckToken
+    public Map<String,Object> upgradeSkills(@RequestParam("id") Long id,@RequestParam("status") Integer status){
+        return iSkillService.upgradeSkills(id,status);
+    }
+
+    //@GetMapping("/upgradeSkills")
+
 }

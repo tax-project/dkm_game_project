@@ -23,4 +23,9 @@ public interface IUserSkillService {
      * 根据技能id查询数据
      */
     UserSkill querySkillById(Long id);
+
+    /**
+     * 修改信息
+     */
+    int updateUserSkill(Long id,UserSkill userSkill);
 }
