@@ -1,6 +1,9 @@
 package com.dkm.feign.fallback;
 
+import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.entity.UserSkillVo;
 
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
  */
 public class ResourceFeignClientFallback implements ResourceFeignClient {
     @Override
-    public List<UserSkill> querySkillByUserId(Long userId) {
-        return null;
+    public Result<List<UserSkillVo>> querySkillByUserId(Long userId) {
+        return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 }

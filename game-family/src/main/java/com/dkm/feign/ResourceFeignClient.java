@@ -1,5 +1,6 @@
 package com.dkm.feign;
 
+import com.dkm.data.Result;
 import com.dkm.feign.entity.UserSkillVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @FeignClient(value = "resource", fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
+
     @GetMapping("/SkillController/querySkillByUserId")
-    List<UserSkillVo> querySkillByUserId(@RequestParam("userId") Long userId);
+    Result<List<UserSkillVo>> querySkillByUserId(@RequestParam("userId") Long userId);
 }
