@@ -23,7 +23,7 @@ import java.util.List;
 public interface UserInfoMapper extends IBaseMapper<UserInfo> {
 
     /**
-     * 增加用户金币、钻石、声望
+     * 增加用户金币、钻石、声望、经验
      * @param increaseUserInfoBO 参数对象
      * @return 是否添加成功
      */

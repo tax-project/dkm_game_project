@@ -51,6 +51,7 @@ public class WebSocketServer implements CommandLineRunner {
    @Autowired
    private OneChatWebSocketHandle oneChatWebSocketHandle;
 
+
    @Autowired
    private ManyChatWebSocketHandle manyChatWebSocketHandle;
 

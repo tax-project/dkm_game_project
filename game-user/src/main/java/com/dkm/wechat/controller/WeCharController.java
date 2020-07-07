@@ -76,7 +76,6 @@ public class WeCharController {
         return resultVo;
     }
 
-
     @ApiOperation(value = "登录", notes = "登录")
     @ApiImplicitParams({
           @ApiImplicitParam(name = "userName", value = "账号", required = true, dataType = "String", paramType = "path"),
@@ -122,12 +121,10 @@ public class WeCharController {
     @CrossOrigin
     @CheckToken
     public void updateUserData (@RequestBody UserDataBO bo) {
-
         if (StringUtils.isBlank(bo.getHeardUrl()) ||
               StringUtils.isBlank(bo.getNickName()) || StringUtils.isBlank(bo.getUserAge())) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-
         weChatService.updateUserData(bo);
     }
 

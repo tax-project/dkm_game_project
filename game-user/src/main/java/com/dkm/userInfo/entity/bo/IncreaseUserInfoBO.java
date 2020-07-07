@@ -26,5 +26,10 @@ public class IncreaseUserInfoBO {
      */
     private Integer userInfoDiamonds;
 
+    /**
+     * 经验
+     */
+    private Long userInfoNowExperience;
+
 
 }
