@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsack> {
     List<TbEquipmentKnapsackVo> selectUserId(Long userId);
+    List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodIdTwo(Long userId);
     /**

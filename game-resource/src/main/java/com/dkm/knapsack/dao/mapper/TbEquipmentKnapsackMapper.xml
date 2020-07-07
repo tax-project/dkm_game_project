@@ -53,6 +53,12 @@
 			tsk.user_id=#{userId} AND tk.tek_isva=1
 	</select>
 
+	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
+			tsk.user_id=#{userId} AND tk.tek_isva=1 and tk.tek_sell=1
+	</select>
+
 	<select id="selectCountAll" resultType="java.lang.Integer" parameterType="java.lang.Long">
 		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1
 	</select>

@@ -1,5 +1,6 @@
 package com.dkm.produce.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.attendant.dao.AttendantMapper;
@@ -11,6 +12,7 @@ import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.good.entity.Goods;
 import com.dkm.good.service.IGoodsService;
@@ -25,6 +27,7 @@ import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +75,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Autowired
     private RedisConfig redisConfig;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private final String put = "PUT::REDIS::";
 
@@ -160,6 +166,16 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         map.put("goods", goods);
         map.put("number",number);
+
+        //事件通知产出
+        MsgInfo msgInfo = new MsgInfo();
+        msgInfo.setMsg("跟班产出事件");
+        msgInfo.setType(6);
+        msgInfo.setMsgType(1);
+        msgInfo.setToId(user.getId());
+
+        log.info("发送事件通知...");
+        rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
         return map;
 

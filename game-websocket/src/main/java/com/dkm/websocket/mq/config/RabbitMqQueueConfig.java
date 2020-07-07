@@ -38,4 +38,9 @@ public class RabbitMqQueueConfig {
    public Queue getFamilyQueue () {
       return new Queue("game_family_info_queue",false);
    }
+
+   @Bean
+   public Queue getEventQueue () {
+      return new Queue("game_event_notice",false);
+   }
 }
