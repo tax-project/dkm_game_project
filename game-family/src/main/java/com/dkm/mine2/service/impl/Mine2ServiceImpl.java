@@ -7,10 +7,12 @@ import com.dkm.mine2.dao.MineBattleMapper;
 import com.dkm.mine2.rule.BattleItemRule;
 import com.dkm.mine2.service.IMine2Service;
 import com.dkm.utils.IdGenerator;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 
 
 /**
@@ -31,24 +33,45 @@ public class Mine2ServiceImpl implements IMine2Service {
     @Override
     public AllMineInfoVo getAllInfo(Long userId, Long familyId) {
         MineBattleEntity entity = getMineBattleEntity(familyId);
+        val result = new AllMineInfoVo();
+        result.setFamilyId(familyId);
+        entity2Vo(entity, result);
+        return result;
+    }
 
-        return null;
+
+    private void entity2Vo(MineBattleEntity entity, AllMineInfoVo result) {
+        long[] arr = new long[4];
+        val longs = new ArrayList<Long>();
+        arr[0] = entity.getFirstFamilyId();
+        arr[1] = entity.getSecondFamilyId();
+        arr[2] = entity.getThirdFamilyId();
+        arr[3] = entity.getFourthFamilyId();
+        for (long l : arr) {
+            if (l != result.getFamilyId()) {
+                longs.add(l);
+            }
+        }
+        if (longs.size() > 3) {
+            throw new IndexOutOfBoundsException("数据异常");
+        }
+        result.setTopLeftFamilyId(longs.get(0));
+        result.setTopRightFamilyId(longs.get(1));
+        result.setBottomRightFamilyId(longs.get(2));
     }
 
     //获取矿产
     private MineBattleEntity getMineBattleEntity(Long familyId) {
         MineBattleEntity entity = mineBattleMapper.selectByFamilyId(familyId);
-        if (entity != null) {
-            return entity;
-        } else {
+        if (entity == null) {
             entity = mineBattleMapper.selectByEmpty();
             if (entity == null) {
                 entity = battleItemRule.createBattle();
             }
             putFamilyToBattle(entity, familyId);
-            return entity;
             //战场不存在，需要生成
         }
+        return entity;
     }
 
     private void putFamilyToBattle(MineBattleEntity entity, Long familyId) {

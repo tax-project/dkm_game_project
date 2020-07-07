@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -63,5 +64,4 @@ public class BattleItemRule {
         }
         return mineBattleEntity;
     }
-
 }
