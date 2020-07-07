@@ -14,8 +14,14 @@ import java.time.LocalDateTime;
 @Data
 @TableName("tb_mine_battle_item")
 public class MineBattleItemEntity {
+    /**
+     *  ID
+     */
     @TableId
     private Long id;
+    /**
+     * 战场 ID
+     */
     private Long battleId;
     /**
      * 设置矿区归属

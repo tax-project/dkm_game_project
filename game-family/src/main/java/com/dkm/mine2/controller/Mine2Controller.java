@@ -50,7 +50,8 @@ public class Mine2Controller {
 
     private User2FamilyId getUser2FamilyId() {
         val userId = localUser.getUser().getId();
-        FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId));
+        FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>()
+                .lambda().eq(FamilyDetailEntity::getUserId, userId));
         if (familyDetailEntity == null) {
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "还未加入家族");
         }
