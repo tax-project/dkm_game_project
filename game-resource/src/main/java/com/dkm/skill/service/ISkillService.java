@@ -23,7 +23,7 @@ public interface ISkillService {
     /**
      * 技能升级
      */
-    public Map<String,Object> upgradeSkills(Long id,Integer status);
+    Map<String,Object> upgradeSkills(Long id,Integer status);
 
     /**
      * 提供内部接口 根据用户id查询所有技能

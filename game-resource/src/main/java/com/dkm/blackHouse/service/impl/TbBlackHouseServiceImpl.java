@@ -1,18 +1,23 @@
 package com.dkm.blackHouse.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.blackHouse.dao.TbBlackHouseMapper;
 import com.dkm.blackHouse.domain.TbBlackHouse;
 import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.land.entity.Land;
 import com.dkm.utils.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,7 +35,9 @@ import java.util.List;
  * @author zy
  * @since 2020-05-10
  */
+@Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TbBlackHouseServiceImpl implements TbBlackHouseService {
     @Resource
     TbBlackHouseMapper tbBlackHouseMapper;
@@ -42,6 +49,10 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
 
     @Autowired
     TbBlackHouseService tbBlackHouseService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Override
     public int selectIsBlack(Long fromId) {
         return tbBlackHouseMapper.selectIsBlack(fromId);
@@ -70,8 +81,20 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         int rows = tbBlackHouseMapper.insert(tbBlackHouses);
         if(rows <= 0){
             //如果失败将回滚
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "批量增加失败");
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
         }
+
+
+        //-------关小黑屋
+        MsgInfo msgInfo = new MsgInfo();
+        msgInfo.setMsg("关小黑屋事件");
+        msgInfo.setType(6);
+        msgInfo.setMsgType(1);
+        msgInfo.setToId(tbBlackHouses.getToId());
+
+        log.info("发送小黑屋事件通知...");
+        rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+
     }
 
     @Override
