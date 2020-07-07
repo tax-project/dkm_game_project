@@ -1,7 +1,10 @@
 package com.dkm.mine2.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.mine2.bean.entity.MineBattleEntity;
+import com.dkm.mine2.bean.entity.MineBattleItemEntity;
 import com.dkm.mine2.bean.vo.AllMineInfoVo;
+import com.dkm.mine2.bean.vo.MineItemInfoVo;
 import com.dkm.mine2.dao.MineBattleItemMapper;
 import com.dkm.mine2.dao.MineBattleMapper;
 import com.dkm.mine2.rule.BattleItemRule;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -35,29 +39,50 @@ public class Mine2ServiceImpl implements IMine2Service {
         MineBattleEntity entity = getMineBattleEntity(familyId);
         val result = new AllMineInfoVo();
         result.setFamilyId(familyId);
-        entity2Vo(entity, result);
+        val locationId = entity2Vo(entity, result);
+        includeMineItem(entity.getId(),result.getPublicItem(),0);
+        includeMineItem(entity.getId(),result.getPrivateItem(),locationId);
         return result;
     }
 
+    private void includeMineItem(Long id, List<MineItemInfoVo> publicItem, int i) {
+        val itemEntities = mineBattleItemMapper.selectList(new QueryWrapper<MineBattleItemEntity>()
+                .lambda().eq(MineBattleItemEntity::getBattleId, id).eq(MineBattleItemEntity::getBelongItem, i));
+        for (int i1 = 0; i1 < itemEntities.size(); i1++) {
+            MineItemInfoVo item = new MineItemInfoVo();
+            MineBattleItemEntity itemEntity = itemEntities.get(i1);
+            item.setId(itemEntity.getId());
+            item.setIndex(i1);
+            publicItem.add(item);
+        }
+    }
 
-    private void entity2Vo(MineBattleEntity entity, AllMineInfoVo result) {
+    /**
+     * 莫得联合查询
+     */
+    private int entity2Vo(MineBattleEntity entity, AllMineInfoVo result) {
         long[] arr = new long[4];
+        int resultId = -1;
         val longs = new ArrayList<Long>();
         arr[0] = entity.getFirstFamilyId();
         arr[1] = entity.getSecondFamilyId();
         arr[2] = entity.getThirdFamilyId();
         arr[3] = entity.getFourthFamilyId();
-        for (long l : arr) {
-            if (l != result.getFamilyId()) {
-                longs.add(l);
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != result.getFamilyId()) {
+                longs.add(arr[i]);
+            } else {
+                resultId = i;
             }
         }
         if (longs.size() > 3) {
             throw new IndexOutOfBoundsException("数据异常");
         }
+
         result.setTopLeftFamilyId(longs.get(0));
         result.setTopRightFamilyId(longs.get(1));
         result.setBottomRightFamilyId(longs.get(2));
+        return resultId ;
     }
 
     //获取矿产

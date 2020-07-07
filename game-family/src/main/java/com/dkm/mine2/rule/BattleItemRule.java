@@ -57,7 +57,7 @@ public class BattleItemRule {
         for (int i = 0; i < 41; i++) {
             val mineBattleItemEntity = new MineBattleItemEntity();
             mineBattleItemEntity.setId(idGenerator.getNumberId());
-            mineBattleItemEntity.setLevel(i%7 + 3);
+            mineBattleItemEntity.setLevel(i%7 + 5);
             mineBattleItemEntity.setBattleId(mineBattleEntityId);
             mineBattleItemEntity.setBelongItem(0);
             mineBattleItemMapper.insert(mineBattleItemEntity);

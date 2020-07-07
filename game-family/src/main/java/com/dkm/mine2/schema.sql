@@ -54,7 +54,37 @@ CREATE TABLE IF NOT EXISTS `tb_mine_battle_item`
 )
     COMMENT '矿场表';
 
+DROP TABLE IF EXISTS `tb_mine_family_level_addition`;
+CREATE TABLE IF NOT EXISTS `tb_mine_family_level_addition`
+(
+    family_level INT PRIMARY KEY NOT NULL COMMENT '家族等级',
+    level_name   VARCHAR(255)    NOT NULL COMMENT '等级名称',
+    addition     DOUBLE          NOT NULL COMMENT '金币加成'
+)
+    COMMENT '家族等级加成表';
 
+INSERT INTO `tb_mine_family_level_addition` VALUE
+    (1, '倔强青铜3', 1.05),
+    (2, '倔强青铜2', 1.1),
+    (3, '倔强青铜1', 1.15),
+    (4, '秩序白银4', 1.2),
+    (5, '秩序白银3', 1.25),
+    (6, '秩序白银2', 1.3),
+    (7, '秩序白银1', 1.35),
+    (8, '荣耀黄金5', 1.4),
+    (9, '荣耀黄金4', 1.45),
+    (10, '荣耀黄金3', 1.5),
+    (11, '荣耀黄金2', 1.6),
+    (12, '荣耀黄金1', 1.7),
+    (13, '尊贵铂金5', 1.8),
+    (14, '尊贵铂金4', 1.9),
+    (15, '尊贵铂金3', 2.0),
+    (16, '尊贵铂金2', 2.1),
+    (17, '尊贵铂金1', 2.2),
+    (18, '永恒钻石3', 2.3),
+    (19, '永恒钻石2', 2.4),
+    (20, '永恒钻石1', 2.5)
+;
 DROP TABLE IF EXISTS `tb_mine_user_info`;
 CREATE TABLE IF NOT EXISTS `tb_mine_user_info`
 (
@@ -62,3 +92,4 @@ CREATE TABLE IF NOT EXISTS `tb_mine_user_info`
     family_id BIGINT(20) NOT NULL COMMENT '家族 ID'
 )
     COMMENT '家族用户的信息'
+;
