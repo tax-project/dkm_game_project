@@ -108,7 +108,16 @@ public class PersonalCenterController {
         map.put("queryUserIdMaster",resourceFeignClient.queryUserIdMaster(userId));
 
         //查询出用户的总体力和当前体力
-        map.put("queryUser",userFeignClient.queryUser(userId));
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(userId);
+        UserInfoQueryBo data = userInfoQueryBoResult.getData();
+        UserInfoQueryBoVo userInfoQueryBoVo=new UserInfoQueryBoVo();
+        BeanUtils.copyProperties(data,userInfoQueryBoVo);
+        Map<String,Object> mapTwo=new HashMap<>(2);
+        mapTwo.put("code",0);
+        mapTwo.put("msg","操作成功");
+        mapTwo.put("data",userInfoQueryBoVo);
+
+        map.put("queryUser",mapTwo);
         //用户勋章数
         map.put("medalNumber",medalService.getUserMadelNumber(userId));
         //座驾信息
