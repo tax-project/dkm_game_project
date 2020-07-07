@@ -356,8 +356,13 @@ public class AttendantServiceImpl implements IAttendantService {
             }
 
             //得到他方的战力
-            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus - userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus);
+
+            double hezdl=0;
+
+            if(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus>0){
+                hezdl=userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus;
+            }
+            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+(hezdl);
 
             //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
@@ -460,9 +465,16 @@ public class AttendantServiceImpl implements IAttendantService {
                  */
                 ourDefenses = ourDefenses + tbEquipmentKnapsackVos.get(i).getEdDefense().doubleValue() * myEquipmentBonus;
             }
+
+
+            double myzdl=0;
+
+            if(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus>0){
+                myzdl=userInfoQueryBoResult.getData().getUserInfoRenown() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() + heEquipmentBonus;
+            }
+
             //得到我方的战力
-            double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+
-                    (userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus);
+            double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+(myzdl);
             //得到最终我方的战力
             myRipetime= (int) heRipetime;
 
