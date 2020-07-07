@@ -1,7 +1,10 @@
 package com.dkm.integral.dao;
 
+import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.integral.entity.Integral;
 import com.dkm.integral.entity.Stars;
+import com.dkm.integral.entity.UserIntegral;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
  * @DATE: 2020/5/22 18:44
  */
 @Component
-public interface IntegralMapper {
+public interface IntegralMapper extends IBaseMapper<UserIntegral> {
     /**
      * 查询所有积分产品
      * @return
@@ -25,7 +28,7 @@ public interface IntegralMapper {
      * @param userId
      * @return
      */
-    int queryUserIdIntegral(long userId);
+    Integer queryUserIdIntegral(Long userId);
 
     /**
      * 根据用户id修改用户积分
@@ -33,7 +36,15 @@ public interface IntegralMapper {
      * @param userId
      * @return
      */
-    int updateUserIntegral(Integer iMyIntegral,long userId);
+    int updateUserIntegral(@Param("iMyIntegral") Integer iMyIntegral, @Param("userId") Long userId);
+
+    /**
+     * 根据用户id修改用户积分
+     * 提供给技能那边的
+     * @param userId
+     * @return
+     */
+    int updateUserByIntegral(Long userId);
 
     /**
      * 根据用户id修改用户所拥有的消耗数量

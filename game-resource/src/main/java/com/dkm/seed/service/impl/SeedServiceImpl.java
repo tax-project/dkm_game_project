@@ -318,9 +318,13 @@ public class SeedServiceImpl implements ISeedService {
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
 
+            System.out.println("======="+list1);
+
             int PlantingTimes = 0;
 
             //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
+            System.out.println(userLandUnlocks.size());
+            System.out.println(listLand.size());
             PlantingTimes = userLandUnlocks.size() - listLand.size();
 
 

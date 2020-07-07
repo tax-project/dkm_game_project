@@ -4,6 +4,7 @@ package com.dkm.knapsack.controller;
 
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentVoTwo;
 import com.dkm.knapsack.domain.vo.TbNumberVo;
@@ -63,6 +64,8 @@ public class TbEquipmentKnapsackController {
     public void addTbEquipmentKnapsack(@RequestBody TbEquipmentKnapsack tbEquipmentKnapsack){
         tbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
     }
+
+
 
     @ApiOperation(value = "后端钟鸿达 专用",notes = "成功返回成功 背包满了返回code=1003")
     @PostMapping("/addTbEquipmentKnapsackThree")
@@ -349,6 +352,23 @@ public class TbEquipmentKnapsackController {
     @CheckToken
     public void updateTekId(Long tekId){
         tbEquipmentKnapsackService.updateTekId(tekId);
+    }
+
+    /**
+     * 声望高就给那个装备卸载下来
+     *
+     */
+    @ApiOperation(value = "开宝箱得到新装备 要替换旧装备接口 ",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "新装备外键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "旧装备主键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "tekIsva",value = "旧装备主键 传0代表卖掉 1为放入装备",required = true),
+    })
+    @PostMapping("/updateAndInsert")
+    @CrossOrigin
+    @CheckToken
+    public void updateAndInsert(@RequestBody TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo){
+       tbEquipmentKnapsackService.updateAndInsert(tbEquipmentKnapsackTwoVo);
     }
 
     /**

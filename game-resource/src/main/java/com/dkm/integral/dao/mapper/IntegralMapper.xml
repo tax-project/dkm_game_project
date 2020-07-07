@@ -7,12 +7,16 @@
         select i_id,i_product_name,i_img,i_product_number,i_Integral_number from tb_integral
     </select>
 
-    <select id="queryUserIdIntegral" parameterType="java.lang.Long">
-        select i_myintegral from tb_user_integral where user_id=#{userId}
+    <select id="queryUserIdIntegral" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select i_my_integral from tb_user_integral where user_id=#{userId}
     </select>
 
     <update id="updateUserIntegral">
-        update tb_user_integral set i_myintegral=#{iMyIntegral} where user_id=#{userId}
+        update tb_user_integral set i_my_integral=i_my_integral-#{iMyIntegral} where user_id=#{userId}
+    </update>
+
+    <update id="updateUserByIntegral" parameterType="java.lang.Long">
+        update tb_user_integral set i_my_integral=i_my_integral+8 where user_id=#{userId}
     </update>
 
 

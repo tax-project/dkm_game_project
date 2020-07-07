@@ -2,6 +2,7 @@ package com.dkm.knapsack.service;
 
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbNumberVo;
 
@@ -21,6 +22,7 @@ public interface ITbEquipmentKnapsackService{
 
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
+    List<TbEquipmentKnapsackVo> selectUserIdThree(Long userId);
     List<TbEquipmentKnapsackVo> selectProps();
     List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectFoodId();
@@ -56,4 +58,6 @@ public interface ITbEquipmentKnapsackService{
     int updateFood(TbNumberVo tbNumberVo);
 
     void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack,Long userId);
+
+    void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo);
 }

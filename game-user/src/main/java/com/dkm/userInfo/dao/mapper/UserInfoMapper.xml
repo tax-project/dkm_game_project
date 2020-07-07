@@ -65,11 +65,15 @@
 
     <update id="updateInfo" parameterType="com.dkm.entity.bo.UserInfoSkillBo">
         update tb_user_info
-        <set>
-            user_info_gold = user_info_gold - #{gold},
-            user_info_renown = user_info_renown + #{prestige},
-            user_info_skill_status = 1
-        </set>
+          <set>
+            <if test="gold != null">
+                user_info_gold = user_info_gold - #{gold},
+            </if>
+            <if test="diamonds != null">
+                user_info_diamonds=user_info_diamonds - #{diamonds},
+            </if>
+                user_info_renown = user_info_renown + #{prestige},
+          </set>
         where user_id = #{userId}
     </update>
 

@@ -1,10 +1,12 @@
 package com.dkm.plunder.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.good.entity.vo.GoodQueryVo;
@@ -20,6 +22,7 @@ import com.dkm.plunder.service.IPlunderGoodsService;
 import com.dkm.plunder.service.IPlunderService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,9 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
    @Autowired
    private IPlunderGoodsService plunderGoodsService;
 
+   @Autowired
+   private RabbitTemplate rabbitTemplate;
+
    @Override
    public void insertPlunder(PlunderVo vo) {
 
@@ -86,6 +92,15 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
       //修改体力值
       //减少自己的体力  自己抢别人
       userFeignClient.updateStrength(user.getId(),vo.getGrade());
+
+      MsgInfo msgInfo = new MsgInfo();
+      msgInfo.setMsg("掠夺事件");
+      msgInfo.setType(6);
+      msgInfo.setMsgType(1);
+      msgInfo.setToId(vo.getUserId());
+
+      log.info("发送事件通知...");
+      rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
    }
 
 

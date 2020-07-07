@@ -13,9 +13,11 @@ import com.dkm.turntable.entity.TurntableCouponEntity;
 import com.dkm.turntable.entity.vo.AddGoodsInfoVo;
 import com.dkm.turntable.entity.vo.TurntableInfoVo;
 import com.dkm.turntable.service.ITurntableService;
+import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,6 +39,8 @@ public class TurntableServiceImpl implements ITurntableService {
     private GoodsMapper goodsMapper;
     @Resource
     private TurntableCouponDao turntableCouponDao;
+    @Resource
+    private IdGenerator idGenerator;
     @Override
     public List<TurntableInfoVo> getTurntable(Long userId, Integer type) {
         List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().in(GoodsEntity::getGoodType,3,1));
@@ -45,7 +49,7 @@ public class TurntableServiceImpl implements ITurntableService {
             for (int i = 0; i < 6; i++) {
                 int c = new Random().nextInt(goodsEntities.size());
                 GoodsEntity a = goodsEntities.get(c);
-                list.add(new TurntableInfoVo(type,a.getUrl(),a.getName(),a.getId()));
+                list.add(new TurntableInfoVo(type*Math.max(c,1),a.getUrl(),a.getName(),a.getId()));
             }
         return list;
     }
@@ -53,6 +57,15 @@ public class TurntableServiceImpl implements ITurntableService {
     @Override
     public void addGoods(Long userId, AddGoodsInfoVo addGoodsInfoVo) {
         TurntableCouponEntity turntableCouponEntity = turntableCouponDao.selectOne(new LambdaQueryWrapper<TurntableCouponEntity>().eq(TurntableCouponEntity::getUserId, userId));
+        if(turntableCouponEntity==null){
+            turntableCouponEntity = new TurntableCouponEntity();
+            turntableCouponEntity.setCouponBlue(0);
+            turntableCouponEntity.setCouponPurple(0);
+            turntableCouponEntity.setCouponGreen(20);
+            turntableCouponEntity.setTurntableCouponId(idGenerator.getNumberId());
+            turntableCouponEntity.setCouponTime(LocalDateTime.now());
+            turntableCouponEntity.setUserId(userId);
+        }
         if(addGoodsInfoVo.getType()==1&&turntableCouponEntity.getCouponGreen()>0){
             turntableCouponEntity.setCouponGreen(turntableCouponEntity.getCouponGreen()-1);
         }else if(addGoodsInfoVo.getType()==2&&turntableCouponEntity.getCouponBlue()>0){

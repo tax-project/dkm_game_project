@@ -52,7 +52,7 @@ public class IntegralController {
     @PostMapping("/queryUserIdIntegral")
     @CrossOrigin
     @CheckToken //自定义注解 判断用户token是否存在
-   public int queryUserIdIntegral(){
+   public Integer queryUserIdIntegral(){
        return iIntegralService.queryUserIdIntegral();
    }
 
