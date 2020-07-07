@@ -22,6 +22,7 @@ public interface ITbEquipmentKnapsackService{
 
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
+    List<TbEquipmentKnapsackVo> selectUserIdThree(Long userId);
     List<TbEquipmentKnapsackVo> selectProps();
     List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectFoodId();
