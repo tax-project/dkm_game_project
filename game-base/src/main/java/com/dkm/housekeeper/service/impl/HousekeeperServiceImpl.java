@@ -54,6 +54,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         if(selectOne!=null){
             //判断是否续费
             selectOne.setOrderTime(now);
+            selectOne.setIsEffective(1);
             selectOne.setHousekeeperMoney(money);
             selectOne.setExpireTime(selectOne.getExpireTime().isBefore(now)?now.minusDays(-30):selectOne.getExpireTime().minusDays(-30));
             return  housekeeperMapper.updateById(selectOne);
@@ -113,9 +114,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         LocalDateTime now = LocalDateTime.now();
         selectOne.setEndWorkTime(now.minusHours(-8));
         selectOne.setStartWorkTime(now);
-        selectOne.setSeedGold(0);
-        selectOne.setSeedExp(0);
         selectOne.setSeedCount(0);
+        selectOne.setBoxCount(0);
         //第二天12点时间
         Map<String,String> result = new HashMap<>();
         if(housekeeperMapper.updateById(selectOne)>=0){
@@ -140,7 +140,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         }
         long time = now.toEpochSecond(ZoneOffset.of("+8"))- housekeeperEntity.getStartWorkTime().toEpochSecond(ZoneOffset.of("+8"));
         //宝箱15分钟开一次 计算次数
-        long count = time / (15 * 60);
+        long count = time / (15 * 60)-housekeeperEntity.getBoxCount();
+        housekeeperEntity.setBoxCount((int)count+housekeeperEntity.getBoxCount());
         if(count<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"暂无装备产出！");
         List<Long> boxId =new ArrayList<>();
         for (long i = 0; i < count; i++) {
@@ -151,6 +152,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         if(listResult.getCode()!=0){
             throw  new ApplicationException(CodeType.SERVICE_ERROR,listResult.getMsg());
         }
+        housekeeperMapper.updateById(housekeeperEntity);
         return listResult.getData();
     }
 

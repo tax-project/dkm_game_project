@@ -55,12 +55,7 @@ public class HousekeeperEntity {
     /**
      * 种子金币
      */
-    private Integer seedGold;
-
-    /**
-     * 种子金币
-     */
-    private Integer seedExp;
+    private Integer boxCount;
 
     /**
      * 种子金币
