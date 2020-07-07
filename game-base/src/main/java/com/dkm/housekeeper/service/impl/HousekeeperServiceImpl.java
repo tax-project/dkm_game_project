@@ -5,6 +5,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.entity.IncreaseUserInfoBO;
 import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
@@ -36,7 +38,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
     private IdGenerator idGenerator;
     @Resource
     private ResourceFeignClient resourceFeignClient;
-
+    @Resource
+    private UserFeignClient userFeignClient;
     /**
      * 开通、续费
      * @param userId
@@ -197,11 +200,15 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         //收取的金币
         int gold = count * size * data.get(0).getSeedGold();
         //调用收取种子的接口
-        housekeeperEntity.setSeedGold(gold);
-        housekeeperEntity.setSeedExp(exp);
         housekeeperMapper.updateById(housekeeperEntity);
-        map.put("gold",housekeeperEntity.getSeedGold());
-        map.put("exp",housekeeperEntity.getSeedExp());
+        IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+        increaseUserInfoBO.setUserId(userId);
+        increaseUserInfoBO.setUserInfoGold(gold);
+        increaseUserInfoBO.setUserInfoNowExperience((long) exp);
+        Result result = userFeignClient.increaseUserInfo(increaseUserInfoBO);
+        if(result.getCode()!=0)throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR,"暂时无法收取金币经验！");
+        map.put("gold",gold);
+        map.put("exp",exp);
         return map;
     }
 
