@@ -5,17 +5,20 @@ import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoTwo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.seed.entity.vo.SeedUnlockVo;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.skill.service.ISkillService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +69,13 @@ public class PersonalCenterController {
          * 根据当前用户查询装备
          * @return
          */
-        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdTwo(userId);
+        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
+        List<TbEquipmentKnapsackVoTwo> list=new ArrayList<>();
+        for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : tbEquipmentKnapsackVos) {
+            TbEquipmentKnapsackVoTwo tbEquipmentKnapsackVoTwo=new TbEquipmentKnapsackVoTwo();
+            BeanUtils.copyProperties(tbEquipmentKnapsackVo,tbEquipmentKnapsackVoTwo);
+            list.add(tbEquipmentKnapsackVoTwo);
+        }
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
 
@@ -74,7 +83,7 @@ public class PersonalCenterController {
         map.put("Seed",seedUnlockVos);
         //map.put("queryMySkill",skillBos);
         map.put("AttendantGoods",map1);
-        map.put("equipment",tbEquipmentKnapsackVos);
+        map.put("equipment",list);
         map.put("blackHouse",houseVo);
         return map;
     }

@@ -16,7 +16,6 @@ public class GameWebsocketApplication extends SpringBootServletInitializer {
       SpringApplication.run(GameWebsocketApplication.class, args);
    }
 
-
    /**
     * 打包
     * @param builder
@@ -26,5 +25,4 @@ public class GameWebsocketApplication extends SpringBootServletInitializer {
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameWebsocketApplication.class);
    }
-
 }

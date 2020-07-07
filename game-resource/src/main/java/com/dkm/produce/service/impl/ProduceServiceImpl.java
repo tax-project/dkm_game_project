@@ -7,6 +7,7 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.dao.AttendantUserMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.config.RedisConfig;
@@ -62,6 +63,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Autowired
     private ProduceMapper produceMapper;
+
+    @Autowired
+    private AttendantMapper attendantMapper;
 
     @Autowired
     private IAttendantUserService attendantUserService;
@@ -225,8 +229,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                 .collect(Collectors.groupingBy(AttendantPutVo::getImgUrl, Collectors.summingInt(AttendantPutVo::getNumber)))
                 .entrySet().stream().map(a -> new ImgNumVo(a.getKey(), a.getValue())).collect(Collectors.toList());
 
-        Map<String, Object> map1 = attendantService.queryThreeAtt();
-        map.put("Img",map1.get("att"));
+        //查询到所有用户跟班
+        List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(userId, 1);
+        map.put("Img",list1);
 
         if(attendantPutVos.size()==0){
             //1代表没有
