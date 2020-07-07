@@ -10,5 +10,11 @@
         where a.sk_id=b.id and a.user_id=#{userId}
     </select>
 
+    <select id="querySkillByUserId" parameterType="Long" resultMap="com.dkm.skill.entity.vo.UserSkillVo">
+        select b.sk_name,a.sk_grade
+        from tb_user_skill a,tb_skill b
+        where a.sk_id=b.id and a.user_id=#{userId}
+
+    </select>
 
 </mapper>

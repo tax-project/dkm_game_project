@@ -18,6 +18,7 @@ import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.SkillUserSkillVo;
+import com.dkm.skill.entity.vo.UserSkillVo;
 import com.dkm.skill.service.ISkillService;
 import com.dkm.skill.service.IUserSkillService;
 import com.dkm.utils.IdGenerator;
@@ -56,6 +57,8 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Autowired
    private UserFeignClient userFeignClient;
 
+   @Autowired
+   private ISkillService iSkillService;
    @Override
    public Map<String,Object> queryAllSkillByUserId() {
 
@@ -201,6 +204,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       }
 
           return map;
+   }
+
+   @Override
+   public List<UserSkillVo> querySkillByUserId(Long userId) {
+
+      return iSkillService.querySkillByUserId(userId);
    }
 
 

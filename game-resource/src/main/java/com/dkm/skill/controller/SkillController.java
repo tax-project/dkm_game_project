@@ -1,7 +1,11 @@
 package com.dkm.skill.controller;
 
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.skill.entity.Skill;
+import com.dkm.skill.entity.UserSkill;
+import com.dkm.skill.entity.vo.UserSkillVo;
 import com.dkm.skill.service.ISkillService;
+import com.dkm.skill.service.IUserSkillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -9,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +30,8 @@ public class SkillController {
 
     @Autowired
     private ISkillService iSkillService;
+
+
 
     /**
      * 根据用户id查询所有技能
@@ -53,6 +60,8 @@ public class SkillController {
         return iSkillService.upgradeSkills(id,status);
     }
 
-    //@GetMapping("/upgradeSkills")
-
+    @GetMapping("/querySkillByUserId")
+    public List<UserSkillVo> querySkillByUserId(@RequestParam("userId") Long userId){
+        return iSkillService.querySkillByUserId(userId);
+    }
 }
