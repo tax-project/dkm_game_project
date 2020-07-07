@@ -121,12 +121,10 @@ public class WeCharController {
     @CrossOrigin
     @CheckToken
     public void updateUserData (@RequestBody UserDataBO bo) {
-
         if (StringUtils.isBlank(bo.getHeardUrl()) ||
               StringUtils.isBlank(bo.getNickName()) || StringUtils.isBlank(bo.getUserAge())) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-
         weChatService.updateUserData(bo);
     }
 

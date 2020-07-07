@@ -15,6 +15,9 @@
             <if test="userInfoDiamonds != null">
                 user_info_diamonds = user_info_diamonds + #{userInfoDiamonds}
             </if>
+            <if test="userInfoNowExperience != null">
+                user_info_now_experience = user_info_now_experience + #{userInfoNowExperience}
+            </if>
         </set>
         where user_id = #{userId}
     </update>
