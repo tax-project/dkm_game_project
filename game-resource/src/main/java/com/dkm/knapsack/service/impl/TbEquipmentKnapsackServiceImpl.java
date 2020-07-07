@@ -78,6 +78,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
     @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdThree(Long userId) {
+        return tbEquipmentKnapsackMapper.selectUserIdTwo(userId);
+    }
+
+    @Override
     public List<TbEquipmentKnapsackVo> selectProps() {
         return tbEquipmentKnapsackMapper.selectProps(localUser.getUser().getId());
     }

@@ -4,10 +4,10 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GameUserApplicationTests {
+public class GameUserApplicationTests {
 
    @Test
-   void contextLoads() {
+   public void contextLoads() {
+      System.out.println(211^6);
    }
-
 }
