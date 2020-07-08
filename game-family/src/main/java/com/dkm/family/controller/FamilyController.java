@@ -157,7 +157,7 @@ public class FamilyController {
     @CheckToken
     @CrossOrigin
     public UserCenterFamilyVo getUserCenterFamily(@RequestParam("userId") Long userId){
-        if(userId==null){
+        if(userId==0){
             userId=localUser.getUser().getId();
         }
         return familyService.getUserCenterFamily(userId);
