@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @ApiModel("矿山的信息")
 @Data
-public class MineItemInfoVo {
+public class MineItemVo {
     @ApiModelProperty("矿山排序ID")
     private long index;
     @ApiModelProperty("矿山唯一ID")
