@@ -88,13 +88,13 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        Map<String,Object> map=new HashMap<>();
         String[] sList = boxId.split(",");
         List<TbEquipmentVo> list=new ArrayList<>();
         for (String aLong : sList) {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
+        Map<String,Object> map=new HashMap<>();
         if(list.size()!=0&&list!=null){
             for (TbEquipmentVo tbEquipmentVo : list) {
                 System.out.println(list.size()+"============");
@@ -142,6 +142,6 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         }else{
             return null;
         }
-        return map;
+        return null;
     }
 }
