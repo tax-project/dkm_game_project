@@ -54,44 +54,42 @@ CREATE TABLE IF NOT EXISTS `tb_mine_battle_item`
 )
     COMMENT '矿场表';
 
-DROP TABLE IF EXISTS tb_mine_user_skill_level;
-DROP TABLE IF EXISTS tb_mine_skill;
-
-
-CREATE TABLE IF NOT EXISTS `tb_mine_skill`
+DROP TABLE IF EXISTS `tb_mine_family_level_addition`;
+CREATE TABLE IF NOT EXISTS `tb_mine_family_level_addition`
 (
-    id   INT          NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '技能ID',
-    name VARCHAR(255) NOT NULL COMMENT '技能名称',
-    week INT          NOT NULL COMMENT '技能的星期'
+    family_level INT PRIMARY KEY NOT NULL COMMENT '家族等级',
+    level_name   VARCHAR(255)    NOT NULL COMMENT '等级名称',
+    addition     DOUBLE          NOT NULL COMMENT '金币加成'
 )
-    COMMENT '矿区技能';
+    COMMENT '家族等级加成表';
 
-INSERT INTO `tb_mine_skill`
-    (name, week)
-    VALUE
-    ('顶猪头', 1),
-    ('胡言乱语', 2),
-    ('顺手牵羊', 3),
-    ('踢出家族', 4),
-    ('禁言', 5),
-    ('幸运之吻', 6),
-    ('声望', 7);
-
-
-CREATE TABLE IF NOT EXISTS `tb_mine_user_skill_level`
-(
-    user_id       BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
-    family_id     BIGINT(20) NOT NULL COMMENT '家族 ID',
-    mine_skill_id INT        NOT NULL COMMENT '技能 ID',
-    level         INT        NOT NULL DEFAULT 0 COMMENT '等级',
-    foreign key (mine_skill_id) references tb_mine_skill (id)
-        on update cascade
-        on delete cascade
-)
-    COMMENT '矿区用户的技能信息';
+INSERT INTO `tb_mine_family_level_addition` VALUE
+    (1, '倔强青铜3', 1.05),
+    (2, '倔强青铜2', 1.1),
+    (3, '倔强青铜1', 1.15),
+    (4, '秩序白银4', 1.2),
+    (5, '秩序白银3', 1.25),
+    (6, '秩序白银2', 1.3),
+    (7, '秩序白银1', 1.35),
+    (8, '荣耀黄金5', 1.4),
+    (9, '荣耀黄金4', 1.45),
+    (10, '荣耀黄金3', 1.5),
+    (11, '荣耀黄金2', 1.6),
+    (12, '荣耀黄金1', 1.7),
+    (13, '尊贵铂金5', 1.8),
+    (14, '尊贵铂金4', 1.9),
+    (15, '尊贵铂金3', 2.0),
+    (16, '尊贵铂金2', 2.1),
+    (17, '尊贵铂金1', 2.2),
+    (18, '永恒钻石3', 2.3),
+    (19, '永恒钻石2', 2.4),
+    (20, '永恒钻石1', 2.5)
+;
+DROP TABLE IF EXISTS `tb_mine_user_info`;
 CREATE TABLE IF NOT EXISTS `tb_mine_user_info`
 (
     user_id   BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
     family_id BIGINT(20) NOT NULL COMMENT '家族 ID'
 )
-COMMENT '家族用户的信息'
+    COMMENT '家族用户的信息'
+;

@@ -15,6 +15,9 @@
             <if test="userInfoDiamonds != null">
                 user_info_diamonds = user_info_diamonds + #{userInfoDiamonds}
             </if>
+            <if test="userInfoNowExperience != null">
+                user_info_now_experience = user_info_now_experience + #{userInfoNowExperience}
+            </if>
         </set>
         where user_id = #{userId}
     </update>
@@ -75,7 +78,7 @@
     </update>
 
     <select id="reputationRanking" resultType="com.dkm.userInfo.entity.bo.ReputationRankingBO">
-        SELECT  a.we_chat_nick_name , a.we_chat_head_img_url, a.user_sex, b.user_info_renown
+        SELECT  a.we_chat_nick_name , a.we_chat_head_img_url, a.user_sex, b.user_info_renown, b.user_info_grade
         FROM  tb_user a LEFT JOIN  tb_user_info b ON a.user_id = b.user_id ORDER BY b.user_info_renown DESC
     </select>
 

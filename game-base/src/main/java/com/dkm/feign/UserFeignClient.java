@@ -5,6 +5,7 @@ import com.dkm.entity.bo.ParamBo;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.feign.entity.IncreaseUserInfoBO;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -43,4 +44,12 @@ public interface UserFeignClient {
     */
    @PostMapping("/v1/we/chat/queryAllHeardByUserId")
    Result<List<UserHeardUrlBo>> queryAllHeardByUserId (@RequestBody ParamBo bo);
+
+   /**
+    * 增加减少金币经验等
+    * @param increaseUserInfoBO
+    * @return
+    */
+   @PostMapping("/v1/userInfo/increase")
+   Result increaseUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO);
 }

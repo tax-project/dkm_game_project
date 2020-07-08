@@ -38,7 +38,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Override
    public void insertUserInfo(Long userId) {
-
       UserInfo userInfo = new UserInfo();
 
       userInfo.setUserInfoId(idGenerator.getNumberId());

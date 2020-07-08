@@ -51,29 +51,88 @@ public class EventMqListener {
          e.printStackTrace();
       }
 
+      //去redis中找设备id
+      String cid = (String) redisTemplate.opsForValue().get(msgInfo.getToId());
+
+      if (cid == null || "".equals(cid)) {
+         log.error("redis中未找到对应的设备ID,有可能是对方未在线,将事件消息通过mq发送存入数据库");
+         rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
+         return;
+      }
+      Channel channel = groupUtils.getChannel(cid);
+
+      if (channel == null) {
+         //对方未在线，应存入rabbitMQ消息队列中，等待客户端的连接再发送消息
+         //存入一个新的队列中
+         log.info("未找到对应的channel,有可能是对方未在线,将事件消息通过mq发送存入数据库");
+         rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
+      }
+
       if (msgInfo.getType() == 6) {
-         //家族群聊消息
-
-         //去redis中找设备id
-         String cid = (String) redisTemplate.opsForValue().get(msgInfo.getToId());
-
-         if (cid == null || "".equals(cid)) {
-            log.error("redis中未找到对应的设备ID,有可能是对方未在线,将事件消息通过mq发送存入数据库");
-            rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
-            return;
-         }
-         Channel channel = groupUtils.getChannel(cid);
-
-         if (channel == null) {
-            //对方未在线，应存入rabbitMQ消息队列中，等待客户端的连接再发送消息
-            //存入一个新的队列中
-            log.info("未找到对应的channel,有可能是对方未在线,将事件消息通过mq发送存入数据库");
-            rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
-         }
-
+         //事件
          //将消息发送给客户端
          if (channel != null) {
             log.info("发送事件消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 7) {
+         //装备
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送装备消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 8) {
+         //跟班产出
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送跟班产出消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 9) {
+         //金矿
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送金矿消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 10) {
+         //活动
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送活动消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 11) {
+         //商店
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送商店消息:" + msgInfo);
+            channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
+         }
+
+      }
+
+      if (msgInfo.getType() == 12) {
+         //好友红包成熟通知
+         //将消息发送给客户端
+         if (channel != null) {
+            log.info("发送好友红包成熟通知消息:" + msgInfo);
             channel.writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(msgInfo)));
          }
 

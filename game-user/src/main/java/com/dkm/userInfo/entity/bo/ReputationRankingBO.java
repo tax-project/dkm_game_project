@@ -23,4 +23,9 @@ public class ReputationRankingBO {
      * 声望
      */
     private String userInfoRenown;
+
+    /**
+     * 用户等级
+     */
+    private Integer userInfoGrade;
 }

@@ -5,6 +5,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.entity.IncreaseUserInfoBO;
 import com.dkm.feign.entity.SeedPlantUnlock;
 import com.dkm.housekeeper.dao.HousekeeperMapper;
 import com.dkm.housekeeper.entity.HousekeeperEntity;
@@ -36,7 +38,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
     private IdGenerator idGenerator;
     @Resource
     private ResourceFeignClient resourceFeignClient;
-
+    @Resource
+    private UserFeignClient userFeignClient;
     /**
      * 开通、续费
      * @param userId
@@ -51,6 +54,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         if(selectOne!=null){
             //判断是否续费
             selectOne.setOrderTime(now);
+            selectOne.setIsEffective(1);
             selectOne.setHousekeeperMoney(money);
             selectOne.setExpireTime(selectOne.getExpireTime().isBefore(now)?now.minusDays(-30):selectOne.getExpireTime().minusDays(-30));
             return  housekeeperMapper.updateById(selectOne);
@@ -110,9 +114,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         LocalDateTime now = LocalDateTime.now();
         selectOne.setEndWorkTime(now.minusHours(-8));
         selectOne.setStartWorkTime(now);
-        selectOne.setSeedGold(0);
-        selectOne.setSeedExp(0);
         selectOne.setSeedCount(0);
+        selectOne.setBoxCount(0);
         //第二天12点时间
         Map<String,String> result = new HashMap<>();
         if(housekeeperMapper.updateById(selectOne)>=0){
@@ -137,7 +140,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         }
         long time = now.toEpochSecond(ZoneOffset.of("+8"))- housekeeperEntity.getStartWorkTime().toEpochSecond(ZoneOffset.of("+8"));
         //宝箱15分钟开一次 计算次数
-        long count = time / (15 * 60);
+        long count = time / (15 * 60)-housekeeperEntity.getBoxCount();
+        housekeeperEntity.setBoxCount((int)count+housekeeperEntity.getBoxCount());
         if(count<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"暂无装备产出！");
         List<Long> boxId =new ArrayList<>();
         for (long i = 0; i < count; i++) {
@@ -148,6 +152,7 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         if(listResult.getCode()!=0){
             throw  new ApplicationException(CodeType.SERVICE_ERROR,listResult.getMsg());
         }
+        housekeeperMapper.updateById(housekeeperEntity);
         return listResult.getData();
     }
 
@@ -197,11 +202,15 @@ public class HousekeeperServiceImpl implements HousekeeperService {
         //收取的金币
         int gold = count * size * data.get(0).getSeedGold();
         //调用收取种子的接口
-        housekeeperEntity.setSeedGold(gold);
-        housekeeperEntity.setSeedExp(exp);
         housekeeperMapper.updateById(housekeeperEntity);
-        map.put("gold",housekeeperEntity.getSeedGold());
-        map.put("exp",housekeeperEntity.getSeedExp());
+        IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+        increaseUserInfoBO.setUserId(userId);
+        increaseUserInfoBO.setUserInfoGold(gold);
+        increaseUserInfoBO.setUserInfoNowExperience((long) exp);
+        Result result = userFeignClient.increaseUserInfo(increaseUserInfoBO);
+        if(result.getCode()!=0)throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR,"暂时无法收取金币经验！");
+        map.put("gold",gold);
+        map.put("exp",exp);
         return map;
     }
 

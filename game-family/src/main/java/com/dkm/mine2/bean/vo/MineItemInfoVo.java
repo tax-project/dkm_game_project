@@ -11,8 +11,14 @@ import lombok.Data;
 @Data
 public class MineItemInfoVo {
     @ApiModelProperty("矿山排序ID")
-    private Long index;
+    private long index;
     @ApiModelProperty("矿山唯一ID")
-    private Long id;
+    private long id;
+    @ApiModelProperty("是否处于被占领状态")
+    private Boolean occupied;
+    @ApiModelProperty("如果被占领那么占领者的信息")
+    private OccupiedInfoVo occupiedInfo = null;
+    @ApiModelProperty("矿山的基本信息")
+    final private BattleItemPropVo prop = new BattleItemPropVo();
 
 }

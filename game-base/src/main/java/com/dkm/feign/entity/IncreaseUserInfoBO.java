@@ -1,4 +1,4 @@
-package com.dkm.userInfo.entity.bo;
+package com.dkm.feign.entity;
 
 import lombok.Data;
 

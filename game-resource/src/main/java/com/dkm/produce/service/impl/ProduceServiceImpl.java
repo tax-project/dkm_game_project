@@ -170,7 +170,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //事件通知产出
         MsgInfo msgInfo = new MsgInfo();
         msgInfo.setMsg("跟班产出事件");
-        msgInfo.setType(6);
+        msgInfo.setType(8);
         msgInfo.setMsgType(1);
         msgInfo.setToId(user.getId());
 
