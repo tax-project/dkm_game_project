@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -94,28 +91,29 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
+
         Map<String,Object> map=new HashMap<>();
-        if(list.size()!=0&&list!=null){
-            for (TbEquipmentVo tbEquipmentVo : list) {
-                System.out.println(list.size()+"============");
+
+            for (int i=0;i<list.size();i++) {
+                TbEquipmentVo tbEquipmentVo=list.get(i);
                 QueryWrapper<TbEquipment> queryWrapper=new QueryWrapper();
                 queryWrapper.eq("equipment_id",tbEquipmentVo.getEquipmentId());
                 List<TbEquipment> listTwo=tbEquipmentMapper.selectList(queryWrapper);
-                for (TbEquipment tbEquipment : listTwo) {
-                    System.out.println(listTwo.size()+"2============");
+                for (int j=0;j<listTwo.size();j++) {
+                    TbEquipment tbEquipment=listTwo.get(j);
                     //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
                     TbKnapsack tbKnapsack=new TbKnapsack();
 
-                    tbKnapsack.setUserId(localUser.getUser().getId());
+                    tbKnapsack.setUserId(712030633500774400L);
                     List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
-                    for (TbKnapsack knapsack : list1) {
-                        System.out.println(list1.size()+"3============");
+
+                    for (int k=0;k<list1.size();k++) {
+                        TbKnapsack knapsack=list1.get(k);
                         //传入当前用户背包的外键和装备编号
                         TbEquipmentKnapsackVo tbEquipmentKnapsack=new TbEquipmentKnapsackVo();
                         tbEquipmentKnapsack.setExp1(tbEquipment.getExp1());
                         tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
                         int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
-                        System.out.println(count+"=========="+"count");
                         if(count>0){
                             //查询为装备上的装备数据
                             TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
@@ -126,23 +124,21 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                             List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
                             map.put("code",3);
                             map.put("msg","此装备已经装备上了");
-                            map.put("dataOne",list3);
-                            map.put("dataTwo",list2);
+                            map.put("dataOne"+i+"_"+j+"_"+k,list3);
+                            map.put("dataTwo"+i+"_"+j+"_"+k,list2);
                         }else{
                             //查询为装备上的装备数据
                             List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(tbEquipmentVo.getEquipmentId());
                             map.put("code",2);
-                            map.put("dataThree",list3);
+                            map.put("dataThree"+i+"_"+j+"_"+k,list3);
                             map.put("msg","此装备没有装备上过");
                         }
                     }
                 }
-                return map;
+
             }
-        }else{
-            return null;
-        }
-        return null;
+
+        return map;
     }
 
     @Override
