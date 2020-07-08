@@ -338,21 +338,24 @@ public class AttendantServiceImpl implements IAttendantService {
                 if (myEquipmentBonus == 0) {
                     //我方装备加成
                     List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = iTbEquipmentKnapsackService.selectUserIdTwo(query.getId());
-                    /**
-                     * 属性加成 1就代表有加成 0代表没有加成
-                     * 如果有加成在判断是生命还是才华
-                     */
-                    if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
-                        // 1 为生命加成 2 为才华加成
-                        if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
-                            // 生命加成
-                            myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
-                        } else {
-                            //才华加成
-                            myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                    if(tbEquipmentKnapsackVos.size()!=0){
+                        /**
+                         * 属性加成 1就代表有加成 0代表没有加成
+                         * 如果有加成在判断是生命还是才华
+                         */
+                        if (tbEquipmentKnapsackVos.get(i).getEdAttribute().intValue() == 1) {
+                            // 1 为生命加成 2 为才华加成
+                            if (tbEquipmentKnapsackVos.get(i).getEdType().intValue() == 1) {
+                                // 生命加成
+                                myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                            } else {
+                                //才华加成
+                                myEquipmentBonus =myEquipmentBonus+tbEquipmentKnapsackVos.get(i).getEdTypevalue().doubleValue();
+                            }
                         }
                     }
                 }
+
             }
 
             //得到他方的战力
