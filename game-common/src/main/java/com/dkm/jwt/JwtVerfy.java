@@ -1,10 +1,12 @@
 package com.dkm.jwt;
 
+
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.entity.UserLoginQuery;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Author qf

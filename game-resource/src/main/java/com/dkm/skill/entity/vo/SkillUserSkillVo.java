@@ -27,6 +27,7 @@ public class SkillUserSkillVo extends Model<SkillUserSkillVo> {
      */
     private Integer skGrade;
 
+
     /**
      * 当前技能升级成功率
      */
