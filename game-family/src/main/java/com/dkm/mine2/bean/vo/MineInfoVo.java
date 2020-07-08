@@ -16,7 +16,7 @@ public class MineInfoVo {
     @ApiModelProperty("家族ID")
     private Long familyId;
     @ApiModelProperty("家族等级")
-    private Long familyLevel;
+    private Integer familyLevel;
     @ApiModelProperty("家族等级名称")
     private String familyLevelName;
     @ApiModelProperty("剩余攻击次数")

@@ -1,6 +1,7 @@
 package com.dkm.mine2.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.dkm.family.dao.FamilyDao;
 import com.dkm.mine2.bean.entity.MineBattleEntity;
 import com.dkm.mine2.bean.entity.MineBattleItemEntity;
 import com.dkm.mine2.bean.entity.MineBattleLevelEntity;
@@ -49,6 +50,7 @@ public class Mine2ServiceImpl implements IMine2Service {
         // 导入公开矿区信息
         includeMineItem(entity.getId(), result.getPrivateItem(), locationId);
         // 导入私有矿区信息
+        result.setFamilyLevel(getFamilyLevel(familyId));
         return result;
     }
 
@@ -140,4 +142,11 @@ public class Mine2ServiceImpl implements IMine2Service {
     }
 
 
+    @Resource
+    private FamilyDao familyDao;
+
+    public Integer getFamilyLevel(Long familyId) {
+        val familyEntity = familyDao.selectById(familyId);
+        return familyEntity.getFamilyGrade();
+    }
 }
