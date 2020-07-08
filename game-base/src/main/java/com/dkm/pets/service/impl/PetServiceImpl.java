@@ -174,7 +174,7 @@ public class PetServiceImpl implements PetService {
                 || (petInfoVo.getPGrade() >= 10 && result1.getCode() != 0)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "喂食失败");
         }
-        redisConfig.setString("pet"+petInfoVo.getUserId(),DateUtils.formatDate(LocalDateTime.now()));
+        redisConfig.setString("pet"+petInfoVo.getUserId(),DateUtils.formatDateTime(LocalDateTime.now()));
     }
 
     /**
@@ -223,7 +223,7 @@ public class PetServiceImpl implements PetService {
     @Override
     public String isHunger(Long userId) {
         String string = (String)redisConfig.getString("pet"+userId);
-        if (StringUtils.isNotEmpty(string)&&DateUtils.parseDateTime(string).minusHours(-5).isBefore(LocalDateTime.now())){
+        if (StringUtils.isNotEmpty(string)&&DateUtils.parseDateTime(string).minusSeconds(-10).isBefore(LocalDateTime.now())){
             return "宠物已经饿的不行了！";
         }
         else throw new ApplicationException(CodeType.SERVICE_ERROR,"不需要喂食！");
