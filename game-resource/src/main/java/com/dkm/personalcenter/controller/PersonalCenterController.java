@@ -10,6 +10,9 @@ import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.seed.entity.vo.SeedUnlockVo;
 import com.dkm.seed.service.ISeedService;
+import com.dkm.skill.entity.UserSkill;
+import com.dkm.skill.entity.vo.SkillUserSkillVo;
+import com.dkm.skill.entity.vo.SkillVo;
 import com.dkm.skill.service.ISkillService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,10 @@ public class PersonalCenterController {
     @GetMapping("/PersonalCenterAll")
     public Map<String,Object> personalCenterAll(@RequestParam("userId") Long userId){
         Map<String,Object> map=new HashMap<>(6);
+
+        //初始化技能
+        iSkillService.initSkill(userId);
+
         /**
          * 查询已经解锁种子
          */
@@ -58,7 +65,7 @@ public class PersonalCenterController {
         /**
          *查询我的技能
          */
-        //List<SkillBo> skillBos = iSkillService.queryAllSkillByUserId(userId);
+        List<SkillVo> skillVos = iSkillService.queryAllSkillByUserIdImgGrade(userId);
         /**
          *查询跟班产出的产物
          */
@@ -81,7 +88,7 @@ public class PersonalCenterController {
 
 
         map.put("Seed",seedUnlockVos);
-        //map.put("queryMySkill",skillBos);
+        map.put("queryMySkill",skillVos);
         map.put("AttendantGoods",map1);
         map.put("equipment",list);
         map.put("blackHouse",houseVo);

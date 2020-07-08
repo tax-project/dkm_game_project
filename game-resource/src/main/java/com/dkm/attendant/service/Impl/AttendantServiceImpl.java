@@ -458,7 +458,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 }
 
 
-
                 /**
                  * 装备防御力*各个装备属性加成
                  * 得到最终我方防御力

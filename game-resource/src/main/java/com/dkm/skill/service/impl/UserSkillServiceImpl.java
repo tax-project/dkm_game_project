@@ -40,9 +40,8 @@ public class UserSkillServiceImpl extends ServiceImpl<UserSkillMapper, UserSkill
    public int updateUserSkill(Long id,UserSkill userSkill) {
       LambdaQueryWrapper<UserSkill> queryWrapper = new LambdaQueryWrapper<UserSkill>()
               .eq(UserSkill::getId, id);
-
-
-
       return baseMapper.update(userSkill,queryWrapper);
    }
+
+
 }

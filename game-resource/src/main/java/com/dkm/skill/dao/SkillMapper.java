@@ -3,6 +3,7 @@ package com.dkm.skill.dao;
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.vo.SkillUserSkillVo;
+import com.dkm.skill.entity.vo.SkillVo;
 import com.dkm.skill.entity.vo.UserSkillVo;
 import org.springframework.stereotype.Component;
 
@@ -30,4 +31,12 @@ public interface SkillMapper extends IBaseMapper<Skill> {
     * @return
     */
    List<UserSkillVo> querySkillByUserId(Long userId);
+
+   /**
+    * 内部使用
+    * 查询技能的图片和等级
+    * @param userId
+    * @return
+    */
+   List<SkillVo> queryAllSkillByUserIdImgGrade(Long userId);
 }

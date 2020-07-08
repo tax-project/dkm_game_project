@@ -186,7 +186,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         Map<String,Object> map=new HashMap<>(16);
 
         //跟班
-        List<AttendantImgVo> attendantImg= new ArrayList<>();
+        List<AttendantImgVo> attendantImg = new ArrayList<>();
 
         //查询所有跟班
         List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
@@ -231,7 +231,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(userId, 1);
-        map.put("Img",list1);
+        map.put("Img",attendantGoods);
 
         if(attendantPutVos.size()==0){
             //1代表没有

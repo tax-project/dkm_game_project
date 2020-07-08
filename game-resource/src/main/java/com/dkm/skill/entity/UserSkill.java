@@ -37,7 +37,6 @@ public class UserSkill extends Model<UserSkill> {
     */
    private Integer skGrade;
 
-
    /**
     * 当前技能升级成功率
     */
