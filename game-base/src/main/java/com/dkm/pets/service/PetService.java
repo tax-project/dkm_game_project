@@ -34,4 +34,6 @@ public interface PetService {
      * @return
      */
     List<PetsDto> getPetInfo(Long userId);
+
+    String isHunger(Long userId);
 }

@@ -16,4 +16,10 @@
         where a.sk_id=b.id and a.user_id=#{userId}
     </select>
 
+
+    <select id="queryAllSkillByUserIdImgGrade" parameterType="Long" resultType="com.dkm.skill.entity.vo.SkillVo">
+        select b.sk_img,a.sk_grade
+        from tb_user_skill a,tb_skill b
+        where a.sk_id=b.id and a.user_id=#{userId}
+    </select>
 </mapper>

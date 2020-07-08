@@ -8,17 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 符凯龙
+ * @author fkl
  */
 @ApiModel("矿区所有信息")
 @Data
-public class AllMineInfoVo {
+public class MineInfoVo {
     @ApiModelProperty("家族ID")
     private Long familyId;
     @ApiModelProperty("家族等级")
     private Long familyLevel;
+    @ApiModelProperty("家族等级名称")
+    private String familyLevelName;
     @ApiModelProperty("剩余攻击次数")
     private Long occupationSize;
+    @ApiModelProperty("金币加成")
+    private Double goldBonus;
     @ApiModelProperty("地图上左上角的家族ID，如果为0表示暂无家族")
     private Long topLeftFamilyId;
     @ApiModelProperty("地图上又上角的家族ID，如果为0表示暂无家族")
@@ -29,4 +33,5 @@ public class AllMineInfoVo {
     final private List<MineItemInfoVo> publicItem = new ArrayList<>();
     @ApiModelProperty("私有地图的矿山")
     final private List<MineItemInfoVo> privateItem = new ArrayList<>();
+
 }

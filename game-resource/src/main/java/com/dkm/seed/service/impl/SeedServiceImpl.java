@@ -318,7 +318,6 @@ public class SeedServiceImpl implements ISeedService {
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
 
-            System.out.println("======="+list1);
 
             int PlantingTimes = 0;
 
