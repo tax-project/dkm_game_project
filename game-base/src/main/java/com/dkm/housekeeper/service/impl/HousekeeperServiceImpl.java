@@ -91,7 +91,9 @@ public class HousekeeperServiceImpl implements HousekeeperService {
                 throw new  ApplicationException(CodeType.SERVICE_ERROR,"管家过期");
             }
             //返回管家时间
-            result.put("status",now.isBefore(selectOne.getEndWorkTime())?1:0);
+            int i =0;
+            if(selectOne.getEndWorkTime()!=null) i=now.isBefore(selectOne.getEndWorkTime()) ? 1 : 0;
+            result.put("status",i);
             result.put("toDayTime", DateUtils.formatDate(now.toLocalDate()).replace("-","/")+" 12:00:00");
             result.put("startWorkTime",selectOne.getStartWorkTime()==null?null: DateUtils.formatDate(selectOne.getStartWorkTime()).replace("-","/"));
             result.put("reTime", DateUtils.formatDateTime(selectOne.getExpireTime()).replace("-","/"));
