@@ -144,7 +144,7 @@ public class TbBoxController {
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
     public Map<String,Object> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=tbBoxService.selectByBoxIdTwo(boxId);
         return map;
     }
 
