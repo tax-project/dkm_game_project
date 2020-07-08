@@ -3,10 +3,10 @@ package com.dkm.mine2.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.mine2.bean.entity.MineBattleEntity;
 import com.dkm.mine2.bean.entity.MineBattleItemEntity;
+import com.dkm.mine2.bean.entity.MineBattleLevelEntity;
 import com.dkm.mine2.bean.vo.BattleItemPropVo;
 import com.dkm.mine2.bean.vo.MineInfoVo;
 import com.dkm.mine2.bean.vo.MineItemInfoVo;
-import com.dkm.mine2.bean.vo.OccupiedInfoVo;
 import com.dkm.mine2.dao.MineBattleItemMapper;
 import com.dkm.mine2.dao.MineBattleLevelMapper;
 import com.dkm.mine2.dao.MineBattleMapper;
@@ -45,8 +45,22 @@ public class Mine2ServiceImpl implements IMine2Service {
         val result = new MineInfoVo();
         result.setFamilyId(familyId);
         val locationId = entity2Vo(entity, result);
-        includeMineItem(entity.getId(),result.getPublicItem(),0);
-        includeMineItem(entity.getId(),result.getPrivateItem(),locationId);
+        includeMineItem(entity.getId(), result.getPublicItem(), 0);
+        // 导入公开矿区信息
+        includeMineItem(entity.getId(), result.getPrivateItem(), locationId);
+        // 导入私有矿区信息
+        return result;
+    }
+
+    @Override
+    public List<BattleItemPropVo> getItemsLevelInfo() {
+        val entityList = mineBattleLevelMapper.selectList(null);
+        val result = new ArrayList<BattleItemPropVo>(entityList.size());
+        for (MineBattleLevelEntity levelEntity : entityList) {
+            BattleItemPropVo battleItemPropVo = new BattleItemPropVo();
+            includeProp(levelEntity, battleItemPropVo);
+            result.add(battleItemPropVo);
+        }
         return result;
     }
 
@@ -58,18 +72,16 @@ public class Mine2ServiceImpl implements IMine2Service {
             MineBattleItemEntity itemEntity = itemEntities.get(i1);
             item.setId(itemEntity.getId());
             item.setIndex(i1);
-            includeProp(itemEntity.getLevel(),item.getProp());
             publicItem.add(item);
         }
     }
 
-    private void includeProp(Integer level, BattleItemPropVo battleItemPropVo) {
-        val select = mineBattleLevelMapper.selectById(level);
-        battleItemPropVo.setNpcName(select.getNpcName());
-        battleItemPropVo.setNpcSkillLevel(select.getNpcLevel());
-        battleItemPropVo.setGoldYield(select.getGoldYield());
-        battleItemPropVo.setIntegralYield(select.getIntegralYield());
-        battleItemPropVo.setLevel(select.getLevel());
+    private void includeProp(MineBattleLevelEntity mineBattleLevelEntity, BattleItemPropVo battleItemPropVo) {
+        battleItemPropVo.setNpcName(mineBattleLevelEntity.getNpcName());
+        battleItemPropVo.setNpcSkillLevel(mineBattleLevelEntity.getNpcLevel());
+        battleItemPropVo.setGoldYield(mineBattleLevelEntity.getGoldYield());
+        battleItemPropVo.setIntegralYield(mineBattleLevelEntity.getIntegralYield());
+        battleItemPropVo.setLevel(mineBattleLevelEntity.getLevel());
     }
 
     /**

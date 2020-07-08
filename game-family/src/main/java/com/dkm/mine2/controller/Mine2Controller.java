@@ -8,6 +8,7 @@ import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.mine2.bean.other.User2FamilyId;
+import com.dkm.mine2.bean.vo.BattleItemPropVo;
 import com.dkm.mine2.bean.vo.MineInfoVo;
 import com.dkm.mine2.service.IMine2Service;
 import io.swagger.annotations.Api;
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
- * @author 符凯龙
+ * @author fkl
  */
 @Api(tags = "新的家族矿区 API")
 @RequestMapping("/mine/")
@@ -35,6 +37,14 @@ public class Mine2Controller {
 
     @Resource
     private IMine2Service mine2Service;
+
+
+    @CrossOrigin
+    @GetMapping("/getLevelInfo")
+    public List<BattleItemPropVo> getItemInfo() {
+        return mine2Service.getItemsLevelInfo();
+    }
+
 
     @CrossOrigin
     @CheckToken

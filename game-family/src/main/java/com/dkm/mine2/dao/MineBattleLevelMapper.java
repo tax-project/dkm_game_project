@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface MineBattleLevelMapper  extends BaseMapper<MineBattleLevelEntity> {
+
 }
