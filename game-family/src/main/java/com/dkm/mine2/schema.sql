@@ -39,12 +39,11 @@ INSERT INTO tb_mine_battle_level VALUE
 
 CREATE TABLE IF NOT EXISTS `tb_mine_battle_item`
 (
-    id               BIGINT(20) NOT NULL PRIMARY KEY COMMENT '矿场ID',
-    battle_id        BIGINT(20) NOT NULL COMMENT '矿区ID',
-    belong_item      INT        NOT NULL DEFAULT 0 COMMENT '归属，公开矿区为0 ，一号家族为 1，二号家族为 2 .... ',
-    user_id          BIGINT(20) NOT NULL DEFAULT 0 COMMENT '是否被占领，如果为0则为未占领，如果不是那么则为被占领的用户ID',
-    mining_stop_date DATETIME   NOT NULL DEFAULT '2000-1-1 00:00:00' COMMENT '挖矿的结束时间',
-    item_level       INT        NOT NULL COMMENT '矿场等级',
+    id          BIGINT(20) NOT NULL PRIMARY KEY COMMENT '矿场ID',
+    battle_id   BIGINT(20) NOT NULL COMMENT '矿区ID',
+    belong_item INT        NOT NULL DEFAULT 0 COMMENT '归属，公开矿区为0 ，一号家族为 1，二号家族为 2 .... ',
+    user_id     BIGINT(20) NOT NULL DEFAULT 0 COMMENT '是否被占领，如果为0则为未占领，如果不是那么则为被占领的用户ID',
+    item_level  INT        NOT NULL COMMENT '矿场等级',
     foreign key (battle_id) references tb_mine_battle (id)
         on update cascade
         on delete cascade,
@@ -85,11 +84,41 @@ INSERT INTO `tb_mine_family_level_addition` VALUE
     (19, '永恒钻石2', 2.4),
     (20, '永恒钻石1', 2.5)
 ;
+
+DROP TABLE IF EXISTS `tb_mine_history_goods`;
+DROP TABLE IF EXISTS `tb_mine_history`;
 DROP TABLE IF EXISTS `tb_mine_user_info`;
+
+CREATE TABLE IF NOT EXISTS `tb_mine_history`
+(
+    id              BIGINT(20) PRIMARY KEY NOT NULL,
+    user_id         BIGINT(20)             NOT NULL COMMENT '用户ID',
+    family_id       BIGINT(20)             NOT NULL COMMENT '家族 ID',
+    start_date      DATETIME               NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '开始时间',
+    stop_date       DATETIME               NOT NULL DEFAULT '2000-01-01 01:00:00' COMMENT '结束时间',
+    integral        INT(10)                NOT NULL DEFAULT '300' COMMENT '贡献的积分',
+    mine_item_level INT                    NOT NULL COMMENT '占领的矿区等级'
+)
+    COMMENT '历史记录';
+
+
 CREATE TABLE IF NOT EXISTS `tb_mine_user_info`
 (
-    user_id   BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
-    family_id BIGINT(20) NOT NULL COMMENT '家族 ID'
+    user_id         BIGINT(20) NOT NULL PRIMARY KEY COMMENT '用户ID',
+    family_id       BIGINT(20) NOT NULL COMMENT '家族 ID',
+    finally_mine_id BIGINT(20) NOT NULL DEFAULT 0 COMMENT '最后挖矿的历史记录'
 )
     COMMENT '家族用户的信息'
 ;
+CREATE TABLE IF NOT EXISTS `tb_mine_history_goods`
+(
+    id              BIGINT(20) PRIMARY KEY NOT NULL,
+    mine_history_id BIGINT(20)             NOT NULL,
+    goods_id        BIGINT(20)             NOT NULL,
+    foreign key (mine_history_id) references tb_mine_history (id)
+        on update cascade
+        on delete cascade,
+    foreign key (goods_id) references tb_goods (id)
+        on update cascade
+        on delete cascade
+) COMMENT '历史记录下获得的额外道具';

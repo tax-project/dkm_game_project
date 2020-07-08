@@ -2,6 +2,7 @@ package com.dkm.pets.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
@@ -16,12 +17,15 @@ import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import com.dkm.pets.service.PetService;
 import com.dkm.turntable.dao.GoodsMapper;
 import com.dkm.turntable.entity.GoodsEntity;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +39,8 @@ public class PetServiceImpl implements PetService {
     @Resource
     private PetsMapper petsMapper;
 
+    @Resource
+    private RedisConfig redisConfig;
 
     @Resource
     private IdGenerator idGenerator;
@@ -168,6 +174,7 @@ public class PetServiceImpl implements PetService {
                 || (petInfoVo.getPGrade() >= 10 && result1.getCode() != 0)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "喂食失败");
         }
+        redisConfig.setString("pet"+petInfoVo.getUserId(),DateUtils.formatDateTime(LocalDateTime.now()));
     }
 
     /**
@@ -212,4 +219,14 @@ public class PetServiceImpl implements PetService {
         }
         return petsMapper.findById(userId);
     }
+
+    @Override
+    public String isHunger(Long userId) {
+        String string = (String)redisConfig.getString("pet"+userId);
+        if (StringUtils.isNotEmpty(string)&&DateUtils.parseDateTime(string).minusSeconds(-10).isBefore(LocalDateTime.now())){
+            return "宠物已经饿的不行了！";
+        }
+        else throw new ApplicationException(CodeType.SERVICE_ERROR,"不需要喂食！");
+    }
+
 }

@@ -5,14 +5,12 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
-import com.dkm.family.entity.FamilyEntity;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.mine2.bean.other.User2FamilyId;
-import com.dkm.mine2.bean.vo.AllMineInfoVo;
+import com.dkm.mine2.bean.vo.MineInfoVo;
 import com.dkm.mine2.service.IMine2Service;
 import io.swagger.annotations.Api;
-import lombok.Data;
 import lombok.val;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -37,12 +33,13 @@ public class Mine2Controller {
     @Resource
     private FamilyDetailDao familyDetailDao;
 
+    @Resource
     private IMine2Service mine2Service;
 
     @CrossOrigin
     @CheckToken
     @GetMapping("/getAllInfo")
-    public AllMineInfoVo getAllInfo() {
+    public MineInfoVo getAllInfo() {
         val user2FamilyId = getUser2FamilyId();
         return mine2Service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }

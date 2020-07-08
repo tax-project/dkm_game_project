@@ -94,16 +94,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //                    throw new ApplicationException(CodeType.OVENDU_ERROR);
 //                }
 
-                String redisToken = (String) redisConfig.getString("token::" + query.getId());
-
-                if (StringUtils.isBlank(redisToken)) {
-                    throw new ApplicationException(CodeType.OVENDU_ERROR, "请重新登录");
-                }
-
-                if (!token.equals(redisToken)) {
-                    throw new ApplicationException(CodeType.OVENDU_ERROR, "该账户已被登录");
-                }
-
                 user.setUser(query);
                 return true;
             }

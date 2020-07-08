@@ -3,9 +3,12 @@ package com.dkm.mine2.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.mine2.bean.entity.MineBattleEntity;
 import com.dkm.mine2.bean.entity.MineBattleItemEntity;
-import com.dkm.mine2.bean.vo.AllMineInfoVo;
+import com.dkm.mine2.bean.vo.BattleItemPropVo;
+import com.dkm.mine2.bean.vo.MineInfoVo;
 import com.dkm.mine2.bean.vo.MineItemInfoVo;
+import com.dkm.mine2.bean.vo.OccupiedInfoVo;
 import com.dkm.mine2.dao.MineBattleItemMapper;
+import com.dkm.mine2.dao.MineBattleLevelMapper;
 import com.dkm.mine2.dao.MineBattleMapper;
 import com.dkm.mine2.rule.BattleItemRule;
 import com.dkm.mine2.service.IMine2Service;
@@ -33,11 +36,13 @@ public class Mine2ServiceImpl implements IMine2Service {
     private MineBattleItemMapper mineBattleItemMapper;
     @Resource
     private BattleItemRule battleItemRule;
+    @Resource
+    private MineBattleLevelMapper mineBattleLevelMapper;
 
     @Override
-    public AllMineInfoVo getAllInfo(Long userId, Long familyId) {
+    public MineInfoVo getAllInfo(Long userId, Long familyId) {
         MineBattleEntity entity = getMineBattleEntity(familyId);
-        val result = new AllMineInfoVo();
+        val result = new MineInfoVo();
         result.setFamilyId(familyId);
         val locationId = entity2Vo(entity, result);
         includeMineItem(entity.getId(),result.getPublicItem(),0);
@@ -53,14 +58,24 @@ public class Mine2ServiceImpl implements IMine2Service {
             MineBattleItemEntity itemEntity = itemEntities.get(i1);
             item.setId(itemEntity.getId());
             item.setIndex(i1);
+            includeProp(itemEntity.getLevel(),item.getProp());
             publicItem.add(item);
         }
+    }
+
+    private void includeProp(Integer level, BattleItemPropVo battleItemPropVo) {
+        val select = mineBattleLevelMapper.selectById(level);
+        battleItemPropVo.setNpcName(select.getNpcName());
+        battleItemPropVo.setNpcSkillLevel(select.getNpcLevel());
+        battleItemPropVo.setGoldYield(select.getGoldYield());
+        battleItemPropVo.setIntegralYield(select.getIntegralYield());
+        battleItemPropVo.setLevel(select.getLevel());
     }
 
     /**
      * 莫得联合查询
      */
-    private int entity2Vo(MineBattleEntity entity, AllMineInfoVo result) {
+    private int entity2Vo(MineBattleEntity entity, MineInfoVo result) {
         long[] arr = new long[4];
         int resultId = -1;
         val longs = new ArrayList<Long>();

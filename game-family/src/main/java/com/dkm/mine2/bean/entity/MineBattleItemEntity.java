@@ -1,6 +1,7 @@
 package com.dkm.mine2.bean.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -32,11 +33,8 @@ public class MineBattleItemEntity {
      */
     private Integer userId;
     /**
-     * 结束时的时间
-     */
-    private LocalDateTime miningStopDate;
-    /**
      * 矿区等级
      */
+    @TableField("item_level")
     private Integer level;
 }

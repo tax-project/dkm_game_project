@@ -91,4 +91,12 @@ public class PetsController  {
     public List<PetsDto> getPetInfo(@RequestParam Long userId){
         return petService.getPetInfo(userId);
     }
+
+    @ApiOperation("宠物是否饥饿")
+    @GetMapping("/isHunger")
+    @CrossOrigin
+    @CheckToken
+    public String isHunger(){
+        return petService.isHunger(localUser.getUser().getId());
+    }
 }
