@@ -25,8 +25,8 @@ public interface UserFeignClient {
     * @param id
     * @return
     */
-/*   @GetMapping("/v1/we/chat/queryUser/{id}")
-   Result<UserInfoQueryBo> queryUser (@PathVariable("id") Long id);*/
+   @GetMapping("/v1/we/chat/queryUser/{id}")
+   Result<UserInfoQueryBo> queryUser (@PathVariable("id") Long id);
 
    /**
     *  修改用户的每日抢红包的总次数
