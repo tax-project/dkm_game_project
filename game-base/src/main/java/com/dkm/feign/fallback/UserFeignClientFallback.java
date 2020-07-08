@@ -20,11 +20,11 @@ import java.util.List;
 @Component
 public class UserFeignClientFallback implements UserFeignClient {
 
-
+/*
    @Override
    public Result<UserInfoQueryBo> queryUser(Long id) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
+   }*/
 
    /**
     * feign调用失败的回调

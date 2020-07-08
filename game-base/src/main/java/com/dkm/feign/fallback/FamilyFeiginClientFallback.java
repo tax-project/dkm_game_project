@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  **/
 @Component
 public class FamilyFeiginClientFallback implements FamilyFeiginClient {
-    @GetMapping("/family/getUserCenterFamily")
+   /* @GetMapping("/family/getUserCenterFamily")
     @Override
     public Result<UserCenterFamilyVo> getUserCenterFamily(Long userId) {
         return Result.fail(CodeType.DATABASE_ERROR);
-    }
+    }*/
 }
