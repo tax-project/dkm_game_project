@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  **/
 @FeignClient(value = "family",fallback = FamilyFeiginClientFallback.class)
 public interface FamilyFeiginClient {
-    @GetMapping("/family/getUserCenterFamily")
-    Result<UserCenterFamilyVo> getUserCenterFamily(@RequestParam("userId") Long userId);
+  /*  @GetMapping("/family/getUserCenterFamily")
+    Result<UserCenterFamilyVo> getUserCenterFamily(@RequestParam("userId") Long userId);*/
 }
