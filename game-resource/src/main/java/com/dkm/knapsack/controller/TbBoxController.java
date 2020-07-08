@@ -10,7 +10,9 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -106,7 +108,7 @@ public class TbBoxController {
         }
     }
 
-    @ApiOperation(value = "批量宝箱的主键查询装备 要传json",notes = "成功返回成功 无数据则返回空")
+    @ApiOperation(value = "批量宝箱的主键查询装备 要传json",notes = "没有装备上返回code=2 且返回Datathree 为此开出新装备详情，装备上返回code=3 并且返回数据dataOne新装备详情   dataTwo查询已经装备上了的装备数据")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "boxId",value = "背包主键",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "boxNo",value = "箱子编号"),
@@ -141,8 +143,9 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
-    public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
-          return tbBoxService.selectByBoxIdTwo(boxId);
+    public Map<String,Object> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
+        Map<String,Object> map=new HashMap<>();
+        return map;
     }
 
     /**

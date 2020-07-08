@@ -195,7 +195,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
 
         if(attendantGoods.size()==0){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"无跟班  去抓跟班吧");
+            map.put("msg","暂无跟班 快去抓跟班吧");
+            return map;
         }
 
         if(attendantUsers.size()!=0){
