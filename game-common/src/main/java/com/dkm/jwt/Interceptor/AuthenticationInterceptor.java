@@ -2,6 +2,7 @@ package com.dkm.jwt.Interceptor;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.JwtVerfy;
@@ -31,6 +32,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
     private LocalUser user;
+
+    @Autowired
+    private RedisConfig redisConfig;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
@@ -76,6 +80,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     throw new ApplicationException(CodeType.OVENDU_ERROR, "身份验证失败");
                 }
 
+
+
                 //获得解密后claims对象
 //                Date date = new Date();
 //                Claims jwt = JwtParseUtil.parseJWT(token,query);
@@ -87,6 +93,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //                if (erpDate.before(date)) {
 //                    throw new ApplicationException(CodeType.OVENDU_ERROR);
 //                }
+
+                String redisToken = (String) redisConfig.getString("token::" + query.getId());
+
+                if (StringUtils.isBlank(redisToken)) {
+                    throw new ApplicationException(CodeType.OVENDU_ERROR, "请重新登录");
+                }
+
+                if (!token.equals(redisToken)) {
+                    throw new ApplicationException(CodeType.OVENDU_ERROR, "该账户已被登录");
+                }
 
                 user.setUser(query);
                 return true;

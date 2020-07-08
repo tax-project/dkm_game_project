@@ -133,31 +133,6 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "用户更新登录失败，请重新登录");
                 }
                 BeanUtils.copyProperties(userBO, resultBO);
-
-                //查询用户是否有未在线消息
-//                Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
-//
-//                List<FriendNotOnlineVo> list = result.getData();
-//
-//                if (null != list && list.size() != 0) {
-//                    //有离线消息,当前该账号未在线，将未在线消息发送给客户端
-//                    List<Long> longList = new ArrayList<>();
-//                    for (FriendNotOnlineVo onlineVo : list) {
-//                        MsgInfo msgInfo = new MsgInfo();
-//                        msgInfo.setFromId(onlineVo.getFromId());
-//                        msgInfo.setToId(onlineVo.getToId());
-//                        msgInfo.setMsg(onlineVo.getContent());
-//                        msgInfo.setSendDate(onlineVo.getCreateDate());
-//                        //离线信息
-//                        msgInfo.setType(onlineVo.getType());
-//                        //将消息更改成已读
-//                        longList.add(onlineVo.getToId());
-//                        rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
-//                    }
-//
-//                    //删除数据库的信息
-//                    friendFeignClient.deleteLookStatus(longList);
-//                }
             }
                 //拷贝新的微信信息，如果是创建用户的话还有新的ID
                 BeanUtils.copyProperties(user, resultBO);
@@ -245,29 +220,6 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         }
 
         //查询用户是否有未在线消息
-//        Result<List<FriendNotOnlineVo>> result = friendFeignClient.queryNotOnline(userBO.getUserId());
-//
-//        List<FriendNotOnlineVo> list = result.getData();
-//
-//        if (null != list && list.size() != 0) {
-//            //有离线消息,当前该账号未在线，将未在线消息发送给客户端
-//            List<Long> longList = new ArrayList<>();
-//            for (FriendNotOnlineVo onlineVo : list) {
-//                MsgInfo msgInfo = new MsgInfo();
-//                msgInfo.setFromId(onlineVo.getFromId());
-//                msgInfo.setToId(onlineVo.getToId());
-//                msgInfo.setMsg(onlineVo.getContent());
-//                msgInfo.setSendDate(onlineVo.getCreateDate());
-//                //离线信息
-//                msgInfo.setType(onlineVo.getType());
-//                //将消息更改成已读
-//                longList.add(onlineVo.getToId());
-//                rabbitTemplate.convertAndSend("game_msg_fanoutExchange", "", JSON.toJSONString(msgInfo));
-//            }
-//
-//            //删除数据库的信息
-//            friendFeignClient.deleteLookStatus(longList);
-//        }
 
         //将设备Id和用户Id存入redis中
         String cid = idGenerator.getUuid();
