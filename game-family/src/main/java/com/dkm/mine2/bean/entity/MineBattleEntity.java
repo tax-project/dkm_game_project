@@ -11,10 +11,10 @@ import lombok.Data;
 @TableName("tb_mine_battle")
 public class MineBattleEntity {
     @TableId
-    private Long id;
-    private Long firstFamilyId;
-    private Long secondFamilyId;
-    private Long thirdFamilyId;
-    private Long fourthFamilyId;
+    private long id;
+    private long firstFamilyId;
+    private long secondFamilyId;
+    private long thirdFamilyId;
+    private long fourthFamilyId;
 
 }
