@@ -88,31 +88,34 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        Map<String,Object> map=new HashMap<>();
         String[] sList = boxId.split(",");
         List<TbEquipmentVo> list=new ArrayList<>();
         for (String aLong : sList) {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
+        Map<String,Object> map=new HashMap<>();
         if(list.size()!=0&&list!=null){
             for (TbEquipmentVo tbEquipmentVo : list) {
+                System.out.println(list.size()+"============");
                 QueryWrapper<TbEquipment> queryWrapper=new QueryWrapper();
                 queryWrapper.eq("equipment_id",tbEquipmentVo.getEquipmentId());
                 List<TbEquipment> listTwo=tbEquipmentMapper.selectList(queryWrapper);
                 for (TbEquipment tbEquipment : listTwo) {
-
+                    System.out.println(listTwo.size()+"2============");
                     //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
                     TbKnapsack tbKnapsack=new TbKnapsack();
 
                     tbKnapsack.setUserId(localUser.getUser().getId());
                     List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
                     for (TbKnapsack knapsack : list1) {
+                        System.out.println(list1.size()+"3============");
                         //传入当前用户背包的外键和装备编号
                         TbEquipmentKnapsackVo tbEquipmentKnapsack=new TbEquipmentKnapsackVo();
                         tbEquipmentKnapsack.setExp1(tbEquipment.getExp1());
                         tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
                         int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
+                        System.out.println(count+"=========="+"count");
                         if(count>0){
                             //查询为装备上的装备数据
                             TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
@@ -139,6 +142,25 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         }else{
             return null;
         }
-        return map;
+        return null;
+    }
+
+    @Override
+    public List<TbEquipmentVo> selectByBoxIdThree(String boxId) {
+        if( boxId==null &&"".equals(boxId) ){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        String[] sList = boxId.split(",");
+        List<TbEquipmentVo> list=new ArrayList<>();
+        for (String aLong : sList) {
+            TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
+            list.add(tbEquipmentVo);
+        }
+        if(list.size()!=0&&list!=null){
+            return list;
+        }else{
+            return null;
+        }
     }
 }
