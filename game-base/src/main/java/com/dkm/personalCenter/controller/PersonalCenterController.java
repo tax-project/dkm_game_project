@@ -59,27 +59,26 @@ public class PersonalCenterController {
         UserLoginQuery user = localUser.getUser();
         //黑屋的用户信息对象
         map.put("personal",resourceFeignClient.personalCenterAll(user.getId()));
-        //主人信息
-        map.put("queryAidUser",resourceFeignClient.queryAidMaster());
+
         //查询出用户的总体力和当前体力
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+     /*   Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
         UserInfoQueryBoVo userInfoQueryBoVo=new UserInfoQueryBoVo();
         BeanUtils.copyProperties(data,userInfoQueryBoVo);
-        Map<String,Object> mapTwo=new HashMap<>(2);
+        Map<String,Object> mapTwo=new HashMap<>(3);
         mapTwo.put("code",0);
         mapTwo.put("msg","操作成功");
         mapTwo.put("data",userInfoQueryBoVo);
 
-        map.put("queryUser",mapTwo);
+        map.put("queryUser",mapTwo);*/
         //用户勋章数
         map.put("medalNumber",medalService.getUserMadelNumber(user.getId()));
         //座驾信息
         map.put("mounts",mountService.getUserCenterMounts(user.getId()));
         //礼物信息
         map.put("gift",giftService.getUserCenterGift(user.getId()));
-        //家族信息
-        map.put("family",familyFeiginClient.getUserCenterFamily(user.getId()));
+     /*   //家族信息
+        map.put("family",familyFeiginClient.getUserCenterFamily(user.getId()));*/
         return map;
 
     }
@@ -104,11 +103,8 @@ public class PersonalCenterController {
 
         map.put("personal",resourceFeignClient.personalCenterAll(userId));
 
-        //主人信息
-        map.put("queryUserIdMaster",resourceFeignClient.queryUserIdMaster(userId));
-
         //查询出用户的总体力和当前体力
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(userId);
+     /*   Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(userId);
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
         UserInfoQueryBoVo userInfoQueryBoVo=new UserInfoQueryBoVo();
         BeanUtils.copyProperties(data,userInfoQueryBoVo);
@@ -117,7 +113,7 @@ public class PersonalCenterController {
         mapTwo.put("msg","操作成功");
         mapTwo.put("data",userInfoQueryBoVo);
 
-        map.put("queryUser",mapTwo);
+        map.put("queryUser",mapTwo);*/
         //用户勋章数
         map.put("medalNumber",medalService.getUserMadelNumber(userId));
         //座驾信息
@@ -125,7 +121,7 @@ public class PersonalCenterController {
         //礼物信息
         map.put("gift",giftService.getUserCenterGift(userId));
         //家族信息
-        map.put("family",familyFeiginClient.getUserCenterFamily(userId));
+/*        map.put("family",familyFeiginClient.getUserCenterFamily(userId));*/
         return map;
     }
 }

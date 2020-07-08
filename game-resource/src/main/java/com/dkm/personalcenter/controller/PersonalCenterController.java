@@ -71,6 +71,11 @@ public class PersonalCenterController {
          */
         Map<String, Object> map1 = iProduceService.queryImgFood(userId);
 
+        /**
+         * 主人信息
+         */
+        Map<String, Object> stringObjectMap = iAttendantService.queryAidUser();
+
 
         /**
          * 根据当前用户查询装备
@@ -92,6 +97,7 @@ public class PersonalCenterController {
         map.put("AttendantGoods",map1);
         map.put("equipment",list);
         map.put("blackHouse",houseVo);
+        map.put("queryAidUser",stringObjectMap);
         return map;
     }
 }

@@ -8,9 +8,12 @@ import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.mine2.bean.other.User2FamilyId;
-import com.dkm.mine2.bean.vo.MineInfoVo;
+import com.dkm.mine2.bean.vo.BattleItemPropVo;
+import com.dkm.mine2.bean.vo.FamilyAdditionVo2Entity;
+import com.dkm.mine2.bean.vo.MineVo;
 import com.dkm.mine2.service.IMine2Service;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.val;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
- * @author 符凯龙
+ * @author fkl
  */
 @Api(tags = "新的家族矿区 API")
 @RequestMapping("/mine/")
@@ -36,10 +40,27 @@ public class Mine2Controller {
     @Resource
     private IMine2Service mine2Service;
 
+
+    @ApiOperation("获取金矿的基础信息和等级相关的信息")
+    @CrossOrigin
+    @GetMapping("/getMineLevelType")
+    public List<BattleItemPropVo> getMineLevelType() {
+        return mine2Service.getItemsLevelType();
+    }
+
+    @ApiOperation("获取家族等级信息与金币加成")
+    @CrossOrigin
+    @GetMapping("/getFamilyType")
+    public List<FamilyAdditionVo2Entity> getFamilyType() {
+        return mine2Service.getFamilyType();
+    }
+
+
+    @ApiOperation("获取家族矿区的所有信息")
     @CrossOrigin
     @CheckToken
-    @GetMapping("/getAllInfo")
-    public MineInfoVo getAllInfo() {
+    @GetMapping("/getMineInfo")
+    public MineVo getAllInfo() {
         val user2FamilyId = getUser2FamilyId();
         return mine2Service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }

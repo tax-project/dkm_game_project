@@ -5,6 +5,7 @@ import com.dkm.knapsack.domain.TbBox;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,5 +22,7 @@ public interface ITbBoxService{
 
     List<TbBox> selectAll();
 
-    List<TbEquipmentVo> selectByBoxIdTwo(String boxId);
+    Map<String,Object> selectByBoxIdTwo(String boxId);
+
+    List<TbEquipmentVo> selectByBoxIdThree(String boxId);
 }

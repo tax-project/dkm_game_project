@@ -152,11 +152,13 @@ public class FamilyController {
     }
 
 
+    @ApiOperation("用户家族信息（查当前用户传userId=0）")
     @GetMapping("/getUserCenterFamily")
+    @CheckToken
     @CrossOrigin
     public UserCenterFamilyVo getUserCenterFamily(@RequestParam("userId") Long userId){
-        if(userId==null){
-            throw  new ApplicationException(CodeType.PARAMETER_ERROR);
+        if(userId==null||userId==0){
+            userId=localUser.getUser().getId();
         }
         return familyService.getUserCenterFamily(userId);
     }
