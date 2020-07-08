@@ -59,14 +59,13 @@ public class PersonalCenterController {
         UserLoginQuery user = localUser.getUser();
         //黑屋的用户信息对象
         map.put("personal",resourceFeignClient.personalCenterAll(user.getId()));
-        //主人信息
-        map.put("queryAidUser",resourceFeignClient.queryAidMaster());
+
         //查询出用户的总体力和当前体力
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
         UserInfoQueryBoVo userInfoQueryBoVo=new UserInfoQueryBoVo();
         BeanUtils.copyProperties(data,userInfoQueryBoVo);
-        Map<String,Object> mapTwo=new HashMap<>(2);
+        Map<String,Object> mapTwo=new HashMap<>(3);
         mapTwo.put("code",0);
         mapTwo.put("msg","操作成功");
         mapTwo.put("data",userInfoQueryBoVo);
@@ -103,9 +102,6 @@ public class PersonalCenterController {
         Map<String,Object> map=new HashMap<>(16);
 
         map.put("personal",resourceFeignClient.personalCenterAll(userId));
-
-        //主人信息
-        map.put("queryUserIdMaster",resourceFeignClient.queryUserIdMaster(userId));
 
         //查询出用户的总体力和当前体力
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(userId);

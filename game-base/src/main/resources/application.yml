@@ -13,3 +13,4 @@ spring:
 app:
   workerId: 9
   dataCenterId: 1
+debug: true
