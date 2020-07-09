@@ -1,9 +1,9 @@
-package com.dkm.mine2.rule;
+package com.dkm.mine.rule;
 
-import com.dkm.mine2.bean.entity.MineBattleEntity;
-import com.dkm.mine2.bean.entity.MineBattleItemEntity;
-import com.dkm.mine2.dao.MineBattleItemMapper;
-import com.dkm.mine2.dao.MineBattleMapper;
+import com.dkm.mine.bean.entity.MineBattleEntity;
+import com.dkm.mine.bean.entity.MineBattleItemEntity;
+import com.dkm.mine.dao.MineBattleItemMapper;
+import com.dkm.mine.dao.MineBattleMapper;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

@@ -1,4 +1,4 @@
-package com.dkm.mine2.bean.entity;
+package com.dkm.mine.bean.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableField;

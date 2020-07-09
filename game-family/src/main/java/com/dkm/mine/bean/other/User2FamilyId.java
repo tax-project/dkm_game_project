@@ -1,4 +1,4 @@
-package com.dkm.mine2.bean.other;
+package com.dkm.mine.bean.other;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

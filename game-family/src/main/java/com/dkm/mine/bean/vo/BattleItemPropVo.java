@@ -1,4 +1,4 @@
-package com.dkm.mine2.bean.vo;
+package com.dkm.mine.bean.vo;
 
 
 import io.swagger.annotations.ApiModel;
