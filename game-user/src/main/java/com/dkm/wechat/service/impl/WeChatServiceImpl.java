@@ -1,6 +1,5 @@
 package com.dkm.wechat.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.config.RedisConfig;
@@ -10,11 +9,8 @@ import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.FileVo;
-import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.FileFeignClient;
-import com.dkm.feign.FriendFeignClient;
-import com.dkm.feign.entity.FriendNotOnlineVo;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.userInfo.service.IUserInfoService;
@@ -33,7 +29,6 @@ import com.dkm.wechat.service.IWeChatService;
 import com.dkm.wechat.util.CreateToken;
 import com.dkm.wechat.util.WeChatUtil;
 import com.dkm.wechat.util.bo.WeChatUtilBO;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -318,7 +312,6 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
               .eq(User::getWeChatOpenId,userName)
               .or()
               .eq(User::getWeChatNickName,userName);
-
         return baseMapper.selectOne(wrapper);
     }
 
