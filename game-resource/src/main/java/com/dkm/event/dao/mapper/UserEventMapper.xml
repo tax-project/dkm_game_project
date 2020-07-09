@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.event.dao.UserEventMapper">
+
+
+    <select id="queryAllEvent" resultType="com.dkm.event.entity.vo.UserEventVo" parameterType="Long">
+        select c.user_sex,c.we_chat_nick_name,c.we_chat_head_img_url,d.user_info_renown,a.he_user_id from tb_user_event a,tb_user_event_content b,tb_user c,tb_user_info d
+        where a.he_user_id=c.user_id and
+            a.he_user_id=b.he_user_id and
+            a.he_user_id=d.user_id and
+            a.user_id=#{userId} and DATE_FORMAT(b.to_rob_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) GROUP BY a.he_user_id
+    </select>
+
+    <select id="queryUserIsExistence" parameterType="Long" resultType="com.dkm.event.entity.UserEvent">
+        select * from tb_user_event where he_user_id=#{heUserId} and user_id=#{userId} and DATE_FORMAT(event_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
+
+
+
+
+</mapper>

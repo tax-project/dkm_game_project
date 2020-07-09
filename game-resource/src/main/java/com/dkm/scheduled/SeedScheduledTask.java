@@ -32,7 +32,7 @@ public class SeedScheduledTask {
    @Autowired
    private ISeedFallService iSeedFallService;
 
-   @Scheduled(cron = "0 */1 * * * ?")
+   //@Scheduled(cron = "0 */1 * * * ?")
    public void toDeleteApply () {
       iSeedFallService.seedDrop();
    }

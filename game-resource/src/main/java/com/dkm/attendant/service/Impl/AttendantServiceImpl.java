@@ -1,9 +1,7 @@
 package com.dkm.attendant.service.Impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
-import com.dkm.plunder.dao.OpponentMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.plunder.entity.Opponent;
@@ -16,8 +14,8 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
-import com.dkm.event.dao.EventMapper;
-import com.dkm.event.entity.Event;
+import com.dkm.event.dao.UserEventMapper;
+import com.dkm.event.entity.UserEventContent;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
@@ -83,7 +81,7 @@ public class AttendantServiceImpl implements IAttendantService {
     private IProduceService produceService;
 
     @Autowired
-    private EventMapper eventMapper;
+    private UserEventMapper eventMapper;
 
     @Autowired
     private IOpponentService iOpponentService;
@@ -718,7 +716,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     //代表抢用户跟班成功
                     vo.setStatus(0);
                     //添加事件
-                    insertEvent(caughtPeopleId);
+                    //insertEvent(caughtPeopleId);
                     //
                     return vo;
                 }
@@ -733,7 +731,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 //代表抢用户跟班成功
                 vo.setStatus(0);
                 //添加事件
-                insertEvent(caughtPeopleId);
+                //insertEvent(caughtPeopleId);
                 //
                 return vo;
             } finally {
@@ -756,7 +754,7 @@ public class AttendantServiceImpl implements IAttendantService {
         vo.setStatus(0);
 
         //添加事件
-        insertEvent(caughtPeopleId);
+        //insertEvent(caughtPeopleId);
 
         //
         return vo;
@@ -764,8 +762,8 @@ public class AttendantServiceImpl implements IAttendantService {
 
     }
 
-    public void insertEvent(Long caughtPeopleId){
-        Event event=new Event();
+   /* public void insertEvent(Long caughtPeopleId){
+        UserEventContent event=new UserEventContent();
         event.setId(idGenerator.getNumberId());
         event.setHeUserId(caughtPeopleId);
         event.setUserId(localUser.getUser().getId());
@@ -774,7 +772,7 @@ public class AttendantServiceImpl implements IAttendantService {
         event.setEvTime(now);
         event.setEvMsgIn("成为你的新主人");
         int insert = eventMapper.insert(event);
-    }
+    }*/
 
 
     /**

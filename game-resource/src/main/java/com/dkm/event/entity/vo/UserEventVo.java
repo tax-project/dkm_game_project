@@ -1,8 +1,10 @@
 package com.dkm.event.entity.vo;
 
+import com.dkm.event.entity.UserEventContent;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author 刘梦祺
@@ -34,18 +36,13 @@ public class UserEventVo {
     private Integer userInfoRenown;
 
     /**
-     * 时间
+     * 抢夺方用户id
      */
-    private LocalDateTime evTime;
+    private Long heUserId;
 
     /**
-     * 事件内容 （里）
+     * 内容
      */
-    private String evMsgIn;
-
-    /**
-     * 事件内容 （外）
-     */
-    private String evMsgExternal;
+    List<UserEventContent> list;
 
 }
