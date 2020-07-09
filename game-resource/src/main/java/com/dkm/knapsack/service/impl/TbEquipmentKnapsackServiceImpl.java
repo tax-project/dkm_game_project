@@ -69,6 +69,18 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     private UserFeignClient userFeignClient;
 
     /**
+     * 根据主键查询详情
+     * @param tekId
+     * @return
+     */
+    @Override
+    public List<TbEquipmentKnapsack> findByIdAndId(Long tekId) {
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("tek_id",tekId);
+        return tbEquipmentKnapsackMapper.selectList(queryWrapper);
+    }
+
+    /**
      * 根据当前登录人的主键 查询出装备
      * @return 返回一个登陆人装备的集合
      */

@@ -18,7 +18,7 @@ import java.util.Map;
  * @since 2020-05-14
  */
 public interface ITbEquipmentKnapsackService{
-
+    List<TbEquipmentKnapsack> findByIdAndId(Long tekId);
 
     List<TbEquipmentKnapsackVo> selectUserId();
     List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);

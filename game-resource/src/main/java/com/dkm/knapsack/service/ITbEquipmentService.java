@@ -21,4 +21,6 @@ public interface ITbEquipmentService{
 	List<TbEquipmentVo> selectByEquipmentId(Long equipmentId);
 
 	TbEquipmentVo selectByEquipmentIdTwo(String exp1);
+
+	void listEquipmentIdTwo(String equipmentId);
 }

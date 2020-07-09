@@ -112,8 +112,6 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       UserLoginQuery user = localUser.getUser();
 
-
-
       LambdaQueryWrapper<Skill> queryWrapper = new LambdaQueryWrapper<>();
 
       List<Skill> landSeedList = baseMapper.selectList(queryWrapper);
@@ -208,7 +206,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       }
 
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
-
+      if(userInfoQueryBoResult.getCode()!=0){
+         log.info("用户模块崩了");
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
 
       //生成1-100的随机数
       int random = (int) (Math.random() * 100) + 1;
@@ -254,7 +255,6 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       //另外加百分之20成功率
       if(status==2 && userSkill.getSkCurrentSuccessRate()<100){
-         System.out.println("钻石");
          if(userInfoQueryBoResult.getData().getUserInfoDiamonds()<20){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"钻石不足");
          }
@@ -335,15 +335,15 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       userSkill.setSkGrade(userSkill.getSkGrade()+1);
 
       if (userSkill.getSkGrade() >= 2 && userSkill.getSkGrade() < 10) {
-         userSkill.setSkCurrentSuccessRate(80);
+         userSkill.setSkCurrentSuccessRate(65);
       } else if (userSkill.getSkGrade() >= 10 && userSkill.getSkGrade() < 20) {
-         userSkill.setSkCurrentSuccessRate(60);
+         userSkill.setSkCurrentSuccessRate(45);
          userSkill.setSkAllConsume(6);
       } else if (userSkill.getSkGrade() >= 20 && userSkill.getSkGrade() < 30) {
-         userSkill.setSkCurrentSuccessRate(40);
+         userSkill.setSkCurrentSuccessRate(22);
          userSkill.setSkAllConsume(8);
       } else if (userSkill.getSkGrade() >= 30 && userSkill.getSkGrade() < 40) {
-         userSkill.setSkCurrentSuccessRate(20);
+         userSkill.setSkCurrentSuccessRate(15);
          userSkill.setSkAllConsume(12);
       } else {
          userSkill.setSkCurrentSuccessRate(10);

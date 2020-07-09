@@ -6,7 +6,7 @@
 
     <select id="queryAllEvent" resultType="com.dkm.event.entity.vo.UserEventVo" parameterType="Long">
         select a.user_sex,a.we_chat_nick_name,a.we_chat_head_img_url,b.user_info_renown,c.ev_time, c.ev_msg_in,c.ev_msg_external
-        from tb_user a,tb_user_info b,tb_event c where a.user_id=b.user_id and b.user_id=c.user_id and and c.he_user_id=#{userId}
+        from tb_user a,tb_user_info b,tb_event c where a.user_id=b.user_id and b.user_id=c.user_id and  c.he_user_id=#{userId}
     </select>
 
 

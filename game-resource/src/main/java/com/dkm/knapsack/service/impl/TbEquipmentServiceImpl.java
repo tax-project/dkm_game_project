@@ -1,15 +1,19 @@
 package com.dkm.knapsack.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.knapsack.dao.TbEquipmentDetailsMapper;
+import com.dkm.knapsack.dao.TbEquipmentKnapsackMapper;
 import com.dkm.knapsack.dao.TbEquipmentMapper;
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentDetails;
+import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.knapsack.domain.vo.TbEquipmentVo;
+import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -36,13 +41,19 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
     @Autowired
     TbEquipmentDetailsMapper tbEquipmentDetailsMapper;
     @Autowired
-    private IdGenerator idGenerator;
+    ITbEquipmentKnapsackService tbEquipmentKnapsackService;
     @Autowired
+    private IdGenerator idGenerator;
+    @Resource
     private UserFeignClient userFeignClient;
     @Autowired
     ITbEquipmentService tbEquipmentService;
     @Autowired
     private LocalUser localUser;
+    @Resource
+    TbEquipmentKnapsackServiceImpl equipmentKnapsackService;
+    @Autowired
+    TbEquipmentKnapsackMapper tbEquipmentKnapsackMapper;
 
     /**
      * 增加装备的接口
@@ -126,5 +137,39 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return tbEquipmentMapper.selectByEquipmentIdTwo(exp1);
+    }
+
+    @Override
+    public void listEquipmentIdTwo(String tekId) {
+        if(StringUtils.isEmpty(tekId)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        String[] athleteId = tekId.split(",");
+
+        //定义一个钱的变量
+        Integer money=0;
+        for (String s : athleteId) {
+            List<TbEquipmentKnapsack> selectByEquipmentId=tbEquipmentKnapsackService.findByIdAndId(Long.valueOf(s));
+            for (TbEquipmentKnapsack tbEquipmentVo : selectByEquipmentId) {
+                TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
+                tbEquipmentKnapsack.setTekIsva(0);
+                QueryWrapper queryWrapper=new QueryWrapper();
+                queryWrapper.eq("tek_id",tbEquipmentVo.getTekId());
+                money+=Integer.valueOf(tbEquipmentVo.getTekMoney());
+                int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack,queryWrapper);
+                if(rows>0){
+                    equipmentKnapsackService.too(tbEquipmentVo.getTekId());
+                }else{
+                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "贩卖失败!");
+                }
+            }
+        }
+        IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+        increaseUserInfoBO.setUserId(localUser.getUser().getId());
+        increaseUserInfoBO.setUserInfoGold(money);
+        increaseUserInfoBO.setUserInfoRenown(0);
+        increaseUserInfoBO.setUserInfoDiamonds(0);
+        userFeignClient.increaseUserInfo(increaseUserInfoBO);
     }
 }
