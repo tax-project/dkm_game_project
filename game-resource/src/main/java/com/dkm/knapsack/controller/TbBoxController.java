@@ -143,8 +143,9 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdThree/{boxId}")
     @CrossOrigin
-    public Map<String,Object> selectByBoxIdThree(@PathVariable("boxId") String  boxId){
-        Map<String,Object> map=tbBoxService.selectByBoxIdTwo(boxId);
+    @CheckToken
+    public List<Map> selectByBoxIdThree(@PathVariable("boxId") String  boxId){
+        List<Map> map=tbBoxService.selectByBoxIdTwo(boxId);
 
         return map;
     }
@@ -184,6 +185,7 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
+    @CheckToken
     public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
         List<TbEquipmentVo> map=tbBoxService.selectByBoxIdThree(boxId);
         return map;

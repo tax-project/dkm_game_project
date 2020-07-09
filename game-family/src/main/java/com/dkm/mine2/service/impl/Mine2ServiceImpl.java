@@ -6,8 +6,10 @@ import com.dkm.mine2.bean.entity.MineBattleEntity;
 import com.dkm.mine2.bean.entity.MineBattleItemEntity;
 import com.dkm.mine2.bean.entity.MineBattleLevelEntity;
 import com.dkm.mine2.bean.vo.BattleItemPropVo;
-import com.dkm.mine2.bean.vo.MineInfoVo;
-import com.dkm.mine2.bean.vo.MineItemInfoVo;
+import com.dkm.mine2.bean.vo.FamilyAdditionVo2Entity;
+import com.dkm.mine2.bean.vo.MineItemVo;
+import com.dkm.mine2.bean.vo.MineVo;
+import com.dkm.mine2.dao.FamilyAdditionMapper;
 import com.dkm.mine2.dao.MineBattleItemMapper;
 import com.dkm.mine2.dao.MineBattleLevelMapper;
 import com.dkm.mine2.dao.MineBattleMapper;
@@ -41,9 +43,9 @@ public class Mine2ServiceImpl implements IMine2Service {
     private MineBattleLevelMapper mineBattleLevelMapper;
 
     @Override
-    public MineInfoVo getAllInfo(Long userId, Long familyId) {
+    public MineVo getAllInfo(Long userId, Long familyId) {
         MineBattleEntity entity = getMineBattleEntity(familyId);
-        val result = new MineInfoVo();
+        val result = new MineVo();
         result.setFamilyId(familyId);
         val locationId = entity2Vo(entity, result);
         includeMineItem(entity.getId(), result.getPublicItem(), 0);
@@ -54,8 +56,16 @@ public class Mine2ServiceImpl implements IMine2Service {
         return result;
     }
 
+    @Resource
+    private FamilyAdditionMapper mapper;
+
     @Override
-    public List<BattleItemPropVo> getItemsLevelInfo() {
+    public List<FamilyAdditionVo2Entity> getFamilyType() {
+        return mapper.selectList(null);
+    }
+
+    @Override
+    public List<BattleItemPropVo> getItemsLevelType() {
         val entityList = mineBattleLevelMapper.selectList(null);
         val result = new ArrayList<BattleItemPropVo>(entityList.size());
         for (MineBattleLevelEntity levelEntity : entityList) {
@@ -66,11 +76,11 @@ public class Mine2ServiceImpl implements IMine2Service {
         return result;
     }
 
-    private void includeMineItem(Long id, List<MineItemInfoVo> publicItem, int i) {
+    private void includeMineItem(Long id, List<MineItemVo> publicItem, int i) {
         val itemEntities = mineBattleItemMapper.selectList(new QueryWrapper<MineBattleItemEntity>()
                 .lambda().eq(MineBattleItemEntity::getBattleId, id).eq(MineBattleItemEntity::getBelongItem, i));
         for (int i1 = 0; i1 < itemEntities.size(); i1++) {
-            MineItemInfoVo item = new MineItemInfoVo();
+            MineItemVo item = new MineItemVo();
             MineBattleItemEntity itemEntity = itemEntities.get(i1);
             item.setId(itemEntity.getId());
             item.setIndex(i1);
@@ -89,7 +99,7 @@ public class Mine2ServiceImpl implements IMine2Service {
     /**
      * 莫得联合查询
      */
-    private int entity2Vo(MineBattleEntity entity, MineInfoVo result) {
+    private int entity2Vo(MineBattleEntity entity, MineVo result) {
         long[] arr = new long[4];
         int resultId = -1;
         val longs = new ArrayList<Long>();
@@ -111,10 +121,9 @@ public class Mine2ServiceImpl implements IMine2Service {
         result.setTopLeftFamilyId(longs.get(0));
         result.setTopRightFamilyId(longs.get(1));
         result.setBottomRightFamilyId(longs.get(2));
-        return resultId ;
+        return resultId;
     }
 
-    //获取矿产
     private MineBattleEntity getMineBattleEntity(Long familyId) {
         MineBattleEntity entity = mineBattleMapper.selectByFamilyId(familyId);
         if (entity == null) {
