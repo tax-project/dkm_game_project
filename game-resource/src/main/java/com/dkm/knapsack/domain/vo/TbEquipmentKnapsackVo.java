@@ -164,6 +164,9 @@ public class TbEquipmentKnapsackVo {
      * 售价
      */
     private Integer goodMoney;
-
+    /**
+     * 宝箱类型
+     */
+    private Integer boxType;
 
 }

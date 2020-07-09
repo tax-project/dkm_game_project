@@ -8,9 +8,13 @@ import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.ListVo;
 import com.dkm.entity.vo.OpponentVo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.userInfo.service.IUserInfoService;
+import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +25,7 @@ import java.util.List;
  * @date 2020/5/14
  * @vesion 1.0
  **/
+@Api(tags = "用户详细信息API")
 @RestController
 @RequestMapping("/v1/userInfo")
 public class UserInfoController {
@@ -76,5 +81,14 @@ public class UserInfoController {
    @PostMapping("/listOpponent")
    public List<OpponentVo> listOpponent(@RequestBody ListVo listVo){
       return userInfoService.listOpponent(listVo.getList());
+   }
+
+
+   @ApiOperation(value = "查询个人信息", notes = "查询个人信息")
+   @GetMapping("/queryWeChatUserInfo")
+   @CrossOrigin
+   @CheckToken
+   public WeChatUserInfoVo queryWeChatUserInfo(){
+      return userInfoService.queryWeChatUserInfo();
    }
 }

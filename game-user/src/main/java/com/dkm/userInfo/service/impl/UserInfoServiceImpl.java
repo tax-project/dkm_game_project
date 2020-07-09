@@ -3,6 +3,7 @@ package com.dkm.userInfo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
@@ -10,13 +11,17 @@ import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
+import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
+import com.dkm.wechat.service.IWeChatService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Autowired
    private IdGenerator idGenerator;
+
+   @Autowired
+   private IWeChatService weChatService;
+
+   @Autowired
+   private LocalUser localUser;
 
    @Override
    public void insertUserInfo(Long userId) {
@@ -155,5 +166,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       }
 
       return baseMapper.listOpponent(list);
+   }
+
+   @Override
+   public WeChatUserInfoVo queryWeChatUserInfo() {
+      UserLoginQuery user = localUser.getUser();
+      UserInfoQueryBo bo = weChatService.queryUser(user.getId());
+
+      WeChatUserInfoVo result = new WeChatUserInfoVo();
+      BeanUtils.copyProperties(bo,result);
+      return result;
    }
 }
