@@ -12,11 +12,16 @@ import java.time.LocalDateTime;
 @ApiModel("被占领的信息")
 @Data
 public class OccupiedInfoVo {
-    @ApiModelProperty("占领的用户ID")
-    private Long userId;
-    @ApiModelProperty("占领的家族ID")
-    private Long userFamily;
+    @ApiModelProperty("占领的用户名称")
+    private Long userName;
+    @ApiModelProperty("占领的家族名称")
+    private Long userFamilyName;
     @ApiModelProperty("结束挖矿的时间")
     private LocalDateTime stopDate;
+    @ApiModelProperty("已获得的金币")
+    private Long goldSize;
+    @ApiModelProperty("已获得的积分")
+    private Long integralSize;
+
 
 }

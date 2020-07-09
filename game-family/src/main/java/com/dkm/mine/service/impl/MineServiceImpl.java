@@ -1,16 +1,15 @@
 package com.dkm.mine.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.mine.bean.FamilyAddition;
 import com.dkm.mine.bean.entity.MineBattleEntity;
 import com.dkm.mine.bean.entity.MineBattleItemEntity;
 import com.dkm.mine.bean.entity.MineBattleLevelEntity;
-import com.dkm.mine.bean.vo.BattleItemPropVo;
-import com.dkm.mine.bean.vo.MineItemVo;
-import com.dkm.mine.bean.vo.MineVo;
-import com.dkm.mine.bean.vo.OccupyResultVo;
+import com.dkm.mine.bean.vo.*;
 import com.dkm.mine.dao.FamilyAdditionMapper;
 import com.dkm.mine.dao.MineBattleItemMapper;
 import com.dkm.mine.dao.MineBattleLevelMapper;
@@ -18,6 +17,7 @@ import com.dkm.mine.dao.MineBattleMapper;
 import com.dkm.mine.rule.BattleItemRule;
 import com.dkm.mine.service.IMineService;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.ObjectUtils;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -43,6 +44,10 @@ public class MineServiceImpl implements IMineService {
     private BattleItemRule battleItemRule;
     @Resource
     private MineBattleLevelMapper mineBattleLevelMapper;
+    @Resource
+    private FamilyDao familyDao;
+    @Resource
+    private FamilyAdditionMapper mapper;
 
     @Override
     public MineVo getAllInfo(Long userId, Long familyId) {
@@ -59,12 +64,18 @@ public class MineServiceImpl implements IMineService {
     }
 
 
-    @Resource
-    private FamilyAdditionMapper mapper;
-
     @Override
     public List<FamilyAddition> getFamilyType() {
         return mapper.selectList(null);
+    }
+
+    @Override
+    public MineItemDetailVo detail(long battleId) {
+        val item = mineBattleItemMapper.selectById(battleId);
+        if (ObjectUtils.isNullOrEmpty(item)) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
+        }
+        return null;
     }
 
     @Override
@@ -72,18 +83,19 @@ public class MineServiceImpl implements IMineService {
         return null;
     }
 
+
     @Override
-    public List<BattleItemPropVo> getItemsLevelType() {
+    public List<BattleItemInfoVo> getItemsLevelType() {
         val entityList = mineBattleLevelMapper.selectList(null);
-        val result = new ArrayList<BattleItemPropVo>(entityList.size());
+        val result = new ArrayList<BattleItemInfoVo>(entityList.size());
         for (MineBattleLevelEntity levelEntity : entityList) {
-            BattleItemPropVo battleItemPropVo = new BattleItemPropVo();
-            battleItemPropVo.setNpcName(levelEntity.getNpcName());
-            battleItemPropVo.setNpcSkillLevel(levelEntity.getNpcLevel());
-            battleItemPropVo.setGoldYield(levelEntity.getGoldYield());
-            battleItemPropVo.setIntegralYield(levelEntity.getIntegralYield());
-            battleItemPropVo.setLevel(levelEntity.getLevel());
-            result.add(battleItemPropVo);
+            BattleItemInfoVo battleItemInfoVo = new BattleItemInfoVo();
+            battleItemInfoVo.setNpcName(levelEntity.getNpcName());
+            battleItemInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());
+            battleItemInfoVo.setGoldYield(levelEntity.getGoldYield());
+            battleItemInfoVo.setIntegralYield(levelEntity.getIntegralYield());
+            battleItemInfoVo.setLevel(levelEntity.getLevel());
+            result.add(battleItemInfoVo);
         }
         return result;
     }
@@ -119,11 +131,31 @@ public class MineServiceImpl implements IMineService {
         if (longs.size() > 3) {
             throw new IndexOutOfBoundsException("数据异常");
         }
-
         result.setTopLeftFamilyId(longs.get(0));
         result.setTopRightFamilyId(longs.get(1));
         result.setBottomRightFamilyId(longs.get(2));
+        ;
+        result.setTopLeftFamilyName(loadFamilyName(longs.get(0)));
+        result.setTopRightFamilyName(loadFamilyName(longs.get(1)));
+        result.setBottomRightFamilyName(loadFamilyName(longs.get(2)));
         return resultId;
+    }
+
+
+    /**
+     * 根据家族ID 来获取家族名称
+     *
+     * @param familyId
+     * @return
+     * @deprecated sql查询可优化
+     */
+    @Deprecated
+    private String loadFamilyName(Long familyId) {
+        if (familyId == 0) {
+            return "无";
+        } else {
+            return familyDao.selectNameByFamilyId(familyId);
+        }
     }
 
     /**
@@ -132,9 +164,9 @@ public class MineServiceImpl implements IMineService {
      */
     private MineBattleEntity getMineBattleEntity(Long familyId) {
         MineBattleEntity entity = mineBattleMapper.selectByFamilyId(familyId);
-        if (entity == null) {
+        if (Objects.isNull(entity)) {
             entity = mineBattleMapper.selectByEmpty();
-            if (entity == null) {
+            if (Objects.isNull(entity)) {
                 entity = battleItemRule.createBattle();
             }
             entity.setFirstFamilyId(chooseFamilyExists(entity.getFirstFamilyId()));
@@ -152,7 +184,7 @@ public class MineServiceImpl implements IMineService {
      */
     private long chooseFamilyExists(long firstFamilyId) {
         FamilyEntity familyEntity = familyDao.selectById(firstFamilyId);
-        if (familyEntity == null) {
+        if (Objects.isNull(familyEntity)) {
             return 0;
         } else {
             return firstFamilyId;
@@ -175,9 +207,6 @@ public class MineServiceImpl implements IMineService {
         mineBattleMapper.updateById(entity);
     }
 
-
-    @Resource
-    private FamilyDao familyDao;
 
     public Integer getFamilyLevel(Long familyId) {
         val familyEntity = familyDao.selectById(familyId);

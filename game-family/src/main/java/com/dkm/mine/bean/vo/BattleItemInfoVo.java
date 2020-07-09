@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @ApiModel("矿山的基本信息")
 @Data
-public class BattleItemPropVo {
+public class BattleItemInfoVo {
     @ApiModelProperty("矿山的等级")
     private int level;
     @ApiModelProperty("默认对手的名称")

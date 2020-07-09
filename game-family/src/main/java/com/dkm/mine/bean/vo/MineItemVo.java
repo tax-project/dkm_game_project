@@ -18,7 +18,7 @@ public class MineItemVo {
     private Integer level;
     @ApiModelProperty("是否处于被占领状态")
     private boolean occupied = false;
-    @ApiModelProperty("如果被占领那么占领者的信息")
+    @ApiModelProperty("如果被占领那么将显示占领者的信息")
     private OccupiedInfoVo occupiedInfo = null;
 
 }

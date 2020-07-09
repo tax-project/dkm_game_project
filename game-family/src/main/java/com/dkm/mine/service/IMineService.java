@@ -2,7 +2,8 @@ package com.dkm.mine.service;
 
 
 import com.dkm.mine.bean.FamilyAddition;
-import com.dkm.mine.bean.vo.BattleItemPropVo;
+import com.dkm.mine.bean.vo.BattleItemInfoVo;
+import com.dkm.mine.bean.vo.MineItemDetailVo;
 import com.dkm.mine.bean.vo.MineVo;
 import com.dkm.mine.bean.vo.OccupyResultVo;
 
@@ -27,7 +28,7 @@ public interface IMineService {
      *
      * @return 映射
      */
-    List<BattleItemPropVo> getItemsLevelType();
+    List<BattleItemInfoVo> getItemsLevelType();
 
     /**
      * 得到家族的等级对应的加成以及段位名称
@@ -37,10 +38,19 @@ public interface IMineService {
     List<FamilyAddition> getFamilyType();
 
     /**
-     * 占领一座矿区
+     * 占领一座矿山ID
      *
-     * @param battleId 矿区ID
+     * @param battleId 矿山ID
      * @return 占领的回执信息
      */
     OccupyResultVo occupy(long battleId);
+
+
+    /**
+     * 查看矿山的详情信息
+     *
+     * @param battleId 矿山ID
+     * @return 详情信息
+     */
+    MineItemDetailVo detail(long battleId);
 }

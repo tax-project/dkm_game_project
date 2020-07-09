@@ -9,7 +9,8 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.mine.bean.FamilyAddition;
 import com.dkm.mine.bean.other.User2FamilyId;
-import com.dkm.mine.bean.vo.BattleItemPropVo;
+import com.dkm.mine.bean.vo.BattleItemInfoVo;
+import com.dkm.mine.bean.vo.MineItemDetailVo;
 import com.dkm.mine.bean.vo.MineVo;
 import com.dkm.mine.bean.vo.OccupyResultVo;
 import com.dkm.mine.service.IMineService;
@@ -44,7 +45,7 @@ public class MineController {
     @ApiOperation("获取金矿的基础信息和等级相关的信息")
     @CrossOrigin
     @GetMapping("/getMineLevelType")
-    public List<BattleItemPropVo> getMineLevelType() {
+    public List<BattleItemInfoVo> getMineLevelType() {
         return service.getItemsLevelType();
     }
 
@@ -65,16 +66,28 @@ public class MineController {
         return service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
+    @ApiOperation("查看矿山详情")
+    @ApiImplicitParams(
+            @ApiImplicitParam(paramType = "path", name = "矿区的矿山 ID", required = true, dataType = "Long")
+    )
+    @CrossOrigin
+    @CheckToken
+    @GetMapping("/{battleId}/detail")
+    public MineItemDetailVo detail(@PathVariable long battleId) {
+        return service.detail(battleId);
+    }
+
     @ApiOperation("占领矿山")
     @ApiImplicitParams(
             @ApiImplicitParam(paramType = "path", name = "矿区的矿山 ID", required = true, dataType = "Long")
     )
     @CrossOrigin
     @CheckToken
-    @GetMapping("/{battleId}/occupy/now")
+    @GetMapping("/{battleId}/occupy")
     public OccupyResultVo occupy(@PathVariable long battleId) {
         return service.occupy(battleId);
     }
+
 
     private User2FamilyId getUser2FamilyId() {
         val userId = localUser.getUser().getId();
