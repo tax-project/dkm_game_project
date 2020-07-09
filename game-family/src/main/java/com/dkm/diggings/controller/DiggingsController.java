@@ -42,14 +42,14 @@ public class DiggingsController {
     private IDiggingsService service;
 
 
-    @ApiOperation("获取金矿的基础信息和等级相关的信息")
+    @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
     @CrossOrigin
     @GetMapping("/getMineLevelType")
     public List<MineInfoVo> getMineLevelType() {
         return service.getItemsLevelType();
     }
 
-    @ApiOperation("获取家族等级信息与金币加成")
+    @ApiOperation("获取家族等级信息与金币加成相关的信息 （静态的）")
     @CrossOrigin
     @GetMapping("/getFamilyType")
     public List<FamilyAddition> getFamilyType() {
@@ -60,35 +60,44 @@ public class DiggingsController {
     @ApiOperation("获取家族矿区的所有信息")
     @CrossOrigin
     @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @GetMapping("/getMineInfo")
     public DiggingsVo getAllInfo() {
         val user2FamilyId = getUser2FamilyId();
         return service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
-    @ApiOperation("查看矿山详情")
-    @ApiImplicitParams(
-            @ApiImplicitParam(paramType = "path", name = "矿区的矿山 ID", required = true, dataType = "Long")
-    )
+
+    @ApiOperation("查看矿山的详情信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "mineId", required = true, dataType = "Long", value = "矿山的 id"),
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    })
     @CrossOrigin
     @CheckToken
-    @GetMapping("/{battleId}/detail")
-    public MineDetailVo detail(@PathVariable long battleId) {
-        return service.detail(battleId);
+    @GetMapping("/{mineId}/detail")
+    public MineDetailVo detail(@PathVariable long mineId) {
+        return service.detail(mineId);
     }
 
     @ApiOperation("占领矿山")
-    @ApiImplicitParams(
-            @ApiImplicitParam(paramType = "path", name = "矿区的矿山 ID", required = true, dataType = "Long")
-    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "mineId", required = true, dataType = "Long", value = "矿山的 id"),
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    })
     @CrossOrigin
     @CheckToken
-    @GetMapping("/{battleId}/occupy")
-    public OccupyResultVo occupy(@PathVariable long battleId) {
-        return service.occupy(battleId);
+    @GetMapping(value = "/{mineId}/occupy")
+    public OccupyResultVo occupy(@PathVariable long mineId) {
+        return service.occupy(mineId);
     }
 
 
+    /**
+     * 根据 Token 来获取各种信息
+     *
+     * @return
+     */
     private User2FamilyId getUser2FamilyId() {
         val userId = localUser.getUser().getId();
         FamilyDetailEntity familyDetailEntity = familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>()

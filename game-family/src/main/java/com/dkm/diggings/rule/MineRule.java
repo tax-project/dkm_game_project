@@ -45,7 +45,7 @@ public class MineRule {
             for (Integer level : privateList) {
                 val mineBattleItemEntity = new MineEntity();
                 mineBattleItemEntity.setId(idGenerator.getNumberId());
-                mineBattleItemEntity.setLevel(level);
+                mineBattleItemEntity.setItemLevel(level);
                 mineBattleItemEntity.setBattleId(mineBattleEntityId);
                 mineBattleItemEntity.setBelongItem(i);
                 list.add(mineBattleItemEntity);
@@ -55,7 +55,7 @@ public class MineRule {
         for (int i = 0; i < 41; i++) {
             val mineBattleItemEntity = new MineEntity();
             mineBattleItemEntity.setId(idGenerator.getNumberId());
-            mineBattleItemEntity.setLevel(i%7 + 5);
+            mineBattleItemEntity.setItemLevel(i % 7 + 5);
             mineBattleItemEntity.setBattleId(mineBattleEntityId);
             mineBattleItemEntity.setBelongItem(0);
             list.add(mineBattleItemEntity);
