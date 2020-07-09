@@ -162,6 +162,7 @@ public class TbEquipmentKnapsackController {
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "物品数量"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "name",value = "物品名字"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "url",value = "物品图片地址"),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "boxType",value = "箱子类型 1为普通箱子 2为白银VIP箱子 3为黄金VIP箱子 4为白金vip 5为普通 6为精良 7为高级 8为稀有 9为超凡 10为史诗 11为远古 12为传奇"),
             @ApiImplicitParam(paramType = "query",dataType = "String",name = "tabUrl",value = "物品使用跳转地址"),
             @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "goodType",value = "物品类型"),
     })
@@ -177,7 +178,7 @@ public class TbEquipmentKnapsackController {
     @CheckToken
     public Map<String,Object> selectUserId(){
         Map<String,Object> map=new HashMap<>();
-        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
+        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserIdFour();
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodIdTwo();
         map.put("data",list);
         map.put("dataOne",listOne);

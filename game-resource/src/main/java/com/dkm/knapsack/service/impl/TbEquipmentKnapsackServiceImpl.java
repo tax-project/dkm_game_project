@@ -254,6 +254,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
     @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdFour() {
+        return tbEquipmentKnapsackMapper.selectUserIdThree(localUser.getUser().getId());
+    }
+
+    @Override
     public void addTbEquipmentKnapsackTwo(String equipmentId) {
         if(equipmentId=="" && equipmentId.equals("")){
             //如果失败将回滚
