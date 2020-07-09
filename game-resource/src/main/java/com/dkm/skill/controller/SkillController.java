@@ -1,5 +1,7 @@
 package com.dkm.skill.controller;
 
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.skill.entity.Skill;
 import com.dkm.skill.entity.UserSkill;
@@ -57,6 +59,9 @@ public class SkillController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> upgradeSkills(@RequestParam("id") Long id,@RequestParam("status") Integer status){
+        if(id==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
         return iSkillService.upgradeSkills(id,status);
     }
 

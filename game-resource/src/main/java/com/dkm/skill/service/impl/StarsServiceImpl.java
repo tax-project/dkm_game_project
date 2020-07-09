@@ -50,7 +50,6 @@ public class StarsServiceImpl extends ServiceImpl<StarsMapper, Stars> implements
    @Override
    public Stars queryCurrentConsumeByUserId(Long userId) {
       Stars stars = starsMapper.queryCurrentConsumeByUserId(userId);
-      System.out.println("数据===="+stars);
       return starsMapper.queryCurrentConsumeByUserId(userId);
    }
 
@@ -58,9 +57,7 @@ public class StarsServiceImpl extends ServiceImpl<StarsMapper, Stars> implements
    public int addUserVenusNum(Long userId) {
       Stars stars=new Stars();
       stars.setUserId(userId);
-
       stars.setSkCurrentConsume(0);
-
       int insert = baseMapper.insert(stars);
       return insert;
    }
@@ -69,7 +66,6 @@ public class StarsServiceImpl extends ServiceImpl<StarsMapper, Stars> implements
    public int updateUserVenusNum(Stars stars) {
       LambdaQueryWrapper<Stars> queryWrapper = new LambdaQueryWrapper<Stars>()
               .eq(Stars::getUserId, stars.getUserId());
-
       return baseMapper.update(stars,queryWrapper);
    }
 }
