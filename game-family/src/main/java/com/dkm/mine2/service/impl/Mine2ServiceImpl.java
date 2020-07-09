@@ -2,13 +2,11 @@ package com.dkm.mine2.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.family.dao.FamilyDao;
+import com.dkm.family.entity.FamilyEntity;
 import com.dkm.mine2.bean.entity.MineBattleEntity;
 import com.dkm.mine2.bean.entity.MineBattleItemEntity;
 import com.dkm.mine2.bean.entity.MineBattleLevelEntity;
-import com.dkm.mine2.bean.vo.BattleItemPropVo;
-import com.dkm.mine2.bean.vo.FamilyAdditionVo2Entity;
-import com.dkm.mine2.bean.vo.MineItemVo;
-import com.dkm.mine2.bean.vo.MineVo;
+import com.dkm.mine2.bean.vo.*;
 import com.dkm.mine2.dao.FamilyAdditionMapper;
 import com.dkm.mine2.dao.MineBattleItemMapper;
 import com.dkm.mine2.dao.MineBattleLevelMapper;
@@ -56,6 +54,7 @@ public class Mine2ServiceImpl implements IMine2Service {
         return result;
     }
 
+
     @Resource
     private FamilyAdditionMapper mapper;
 
@@ -65,12 +64,21 @@ public class Mine2ServiceImpl implements IMine2Service {
     }
 
     @Override
+    public OccupyResultVo occupy(long battleId) {
+        return null;
+    }
+
+    @Override
     public List<BattleItemPropVo> getItemsLevelType() {
         val entityList = mineBattleLevelMapper.selectList(null);
         val result = new ArrayList<BattleItemPropVo>(entityList.size());
         for (MineBattleLevelEntity levelEntity : entityList) {
             BattleItemPropVo battleItemPropVo = new BattleItemPropVo();
-            includeProp(levelEntity, battleItemPropVo);
+            battleItemPropVo.setNpcName(levelEntity.getNpcName());
+            battleItemPropVo.setNpcSkillLevel(levelEntity.getNpcLevel());
+            battleItemPropVo.setGoldYield(levelEntity.getGoldYield());
+            battleItemPropVo.setIntegralYield(levelEntity.getIntegralYield());
+            battleItemPropVo.setLevel(levelEntity.getLevel());
             result.add(battleItemPropVo);
         }
         return result;
@@ -79,26 +87,16 @@ public class Mine2ServiceImpl implements IMine2Service {
     private void includeMineItem(Long id, List<MineItemVo> publicItem, int i) {
         val itemEntities = mineBattleItemMapper.selectList(new QueryWrapper<MineBattleItemEntity>()
                 .lambda().eq(MineBattleItemEntity::getBattleId, id).eq(MineBattleItemEntity::getBelongItem, i));
-        for (int i1 = 0; i1 < itemEntities.size(); i1++) {
+        for (int j = 0; j < itemEntities.size(); j++) {
             MineItemVo item = new MineItemVo();
-            MineBattleItemEntity itemEntity = itemEntities.get(i1);
+            MineBattleItemEntity itemEntity = itemEntities.get(j);
             item.setId(itemEntity.getId());
-            item.setIndex(i1);
+            item.setIndex(j);
+            item.setLevel(itemEntity.getLevel());
             publicItem.add(item);
         }
     }
 
-    private void includeProp(MineBattleLevelEntity mineBattleLevelEntity, BattleItemPropVo battleItemPropVo) {
-        battleItemPropVo.setNpcName(mineBattleLevelEntity.getNpcName());
-        battleItemPropVo.setNpcSkillLevel(mineBattleLevelEntity.getNpcLevel());
-        battleItemPropVo.setGoldYield(mineBattleLevelEntity.getGoldYield());
-        battleItemPropVo.setIntegralYield(mineBattleLevelEntity.getIntegralYield());
-        battleItemPropVo.setLevel(mineBattleLevelEntity.getLevel());
-    }
-
-    /**
-     * 莫得联合查询
-     */
     private int entity2Vo(MineBattleEntity entity, MineVo result) {
         long[] arr = new long[4];
         int resultId = -1;
@@ -111,7 +109,7 @@ public class Mine2ServiceImpl implements IMine2Service {
             if (arr[i] != result.getFamilyId()) {
                 longs.add(arr[i]);
             } else {
-                resultId = i;
+                resultId = i + 1;
             }
         }
         if (longs.size() > 3) {
@@ -124,6 +122,10 @@ public class Mine2ServiceImpl implements IMine2Service {
         return resultId;
     }
 
+    /**
+     * 得到金矿，如果家族不位于任何金矿时将自动添加，
+     * 如果金矿不存在则将自动创建一个新的金矿
+     */
     private MineBattleEntity getMineBattleEntity(Long familyId) {
         MineBattleEntity entity = mineBattleMapper.selectByFamilyId(familyId);
         if (entity == null) {
@@ -131,12 +133,31 @@ public class Mine2ServiceImpl implements IMine2Service {
             if (entity == null) {
                 entity = battleItemRule.createBattle();
             }
+            entity.setFirstFamilyId(chooseFamilyExists(entity.getFirstFamilyId()));
+            entity.setSecondFamilyId(chooseFamilyExists(entity.getSecondFamilyId()));
+            entity.setThirdFamilyId(chooseFamilyExists(entity.getThirdFamilyId()));
+            entity.setFourthFamilyId(chooseFamilyExists(entity.getFourthFamilyId()));
             putFamilyToBattle(entity, familyId);
             //战场不存在，需要生成
         }
         return entity;
     }
 
+    /**
+     * 判断家族是否存在，不存在返回 0
+     */
+    private long chooseFamilyExists(long firstFamilyId) {
+        FamilyEntity familyEntity = familyDao.selectById(firstFamilyId);
+        if (familyEntity == null) {
+            return 0;
+        } else {
+            return firstFamilyId;
+        }
+    }
+
+    /**
+     * 将一个新家族添加到矿区
+     */
     private void putFamilyToBattle(MineBattleEntity entity, Long familyId) {
         if (entity.getFirstFamilyId() == 0) {
             entity.setFirstFamilyId(familyId);

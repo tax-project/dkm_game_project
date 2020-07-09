@@ -7,14 +7,12 @@ import com.dkm.mine2.dao.MineBattleMapper;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * 矿场的生成规则
@@ -41,7 +39,7 @@ public class BattleItemRule {
         mineBattleEntity.setId(mineBattleEntityId);
         mineBattleMapper.insert(mineBattleEntity);
         //开始生成私有的
-
+        val list = new ArrayList<MineBattleItemEntity>(30);
         for (int i = 1; i < 5; i++) {
             val privateList = Arrays.asList(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4);
             for (Integer level : privateList) {
@@ -50,7 +48,7 @@ public class BattleItemRule {
                 mineBattleItemEntity.setLevel(level);
                 mineBattleItemEntity.setBattleId(mineBattleEntityId);
                 mineBattleItemEntity.setBelongItem(i);
-                mineBattleItemMapper.insert(mineBattleItemEntity);
+                list.add(mineBattleItemEntity);
             }
         }
         //开始生成公开的
@@ -60,8 +58,9 @@ public class BattleItemRule {
             mineBattleItemEntity.setLevel(i%7 + 5);
             mineBattleItemEntity.setBattleId(mineBattleEntityId);
             mineBattleItemEntity.setBelongItem(0);
-            mineBattleItemMapper.insert(mineBattleItemEntity);
+            list.add(mineBattleItemEntity);
         }
+        mineBattleItemMapper.insertAll(list);
         return mineBattleEntity;
     }
 }
