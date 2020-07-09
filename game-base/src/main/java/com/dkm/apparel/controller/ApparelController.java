@@ -36,7 +36,7 @@ public class ApparelController {
     @CrossOrigin
     @GetMapping("/getAll")
     @CheckToken
-    public List<ApparelEntity> getAll(Integer type) {
+    public List<ApparelEntity> getAll(@RequestParam("type") Integer type) {
         return apparelService.getAllApparels(type, localUser.getUser().getId());
     }
 
@@ -45,7 +45,7 @@ public class ApparelController {
     @CrossOrigin
     @GetMapping("/getHave")
     @CheckToken
-    public List<ApparelEntity> getHave(Integer type) {
+    public List<ApparelEntity> getHave(@RequestParam("type")Integer type) {
         return apparelService.getUserApparel(localUser.getUser().getId(), type);
     }
 
@@ -87,7 +87,7 @@ public class ApparelController {
     @CrossOrigin
     @GetMapping("/equipApparel")
     @CheckToken
-    public void equipApparel(Long apparelId, Integer type) {
+    public void equipApparel(@RequestParam("apparelId")Long apparelId,@RequestParam("type") Integer type) {
         apparelService.equipApparel(localUser.getUser().getId(), apparelId, type);
     }
 

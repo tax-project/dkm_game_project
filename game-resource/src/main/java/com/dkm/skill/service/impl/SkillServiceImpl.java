@@ -16,11 +16,13 @@ import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
+import com.dkm.skill.entity.Stars;
 import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.SkillUserSkillVo;
 import com.dkm.skill.entity.vo.SkillVo;
 import com.dkm.skill.entity.vo.UserSkillVo;
 import com.dkm.skill.service.ISkillService;
+import com.dkm.skill.service.IStarsService;
 import com.dkm.skill.service.IUserSkillService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Autowired
    private UserFeignClient userFeignClient;
 
+   @Autowired
+   private IStarsService iStarsService;
+
    @Override
    public int initSkill(Long userId) {
 
@@ -88,13 +93,15 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userSkill.setSkAddPrestige(100);
             userSkill.setSkDegreeProficiency(0);
             userSkill.setSkAllConsume(1);
-            userSkill.setSkCurrentConsume(0);
             list.add(userSkill);
          }
 
          init = iUserSkillService.addUserSkill(list);
 
+         //初始用户拥有的金星星
+         iStarsService.addUserVenusNum(userId);
       }
+
       return init;
    }
 
@@ -105,6 +112,44 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       UserLoginQuery user = localUser.getUser();
 
+      LambdaQueryWrapper<Skill> queryWrapper = new LambdaQueryWrapper<>();
+
+      List<Skill> landSeedList = baseMapper.selectList(queryWrapper);
+
+      List<UserSkill> list=new ArrayList<>();
+
+      /**
+       * 根据用户id查询所有技能
+       * 如果没有则初始化
+       */
+      int init=0;
+      List<SkillUserSkillVo> skillUserSkillVos = baseMapper.queryAllSkillByUserId(user.getId());
+      if(skillUserSkillVos.size()==0){
+         log.info("无数据");
+
+         for (int i = 0; i < landSeedList.size(); i++) {
+            UserSkill userSkill=new UserSkill();
+            userSkill.setId(idGenerator.getNumberId());
+            userSkill.setUserId(user.getId());
+            userSkill.setSkId(landSeedList.get(i).getId());
+            userSkill.setSkGrade(1);
+            userSkill.setSkCurrentSuccessRate(100);
+            userSkill.setSkAddPrestige(100);
+            userSkill.setSkDegreeProficiency(0);
+            userSkill.setSkAllConsume(1);
+            list.add(userSkill);
+         }
+
+         init = iUserSkillService.addUserSkill(list);
+
+         //初始用户拥有的金星星
+         int i = iStarsService.addUserVenusNum(user.getId());
+         if(i<=0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"初始化用户金星星数量失败");
+         }
+      }
+
+
 
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
 
@@ -112,6 +157,17 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
        * 根据用户id查询所有技能
        */
       List<SkillUserSkillVo> skillUserSkillVo = baseMapper.queryAllSkillByUserId(user.getId());
+
+
+
+      /**
+       * 查询自己当前拥有金星星的数量
+       */
+      Stars stars = iStarsService.queryCurrentConsumeByUserId(user.getId());
+      System.out.println(user.getId());
+      System.out.println(stars);
+      //金星星数量
+      map.put("VenusNum",stars.getSkCurrentConsume());
 
       map.put("skillUserSkillVo",skillUserSkillVo);
       map.put("gold",10000);
@@ -141,12 +197,19 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       UserSkill userSkill = iUserSkillService.querySkillById(id);
 
 
-      if(userSkill.getSkCurrentConsume()<userSkill.getSkAllConsume()){
+      System.out.println(localUser.getUser().getId());
+
+      Stars stars = iStarsService.queryCurrentConsumeByUserId(localUser.getUser().getId());
+
+      if(stars.getSkCurrentConsume()<userSkill.getSkAllConsume()){
          throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
       }
 
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
-
+      if(userInfoQueryBoResult.getCode()!=0){
+         log.info("用户模块崩了");
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
 
       //生成1-100的随机数
       int random = (int) (Math.random() * 100) + 1;
@@ -192,7 +255,6 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       //另外加百分之20成功率
       if(status==2 && userSkill.getSkCurrentSuccessRate()<100){
-         System.out.println("钻石");
          if(userInfoQueryBoResult.getData().getUserInfoDiamonds()<20){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"钻石不足");
          }
@@ -237,6 +299,8 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    public Integer operation(Long id,Integer status,UserSkill userSkill){
 
+      Stars stars = iStarsService.queryCurrentConsumeByUserId(localUser.getUser().getId());
+
       UserInfoSkillBo bo=new UserInfoSkillBo();
       //增加声望
       bo.setPrestige(userSkill.getSkAddPrestige());
@@ -271,15 +335,15 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       userSkill.setSkGrade(userSkill.getSkGrade()+1);
 
       if (userSkill.getSkGrade() >= 2 && userSkill.getSkGrade() < 10) {
-         userSkill.setSkCurrentSuccessRate(80);
+         userSkill.setSkCurrentSuccessRate(65);
       } else if (userSkill.getSkGrade() >= 10 && userSkill.getSkGrade() < 20) {
-         userSkill.setSkCurrentSuccessRate(60);
+         userSkill.setSkCurrentSuccessRate(45);
          userSkill.setSkAllConsume(6);
       } else if (userSkill.getSkGrade() >= 20 && userSkill.getSkGrade() < 30) {
-         userSkill.setSkCurrentSuccessRate(40);
+         userSkill.setSkCurrentSuccessRate(22);
          userSkill.setSkAllConsume(8);
       } else if (userSkill.getSkGrade() >= 30 && userSkill.getSkGrade() < 40) {
-         userSkill.setSkCurrentSuccessRate(20);
+         userSkill.setSkCurrentSuccessRate(15);
          userSkill.setSkAllConsume(12);
       } else {
          userSkill.setSkCurrentSuccessRate(10);
@@ -287,7 +351,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       }
 
 
-      userSkill.setSkCurrentConsume(userSkill.getSkCurrentConsume()-userSkill.getSkAllConsume());
+      //升级成功 当前用户拥有的数量 减去 需要消耗的一个数量
+      stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
+      //修改用户拥有金星星的数量
+      iStarsService.updateUserVenusNum(stars);
 
       //熟练度加7
       userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+7);

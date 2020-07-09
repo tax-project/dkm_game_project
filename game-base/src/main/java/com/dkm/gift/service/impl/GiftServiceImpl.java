@@ -54,50 +54,62 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public List<GiftEntity> getAllGift(Integer type) {
-        return giftDao.selectList(new QueryWrapper<GiftEntity>().lambda().eq(GiftEntity::getGiType,type));
+        return giftDao.selectList(new QueryWrapper<GiftEntity>().lambda().eq(GiftEntity::getGiType, type));
     }
 
     @Override
     public void sendGift(SendGiftVo sendGiftVo) {
         //更新送礼人和收礼人信息
         UserInfoDto userInfo = giftDao.getUserInfo(sendGiftVo.getSendId());
-        if(sendGiftVo.getGold()>0&&userInfo.getUserInfoGold()<sendGiftVo.getGold()){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"金币不足");
+        if (sendGiftVo.getGold() > 0 && userInfo.getUserInfoGold() < sendGiftVo.getGold()) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "金币不足");
         }
-        if(sendGiftVo.getDiamond()>0&&userInfo.getUserInfoDiamonds()<sendGiftVo.getDiamond()){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"钻石不足");
+        if (sendGiftVo.getDiamond() > 0 && userInfo.getUserInfoDiamonds() < sendGiftVo.getDiamond()) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "钻石不足");
         }
         //更新送礼人钻石、金币
         Integer integer = giftDao.updateUserInfo(sendGiftVo);
         //更新收，礼人魅力等值
         Integer integer1 = giftDao.updateUserCharm(sendGiftVo);
-        if(integer<1||integer1<1){
-            throw  new ApplicationException(CodeType.DATABASE_ERROR,"更新信息失败");
+        if (integer < 1 || integer1 < 1) {
+            throw new ApplicationException(CodeType.DATABASE_ERROR, "更新信息失败");
         }
-        //查询礼物勋章信息
-        MedalEntity medalEntity = medalDao.selectOne(new QueryWrapper<MedalEntity>().lambda().eq(MedalEntity::getGiId, sendGiftVo.getGiftId()));
         //更新送礼排行表
-        List<GiftRankingEntity> giftRankingEntities = giftRankingDao.list(new LambdaQueryWrapper<GiftRankingEntity>().in(GiftRankingEntity::getUserId,Stream.of(sendGiftVo.getSendId(),sendGiftVo.getReceiveId()).collect(Collectors.toList())));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getSendId())))giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(),sendGiftVo.getSendId(),0,0,0,0));
-        if(giftRankingEntities.stream().noneMatch(a-> a.getUserId().equals(sendGiftVo.getReceiveId())))giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(),sendGiftVo.getReceiveId(),0,0,0,0));
+        List<GiftRankingEntity> giftRankingEntities = giftRankingDao.list(new LambdaQueryWrapper<GiftRankingEntity>()
+                .in(GiftRankingEntity::getUserId, Stream.of(sendGiftVo.getSendId(), sendGiftVo.getReceiveId()).collect(Collectors.toList())));
+        //是否有送礼人记录 没有就添加
+        if (giftRankingEntities.stream().noneMatch(a -> a.getUserId().equals(sendGiftVo.getSendId()))) {
+            giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(), sendGiftVo.getSendId(), 0, 0, 0, 0));
+        }
+        //是否有收礼人记录 没有就添加
+        if (giftRankingEntities.stream().noneMatch(a -> a.getUserId().equals(sendGiftVo.getReceiveId()))) {
+            giftRankingEntities.add(new GiftRankingEntity(idGenerator.getNumberId(), sendGiftVo.getReceiveId(), 0, 0, 0, 0));
+        }
+        //送蓝色妖姬需要记录勋章
         boolean equals = "蓝色妖姬".equals(sendGiftVo.getGiftName());
-        giftRankingEntities.forEach(a->{
-            if(a.getUserId().equals(sendGiftVo.getSendId())){
+        giftRankingEntities.forEach(a -> {
+            if (a.getUserId().equals(sendGiftVo.getSendId())) {
+                //更新送礼人数量
                 a.setSend(sendGiftVo.getCharm());
-                if(equals)a.setSendFlower(sendGiftVo.getGiftNumber());
+                if (equals) {a.setSendFlower(sendGiftVo.getGiftNumber());}
             } else {
+                //更新收礼人数量
                 a.setAccept(sendGiftVo.getCharm());
-                if(equals)a.setAcceptFlower(sendGiftVo.getGiftNumber());
+                if (equals) {a.setAcceptFlower(sendGiftVo.getGiftNumber());}
             }
         });
         giftRankingDao.updateBatchById(giftRankingEntities);
-        //礼物有勋章
-        if(medalEntity!=null){
+        //查询礼物勋章信息
+        MedalEntity medalEntity = medalDao.selectOne(new QueryWrapper<MedalEntity>().lambda()
+                .eq(MedalEntity::getGiId, sendGiftVo.getGiftId()));
+        //礼物有勋章表
+        if (medalEntity != null) {
             //是否有送礼记录
             MedalUserEntity medalUserEntity = medalUserDao.getOne(new QueryWrapper<MedalUserEntity>().lambda()
                     .eq(MedalUserEntity::getUserId, sendGiftVo.getSendId())
                     .eq(MedalUserEntity::getMedalId, medalEntity.getMedalId()));
-            if(medalUserEntity==null){
+            if (medalUserEntity == null) {
+                //没有勋章记录
                 medalUserEntity = new MedalUserEntity();
                 medalUserEntity.setMedalId(medalEntity.getMedalId());
                 medalUserEntity.setUserId(sendGiftVo.getSendId());
@@ -107,35 +119,38 @@ public class GiftServiceImpl implements GiftService {
                 medalUserEntity.setMedalReceiveCount(0);
             }
             //礼物勋章类型0礼物1幸运
-            if(medalEntity.getMedalType()==0){
-                medalUserEntity.setProcess(medalUserEntity.getProcess()+sendGiftVo.getGiftNumber());
-            }else if(medalEntity.getMedalType()==1){
-                medalUserEntity.setProcess(medalUserEntity.getProcess()+sendGiftVo.getDiamond());
+            if (medalEntity.getMedalType() == 0) {
+                medalUserEntity.setProcess(medalUserEntity.getProcess() + sendGiftVo.getGiftNumber());
+            } else if (medalEntity.getMedalType() == 1) {
+                medalUserEntity.setProcess(medalUserEntity.getProcess() + sendGiftVo.getDiamond());
             }
-            //判断当前级别
-            medalUserEntity.setMedalLevel(medalUserEntity.getProcess()>=medalEntity.getMedalProcess3()?3:
-                                        (medalUserEntity.getProcess()>=medalEntity.getMedalProcess2()?2:
-                                        (medalUserEntity.getProcess()>=medalEntity.getMedalProcess1()?1:0)));
+            //判断当前级别并更新
+            medalUserEntity.setMedalLevel(medalUserEntity.getProcess() >= medalEntity.getMedalProcess3() ? 3 :
+                    (medalUserEntity.getProcess() >= medalEntity.getMedalProcess2() ? 2 :
+                            (medalUserEntity.getProcess() >= medalEntity.getMedalProcess1() ? 1 : 0)));
             medalUserDao.saveOrUpdate(medalUserEntity);
         }
     }
 
     @Override
     public List<GiftRankingDto> getGiftRanking(Integer type) {
-        List<GiftRankingDto> send =null;
-        if(type==1){
-            send= giftRankingDao.getGiftRankingSend();
-        }else{
-            send= giftRankingDao.getGiftRankingAccept();
+        List<GiftRankingDto> send = null;
+        if (type == 1) {
+            //送礼排行
+            send = giftRankingDao.getGiftRankingSend();
+        } else {
+            //收礼排行
+            send = giftRankingDao.getGiftRankingAccept();
         }
+        //根据排名设置加成
         for (int i = 0; i < send.size(); i++) {
-            if(i==0){
+            if (i == 0) {
                 send.get(i).setMedal(2000);
                 send.get(i).setRenown(15);
-            }else if((i+1)%5==0){
+            } else if ((i + 1) % 5 == 0) {
                 send.get(i).setMedal(1200);
                 send.get(i).setRenown(10);
-            }else {
+            } else {
                 send.get(i).setMedal(600);
                 send.get(i).setRenown(7);
             }
@@ -145,18 +160,21 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public List<GiftRankingDto> getGiftFlower(Integer type) {
-        List<GiftRankingDto> send =null;
-        if(type==1){
-            send= giftRankingDao.getGiftRankingSendFlower();
-        }else{
-            send= giftRankingDao.getGiftRankingAcceptFlower();
+        List<GiftRankingDto> send = null;
+        if (type == 1) {
+            //送出蓝色妖姬排行
+            send = giftRankingDao.getGiftRankingSendFlower();
+        } else {
+            //收到蓝色妖姬排行
+            send = giftRankingDao.getGiftRankingAcceptFlower();
         }
+        //根据排名设置加成
         for (int i = 0; i < send.size(); i++) {
-            if(i==0){
+            if (i == 0) {
                 send.get(i).setRenown(15);
-            }else if((i+1)%5==0){
+            } else if ((i + 1) % 5 == 0) {
                 send.get(i).setRenown(10);
-            }else {
+            } else {
                 send.get(i).setRenown(7);
             }
         }
@@ -165,12 +183,15 @@ public class GiftServiceImpl implements GiftService {
 
     @Override
     public UserCenterGiftVo getUserCenterGift(Long userId) {
+        //查询送礼记录
         GiftRankingEntity one = giftRankingDao.selectOne(userId);
         UserCenterGiftVo userCenterGiftVo = new UserCenterGiftVo();
-        if(one==null){
+        if (one == null) {
+            //没送过或收过都为0
             userCenterGiftVo.setAccept(0);
             userCenterGiftVo.setSend(0);
-        }else {
+        } else {
+            //设置送礼收礼值
             userCenterGiftVo.setSend(one.getSend());
             userCenterGiftVo.setAccept(one.getAccept());
         }

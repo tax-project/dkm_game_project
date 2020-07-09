@@ -178,7 +178,7 @@ public class TbEquipmentKnapsackController {
     @CheckToken
     public Map<String,Object> selectUserId(){
         Map<String,Object> map=new HashMap<>();
-        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserId();
+        List<TbEquipmentKnapsackVo> list=tbEquipmentKnapsackService.selectUserIdFour();
         List<TbEquipmentKnapsackVo> listOne=tbEquipmentKnapsackService.selectFoodIdTwo();
         map.put("data",list);
         map.put("dataOne",listOne);

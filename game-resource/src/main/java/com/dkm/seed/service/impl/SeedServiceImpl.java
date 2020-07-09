@@ -276,9 +276,7 @@ public class SeedServiceImpl implements ISeedService {
             UserLoginQuery user = localUser.getUser();
 
             User user1 = attendantMapper.queryUserReputationGold(user.getId());
-            if (user1.getUserInfoGold() < seedPlantVo.getSeedGold()) {
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
-            }
+
 
             //根据用户查询解锁的土地
             List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
@@ -290,6 +288,10 @@ public class SeedServiceImpl implements ISeedService {
             Integer gold = seedPlantVo.getSeedGold() * userLandUnlocks.size();
             increaseUserInfoBO.setUserId(user.getId());
             increaseUserInfoBO.setUserInfoGold(gold);
+
+            if (user1.getUserInfoGold() < gold) {
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            }
 
             //减少金币
             Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
