@@ -62,6 +62,7 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId,userId))!=null){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"请先退出当前家族");
         }
+        //新建家族基本信息
         LocalDateTime now = LocalDateTime.now();
         family.setFamilyCreateTime(now);
         family.setFamilyId(idGenerator.getNumberId());
@@ -77,14 +78,17 @@ public class FamilyServiceImpl implements FamilyService {
         //工会
         UnionEntity unionEntity = unionMapper.selectOne(new LambdaQueryWrapper<UnionEntity>().eq(UnionEntity::getUserId, userId));
         if(unionEntity==null){
+            //没有工会新建
             unionEntity = new UnionEntity();
             unionEntity.setCreateTime(now);
             unionEntity.setUnionId(idGenerator.getNumberId());
             unionEntity.setUserId(userId);
+            //工会名字是新建家族名字
             unionEntity.setUnionName(family.getFamilyName());
             if(unionMapper.insert(unionEntity)<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"关联工会失败");
         }
         family.setUnionId(unionEntity.getUnionId());
+        //更新进数据库
         int insertFamily = familyDao.insert(family);
         int insertFamilyDetailEntity = familyDetailDao.insert(familyDetailEntity);
         if(insertFamily<1||insertFamilyDetailEntity<1){
@@ -98,12 +102,15 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity==null){
             throw  new ApplicationException(CodeType.RESOURCES_NOT_FIND,"您当前还未加入任何家族");
         }
-        Map<String,Object> map = new HashMap<>(2);
+        Map<String,Object> map = new HashMap<>();
         //获取用户信息
         List<FamilyUsersVo> familyUsersVos = familyDetailDao.selectFamilyUser(familyDetailEntity.getFamilyId());
         FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
+        //家族基本信息
         map.put("family",familyEntity);
+        //是否管理员
         map.put("isAdmin",familyDetailEntity.getIsAdmin());
+        //用户信息
         map.put("user",familyUsersVos);
         return map;
     }
@@ -116,7 +123,9 @@ public class FamilyServiceImpl implements FamilyService {
         Map<String,Object> map = new HashMap<>(2);
         //获取用户信息
         List<FamilyUsersVo> familyUsersVos = familyDetailDao.selectFamilyUser(familyEntity1.getFamilyId());
+        //家族基本信息
         map.put("family",familyEntity1);
+        //用户信息
         map.put("user",familyUsersVos);
         return map;
     }
@@ -145,6 +154,7 @@ public class FamilyServiceImpl implements FamilyService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"你不是该家族成员");
         }
         if(familyDetailEntity.getIsAdmin()==2){
+            //是族长则删除家族所有信息
             int i = familyDao.deleteById(familyDetailEntity.getFamilyId());
             int delete = familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyDetailEntity.getFamilyId()));
             if(i<1||delete<1){
@@ -155,6 +165,7 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId, userId))<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"退出家族失败");
         }
+        //更新家族人数数量
         FamilyEntity familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, familyDetailEntity.getFamilyId()));
         familyEntity.setFamilyUserNumber(familyEntity.getFamilyUserNumber()-1);
         familyDao.updateById(familyEntity);
