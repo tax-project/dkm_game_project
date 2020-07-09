@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author OpenE
  */
-public interface IMineService {
+public interface IDiggingsService {
     /**
      * 得到矿区的所有信息
      *

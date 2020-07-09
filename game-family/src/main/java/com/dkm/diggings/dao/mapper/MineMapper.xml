@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dkm.diggings.dao.MineBattleItemMapper">
+<mapper namespace="com.dkm.diggings.dao.MineMapper">
     <insert id="insertAll">
         INSERT INTO
         tb_mine_battle_item(id, battle_id, belong_item, user_id, family_id, item_level)

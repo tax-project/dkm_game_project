@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @TableName("tb_mine_battle")
-public class MineBattleEntity {
+public class DiggingsEntity {
     @TableId
     private long id;
     private long firstFamilyId;

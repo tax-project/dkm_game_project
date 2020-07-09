@@ -3,16 +3,16 @@ package com.dkm.diggings.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.FamilyAddition;
-import com.dkm.diggings.bean.entity.MineBattleEntity;
-import com.dkm.diggings.bean.entity.MineBattleItemEntity;
-import com.dkm.diggings.bean.entity.MineBattleLevelEntity;
+import com.dkm.diggings.bean.entity.DiggingsEntity;
+import com.dkm.diggings.bean.entity.MineEntity;
+import com.dkm.diggings.bean.entity.MineLevelEntity;
 import com.dkm.diggings.bean.vo.*;
+import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.FamilyAdditionMapper;
-import com.dkm.diggings.dao.MineBattleItemMapper;
-import com.dkm.diggings.dao.MineBattleLevelMapper;
-import com.dkm.diggings.dao.MineBattleMapper;
-import com.dkm.diggings.rule.BattleItemRule;
-import com.dkm.diggings.service.IMineService;
+import com.dkm.diggings.dao.MineLevelMapper;
+import com.dkm.diggings.dao.MineMapper;
+import com.dkm.diggings.rule.MineRule;
+import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
@@ -33,17 +33,17 @@ import java.util.Objects;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class MineServiceImpl implements IMineService {
+public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
     private IdGenerator idGenerator;
     @Resource
-    private MineBattleMapper mineBattleMapper;
+    private DiggingsMapper diggingsMapper;
     @Resource
-    private MineBattleItemMapper mineBattleItemMapper;
+    private MineMapper mineMapper;
     @Resource
-    private BattleItemRule battleItemRule;
+    private MineRule mineRule;
     @Resource
-    private MineBattleLevelMapper mineBattleLevelMapper;
+    private MineLevelMapper mineLevelMapper;
     @Resource
     private FamilyDao familyDao;
     @Resource
@@ -51,7 +51,7 @@ public class MineServiceImpl implements IMineService {
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
-        MineBattleEntity entity = getMineBattleEntity(familyId);
+        DiggingsEntity entity = getMineBattleEntity(familyId);
         val result = new DiggingsVo();
         result.setFamilyId(familyId);
         result.setFamilyName(loadFamilyName(familyId));
@@ -72,7 +72,7 @@ public class MineServiceImpl implements IMineService {
 
     @Override
     public MineDetailVo detail(long battleId) {
-        val item = mineBattleItemMapper.selectById(battleId);
+        val item = mineMapper.selectById(battleId);
         if (ObjectUtils.isNullOrEmpty(item)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
@@ -87,9 +87,9 @@ public class MineServiceImpl implements IMineService {
 
     @Override
     public List<MineInfoVo> getItemsLevelType() {
-        val entityList = mineBattleLevelMapper.selectList(null);
+        val entityList = mineLevelMapper.selectList(null);
         val result = new ArrayList<MineInfoVo>(entityList.size());
-        for (MineBattleLevelEntity levelEntity : entityList) {
+        for (MineLevelEntity levelEntity : entityList) {
             MineInfoVo mineInfoVo = new MineInfoVo();
             mineInfoVo.setNpcName(levelEntity.getNpcName());
             mineInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());
@@ -102,11 +102,11 @@ public class MineServiceImpl implements IMineService {
     }
 
     private void includeMineItem(Long id, List<MineVo> publicItem, int i) {
-        val itemEntities = mineBattleItemMapper.selectList(new QueryWrapper<MineBattleItemEntity>()
-                .lambda().eq(MineBattleItemEntity::getBattleId, id).eq(MineBattleItemEntity::getBelongItem, i));
+        val itemEntities = mineMapper.selectList(new QueryWrapper<MineEntity>()
+                .lambda().eq(MineEntity::getBattleId, id).eq(MineEntity::getBelongItem, i));
         for (int j = 0; j < itemEntities.size(); j++) {
             MineVo item = new MineVo();
-            MineBattleItemEntity itemEntity = itemEntities.get(j);
+            MineEntity itemEntity = itemEntities.get(j);
             item.setId(itemEntity.getId());
             item.setIndex(j);
             item.setLevel(itemEntity.getLevel());
@@ -114,7 +114,7 @@ public class MineServiceImpl implements IMineService {
         }
     }
 
-    private int entity2Vo(MineBattleEntity entity, DiggingsVo result) {
+    private int entity2Vo(DiggingsEntity entity, DiggingsVo result) {
         long[] arr = new long[4];
         int resultId = -1;
         val longs = new ArrayList<Long>();
@@ -159,12 +159,12 @@ public class MineServiceImpl implements IMineService {
      * 得到金矿，如果家族不位于任何金矿时将自动添加，
      * 如果金矿不存在则将自动创建一个新的金矿
      */
-    private MineBattleEntity getMineBattleEntity(Long familyId) {
-        MineBattleEntity entity = mineBattleMapper.selectByFamilyId(familyId);
+    private DiggingsEntity getMineBattleEntity(Long familyId) {
+        DiggingsEntity entity = diggingsMapper.selectByFamilyId(familyId);
         if (Objects.isNull(entity)) {
-            entity = mineBattleMapper.selectByEmpty();
+            entity = diggingsMapper.selectByEmpty();
             if (Objects.isNull(entity)) {
-                entity = battleItemRule.createBattle();
+                entity = mineRule.createNewBattle();
             }
             entity.setFirstFamilyId(chooseFamilyExists(entity.getFirstFamilyId()));
             entity.setSecondFamilyId(chooseFamilyExists(entity.getSecondFamilyId()));
@@ -192,7 +192,7 @@ public class MineServiceImpl implements IMineService {
      * 将一个新家族添加到矿区
      */
 
-    private void putFamilyToBattle(MineBattleEntity entity, Long familyId) {
+    private void putFamilyToBattle(DiggingsEntity entity, Long familyId) {
         if (entity.getFirstFamilyId() == 0) {
             entity.setFirstFamilyId(familyId);
         } else if (entity.getSecondFamilyId() == 0) {
@@ -202,7 +202,7 @@ public class MineServiceImpl implements IMineService {
         } else if (entity.getFourthFamilyId() == 0) {
             entity.setFourthFamilyId(familyId);
         }
-        mineBattleMapper.updateById(entity);
+        diggingsMapper.updateById(entity);
     }
 
 

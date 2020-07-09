@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @TableName("tb_mine_battle_level")
-public class MineBattleLevelEntity {
+public class MineLevelEntity {
 
     @TableId
     private Integer level;

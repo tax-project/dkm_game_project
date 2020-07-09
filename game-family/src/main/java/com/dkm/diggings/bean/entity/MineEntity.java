@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @TableName("tb_mine_battle_item")
-public class MineBattleItemEntity {
+public class MineEntity {
     /**
      * ID
      */

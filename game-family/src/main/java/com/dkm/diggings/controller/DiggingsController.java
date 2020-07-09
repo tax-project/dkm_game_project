@@ -8,7 +8,7 @@ import com.dkm.diggings.bean.vo.DiggingsVo;
 import com.dkm.diggings.bean.vo.MineDetailVo;
 import com.dkm.diggings.bean.vo.MineInfoVo;
 import com.dkm.diggings.bean.vo.OccupyResultVo;
-import com.dkm.diggings.service.IMineService;
+import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
@@ -28,8 +28,8 @@ import java.util.List;
 /**
  * @author fkl
  */
-@Api(tags = "新的家族矿区 API")
-@RequestMapping("/mine/")
+@Api(tags = "家族矿区 API")
+@RequestMapping("/diggings/")
 @RestController
 public class DiggingsController {
 
@@ -39,7 +39,7 @@ public class DiggingsController {
     private FamilyDetailDao familyDetailDao;
 
     @Resource
-    private IMineService service;
+    private IDiggingsService service;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息")
