@@ -1,7 +1,6 @@
 package com.dkm.diggings.bean.entity;
 
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -36,6 +35,5 @@ public class MineEntity {
     /**
      * 矿区等级
      */
-    @TableField("item_level")
-    private int level;
+    private int itemLevel;
 }

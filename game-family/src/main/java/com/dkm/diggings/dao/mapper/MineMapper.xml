@@ -14,7 +14,7 @@
             #{item.belongItem},
             #{item.userId},
             #{item.familyId},
-            #{item.level}
+            #{item.itemLevel}
             )
         </foreach>
     </insert>

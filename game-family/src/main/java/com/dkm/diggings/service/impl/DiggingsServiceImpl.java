@@ -76,7 +76,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
         if (ObjectUtils.isNullOrEmpty(item)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
-        return null;
+        val result = new MineDetailVo();
+        return result;
     }
 
     @Override
@@ -109,7 +110,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
             MineEntity itemEntity = itemEntities.get(j);
             item.setId(itemEntity.getId());
             item.setIndex(j);
-            item.setLevel(itemEntity.getLevel());
+            item.setLevel(itemEntity.getItemLevel());
             publicItem.add(item);
         }
     }
