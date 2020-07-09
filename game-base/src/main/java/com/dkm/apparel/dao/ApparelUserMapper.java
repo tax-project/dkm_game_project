@@ -18,7 +18,7 @@ import java.util.List;
  * @create: 2020-05-22 10:33
  **/
 @Repository
-public interface ApparelUserDao extends BaseMapper<ApparelUserEntity> {
+public interface ApparelUserMapper extends BaseMapper<ApparelUserEntity> {
 
     /**
      * 制作消费
