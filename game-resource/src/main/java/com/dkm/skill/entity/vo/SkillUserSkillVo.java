@@ -18,11 +18,6 @@ public class SkillUserSkillVo extends Model<SkillUserSkillVo> {
     private String skName;
 
     /**
-     * 技能图片
-     */
-    private String skImg;
-
-    /**
      * 等级
      */
     private Integer skGrade;

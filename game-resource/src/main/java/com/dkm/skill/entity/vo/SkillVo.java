@@ -16,10 +16,4 @@ public class SkillVo {
      */
     private Integer skGrade;
 
-
-    /**
-     * 技能图片
-     */
-    private String skImg;
-
 }

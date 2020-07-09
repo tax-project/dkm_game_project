@@ -105,6 +105,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       UserLoginQuery user = localUser.getUser();
 
+
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
 
       /**
@@ -135,10 +136,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    @Override
    public Map<String,Object> upgradeSkills(Long id,Integer status) {
-      Map<String,Object> map=new HashMap<>();
+      Map<String,Object> map=new HashMap<>(16);
 
       UserSkill userSkill = iUserSkillService.querySkillById(id);
-
 
 
       if(userSkill.getSkCurrentConsume()<userSkill.getSkAllConsume()){
@@ -289,10 +289,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       userSkill.setSkCurrentConsume(userSkill.getSkCurrentConsume()-userSkill.getSkAllConsume());
 
-      //数量度加10
-      userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+10);
+      //熟练度加7
+      userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+7);
 
-      if(userSkill.getSkDegreeProficiency()==100){
+      if(userSkill.getSkDegreeProficiency()>=100){
          userSkill.setSkDegreeProficiency(0);
       }
 

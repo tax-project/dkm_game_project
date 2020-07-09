@@ -483,6 +483,8 @@ public class SeedServiceImpl implements ISeedService {
             double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 1000 * list1.size();
             Integer userGoldInteger = Integer.valueOf((int) userGold);
 
+            System.out.println(userGold);
+
             //判断当前经验是否等级下一级的等级 如果等于等级加一
             if (seedPlantVo.getUserInfoNowExperience() + experienceInteger >= seedPlantVo.getUserInfoNextExperience()) {
 

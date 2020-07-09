@@ -31,6 +31,7 @@
 		<result column="exp2" property="exp2" />
 		<result column="exp3" property="exp3" />
 		<result column="name" property="name" />
+		<result column="box_type" property="boxType" />
 		<result column="url" property="url" />
 		<result column="good_money" property="goodMoney" />
 		<result column="ed_id" jdbcType="BIGINT" property="edId" />
@@ -48,9 +49,9 @@
 	</resultMap>
 
 	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
-		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
-			tsk.user_id=#{userId} AND tk.tek_isva=1
+			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
 
 	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
