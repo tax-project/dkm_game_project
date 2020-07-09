@@ -67,26 +67,50 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
     @Resource
     private UserFeignClient userFeignClient;
+
+    /**
+     * 根据当前登录人的主键 查询出装备
+     * @return 返回一个登陆人装备的集合
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectUserId() {
         return tbEquipmentKnapsackMapper.selectUserId(localUser.getUser().getId());
     }
 
+    /**
+     * 根据传的用户id查询出装备
+     * @param userId 传的用户id
+     * @return
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId) {
         return tbEquipmentKnapsackMapper.selectUserId(userId);
     }
 
+    /**
+     * 根据传的用户id查出装备上的装备
+     * @param userId 用户id
+     * @return 返回对应的装备数据
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdThree(Long userId) {
         return tbEquipmentKnapsackMapper.selectUserIdTwo(userId);
     }
 
+    /**
+     * 查询背包中特权商店的数据
+     * @return 返回对应数据
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectProps() {
         return tbEquipmentKnapsackMapper.selectProps(localUser.getUser().getId());
     }
 
+    /**
+     * 根据特权商店的主键查询出数据
+     * @param tbEquipmentKnapsackVo 传入数据的模型
+     * @return 返回对应的数据
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
         return tbEquipmentKnapsackMapper.selectPropsTwo(tbEquipmentKnapsackVo);
@@ -94,17 +118,26 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     /**
      * 根据当前用户查询食物
-     * @return
+     * @return 返回对应的数据
      */
     @Override
     public List<TbEquipmentKnapsackVo> selectFoodId() {
         return tbEquipmentKnapsackMapper.selectFoodId(localUser.getUser().getId());
     }
-
+    /**
+     * 根据当前用户type为3的食物
+     * @return 返回对应的数据
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectFoodIdTwo() {
         return tbEquipmentKnapsackMapper.selectFoodIdTwo(localUser.getUser().getId());
     }
+
+    /**
+     *  增加到背包的增加方法
+     * @param tbEquipmentKnapsack 传的参数
+     * @param userId 用户id
+     */
     @Override
     public void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack,Long userId) {
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
@@ -142,13 +175,19 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
                 }
             }else{
+                //增加声望和金币方法
                 fz(tbEquipmentKnapsack,2,userId);
             }
         }else{
+            //增加声望和金币方法
             fz(tbEquipmentKnapsack,2,userId);
         }
     }
 
+    /**
+     * 贩卖装备或者卸下装备的方法 且减少声望和金币
+     * @param tbEquipmentKnapsackTwoVo 对应参数的模型
+     */
     @Override
     public void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo) {
         if(tbEquipmentKnapsackTwoVo.getEquipmentId()==null
@@ -208,6 +247,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 增加装备到用户背包的方法
+     * @param tbEquipmentKnapsack 对应的参数模型
+     */
     @Override
     public void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack) {
         //首先判断食物id不为空 然后查询出该用户是否有这个食物
@@ -245,6 +288,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                     throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
                 }
             }else{
+                //增加声望方法
                 fz(tbEquipmentKnapsack,1,null);
             }
         //没有就给它增加
@@ -253,6 +297,19 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 查询出有装备和未装备的接口
+     * @return 返回对应的数据
+     */
+    @Override
+    public List<TbEquipmentKnapsackVo> selectUserIdFour() {
+        return tbEquipmentKnapsackMapper.selectUserIdThree(localUser.getUser().getId());
+    }
+
+    /**
+     * 批量增加的方法 传入id字符串
+     * @param equipmentId 字符串参数
+     */
     @Override
     public void addTbEquipmentKnapsackTwo(String equipmentId) {
         if(equipmentId=="" && equipmentId.equals("")){
@@ -294,6 +351,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 逻辑删除的方法
+     * @param tekId 背包装备表id
+     * @param tekMoney 对应的钱
+     */
     @Override
     public void deleteTbEquipment(Long tekId,Integer tekMoney) {
         if(StringUtils.isEmpty(tekId) && StringUtils.isEmpty(tekMoney)){
@@ -334,6 +396,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 特权商店增加到这的方法
+     * @param tbEquipmentKnapsack 对应的参数
+     */
     @Override
     public void addTbPrivilegeMall(TbEquipmentKnapsack tbEquipmentKnapsack) {
         TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
@@ -365,6 +431,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 根据传过来的id查询装备有没有装备上去过
+     * @param equipmentId 装备主键
+     * @return 返回相对于的对象
+     */
     @Override
     public Map<String,Object> findById(Long equipmentId) {
         Map<String,Object> map=new HashMap<>();
@@ -410,11 +481,21 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return map;
     }
 
+    /**
+     * 统计数据方法
+     * @param tbEquipmentKnapsackVo 对应参数
+     * @return
+     */
     @Override
     public int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
         return tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsackVo);
     }
 
+    /**
+     * 根据参数查询的装备上的方法
+     * @param tbEquipmentKnapsackVo 对应的参数
+     * @return 返回对应的参数
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectAll(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
         return tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
@@ -439,7 +520,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             too(tekId);
         }
     }
-
+    /**
+     * 点击装备 首先查一下有没有相同的装备装上了 加入装备上了给他替换 没有则给它修
+     * @param tekId
+     */
     @Override
     public void updateTekId(Long tekId) {
         if(StringUtils.isEmpty(tekId)){
@@ -550,6 +634,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
 
     }
 
+    /**
+     * 点击使用道具和食物的修改数量接口
+     * @param tekId 主键
+     * @param foodNumber 数量
+     */
     @Override
     public void updateIsva(Long tekId,Integer foodNumber) {
         if(StringUtils.isEmpty(tekId) &&StringUtils.isEmpty(foodNumber)){
@@ -593,11 +682,20 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    /**
+     * 查询出 食物的数据
+     * @param userId 用户的id
+     * @return 返回对应的数据
+     */
     @Override
     public List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId) {
         return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
 
+    /**
+     * 查询有效装备的数量
+     * @return
+     */
     @Override
     public int selectCount() {
         Long knapsackId=null;
@@ -617,6 +715,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return one;
     }
 
+    /**
+     * 使用三条鱼兑换一个蜂蜜
+     * @param tbNumberVo 对应的参数模型
+     * @return
+     */
     @Override
     public int updateFood(TbNumberVo tbNumberVo) {
         Integer yuNum=null;
@@ -659,7 +762,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
 
-
+    /**
+     * 减少用户的方法
+     * @param tekId 装备的主键
+     */
     public void too(Long tekId){
         Integer userInfoRenown;
         //根据tekId 查到装备的主键
@@ -700,6 +806,13 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
             }
         }
     }
+
+    /**
+     * 增加用户声望的增加方法
+     * @param tbEquipmentKnapsack 对应的对象模型
+     * @param type 2代表后端人增加 1代表前端
+     * @param userId 用户的id
+     */
     public void fz(TbEquipmentKnapsack tbEquipmentKnapsack,int type,Long userId){
         //查询背包容量是否够
         int one= tbEquipmentKnapsackService.selectCount();

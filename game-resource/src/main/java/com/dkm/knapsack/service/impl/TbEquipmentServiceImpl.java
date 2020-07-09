@@ -44,6 +44,10 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
     @Autowired
     private LocalUser localUser;
 
+    /**
+     * 增加装备的接口
+     * @param tbEquipmentVo 对应的参数
+     */
     @Override
     public void addTbEquipment(TbEquipmentVo tbEquipmentVo) {
         //给装备一个主键
@@ -64,6 +68,10 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
         }
     }
 
+    /**
+     * 批量出售的接口
+     * @param equipmentId 字符串主键参数
+     */
     @Override
     public void listEquipmentId(String equipmentId) {
         if(StringUtils.isEmpty(equipmentId)){
@@ -94,6 +102,11 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
         userFeignClient.increaseUserInfo(increaseUserInfoBO);
     }
 
+    /**
+     * 根据装备主键查询详情
+     * @param equipmentId 装备主键
+     * @return 返回对应json
+     */
     @Override
     public List<TbEquipmentVo> selectByEquipmentId(Long equipmentId) {
         if(StringUtils.isEmpty(equipmentId)){
@@ -102,6 +115,11 @@ public class TbEquipmentServiceImpl implements ITbEquipmentService {
         return tbEquipmentMapper.selectByEquipmentId(equipmentId);
     }
 
+    /**
+     * 根据编号类型随机查询出一条装备数据
+     * @param exp1 参数
+     * @return 返回对应的模型数据
+     */
     @Override
     public TbEquipmentVo selectByEquipmentIdTwo(String exp1) {
         if(StringUtils.isEmpty(exp1)){

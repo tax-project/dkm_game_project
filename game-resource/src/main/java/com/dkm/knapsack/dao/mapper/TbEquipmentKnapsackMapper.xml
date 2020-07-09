@@ -54,6 +54,8 @@
 			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
 
+
+
 	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
@@ -83,6 +85,11 @@
 	<select id="selectCountMy" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM tb_equipment_knapsack tk,tb_equipment te
 		WHERE te.`equipment_id`=tk.equipment_id AND   tk.tek_sell=1 AND tk.tek_isva=1  AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
+	</select>
+	<select id="selectUserIdThree" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
+			tsk.user_id=#{userId} AND tk.tek_isva=1  AND tbx.box_id=te.box_id
 	</select>
 	<select id="selectAll" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultMap="BaseResultMapVo">
 		SELECT tk.tek_id,td.*,te.* FROM tb_equipment_knapsack tk,tb_equipment te,tb_equipment_details td

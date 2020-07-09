@@ -28,7 +28,7 @@ public interface ITbEquipmentKnapsackService{
     List<TbEquipmentKnapsackVo> selectFoodId();
     List<TbEquipmentKnapsackVo> selectFoodIdTwo();
     void addTbEquipmentKnapsack(TbEquipmentKnapsack tbEquipmentKnapsack);
-
+    List<TbEquipmentKnapsackVo> selectUserIdFour();
     void addTbEquipmentKnapsackTwo(String equipmentId);
     void deleteTbEquipment(Long tekId,Integer tekMoney);
     void addTbPrivilegeMall(TbEquipmentKnapsack tbEquipmentKnapsack);

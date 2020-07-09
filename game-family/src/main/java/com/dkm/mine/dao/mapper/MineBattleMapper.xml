@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.mine.dao.MineBattleMapper">
+    <select id="selectByFamilyId" resultType="com.dkm.mine.bean.entity.MineBattleEntity">
+        SELECT *
+        FROM tb_mine_battle
+        WHERE first_family_id = #{familyId}
+           OR second_family_id = #{familyId}
+           OR third_family_id = #{familyId}
+           OR fourth_family_id = #{familyId}
+    </select>
+    <select id="selectByEmpty" resultType="com.dkm.mine.bean.entity.MineBattleEntity">
+        SELECT *
+        FROM tb_mine_battle
+        WHERE second_family_id = 0
+           OR third_family_id = 0
+           OR fourth_family_id = 0
+    </select>
+</mapper>
