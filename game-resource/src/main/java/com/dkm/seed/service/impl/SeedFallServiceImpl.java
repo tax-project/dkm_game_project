@@ -141,9 +141,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
 
 
-
-
-
     @Override
     public List<Double> redBagDroppedSeparately(Double money) {
         List<Double> list=new ArrayList<>();

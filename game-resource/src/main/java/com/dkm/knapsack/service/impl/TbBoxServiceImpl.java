@@ -80,7 +80,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     }
 
     @Override
-    public Map<String,Object> selectByBoxIdTwo(String boxId) {
+    public List<Map> selectByBoxIdTwo(String boxId) {
         if( boxId==null &&"".equals(boxId) ){
             //如果失败将回滚
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
@@ -91,8 +91,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
-
-        Map<String,Object> map=new HashMap<>();
+        List<Map> listMap=new ArrayList<>();
 
             for (int i=0;i<list.size();i++) {
                 TbEquipmentVo tbEquipmentVo=list.get(i);
@@ -104,7 +103,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                     //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
                     TbKnapsack tbKnapsack=new TbKnapsack();
 
-                    tbKnapsack.setUserId(712030633500774400L);
+                    tbKnapsack.setUserId(localUser.getUser().getId());
                     List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
 
                     for (int k=0;k<list1.size();k++) {
@@ -122,23 +121,27 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                             tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
                             //查询已经装备上了的装备数据
                             List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
+                            Map<String,Object> map=new HashMap<>();
                             map.put("code",3);
                             map.put("msg","此装备已经装备上了");
-                            map.put("dataOne"+i+"_"+j+"_"+k,list3);
-                            map.put("dataTwo"+i+"_"+j+"_"+k,list2);
+                            map.put("dataOne",list3);
+                            map.put("dataTwo",list2);
+                            listMap.add(map);
                         }else{
+                            Map<String,Object> map=new HashMap<>();
                             //查询为装备上的装备数据
                             List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(tbEquipmentVo.getEquipmentId());
                             map.put("code",2);
-                            map.put("dataThree"+i+"_"+j+"_"+k,list3);
+                            map.put("dataThree",list3);
                             map.put("msg","此装备没有装备上过");
+                            listMap.add(map);
                         }
                     }
                 }
 
             }
 
-        return map;
+        return listMap;
     }
 
     @Override
