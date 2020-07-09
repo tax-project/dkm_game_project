@@ -1,18 +1,22 @@
-package com.dkm.mine2.service.impl;
+package com.dkm.mine.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.mine2.bean.entity.MineBattleEntity;
-import com.dkm.mine2.bean.entity.MineBattleItemEntity;
-import com.dkm.mine2.bean.entity.MineBattleLevelEntity;
-import com.dkm.mine2.bean.vo.*;
-import com.dkm.mine2.dao.FamilyAdditionMapper;
-import com.dkm.mine2.dao.MineBattleItemMapper;
-import com.dkm.mine2.dao.MineBattleLevelMapper;
-import com.dkm.mine2.dao.MineBattleMapper;
-import com.dkm.mine2.rule.BattleItemRule;
-import com.dkm.mine2.service.IMine2Service;
+import com.dkm.mine.bean.FamilyAddition;
+import com.dkm.mine.bean.entity.MineBattleEntity;
+import com.dkm.mine.bean.entity.MineBattleItemEntity;
+import com.dkm.mine.bean.entity.MineBattleLevelEntity;
+import com.dkm.mine.bean.vo.BattleItemPropVo;
+import com.dkm.mine.bean.vo.MineItemVo;
+import com.dkm.mine.bean.vo.MineVo;
+import com.dkm.mine.bean.vo.OccupyResultVo;
+import com.dkm.mine.dao.FamilyAdditionMapper;
+import com.dkm.mine.dao.MineBattleItemMapper;
+import com.dkm.mine.dao.MineBattleLevelMapper;
+import com.dkm.mine.dao.MineBattleMapper;
+import com.dkm.mine.rule.BattleItemRule;
+import com.dkm.mine.service.IMineService;
 import com.dkm.utils.IdGenerator;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -28,7 +32,7 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class Mine2ServiceImpl implements IMine2Service {
+public class MineServiceImpl implements IMineService {
     @Resource
     private IdGenerator idGenerator;
     @Resource
@@ -59,7 +63,7 @@ public class Mine2ServiceImpl implements IMine2Service {
     private FamilyAdditionMapper mapper;
 
     @Override
-    public List<FamilyAdditionVo2Entity> getFamilyType() {
+    public List<FamilyAddition> getFamilyType() {
         return mapper.selectList(null);
     }
 

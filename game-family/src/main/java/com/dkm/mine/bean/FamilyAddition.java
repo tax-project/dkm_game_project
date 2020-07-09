@@ -1,4 +1,4 @@
-package com.dkm.mine2.bean.vo;
+package com.dkm.mine.bean;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,7 +9,7 @@ import lombok.Data;
 @ApiModel("家族的等级加成")
 @Data
 @TableName("tb_mine_family_level_addition")
-public class FamilyAdditionVo2Entity {
+public class FamilyAddition {
     @ApiModelProperty("家族等级")
     @TableId
     private int familyLevel;

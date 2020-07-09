@@ -1,4 +1,4 @@
-package com.dkm.mine2.controller;
+package com.dkm.mine.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
@@ -7,12 +7,12 @@ import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.mine2.bean.other.User2FamilyId;
-import com.dkm.mine2.bean.vo.BattleItemPropVo;
-import com.dkm.mine2.bean.vo.FamilyAdditionVo2Entity;
-import com.dkm.mine2.bean.vo.MineVo;
-import com.dkm.mine2.bean.vo.OccupyResultVo;
-import com.dkm.mine2.service.IMine2Service;
+import com.dkm.mine.bean.FamilyAddition;
+import com.dkm.mine.bean.other.User2FamilyId;
+import com.dkm.mine.bean.vo.BattleItemPropVo;
+import com.dkm.mine.bean.vo.MineVo;
+import com.dkm.mine.bean.vo.OccupyResultVo;
+import com.dkm.mine.service.IMineService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,7 +30,7 @@ import java.util.List;
 @Api(tags = "新的家族矿区 API")
 @RequestMapping("/mine/")
 @RestController
-public class Mine2Controller {
+public class MineController {
 
     @Resource
     private LocalUser localUser;
@@ -38,7 +38,7 @@ public class Mine2Controller {
     private FamilyDetailDao familyDetailDao;
 
     @Resource
-    private IMine2Service service;
+    private IMineService service;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息")
@@ -51,7 +51,7 @@ public class Mine2Controller {
     @ApiOperation("获取家族等级信息与金币加成")
     @CrossOrigin
     @GetMapping("/getFamilyType")
-    public List<FamilyAdditionVo2Entity> getFamilyType() {
+    public List<FamilyAddition> getFamilyType() {
         return service.getFamilyType();
     }
 
