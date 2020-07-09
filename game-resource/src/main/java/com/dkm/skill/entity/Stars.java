@@ -19,26 +19,13 @@ import lombok.experimental.Accessors;
 public class Stars extends Model<Stars> {
 
     /**
-     * 主键
-     */
-    private Long id;
-
-    /**
      * 用户id
      */
     private Long userId;
-    /**
-     * 星星类型
-     */
-    private Integer sStar;
 
     /**
-     *  当前拥有的数量
+     * 也是自己当前拥有的个数
+     * 当前使用消耗的个数
      */
-    private Integer sCurrentlyHasNum;
-
-    /**
-     * 需要消耗数量
-     */
-   private Integer sTotalConsumedQuantity;
+    private Integer skCurrentConsume;
 }
