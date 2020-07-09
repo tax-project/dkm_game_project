@@ -27,10 +27,6 @@ public class Skill extends Model<Skill> {
     */
    private String skName;
 
-   /**
-    * 技能图片
-    */
-   private String skImg;
 
    /**
     * 效果一

@@ -54,6 +54,11 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
     @Autowired
     TbEquipmentMapper tbEquipmentMapper;
+
+    /**
+     * 增加宝箱的方法
+     * @param tbBox 宝箱的模型
+     */
     @Override
     public void addTbBox(TbBox tbBox) {
         tbBox.setBoxId(idGenerator.getNumberId());
@@ -64,6 +69,11 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         }
     }
 
+    /**
+     *  根据宝箱的主键得到一个新装备
+     * @param boxId 宝箱的主键
+     * @return 返回一个新装备的对象
+     */
     @Override
     public TbEquipmentVo selectByBoxId(String boxId) {
         if(StringUtils.isEmpty(boxId)){
@@ -72,6 +82,10 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         return tbBoxMapper.selectByBoxId(Long.valueOf(boxId));
     }
 
+    /**
+     * 查询出所有宝箱 根据宝箱的类型 升序
+     * @return 返回宝箱数据
+     */
     @Override
     public List<TbBox> selectAll() {
         QueryWrapper queryWrapper=new QueryWrapper();
@@ -79,6 +93,14 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         return tbBoxMapper.selectList(queryWrapper);
     }
 
+    /**
+     *
+     * @param boxId 根据前端传过来的字符串id批量查询出宝箱对应的随机装备
+     *
+     * @return 返回一个list的map集合 自动比对 这个新开的装备有没有装备上去过
+     * dataOne 为开出的新装备数据   dataTwo为已经装备上去的装备
+     * dataThree 为从来没有装备上的新装备
+     */
     @Override
     public List<Map> selectByBoxIdTwo(String boxId) {
         if( boxId==null &&"".equals(boxId) ){
@@ -144,6 +166,11 @@ public class TbBoxServiceImpl  implements ITbBoxService {
         return listMap;
     }
 
+    /**
+     * 根据前端传过来的宝箱的主键字符串 得到开出新装备的数据
+     * @param boxId 宝箱字符串id
+     * @return
+     */
     @Override
     public List<TbEquipmentVo> selectByBoxIdThree(String boxId) {
         if( boxId==null &&"".equals(boxId) ){

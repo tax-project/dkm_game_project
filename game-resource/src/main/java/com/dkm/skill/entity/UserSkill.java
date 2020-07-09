@@ -57,9 +57,4 @@ public class UserSkill extends Model<UserSkill> {
     */
    private Integer skAllConsume;
 
-   /**
-    * 也是自己当前拥有的个数
-    * 当前使用消耗的个数
-    */
-   private Integer skCurrentConsume;
 }

@@ -5,7 +5,7 @@
 
 
     <select id="queryAllSkillByUserId" parameterType="Long" resultType="com.dkm.skill.entity.vo.SkillUserSkillVo">
-        select b.sk_name,a.sk_grade,a.sk_degree_proficiency,a.sk_Current_success_rate,a.sk_add_prestige,a.sk_all_consume,a.sk_current_consume
+        select a.id,b.sk_name,a.sk_grade,a.sk_degree_proficiency,a.sk_Current_success_rate,a.sk_add_prestige,a.sk_all_consume
         from tb_user_skill a,tb_skill b
         where a.sk_id=b.id and a.user_id=#{userId}
     </select>
