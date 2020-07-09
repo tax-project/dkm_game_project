@@ -7,6 +7,7 @@ import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
+import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
 
 import java.util.List;
 
@@ -86,4 +87,11 @@ public interface IUserInfoService {
     * @return
     */
    List<OpponentVo> listOpponent (List<IdVo> list);
+
+   /**
+    *  查询个人信息
+    *  个人信息页面的接口
+    * @return 返回个人信息
+    */
+   WeChatUserInfoVo queryWeChatUserInfo ();
 }
