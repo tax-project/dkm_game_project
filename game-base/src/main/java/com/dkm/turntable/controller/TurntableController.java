@@ -48,7 +48,7 @@ public class TurntableController {
     @ApiImplicitParam(value = "转盘类型1绿券2蓝券以此类推",name = "type",dataType = "int",paramType = "path",required = true)
     @CrossOrigin
     @CheckToken
-    public List<TurntableInfoVo> getGoods(Integer type){
+    public List<TurntableInfoVo> getGoods(@RequestParam("type") Integer type){
         return turntableService.getTurntable(localUser.getUser().getId(),type);
     }
 

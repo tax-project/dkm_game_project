@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @create: 2020-06-23 10:35
  **/
 @Repository
-public interface GoodsMapper extends IBaseMapper<GoodsEntity> {
+public interface GoodsDao extends IBaseMapper<GoodsEntity> {
 }

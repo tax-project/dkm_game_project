@@ -30,11 +30,13 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
 
     @Override
     public Map<String,Object> getUserCoupon(Long userId) {
-        TurntableCouponEntity turntableCouponEntity = turntableCouponDao.selectOne(new LambdaQueryWrapper<TurntableCouponEntity>().eq(TurntableCouponEntity::getUserId, userId));
+        //查询用户券信息
+        TurntableCouponEntity turntableCouponEntity = turntableCouponDao.selectOne(new LambdaQueryWrapper<TurntableCouponEntity>()
+                .eq(TurntableCouponEntity::getUserId, userId));
         LocalDateTime now = LocalDateTime.now();
         Map<String,Object> map = new HashMap<>();
         if(turntableCouponEntity==null){
-            //首次登陆
+            //首次登陆抽奖
             turntableCouponEntity = new TurntableCouponEntity();
             turntableCouponEntity.setCouponBlue(0);
             turntableCouponEntity.setCouponPurple(0);
@@ -44,13 +46,15 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
             turntableCouponEntity.setUserId(userId);
             turntableCouponDao.insert(turntableCouponEntity);
         }else if(turntableCouponEntity.getCouponBlue()<20){
-            //计算获得多少张 20分钟一张
+            //计算获得多少张绿券 20分钟一张
             long nowSecond = now.toEpochSecond(ZoneOffset.of("+8"));
             long lastTime = turntableCouponEntity.getCouponTime().toEpochSecond(ZoneOffset.of("+8"));
             long l = nowSecond - lastTime;
             int count = (int) l / (60 * 20);
             int green = turntableCouponEntity.getCouponGreen() + count;
+            //最多20张
             turntableCouponEntity.setCouponGreen(Math.min(green, 20));
+            //更新时间
             turntableCouponEntity.setCouponTime(now);
             if(green<20){
                 map.put("time",l%(60 * 20));
