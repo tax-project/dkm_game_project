@@ -306,7 +306,8 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public void transfer(Long userId, Long setUserId) {
-        List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new LambdaQueryWrapper<FamilyDetailEntity>().in(FamilyDetailEntity::getUserId, Stream.of(userId, setUserId).collect(Collectors.toList())));
+        List<FamilyDetailEntity> familyDetailEntities = familyDetailDao.selectList(new LambdaQueryWrapper<FamilyDetailEntity>()
+                .in(FamilyDetailEntity::getUserId, Stream.of(userId, setUserId).collect(Collectors.toList())));
         if(familyDetailEntities==null||familyDetailEntities.size()!=2){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"转让失败");
         }
