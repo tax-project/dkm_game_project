@@ -65,7 +65,7 @@ public class FamilyController {
     @GetMapping("/otherFamilyInfo")
     @CheckToken
     @CrossOrigin
-    public Map<String,Object> otherFamilyInfo(Long familyId){
+    public Map<String,Object> otherFamilyInfo(@RequestParam("familyId") Long familyId){
         if(familyId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
@@ -75,7 +75,7 @@ public class FamilyController {
     @ApiOperation("获取家族二维码")
     @GetMapping("/getQrcode")
     @CrossOrigin
-    public String getQrcode(Long familyId){
+    public String getQrcode(@RequestParam("familyId") Long familyId){
         return familyService.getQrcode(familyId);
     }
 

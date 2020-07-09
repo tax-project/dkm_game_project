@@ -31,10 +31,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void getTaskReward(Long userId, Long taskId) {
+        //获取任务信息
         TaskEntity taskEntity = taskDao.selectById(taskId);
         if(taskEntity==null){
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND,"不存在该任务");
         }
+        //更新任务所需物品
         Integer taskGold = taskEntity.getTaskGold();
         taskDao.updateUserInfo(taskGold);
     }

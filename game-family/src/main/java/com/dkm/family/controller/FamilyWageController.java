@@ -49,7 +49,7 @@ public class FamilyWageController {
     })
     @CrossOrigin
     @CheckToken
-    public void receiveWake(Integer wage,Integer index){
+    public void receiveWake(@RequestParam("wage") Integer wage,@RequestParam("index")Integer index){
         if(wage==null||index==null||wage<=0||index<0||index>3){
             throw  new ApplicationException(CodeType.PARAMETER_ERROR);
         }
