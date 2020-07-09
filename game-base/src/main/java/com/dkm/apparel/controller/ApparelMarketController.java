@@ -100,7 +100,7 @@ public class ApparelMarketController {
     @CrossOrigin
     @CheckToken
     @GetMapping("/getMarketInfo")
-    public List<ApparelMarketDto> getMarketInfo(Integer type){
+    public List<ApparelMarketDto> getMarketInfo(@RequestParam("type")Integer type){
         return apparelMarketService.getApparelMarketInfo(localUser.getUser().getId(),type);
     }
 
