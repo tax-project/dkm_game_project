@@ -15,7 +15,7 @@ import com.dkm.pets.entity.dto.UserInfo;
 import com.dkm.pets.entity.vo.FeedPetInfoVo;
 import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import com.dkm.pets.service.PetService;
-import com.dkm.turntable.dao.GoodsMapper;
+import com.dkm.turntable.dao.GoodsDao;
 import com.dkm.turntable.entity.GoodsEntity;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -46,7 +46,7 @@ public class PetServiceImpl implements PetService {
     private IdGenerator idGenerator;
 
     @Resource
-    private GoodsMapper goodsMapper;
+    private GoodsDao goodsDao;
 
     @Resource
     private ResourceFeignClient resourceFeignClient;
@@ -60,22 +60,24 @@ public class PetServiceImpl implements PetService {
     @Override
     public Map<String, Object> getAllPets(Long userId) {
         Map<String, Object> map = new HashMap<>();
-        //查询食物信息
+        //查询背包食物信息
         Result<List<TbEquipmentKnapsackVo>> listResult = resourceFeignClient.selectUserIdAndFoodId(userId);
         if (listResult.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"获取不到食物信息");
         }
-        //食物信息
-        List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 3));
+        //所有食物信息
+        List<GoodsEntity> goodsEntities = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 3));
         if(listResult.getData()==null||listResult.getData().size()<3){
+            //部分食物未获得
             List<GoodsEntity> a = goodsEntities;
             //有部分食物>>添加完整
             if(listResult.getData()!=null){
                 for (TbEquipmentKnapsackVo foodInfo : listResult.getData()) {
+                    //过滤背包已有的食物
                     a = a.stream().filter(food -> !food.getId().equals(foodInfo.getFoodId())).collect(Collectors.toList());
                 }
             }
-            //没有食物
+            //放入没有食物
             a.forEach(foodDetailEntity -> {
                 TbEquipmentKnapsackVo foodInfo = new TbEquipmentKnapsackVo();
                 foodInfo.setFoodId(foodDetailEntity.getId());

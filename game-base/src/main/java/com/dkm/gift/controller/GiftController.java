@@ -40,7 +40,7 @@ public class GiftController {
     @GetMapping("/getGift")
     @CrossOrigin
     @CheckToken
-    public List<GiftEntity> getGift(Integer type){
+    public List<GiftEntity> getGift(@RequestParam("type") Integer type){
         if(type==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }

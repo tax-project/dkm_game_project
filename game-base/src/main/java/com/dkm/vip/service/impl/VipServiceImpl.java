@@ -27,6 +27,7 @@ public class VipServiceImpl implements VipService {
 
     @Override
     public void openVip(Long userId,BigDecimal money) {
+        //新增vip开通记录
         VipEntity a = new VipEntity();
         a.setVipId(idGenerator.getNumberId());
         a.setVipMoney(money);

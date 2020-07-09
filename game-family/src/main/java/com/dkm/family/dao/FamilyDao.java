@@ -36,6 +36,9 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
             "SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id ")
     List<HotFamilyVo> getHotFamily();
 
+    @Select("SELECT family_name FROM tb_family WHERE family_id = #{family_id}")
+    String selectNameByFamilyId(@Param("family_id") long familyId);
+
     List<FamilyImgsVo> getImgs(@Param("param") List<Long> param);
 
     @Select("select family_id,family_name from tb_family")
@@ -43,6 +46,7 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
 
     @Select("SELECT family_id,family_user_number,family_name,family_introduce,family_welcome_words FROM tb_family WHERE union_id = #{unionId}")
     List<UnionFamilyInfoVo> getUnionFamily(@Param("unionId") Long unionId);
+
 
 
     @Select("SELECT we_chat_nick_name,we_chat_head_img_url from tb_user WHERE user_id = #{userId}")

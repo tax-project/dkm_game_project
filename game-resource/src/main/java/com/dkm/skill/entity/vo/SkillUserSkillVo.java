@@ -13,14 +13,14 @@ import lombok.Data;
 public class SkillUserSkillVo extends Model<SkillUserSkillVo> {
 
     /**
+     * 技能主键id
+     */
+    private Long id;
+
+    /**
      * 技能名字
      */
     private String skName;
-
-    /**
-     * 技能图片
-     */
-    private String skImg;
 
     /**
      * 等级
@@ -48,8 +48,4 @@ public class SkillUserSkillVo extends Model<SkillUserSkillVo> {
      */
     private Integer skAllConsume;
 
-    /**
-     * 当前使用消耗的个数
-     */
-    private Integer skCurrentConsume;
 }

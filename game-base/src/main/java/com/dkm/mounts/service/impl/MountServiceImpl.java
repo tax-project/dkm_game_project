@@ -41,7 +41,9 @@ public class MountServiceImpl implements MountService {
 
     @Override
     public void equipMount(Long id,Long userId) {
+        //取消正在装备的
         mountsMapper.cancelEquip(userId);
+        //更新要装备 的
         mountsMapper.updateEquip(id);
     }
 
@@ -51,7 +53,9 @@ public class MountServiceImpl implements MountService {
         if(userInfo.getUserInfoGold()<gold||userInfo.getUserInfoDiamonds()<diamond){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"金币或钻石不足！");
         }
+        //更新用户金币等
         Integer updateUser = mountsMapper.updateUser(gold,diamond,userId);
+        //添加用户座驾记录
         Integer updateMount = mountsMapper.insetOne(idGenerator.getNumberId(), mountId, userId, 0);
         if(updateUser<1||updateMount<1){
             throw new ApplicationException(CodeType.SERVICE_ERROR);
@@ -66,7 +70,9 @@ public class MountServiceImpl implements MountService {
     @Override
     public UserCenterMountsVo getUserCenterMounts(Long userId) {
         UserCenterMountsVo userCenterMountsVo = new UserCenterMountsVo();
+        //用户座驾数量
         userCenterMountsVo.setMountsNumber(mountsMapper.getMountNumber(userId));
+        //用户当前座驾图片
         userCenterMountsVo.setMountsUrl(mountsMapper.getMountImg(userId));
         return userCenterMountsVo;
     }

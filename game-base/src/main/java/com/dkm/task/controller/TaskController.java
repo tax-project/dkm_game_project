@@ -7,10 +7,7 @@ import com.dkm.task.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -37,7 +34,7 @@ public class TaskController {
     @CrossOrigin
     @GetMapping("/getUserTask")
     @CheckToken
-    public List<TaskUserDetailVo> getUserTask(Integer type){
+    public List<TaskUserDetailVo> getUserTask(@RequestParam("type") Integer type){
         return taskService.selectUserTask(localUser.getUser().getId(),type);
     }
 
@@ -46,7 +43,7 @@ public class TaskController {
     @CrossOrigin
     @GetMapping("/getTaskReward")
     @CheckToken
-    public void getTaskReward(Long taskId){
+    public void getTaskReward(@RequestParam("taskId")Long taskId){
         taskService.getTaskReward(localUser.getUser().getId(),taskId);
     }
 

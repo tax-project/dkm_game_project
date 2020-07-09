@@ -276,9 +276,7 @@ public class SeedServiceImpl implements ISeedService {
             UserLoginQuery user = localUser.getUser();
 
             User user1 = attendantMapper.queryUserReputationGold(user.getId());
-            if (user1.getUserInfoGold() < seedPlantVo.getSeedGold()) {
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
-            }
+
 
             //根据用户查询解锁的土地
             List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
@@ -290,6 +288,10 @@ public class SeedServiceImpl implements ISeedService {
             Integer gold = seedPlantVo.getSeedGold() * userLandUnlocks.size();
             increaseUserInfoBO.setUserId(user.getId());
             increaseUserInfoBO.setUserInfoGold(gold);
+
+            if (user1.getUserInfoGold() < gold) {
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            }
 
             //减少金币
             Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
@@ -482,6 +484,8 @@ public class SeedServiceImpl implements ISeedService {
 
             double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 1000 * list1.size();
             Integer userGoldInteger = Integer.valueOf((int) userGold);
+
+            System.out.println(userGold);
 
             //判断当前经验是否等级下一级的等级 如果等于等级加一
             if (seedPlantVo.getUserInfoNowExperience() + experienceInteger >= seedPlantVo.getUserInfoNextExperience()) {

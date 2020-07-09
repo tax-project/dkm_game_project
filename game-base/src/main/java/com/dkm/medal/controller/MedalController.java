@@ -9,10 +9,7 @@ import com.dkm.medal.service.MedalService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,7 +35,7 @@ public class MedalController {
     @GetMapping("/getUserMedal")
     @CheckToken
     @CrossOrigin
-    public List<MedalUserInfoVo> getUserMedal(Integer type){
+    public List<MedalUserInfoVo> getUserMedal(@RequestParam("type") Integer type){
         if(type==null||type>1||type<0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
@@ -50,7 +47,7 @@ public class MedalController {
     @GetMapping("/getOneUserMedal")
     @CheckToken
     @CrossOrigin
-    public MedalUserInfoVo getOneUserMedal(Long  medalId){
+    public MedalUserInfoVo getOneUserMedal(@RequestParam("medalId")Long  medalId){
         if(medalId==null||medalId<0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }

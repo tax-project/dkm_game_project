@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.apparel.dao.ApparelMapper;
 import com.dkm.apparel.dao.ApparelMarketMapper;
 import com.dkm.apparel.dao.ApparelOrderMapper;
-import com.dkm.apparel.dao.ApparelUserDao;
+import com.dkm.apparel.dao.ApparelUserMapper;
 import com.dkm.apparel.entity.ApparelMarketEntity;
 import com.dkm.apparel.entity.ApparelOrderEntity;
 import com.dkm.apparel.entity.dto.ApparelMarketDto;
@@ -36,63 +36,83 @@ import java.util.List;
 public class ApparelMarketImpl implements IApparelMarketService {
 
     @Resource
-    private ApparelMapper apparelMapper;
-
-    @Resource
     private ApparelOrderMapper apparelOrderMapper;
 
     @Resource
-    private ApparelUserDao apparelUserDao;
+    private ApparelUserMapper apparelUserMapper;
 
     @Resource
     private ApparelMarketMapper apparelMarketMapper;
 
     @Resource
     private IdGenerator idGenerator;
+
     @Override
     public void putOnSell(Long userId, ApparelPutVo apparelPutVo) {
         //获取用户服饰状态
-        ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, userId).eq(ApparelUserEntity::getApparelDetailId, apparelPutVo.getApparelId()));
-        if(apparelUserEntity==null) throw new ApplicationException(CodeType.SERVICE_ERROR,"你未拥有该服饰");
-        if(apparelUserEntity.getIsEquip()==2) throw new ApplicationException(CodeType.SERVICE_ERROR,"该服饰已上架");
-        if(apparelUserEntity.getIsEquip()==1) throw new ApplicationException(CodeType.SERVICE_ERROR,"改服饰正在装备，不能上架");
-        //更新记录
+        ApparelUserEntity apparelUserEntity = apparelUserMapper.selectOne(new LambdaQueryWrapper<ApparelUserEntity>()
+                .eq(ApparelUserEntity::getUserId, userId)
+                .eq(ApparelUserEntity::getApparelDetailId, apparelPutVo.getApparelId()));
+        if (apparelUserEntity == null) throw new ApplicationException(CodeType.SERVICE_ERROR, "你未拥有该服饰");
+        if (apparelUserEntity.getIsEquip() == 2) throw new ApplicationException(CodeType.SERVICE_ERROR, "该服饰已上架");
+        if (apparelUserEntity.getIsEquip() == 1) throw new ApplicationException(CodeType.SERVICE_ERROR, "改服饰正在装备，不能上架");
+        //更新记录并设置初始状态
         ApparelMarketEntity marketEntity = new ApparelMarketEntity();
         marketEntity.setApparelMarketId(idGenerator.getNumberId());
         marketEntity.setUserId(userId);
         marketEntity.setApparelDetailId(apparelUserEntity.getApparelDetailId());
-        marketEntity.setMaturityTime(LocalDateTime.now().minusHours(-(24*3)));
+        marketEntity.setMaturityTime(LocalDateTime.now().minusHours(-(24 * 3)));
         marketEntity.setGold(apparelPutVo.getGold());
+        //插入市场表
         int insert = apparelMarketMapper.insert(marketEntity);
+        //更新用户服饰状态为2上架
         apparelUserEntity.setIsEquip(2);
-        int i = apparelUserDao.updateById(apparelUserEntity);
-        if(i!=1||insert!=1)throw new ApplicationException(CodeType.SERVICE_ERROR,"上架失败");
+        int i = apparelUserMapper.updateById(apparelUserEntity);
+        if (i != 1 || insert != 1) throw new ApplicationException(CodeType.SERVICE_ERROR, "上架失败");
     }
 
     @Override
     public void downApparel(Long apparelMarketId) {
-        ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
-        if(marketEntity==null)throw new ApplicationException(CodeType.SERVICE_ERROR,"该商品未上架");
-        int delete = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
-        ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, marketEntity.getUserId()).eq(ApparelUserEntity::getApparelDetailId, marketEntity.getApparelDetailId()));
+        //查出当前服饰市场信息
+        ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>()
+                .eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
+        if (marketEntity == null) throw new ApplicationException(CodeType.SERVICE_ERROR, "该商品未上架");
+        //删除记录下架
+        int delete = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>()
+                .eq(ApparelMarketEntity::getApparelMarketId, apparelMarketId));
+        //更具用户id查出用户服饰记录
+        ApparelUserEntity apparelUserEntity = apparelUserMapper.selectOne(new LambdaQueryWrapper<ApparelUserEntity>()
+                .eq(ApparelUserEntity::getUserId, marketEntity.getUserId())
+                .eq(ApparelUserEntity::getApparelDetailId, marketEntity.getApparelDetailId()));
+        //修改用户服饰状态未0正常并更新
         apparelUserEntity.setIsEquip(0);
-        int i1 = apparelUserDao.updateById(apparelUserEntity);
-        if(delete!=1||i1!=1)throw new ApplicationException(CodeType.SERVICE_ERROR,"下架失败");
+        int i1 = apparelUserMapper.updateById(apparelUserEntity);
+        if (delete != 1 || i1 != 1) throw new ApplicationException(CodeType.SERVICE_ERROR, "下架失败");
     }
 
     @Override
     public List<ApparelMarketDetailVo> apparelMarket(Long userId, Integer type) {
-        return apparelUserDao.getApparelMarket(userId,type);
+        return apparelUserMapper.getApparelMarket(userId, type);
     }
 
     @Override
     public List<ApparelMarketDetailVo> puttingApparel(Long userId) {
+        //根据userId查询市场服饰
         List<ApparelMarketDetailVo> puttingApparel = apparelMarketMapper.getPuttingApparel(userId);
         LocalDateTime now = LocalDateTime.now();
-        puttingApparel.forEach(a->{
-            if(now.isAfter(a.getMaturityTime())){
+        puttingApparel.forEach(a -> {
+            if (now.isAfter(a.getMaturityTime())) {
+                //判断服饰时长否过了当前时间
                 puttingApparel.remove(a);
-                apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,a.getApparelMarketId()));
+                //删除记录
+                apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>()
+                        .eq(ApparelMarketEntity::getApparelMarketId, a.getApparelMarketId()));
+                //更具用户id查出用户服饰记录
+                ApparelUserEntity apparelUserEntity = apparelUserMapper.selectOne(new LambdaQueryWrapper<ApparelUserEntity>()
+                        .eq(ApparelUserEntity::getUserId, a.getUserId())
+                        .eq(ApparelUserEntity::getApparelDetailId, a.getApparelDetailId()));
+                //修改用户服饰状态未0正常并更新
+                apparelUserEntity.setIsEquip(0);
             }
         });
         return puttingApparel;
@@ -100,27 +120,37 @@ public class ApparelMarketImpl implements IApparelMarketService {
 
     @Override
     public List<ApparelOrderVo> getApparelOrders(Long userId) {
+        //获取订单列表
         List<ApparelOrderVo> apparelOrders = apparelOrderMapper.getApparelOrders(userId);
-        apparelOrders.forEach(a-> a.setTime(DateUtils.formatDateTime(a.getApparelPayTime())));
+        //格式化时间给前端
+        apparelOrders.forEach(a -> a.setTime(DateUtils.formatDateTime(a.getApparelPayTime())));
         return apparelOrders;
     }
 
     @Override
-    public List<ApparelMarketDto> getApparelMarketInfo(Long userId,Integer type) {
+    public List<ApparelMarketDto> getApparelMarketInfo(Long userId, Integer type) {
         return apparelMarketMapper.getApparelMarketInfo(userId, type);
     }
 
     @Override
     public void buyMarketApparel(BuyMarketApparelDto buyMarketApparelDto) {
-        ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,buyMarketApparelDto.getApparelMarketId()));
-        if(marketEntity==null)throw new ApplicationException(CodeType.SERVICE_ERROR,"该服饰已售出！");
+        //查出市场记录
+        ApparelMarketEntity marketEntity = apparelMarketMapper.selectOne(new LambdaQueryWrapper<ApparelMarketEntity>()
+                .eq(ApparelMarketEntity::getApparelMarketId, buyMarketApparelDto.getApparelMarketId()));
+        if (marketEntity == null) throw new ApplicationException(CodeType.SERVICE_ERROR, "该服饰已售出！");
         //删除上架信息
-        int i = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>().eq(ApparelMarketEntity::getApparelMarketId,buyMarketApparelDto.getApparelMarketId()));
-        ApparelUserEntity apparelUserEntity = apparelUserDao.selectOne(new LambdaQueryWrapper<ApparelUserEntity>().eq(ApparelUserEntity::getUserId, buyMarketApparelDto.getSellUserId()).eq(ApparelUserEntity::getIsEquip, 2));
+        int i = apparelMarketMapper.delete(new LambdaQueryWrapper<ApparelMarketEntity>()
+                .eq(ApparelMarketEntity::getApparelMarketId, buyMarketApparelDto.getApparelMarketId()));
+        //查出用户上架服饰
+        ApparelUserEntity apparelUserEntity = apparelUserMapper.selectOne(new LambdaQueryWrapper<ApparelUserEntity>()
+                .eq(ApparelUserEntity::getUserId, buyMarketApparelDto.getSellUserId())
+                .eq(ApparelUserEntity::getIsEquip, 2));
+        //修改服饰用户
         apparelUserEntity.setUserId(buyMarketApparelDto.getBuyUserId());
+        //修改服饰状态
         apparelUserEntity.setIsEquip(0);
-        //修改服饰用户归属
-        int i1 = apparelUserDao.updateById(apparelUserEntity);
+        //更新用户
+        int i1 = apparelUserMapper.updateById(apparelUserEntity);
         //更新购买记录
         LocalDateTime now = LocalDateTime.now();
         ApparelOrderEntity apparelOrderEntity = new ApparelOrderEntity();
@@ -139,6 +169,7 @@ public class ApparelMarketImpl implements IApparelMarketService {
         //跟新用户金币
         Integer integer = apparelOrderMapper.updateUserGold(-marketEntity.getGold(), buyMarketApparelDto.getSellUserId());
         Integer integer1 = apparelOrderMapper.updateUserGold(marketEntity.getGold(), buyMarketApparelDto.getBuyUserId());
-        if(i<1||i1<1||insert<1||insert1<1||integer<1||integer1<1)throw new ApplicationException(CodeType.SERVICE_ERROR,"购买失败！");
+        if (i < 1 || i1 < 1 || insert < 1 || insert1 < 1 || integer < 1 || integer1 < 1)
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "购买失败！");
     }
 }
