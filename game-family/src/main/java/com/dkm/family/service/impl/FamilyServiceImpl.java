@@ -196,6 +196,9 @@ public class FamilyServiceImpl implements FamilyService {
         List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId))
                 .stream().mapToLong(FamilyLatelyEntity::getFamilyId).boxed().collect(Collectors.toList());
         //获取热门家族
+        if( familyIds==null || familyIds.isEmpty()){
+            return null;
+        }
         List<HotFamilyVo> hotFamily = familyDao.getLatelyFamily(familyIds,userId);
         if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
