@@ -30,7 +30,7 @@ import java.util.List;
 import static com.dkm.seed.vilidata.RandomUtils.*;
 
 /**
- * @author 刘梦祺
+ * @author MQ
  * @PROJECT_NAME: game_project
  * @DESCRIPTION:
  * @DATE: 2020/6/8 15:32
