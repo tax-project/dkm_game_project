@@ -6,6 +6,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
@@ -79,5 +80,12 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return
      */
     List<OpponentVo> listOpponent(List<IdVo> list);
+
+    /**
+     *  查询所有用户信息
+     * @param list 参数id集合
+     * @return 返回所有用户信息
+     */
+    List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
 
 }
