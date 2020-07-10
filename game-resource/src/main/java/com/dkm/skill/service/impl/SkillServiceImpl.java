@@ -242,10 +242,13 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             //修改用户信息
             userFeignClient.updateInfo(bo);
 
+            //修改用户金星星数量
+            stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
+            iStarsService.updateUserVenusNum(stars);
+
             /**
              * 积分加8
              */
-            System.out.println("===="+localUser.getUser().getId());
             iIntegralService.updateUserByIntegral(localUser.getUser().getId());
 
             map.put("msg","升级失败 积分加8");
@@ -271,6 +274,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             bo.setPrestige(0);
             //修改用户信息
             userFeignClient.updateInfo(bo);
+
+            //修改用户金星星数量
+            stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
+            iStarsService.updateUserVenusNum(stars);
 
             /**
              * 积分加8

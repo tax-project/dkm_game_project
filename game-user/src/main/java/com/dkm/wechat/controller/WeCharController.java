@@ -133,7 +133,7 @@ public class WeCharController {
     @ApiImplicitParam(name = "userName", value = "账号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/queryUserByName")
     @CrossOrigin
-    public User queryUserByName (@RequestParam("userName") String userName) {
+    public List<User> queryUserByName (@RequestParam("userName") String userName) {
 
         if (StringUtils.isBlank(userName)) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");

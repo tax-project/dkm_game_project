@@ -22,6 +22,4 @@ public class OccupiedVo {
     private Long goldSize;
     @ApiModelProperty("已获得的积分")
     private Long integralSize;
-
-
 }
