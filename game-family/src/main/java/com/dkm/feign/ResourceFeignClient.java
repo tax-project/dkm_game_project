@@ -17,6 +17,11 @@ import java.util.List;
 @FeignClient(value = "resource", fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     @GetMapping("/SkillController/querySkillByUserId")
     Result<List<UserSkillVo>> querySkillByUserId(@RequestParam("userId") Long userId);
 }

@@ -20,6 +20,7 @@ import com.dkm.feign.ResourceFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +51,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private FamilyDao familyDao;
     @Resource
     private FamilyAdditionMapper mapper;
-    @Resource
+    @Autowired
     private ResourceFeignClient resourceFeignClient;
 
     @Override
@@ -74,6 +75,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         return mapper.selectList(null);
     }
 
+    @Deprecated
     @Override
     public MineDetailVo detail(long battleId, Long userId) {
         val item = mineMapper.selectById(battleId);
@@ -112,8 +114,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     throw new IllegalStateException("Unexpected value: " + LocalDate.now().getDayOfWeek());
             }
             result.setSkillName(name);
-            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
-            result.setSkillLevel(listResult.get(0).getSkGrade());
+//            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+//            result.setSkillLevel(listResult.get(0).getSkGrade());
         }
         return result;
     }

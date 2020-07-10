@@ -393,13 +393,16 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double hezdl=0;
 
-            if(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus>0){
+            /*if(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus>0){
                 hezdl=userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus;
             }
-            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+(hezdl);
+            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+(hezdl);*/
 
             //得到最终他方的战力
-            heRipetime1 = (int) heRipetime;
+            double v = userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus;
+            int v1 = (int) v;
+            heRipetime1 = v1;
+            System.out.println("他方战斗力"+heRipetime1);
            /* if(heRipetime1==0){
                 heRipetime1=100;
             }*/
@@ -513,10 +516,11 @@ public class AttendantServiceImpl implements IAttendantService {
             double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+(myzdl);
 
 
-
+            double v = userInfoQueryBoResult.getData().getUserInfoRenown() * myEquipmentBonus;
+            int v1 = (int) v;
             //得到最终我方的战力
-            myRipetime= (int) heRipetime;
-
+            //myRipetime= (int) heRipetime;
+                myRipetime=v1;
             System.out.println("我方战斗力"+myRipetime);
             System.out.println("我方血量"+ourHealth);
 

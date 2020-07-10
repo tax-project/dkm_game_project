@@ -48,9 +48,10 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
      */
     @Override
     public List<UserEventVo> queryAllEvent() {
+        System.out.println(localUser.getUser().getId());
         List<UserEventVo> userEventVos = baseMapper.queryAllEvent(localUser.getUser().getId());
         for (int i = 0; i < userEventVos.size(); i++) {
-            List<UserEventContentVo> userEvents = baseMapper.queryUserIsExistence(userEventVos.get(i).getHeUserId(), localUser.getUser().getId());
+            List<UserEventContentVo> userEvents = baseMapper.queryUserIsExistence(localUser.getUser().getId(),userEventVos.get(i).getHeUserId());
             for (int j = 0; j < userEvents.size(); j++) {
                 userEvents.get(j).setTime(DateUtils.formatDateTime(userEvents.get(j).getEventTime()));
                 userEventVos.get(i).setList(userEvents);

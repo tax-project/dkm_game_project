@@ -153,6 +153,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
 
+
       /**
        * 根据用户id查询所有技能
        */
@@ -293,6 +294,8 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    @Override
    public List<UserSkillVo> querySkillByUserId(Long userId) {
+      //初始化技能
+      initSkill(userId);
       return skillMapper.querySkillByUserId(userId);
    }
 
