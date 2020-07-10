@@ -66,7 +66,7 @@ public interface IWeChatService {
      * @param userName
      * @return
      */
-    User queryUserByName (String userName);
+    List<User> queryUserByName (String userName);
 
     /**
      *  查询个人信息

@@ -312,14 +312,14 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     }
 
     @Override
-    public User queryUserByName(String userName) {
+    public List<User> queryUserByName(String userName) {
 
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
               .eq(User::getWeChatOpenId,userName)
               .or()
               .eq(User::getWeChatNickName,userName);
 
-        return baseMapper.selectOne(wrapper);
+        return baseMapper.selectList(wrapper);
     }
 
     @Override
