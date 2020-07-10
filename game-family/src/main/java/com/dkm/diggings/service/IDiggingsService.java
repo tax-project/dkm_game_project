@@ -50,7 +50,8 @@ public interface IDiggingsService {
      * 查看矿山的详情信息
      *
      * @param battleId 矿山ID
+     * @param userId
      * @return 详情信息
      */
-    MineDetailVo detail(long battleId);
+    MineDetailVo detail(long battleId, Long userId);
 }

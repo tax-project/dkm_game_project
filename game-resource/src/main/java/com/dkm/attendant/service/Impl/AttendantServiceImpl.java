@@ -4,6 +4,8 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.entity.vo.UserAttAllVo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.plunder.entity.Opponent;
 import com.dkm.attendant.entity.bo.*;
 import com.dkm.attendant.entity.vo.*;
@@ -30,6 +32,7 @@ import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,7 @@ import java.util.stream.Collectors;
  * @USER: 刘梦祺
  * @DATE: 2020/5/11 14:06
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class AttendantServiceImpl implements IAttendantService {
@@ -108,8 +112,38 @@ public class AttendantServiceImpl implements IAttendantService {
             list.add(infoVo);
         }
 
+        List<Long> longList = new ArrayList<>();
+        for (AttUserAllInfoVo infoVo : list1) {
+            //添加进所有用户id
+            longList.add(infoVo.getCaughtPeopleId());
+        }
+
+        //查询所有用户信息
+        UserAttAllVo vo = new UserAttAllVo();
+        vo.setList(longList);
+        Result<List<UserInfoAttVo>> listResult = userFeignClient.queryUserInfoAtt(vo);
+
+        if (listResult.getCode() != 0) {
+            log.info("查询用户feign错误");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+
+        List<UserInfoAttVo> data = listResult.getData();
+
+        Map<Long, UserInfoAttVo> userInfoAttVoMap = data.stream().
+              collect(Collectors.toMap(UserInfoAttVo::getUserId,
+                    userInfoAttVo -> userInfoAttVo));
+
+        List<AttUserAllInfoVo> collect = list.stream().map(attUserAllInfoVo -> {
+            if (userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()) != null) {
+                attUserAllInfoVo.setAtImg(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeardUrl());
+                attUserAllInfoVo.setAtName(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+            }
+            return attUserAllInfoVo;
+        }).collect(Collectors.toList());
+
         Map<String, Object> map = new HashMap<>(2);
-        map.put("att",list);
+        map.put("att",collect);
         map.put("put", outputList);
 
         return map;
@@ -359,13 +393,16 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double hezdl=0;
 
-            if(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus>0){
+            /*if(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus>0){
                 hezdl=userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus- userInfoQueryBoResult.getData().getUserInfoRenown() + myEquipmentBonus;
             }
-            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+(hezdl);
+            double heRipetime = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1/2.0)+(hezdl);*/
 
             //得到最终他方的战力
-            heRipetime1 = (int) heRipetime;
+            double v = userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * heEquipmentBonus;
+            int v1 = (int) v;
+            heRipetime1 = v1;
+            System.out.println("他方战斗力"+heRipetime1);
            /* if(heRipetime1==0){
                 heRipetime1=100;
             }*/
@@ -479,10 +516,11 @@ public class AttendantServiceImpl implements IAttendantService {
             double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+(myzdl);
 
 
-
+            double v = userInfoQueryBoResult.getData().getUserInfoRenown() * myEquipmentBonus;
+            int v1 = (int) v;
             //得到最终我方的战力
-            myRipetime= (int) heRipetime;
-
+            //myRipetime= (int) heRipetime;
+                myRipetime=v1;
             System.out.println("我方战斗力"+myRipetime);
             System.out.println("我方血量"+ourHealth);
 

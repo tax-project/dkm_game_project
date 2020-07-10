@@ -36,6 +36,13 @@ public interface FamilyDao extends BaseMapper<FamilyEntity> {
             "SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id ")
     List<HotFamilyVo> getHotFamily();
 
+    //性能不好的---进行了全表扫描
+    @Select("SELECT f.*,u.we_chat_head_img_url as headImg FROM ( " +
+            "SELECT f.*,fd.user_id FROM ( " +
+            "SELECT * FROM tb_family where family_id in (#{ids}) ) f LEFT JOIN ( " +
+            "SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id ")
+    List<HotFamilyVo> getLatelyFamily(@Param("ids") String ids);
+
     @Select("SELECT family_name FROM tb_family WHERE family_id = #{family_id}")
     String selectNameByFamilyId(@Param("family_id") long familyId);
 

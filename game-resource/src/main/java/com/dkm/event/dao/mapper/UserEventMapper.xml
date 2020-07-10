@@ -7,7 +7,7 @@
     <select id="queryAllEvent" resultType="com.dkm.event.entity.vo.UserEventVo" parameterType="Long">
         select c.user_sex,c.we_chat_nick_name,c.we_chat_head_img_url,b.user_info_renown,a.he_user_id from tb_user_event a,tb_user_info b,tb_user c
         where a.he_user_id=b.user_id and a.he_user_id=c.user_id and a.user_id=#{userId}
-        and DATE_FORMAT(event_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        and DATE_FORMAT(event_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) GROUP BY a.he_user_id
     </select>
 
     <select id="queryUserIsExistence" parameterType="Long" resultType="com.dkm.event.entity.vo.UserEventContentVo">

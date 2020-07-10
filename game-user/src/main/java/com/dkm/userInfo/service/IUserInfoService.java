@@ -5,6 +5,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
@@ -95,4 +96,11 @@ public interface IUserInfoService {
     * @return 返回个人信息
     */
    WeChatUserInfoVo queryWeChatUserInfo ();
+
+   /**
+    *  查询所有用户信息
+    * @param list 参数id集合
+    * @return 返回所有用户信息
+    */
+   List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
 }

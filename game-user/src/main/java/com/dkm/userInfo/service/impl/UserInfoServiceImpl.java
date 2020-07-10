@@ -9,6 +9,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
@@ -177,5 +178,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       WeChatUserInfoVo result = new WeChatUserInfoVo();
       BeanUtils.copyProperties(bo,result);
       return result;
+   }
+
+
+   @Override
+   public List<UserInfoAttVo> queryUserInfoAtt(List<Long> list) {
+      return baseMapper.queryUserInfoAtt (list);
    }
 }
