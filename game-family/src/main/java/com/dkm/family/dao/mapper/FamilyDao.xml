@@ -2,13 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.family.dao.FamilyDao">
-<select id="getImgs"  resultType="com.dkm.family.entity.vo.FamilyImgsVo">
-    SELECT u.we_chat_head_img_url,fd.family_id FROM
-    (SELECT user_id,family_id FROM tb_family_details WHERE
-    <foreach collection="param" item="para" separator="or">
-        family_id = #{para}
-    </foreach>
-    ) fd LEFT JOIN tb_user u ON u.user_id = fd.user_id
-</select>
+    <select id="getImgs"  resultType="com.dkm.family.entity.vo.FamilyImgsVo">
+        SELECT u.we_chat_head_img_url,fd.family_id FROM
+        (SELECT user_id,family_id FROM tb_family_details WHERE
+        <foreach collection="param" item="para" separator="or">
+            family_id = #{para}
+        </foreach>
+        ) fd LEFT JOIN tb_user u ON u.user_id = fd.user_id
+    </select>
+    <select id="getLatelyFamily"   resultType="com.dkm.family.entity.vo.HotFamilyVo">
+        SELECT f.*,u.we_chat_head_img_url as headImg FROM (
+        SELECT f.*,fd.user_id FROM (
+        SELECT * FROM tb_family where family_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        ) ) f LEFT JOIN (
+        SELECT family_id,user_id FROM tb_family_details WHERE is_admin=2) fd ON fd.family_id=f.family_id) f LEFT JOIN tb_user u ON f.user_id=u.user_id where f.user_id != #{userId}
+    </select>
 
 </mapper>
