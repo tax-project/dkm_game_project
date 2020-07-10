@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  * @DESCRIPTION:
  * @DATE: 2020/7/6 14:23
  */
+@Slf4j
 @Api(tags = "技能api")
 @RestController
 @RequestMapping("/SkillController")
@@ -65,8 +67,11 @@ public class SkillController {
         return iSkillService.upgradeSkills(id,status);
     }
 
+
+
     @GetMapping("/querySkillByUserId")
     public List<UserSkillVo> querySkillByUserId(@RequestParam("userId") Long userId){
+        log.info("userID {}",userId);
         return iSkillService.querySkillByUserId(userId);
     }
 }

@@ -294,7 +294,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    @Override
    public List<UserSkillVo> querySkillByUserId(Long userId) {
-      //初始化
+      //初始化技能
       initSkill(userId);
       return skillMapper.querySkillByUserId(userId);
    }

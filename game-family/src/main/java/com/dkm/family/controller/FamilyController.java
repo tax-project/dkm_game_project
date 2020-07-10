@@ -104,7 +104,7 @@ public class FamilyController {
     @CrossOrigin
     @CheckToken
     public List<HotFamilyVo> hotFamily(){
-        return familyService.getHotFamily();
+        return familyService.getHotFamily(localUser.getUser().getId());
     }
 
     @ApiOperation("最近访问家族（最多5条记录）")

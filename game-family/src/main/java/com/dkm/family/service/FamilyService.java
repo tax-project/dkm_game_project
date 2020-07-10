@@ -52,7 +52,7 @@ public interface FamilyService {
     /**
      * 热门家族
      */
-    List<HotFamilyVo> getHotFamily();
+    List<HotFamilyVo> getHotFamily(Long userId);
 
     /**
      * 最近访问家族
