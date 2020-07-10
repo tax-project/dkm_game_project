@@ -20,6 +20,7 @@ import com.dkm.feign.ResourceFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +51,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private FamilyDao familyDao;
     @Resource
     private FamilyAdditionMapper mapper;
-    @Resource
+    @Autowired
     private ResourceFeignClient resourceFeignClient;
 
     @Override
