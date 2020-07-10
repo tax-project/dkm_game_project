@@ -75,6 +75,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         return mapper.selectList(null);
     }
 
+    @Deprecated
     @Override
     public MineDetailVo detail(long battleId, Long userId) {
         val item = mineMapper.selectById(battleId);
@@ -113,8 +114,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     throw new IllegalStateException("Unexpected value: " + LocalDate.now().getDayOfWeek());
             }
             result.setSkillName(name);
-            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
-            result.setSkillLevel(listResult.get(0).getSkGrade());
+//            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+//            result.setSkillLevel(listResult.get(0).getSkGrade());
         }
         return result;
     }
