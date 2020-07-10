@@ -16,6 +16,7 @@ import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.feign.ResourceFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,6 +50,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private FamilyDao familyDao;
     @Resource
     private FamilyAdditionMapper mapper;
+    @Resource
+    private ResourceFeignClient resourceFeignClient;
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -71,13 +75,46 @@ public class DiggingsServiceImpl implements IDiggingsService {
     }
 
     @Override
-    public MineDetailVo detail(long battleId) {
+    public MineDetailVo detail(long battleId, Long userId) {
         val item = mineMapper.selectById(battleId);
         if (ObjectUtils.isNullOrEmpty(item)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
         val result = new MineDetailVo();
-
+        result.setInfo(getItemsLevelType().get(item.getItemLevel()));
+        if (item.getUserId() == 0) {
+            result.setHerSkillLevel(result.getInfo().getLevel());
+            result.setHerName(result.getInfo().getNpcName());
+            String name;
+            switch (LocalDate.now().getDayOfWeek()) {
+                case MONDAY:
+                    name = "顶猪头";
+                    break;
+                case TUESDAY:
+                    name = "胡言乱语";
+                    break;
+                case WEDNESDAY:
+                    name = "顺手牵羊";
+                    break;
+                case THURSDAY:
+                    name = "踢出家族";
+                    break;
+                case FRIDAY:
+                    name = "禁言";
+                    break;
+                case SATURDAY:
+                    name = "幸运之吻";
+                    break;
+                case SUNDAY:
+                    name = "声望";
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + LocalDate.now().getDayOfWeek());
+            }
+            result.setSkillName(name);
+            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+            result.setSkillLevel(listResult.get(0).getSkGrade());
+        }
         return result;
     }
 
@@ -87,11 +124,20 @@ public class DiggingsServiceImpl implements IDiggingsService {
     }
 
 
+    private final List<MineLevelEntity> mineLevelEntities =
+            new ArrayList<>();
+
     @Override
     public List<MineInfoVo> getItemsLevelType() {
-        val entityList = mineLevelMapper.selectList(null);
-        val result = new ArrayList<MineInfoVo>(entityList.size());
-        for (MineLevelEntity levelEntity : entityList) {
+
+        synchronized (mineLevelEntities) {
+            if (mineLevelEntities.size() == 0) {
+                val entityList = mineLevelMapper.selectList(null);
+                mineLevelEntities.addAll(entityList);
+            }
+        }
+        val result = new ArrayList<MineInfoVo>(mineLevelEntities.size());
+        for (MineLevelEntity levelEntity : mineLevelEntities) {
             MineInfoVo mineInfoVo = new MineInfoVo();
             mineInfoVo.setNpcName(levelEntity.getNpcName());
             mineInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());

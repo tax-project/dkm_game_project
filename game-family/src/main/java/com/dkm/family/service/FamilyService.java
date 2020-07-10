@@ -55,6 +55,12 @@ public interface FamilyService {
     List<HotFamilyVo> getHotFamily();
 
     /**
+     * 最近访问家族
+     * @return
+     */
+    List<HotFamilyVo> getLatelyFamily(Long userId);
+
+    /**
      * 加入家族
      * @param userId
      * @param familyId

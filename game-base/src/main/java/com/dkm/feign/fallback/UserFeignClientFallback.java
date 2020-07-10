@@ -26,13 +26,8 @@ public class UserFeignClientFallback implements UserFeignClient {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
-   /**
-    * feign调用失败的回调
-    * @param much 次数
-    * @param userId 用户Id
-    */
    @Override
-   public Result updateUserInfo(Integer much, Long userId) {
+   public Result updateUserInfo(Integer much, Long userId, Integer userInfoDiamonds) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
