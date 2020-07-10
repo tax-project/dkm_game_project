@@ -6,6 +6,7 @@ import com.dkm.family.entity.FamilyEntity;
 import com.dkm.family.entity.vo.HotFamilyVo;
 import com.dkm.family.entity.vo.UserCenterFamilyVo;
 import com.dkm.family.service.FamilyService;
+import com.dkm.family.service.IFamilyLatelyService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
@@ -34,6 +35,8 @@ public class FamilyController {
     private LocalUser localUser;
     @Resource
     private FamilyService familyService;
+    @Resource
+    private IFamilyLatelyService iFamilyLatelyService;
 
     @ApiOperation("创建家族")
     @ApiImplicitParams({
@@ -69,6 +72,7 @@ public class FamilyController {
         if(familyId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
+        iFamilyLatelyService.add(localUser.getUser().getId(),familyId);
         return familyService.otherFamilyInfo(familyId);
     }
 
@@ -95,12 +99,20 @@ public class FamilyController {
         familyService.exitFamily(localUser.getUser().getId());
     }
 
-    @ApiOperation("感兴趣家族")
+    @ApiOperation("热门家族")
     @GetMapping("/hotFamily")
     @CrossOrigin
     @CheckToken
     public List<HotFamilyVo> hotFamily(){
         return familyService.getHotFamily();
+    }
+
+    @ApiOperation("最近访问家族（最多5条记录）")
+    @GetMapping("/latelyFamily")
+    @CrossOrigin
+    @CheckToken
+    public List<HotFamilyVo> latelyFamily(){
+        return familyService.getLatelyFamily(localUser.getUser().getId());
     }
 
     @ApiOperation("加入家族")

@@ -8,8 +8,10 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.dao.FamilyDetailDao;
+import com.dkm.family.dao.FamilyLatelyDao;
 import com.dkm.family.entity.FamilyDetailEntity;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.family.entity.FamilyLatelyEntity;
 import com.dkm.family.entity.vo.*;
 import com.dkm.family.service.FamilyService;
 import com.dkm.union.dao.UnionMapper;
@@ -57,6 +59,8 @@ public class FamilyServiceImpl implements FamilyService {
     private IdGenerator idGenerator;
     @Resource
     private UnionMapper unionMapper;
+    @Resource
+    private FamilyLatelyDao familyLatelyDao;
     @Override
     public void creatFamily(Long userId,FamilyEntity family) {
         if(familyDetailDao.selectOne(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getUserId,userId))!=null){
@@ -175,6 +179,24 @@ public class FamilyServiceImpl implements FamilyService {
     public List<HotFamilyVo> getHotFamily() {
         //获取热门家族
         List<HotFamilyVo> hotFamily = familyDao.getHotFamily();
+        if(hotFamily==null||hotFamily.size()==0)return null;
+        List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
+        //根据家族id查询人员头像
+        Map<Long, List<String>> collect1 = familyDao.getImgs(collect).stream().collect(Collectors.groupingBy(FamilyImgsVo::getFamilyId,Collectors.mapping(FamilyImgsVo::getWeChatHeadImgUrl,Collectors.toList())));
+        //整合头像并返回结果
+        hotFamily.forEach(hotFamilyVo->{
+            List<String> strings = collect1.get(hotFamilyVo.getFamilyId());
+            hotFamilyVo.setImgs(strings.subList(0, Math.min(strings.size(), 3)));
+        });
+        return hotFamily;
+    }
+
+    @Override
+    public List<HotFamilyVo> getLatelyFamily(Long userId) {
+        List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId))
+                .stream().mapToLong(FamilyLatelyEntity::getFamilyId).boxed().collect(Collectors.toList());
+        //获取热门家族
+        List<HotFamilyVo> hotFamily = familyDao.getLatelyFamily(familyIds.toString().replace("[", "").replace("]", "").replace(" ",""));
         if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
         //根据家族id查询人员头像
