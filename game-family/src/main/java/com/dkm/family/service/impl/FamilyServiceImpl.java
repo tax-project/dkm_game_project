@@ -176,9 +176,9 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public List<HotFamilyVo> getHotFamily() {
+    public List<HotFamilyVo> getHotFamily(Long userId) {
         //获取热门家族
-        List<HotFamilyVo> hotFamily = familyDao.getHotFamily();
+        List<HotFamilyVo> hotFamily = familyDao.getHotFamily(userId);
         if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
         //根据家族id查询人员头像
@@ -196,7 +196,10 @@ public class FamilyServiceImpl implements FamilyService {
         List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId))
                 .stream().mapToLong(FamilyLatelyEntity::getFamilyId).boxed().collect(Collectors.toList());
         //获取热门家族
-        List<HotFamilyVo> hotFamily = familyDao.getLatelyFamily(familyIds.toString().replace("[", "").replace("]", "").replace(" ",""));
+        if( familyIds==null || familyIds.isEmpty()){
+            return null;
+        }
+        List<HotFamilyVo> hotFamily = familyDao.getLatelyFamily(familyIds,userId);
         if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());
         //根据家族id查询人员头像
