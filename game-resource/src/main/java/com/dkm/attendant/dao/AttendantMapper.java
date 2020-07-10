@@ -6,6 +6,7 @@ import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.User;
+import com.dkm.entity.vo.UserInfoAttVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 

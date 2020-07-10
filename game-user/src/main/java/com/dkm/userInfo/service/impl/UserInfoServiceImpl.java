@@ -183,6 +183,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Override
    public List<UserInfoAttVo> queryUserInfoAtt(List<Long> list) {
+      if (null == list || list.size() == 0) {
+         return null;
+      }
       return baseMapper.queryUserInfoAtt (list);
    }
 }
