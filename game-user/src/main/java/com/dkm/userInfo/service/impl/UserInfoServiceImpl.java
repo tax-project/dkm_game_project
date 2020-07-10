@@ -84,7 +84,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     * @param userId 用户id
     */
    @Override
-   public void updateUserInfo(Integer much, Long userId) {
+   public void updateUserInfo(Integer much, Long userId,Integer userInfoDiamonds) {
 
       LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<UserInfo>()
             .eq(UserInfo::getUserId,userId);
@@ -98,6 +98,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       UserInfo userInfo1 = new UserInfo();
 
       userInfo1.setUserInfoAllEnvelopeMuch(userInfo.getUserInfoAllEnvelopeMuch() + much);
+      userInfo1.setUserInfoDiamonds(userInfo.getUserInfoDiamonds() - userInfoDiamonds);
 
       baseMapper.update(userInfo1, wrapper);
    }
