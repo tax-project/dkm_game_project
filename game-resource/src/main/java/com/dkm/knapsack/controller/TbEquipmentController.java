@@ -114,7 +114,7 @@ public class TbEquipmentController {
 
 
 
-    @ApiOperation(value = "批量出售的接口文档",notes = "成功返回成功 失败则返回失败")
+    @ApiOperation(value = "批量出售未进背包的接口文档",notes = "成功返回成功 失败则返回失败")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键",required = true)
     })
@@ -130,5 +130,23 @@ public class TbEquipmentController {
     @CheckToken
     public void listEquipmentId(@RequestParam("equipmentId") String equipmentId){
         tbEquipmentService.listEquipmentId(equipmentId);
+    }
+    @ApiOperation(value = "批量出售已进背包的接口文档",notes = "成功返回成功 失败则返回失败")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "equipmentId",value = "装备主键",required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @GetMapping("/listEquipmentIdTwo")
+    @CrossOrigin
+    @CheckToken
+    public void listEquipmentIdTwo(@RequestParam("equipmentId") String equipmentId){
+
+        tbEquipmentService.listEquipmentIdTwo(equipmentId);
     }
 }

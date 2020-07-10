@@ -275,8 +275,11 @@ public class SeedServiceImpl implements ISeedService {
             //得到用户token信息
             UserLoginQuery user = localUser.getUser();
 
-            User user1 = attendantMapper.queryUserReputationGold(user.getId());
-
+            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+            if(userInfoQueryBoResult.getCode()!=0){
+                log.info("用户模块崩了");
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了");
+            }
 
             //根据用户查询解锁的土地
             List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
@@ -289,12 +292,15 @@ public class SeedServiceImpl implements ISeedService {
             increaseUserInfoBO.setUserId(user.getId());
             increaseUserInfoBO.setUserInfoGold(gold);
 
-            if (user1.getUserInfoGold() < gold) {
+            if (userInfoQueryBoResult.getData().getUserInfoGold() < gold) {
                 throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
             }
 
             //减少金币
             Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
+            if(result.getCode()!=0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了 别找我");
+            }
 
             //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
             double ripeTime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
@@ -440,6 +446,12 @@ public class SeedServiceImpl implements ISeedService {
             //得到用户token信息
             UserLoginQuery user = localUser.getUser();
 
+            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+            if(userInfoQueryBoResult.getCode()!=0){
+                log.info("用户模块崩了");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
+
             //根据用户查询解锁的土地
             List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
 
@@ -468,24 +480,16 @@ public class SeedServiceImpl implements ISeedService {
 
             }
 
-
-            LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
-                    .eq(LandSeed::getUserId, user.getId())
-                    .eq(LandSeed::getLeStatus, 3);
-
-            List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
-
             //种植所获得的经验
-            double experience = Math.pow(seedPlantVo.getSeedGrade(), 2 / 5.0) * 100 * list1.size();
+            double experience = Math.pow(seedPlantVo.getSeedGrade(), 2 / 5.0) * 100 * userLandUnlocks.size();
             Integer experienceInteger = Integer.valueOf((int) experience);
 
 
             //种植一次所获得的金币
-
-            double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 1000 * list1.size();
+            double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 1000 * userLandUnlocks.size();
             Integer userGoldInteger = Integer.valueOf((int) userGold);
 
-            System.out.println(userGold);
+            System.out.println("种植一次所获得的金币="+userGold);
 
             //判断当前经验是否等级下一级的等级 如果等于等级加一
             if (seedPlantVo.getUserInfoNowExperience() + experienceInteger >= seedPlantVo.getUserInfoNextExperience()) {
@@ -493,7 +497,6 @@ public class SeedServiceImpl implements ISeedService {
                 seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNextExperience() + experienceInteger);
                 //当前经验减去总经验
                 seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNowExperience() - seedPlantVo.getUserInfoNextExperience());
-                Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
 
                 //算出下一级的总经验
                 double v = (((userInfoQueryBoResult.getData().getUserInfoGrade() - 1) +
@@ -524,15 +527,15 @@ public class SeedServiceImpl implements ISeedService {
 
                 //修改用户信息
                 int i = seedMapper.updateUser(seedPlantVo);
-                Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
+                //Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
 
                 //每三级解锁一块土地
-                if (userInfoQueryBoResults.getData().getUserInfoGrade() % 3 == 0) {
+                if (userInfoQueryBoResult.getData().getUserInfoGrade() % 3 == 0) {
                     //查询用户没有解锁的土地 状态等于0解锁第一块土地
                     List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
 
                     //应该拥有土地
-                    int i2 = userInfoQueryBoResults.getData().getUserInfoGrade() / 3 + 1;
+                    int i2 = userInfoQueryBoResult.getData().getUserInfoGrade() / 3 + 1;
 
                     //现在拥有土地
                     int size = userLandUnlocks.size();
@@ -543,7 +546,7 @@ public class SeedServiceImpl implements ISeedService {
                         if (userLandUnlocks1.get(0).getLaStatus() == 0) {
                             int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
                             if (i1 <= 0) {
-                                throw new ApplicationException(CodeType.SERVICE_ERROR, "等级等于" + userInfoQueryBoResults.getData().getUserInfoGrade() + "！解锁失败");
+                                throw new ApplicationException(CodeType.SERVICE_ERROR, "等级等于" + userInfoQueryBoResult.getData().getUserInfoGrade() + "！解锁失败");
                             }
                         }
                     }
@@ -575,8 +578,6 @@ public class SeedServiceImpl implements ISeedService {
 
             }
 
-       /* } */
-
     }
 
     @Override
@@ -589,8 +590,12 @@ public class SeedServiceImpl implements ISeedService {
     public Result<UserInfoQueryBo> queryUserAll() {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
-
-        return userFeignClient.queryUser(user.getId());
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+        if(userInfoQueryBoResult.getCode()!=0){
+            log.info("用户模块崩了");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了 别找我");
+        }
+        return userInfoQueryBoResult;
     }
 
     @Override
