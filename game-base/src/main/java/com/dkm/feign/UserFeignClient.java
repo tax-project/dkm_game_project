@@ -32,10 +32,13 @@ public interface UserFeignClient {
     *  修改用户的每日抢红包的总次数
     * @param much 次数
     * @param userId 用户Id
+    * @param userInfoDiamonds 钻石
     * @return 返回结果
     */
-   @GetMapping("/v1/userInfo/updateMuch/{much}/{userId}")
-   Result updateUserInfo (@PathVariable("much") Integer much, @PathVariable("userId") Long userId);
+   @GetMapping("/v1/userInfo/updateMuch/{much}/{userId}/{userInfoDiamonds}")
+   Result updateUserInfo (@PathVariable("much") Integer much,
+                          @PathVariable("userId") Long userId,
+                          @PathVariable("userInfoDiamonds") Integer userInfoDiamonds);
 
    /**
     *  根据用户Id集合查询所有用户头像

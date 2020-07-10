@@ -3,10 +3,7 @@ package com.dkm.userInfo.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
-import com.dkm.entity.vo.AttendantWithUserVo;
-import com.dkm.entity.vo.IdVo;
-import com.dkm.entity.vo.ListVo;
-import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.*;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
@@ -33,12 +30,14 @@ public class UserInfoController {
    @Autowired
    private IUserInfoService userInfoService;
 
-   @GetMapping("/updateMuch/{much}/{userId}")
-   public void updateUserInfo (@PathVariable("much") Integer much, @PathVariable("userId") Long userId) {
+   @GetMapping("/updateMuch/{much}/{userId}/{userInfoDiamonds}")
+   public void updateUserInfo (@PathVariable("much") Integer much,
+                               @PathVariable("userId") Long userId,
+                               @PathVariable("userInfoDiamonds") Integer userInfoDiamonds) {
       if (userId == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
       }
-      userInfoService.updateUserInfo(much,userId);
+      userInfoService.updateUserInfo(much,userId,userInfoDiamonds);
    }
 
    @PostMapping("/increase")
@@ -81,6 +80,11 @@ public class UserInfoController {
    @PostMapping("/listOpponent")
    public List<OpponentVo> listOpponent(@RequestBody ListVo listVo){
       return userInfoService.listOpponent(listVo.getList());
+   }
+
+   @PostMapping("/queryUserInfoAtt")
+   public List<UserInfoAttVo> queryUserInfoAtt(@RequestBody UserAttAllVo listVo){
+      return userInfoService.queryUserInfoAtt(listVo.getList());
    }
 
 

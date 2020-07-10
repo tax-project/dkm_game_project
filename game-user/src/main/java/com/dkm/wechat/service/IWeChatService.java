@@ -4,6 +4,7 @@ package com.dkm.wechat.service;
 import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
 import com.dkm.wechat.entity.vo.UserChatInfoVo;

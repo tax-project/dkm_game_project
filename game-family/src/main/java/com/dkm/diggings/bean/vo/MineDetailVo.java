@@ -26,7 +26,7 @@ public class MineDetailVo {
     @ApiModelProperty("对手的姓名")
     private String herName;
     @ApiModelProperty("对手的技能等级")
-    private String herSkillLevel;
+    private int herSkillLevel;
     @ApiModelProperty("自己的的技能等级")
-    private String skillLevel;
+    private int skillLevel;
 }

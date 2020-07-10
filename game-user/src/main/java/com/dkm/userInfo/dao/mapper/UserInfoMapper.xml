@@ -91,4 +91,12 @@
         </foreach>
     </select>
 
+
+    <select id="queryUserInfoAtt" parameterType="Long" resultType="com.dkm.entity.vo.UserInfoAttVo">
+        select user_id, we_chat_head_img_url as 'heardUrl',we_chat_nick_name as 'nickName' from tb_user where
+        <foreach collection="list" item="item" index="index" separator="or">
+            user_id = #{item}
+        </foreach>
+    </select>
+
 </mapper>

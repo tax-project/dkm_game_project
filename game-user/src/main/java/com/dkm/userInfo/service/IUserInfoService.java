@@ -5,6 +5,7 @@ import com.dkm.entity.bo.UserPlunderBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
 import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
@@ -29,8 +30,9 @@ public interface IUserInfoService {
     * 修改红包总次数
     * @param much 次数
     * @param userId 用户id
+    * @param userInfoDiamonds 钻石
     */
-   void updateUserInfo (Integer much, Long userId);
+   void updateUserInfo (Integer much, Long userId,Integer userInfoDiamonds);
 
    /**
     * 增加用户金币、钻石、声望
@@ -94,4 +96,11 @@ public interface IUserInfoService {
     * @return 返回个人信息
     */
    WeChatUserInfoVo queryWeChatUserInfo ();
+
+   /**
+    *  查询所有用户信息
+    * @param list 参数id集合
+    * @return 返回所有用户信息
+    */
+   List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
 }
