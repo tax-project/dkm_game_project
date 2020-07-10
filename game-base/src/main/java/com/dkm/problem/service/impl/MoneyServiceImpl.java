@@ -129,7 +129,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       UserLoginQuery user = localUser.getUser();
 
       //修改用户的红包次数
-      userInfoFeignClient.updateUserInfo(much, user.getId());
+      userInfoFeignClient.updateUserInfo(much, user.getId(),vo.getDiamonds());
 
       Money money = new Money();
 

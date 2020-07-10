@@ -15,7 +15,6 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.event.dao.UserEventMapper;
-import com.dkm.event.entity.UserEventContent;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.BaseFeignClient;
 import com.dkm.feign.UserFeignClient;
@@ -367,6 +366,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
             //得到最终他方的战力
             heRipetime1 = (int) heRipetime;
+           /* if(heRipetime1==0){
+                heRipetime1=100;
+            }*/
         }
 
 
@@ -467,14 +469,22 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double myzdl=0;
 
+            System.out.println(userInfoQueryBoResult.getData().getUserInfoRenown() * myEquipmentBonus);
+
             if(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown().doubleValue() + heEquipmentBonus>0){
                 myzdl=userInfoQueryBoResult.getData().getUserInfoRenown() * myEquipmentBonus  - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() + heEquipmentBonus;
             }
 
             //得到我方的战力
             double heRipetime = Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown().doubleValue(), 1/2.0)+(myzdl);
+
+
+
             //得到最终我方的战力
             myRipetime= (int) heRipetime;
+
+            System.out.println("我方战斗力"+myRipetime);
+            System.out.println("我方血量"+ourHealth);
 
         }
 

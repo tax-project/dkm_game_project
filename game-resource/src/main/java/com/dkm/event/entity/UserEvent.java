@@ -41,4 +41,9 @@ public class UserEvent extends Model<UserEvent> {
      * 他人的用户id
      */
     private Long heUserId;
+
+    /**
+     * 事件内容
+     */
+    private String toRobContent;
 }

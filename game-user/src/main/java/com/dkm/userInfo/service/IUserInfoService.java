@@ -29,8 +29,9 @@ public interface IUserInfoService {
     * 修改红包总次数
     * @param much 次数
     * @param userId 用户id
+    * @param userInfoDiamonds 钻石
     */
-   void updateUserInfo (Integer much, Long userId);
+   void updateUserInfo (Integer much, Long userId,Integer userInfoDiamonds);
 
    /**
     * 增加用户金币、钻石、声望

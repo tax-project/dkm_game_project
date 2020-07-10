@@ -33,12 +33,14 @@ public class UserInfoController {
    @Autowired
    private IUserInfoService userInfoService;
 
-   @GetMapping("/updateMuch/{much}/{userId}")
-   public void updateUserInfo (@PathVariable("much") Integer much, @PathVariable("userId") Long userId) {
+   @GetMapping("/updateMuch/{much}/{userId}/{userInfoDiamonds}")
+   public void updateUserInfo (@PathVariable("much") Integer much,
+                               @PathVariable("userId") Long userId,
+                               @PathVariable("userInfoDiamonds") Integer userInfoDiamonds) {
       if (userId == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
       }
-      userInfoService.updateUserInfo(much,userId);
+      userInfoService.updateUserInfo(much,userId,userInfoDiamonds);
    }
 
    @PostMapping("/increase")
