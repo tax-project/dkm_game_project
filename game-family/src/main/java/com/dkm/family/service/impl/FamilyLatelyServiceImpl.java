@@ -33,10 +33,12 @@ public class FamilyLatelyServiceImpl implements IFamilyLatelyService {
             }
             familyLatelyDao.deleteBatchIds(ids);
         }
-        FamilyLatelyEntity familyLatelyEntity = new FamilyLatelyEntity();
-        familyLatelyEntity.setId(idGenerator.getNumberId());
-        familyLatelyEntity.setFamilyId(familyId);
-        familyLatelyEntity.setUserId(userId);
-        familyLatelyDao.insert(familyLatelyEntity);
+        if(familyLatelyEntities.stream().noneMatch(a-> a.getFamilyId().equals(familyId))){
+            FamilyLatelyEntity familyLatelyEntity = new FamilyLatelyEntity();
+            familyLatelyEntity.setId(idGenerator.getNumberId());
+            familyLatelyEntity.setFamilyId(familyId);
+            familyLatelyEntity.setUserId(userId);
+            familyLatelyDao.insert(familyLatelyEntity);
+        }
     }
 }
