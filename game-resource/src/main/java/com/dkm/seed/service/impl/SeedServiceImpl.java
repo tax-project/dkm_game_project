@@ -36,10 +36,9 @@ import java.util.*;
 import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
 
 /**
- * @author 刘梦祺
- * @PROJECT_NAME: dkm_game
+ * @author MQ
+ * @PROJECT_NAME: game_project
  * @DESCRIPTION:
- * @USER: 刘梦祺
  * @DATE: 2020/5/11 16:17
  */
 @Service
