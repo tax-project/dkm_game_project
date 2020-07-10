@@ -3,9 +3,7 @@ package com.dkm.feign.fallback;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.*;
-import com.dkm.entity.vo.AttendantWithUserVo;
-import com.dkm.entity.vo.ListVo;
-import com.dkm.entity.vo.OpponentVo;
+import com.dkm.entity.vo.*;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.ReputationRankingBO;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
@@ -70,6 +68,11 @@ public class UserFeignClientFallback implements UserFeignClient {
 
    @Override
    public Result<List<OpponentVo>> listOpponent(ListVo listVo) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result<List<UserInfoAttVo>> queryUserInfoAtt(UserAttAllVo listVo) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
