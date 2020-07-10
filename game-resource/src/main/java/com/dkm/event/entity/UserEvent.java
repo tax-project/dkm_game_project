@@ -10,16 +10,16 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
- * @author 刘梦祺
+ * @author MQ
  * @PROJECT_NAME: game_project
  * @DESCRIPTION:
- * @DATE: 2020/6/10 14:03
+ * @DATE: 2020/7/9 20:09
  */
 @Data
-@TableName("tb_event")
+@TableName("tb_user_event")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class Event extends Model<Event> {
+public class UserEvent extends Model<UserEvent> {
 
     /**
      * 主键
@@ -35,22 +35,8 @@ public class Event extends Model<Event> {
     /**
      * 时间
      */
-    private LocalDateTime evTime;
+    private LocalDateTime eventTime;
 
-    /**
-     * 事件内容 （里）
-     */
-    private String evMsgIn;
-
-    /**
-     * 事件内容 （外）
-     */
-    private String evMsgExternal;
-
-    /**
-     * 状态
-     */
-    private Integer evStatus;
     /**
      * 他人的用户id
      */
