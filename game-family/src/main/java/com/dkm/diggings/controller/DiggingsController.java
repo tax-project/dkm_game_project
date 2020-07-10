@@ -44,14 +44,14 @@ public class DiggingsController {
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
     @CrossOrigin
-    @GetMapping("/getMineLevelType")
+    @GetMapping(value = "/getMineLevelType", produces = "application/json")
     public List<MineInfoVo> getMineLevelType() {
         return service.getItemsLevelType();
     }
 
     @ApiOperation("获取家族等级信息与金币加成相关的信息 （静态的）")
     @CrossOrigin
-    @GetMapping("/getFamilyType")
+    @GetMapping(value = "/getFamilyType", produces = "application/json")
     public List<FamilyAddition> getFamilyType() {
         return service.getFamilyType();
     }
@@ -61,7 +61,7 @@ public class DiggingsController {
     @CrossOrigin
     @CheckToken
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
-    @GetMapping("/getMineInfo")
+    @GetMapping(value = "/getMineInfo", produces = "application/json")
     public DiggingsVo getAllInfo() {
         val user2FamilyId = getUser2FamilyId();
         return service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
@@ -75,9 +75,9 @@ public class DiggingsController {
     })
     @CrossOrigin
     @CheckToken
-    @GetMapping("/{mineId}/detail")
+    @GetMapping(value = "/{mineId}/detail", produces = "application/json")
     public MineDetailVo detail(@PathVariable long mineId) {
-        return service.detail(mineId);
+        return service.detail(mineId, getUser2FamilyId().getUserId());
     }
 
     @ApiOperation("占领矿山")
@@ -87,7 +87,7 @@ public class DiggingsController {
     })
     @CrossOrigin
     @CheckToken
-    @GetMapping(value = "/{mineId}/occupy")
+    @GetMapping(value = "/{mineId}/occupy", produces = "application/json")
     public OccupyResultVo occupy(@PathVariable long mineId) {
         return service.occupy(mineId);
     }
@@ -96,7 +96,6 @@ public class DiggingsController {
     /**
      * 根据 Token 来获取各种信息
      *
-     * @return
      */
     private User2FamilyId getUser2FamilyId() {
         val userId = localUser.getUser().getId();
