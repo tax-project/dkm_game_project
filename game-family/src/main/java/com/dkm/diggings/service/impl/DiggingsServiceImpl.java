@@ -77,6 +77,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
         val result = new MineDetailVo();
+
         return result;
     }
 
