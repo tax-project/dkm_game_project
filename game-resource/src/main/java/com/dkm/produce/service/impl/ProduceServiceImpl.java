@@ -199,10 +199,10 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             return map;
         }
 
-        if(attendantUsers.size()!=0){
-        for (int i = 0; i < attendantUsers.size(); i++) {
+        if(attendantGoods.size()!=0){
+        for (int i = 0; i < attendantGoods.size(); i++) {
             //不等于0说明是系统跟班 随机查询出一个跟班  放入集合
-            if(attendantUsers.get(i).getAttendantId()!=0){
+            if(attendantGoods.get(i).getAttendantId()!=0){
 
                 AttendantImgVo attendantImgVo=new AttendantImgVo();
                 //随机查询一个跟班
@@ -216,7 +216,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
 
                 //等于0就是用户跟班
-                if(attendantUsers.get(i).getAttendantId()==0){
+                if(attendantGoods.get(i).getAttendantId()==0){
                     AttendantImgVo attendantImgVo=new AttendantImgVo();
                     attendantImgVo.setWeChatHeadImgUrl(attendantGoods.get(i).getWeChatHeadImgUrl());
                     attendantImg.add(attendantImgVo);

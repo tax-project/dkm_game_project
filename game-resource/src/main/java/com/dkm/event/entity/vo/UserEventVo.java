@@ -1,9 +1,7 @@
 package com.dkm.event.entity.vo;
 
-import com.dkm.event.entity.UserEventContent;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,6 +41,6 @@ public class UserEventVo {
     /**
      * 内容
      */
-    List<UserEventContent> list;
+    List<UserEventContentVo> list;
 
 }

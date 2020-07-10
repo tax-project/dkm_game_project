@@ -1,6 +1,6 @@
 package com.dkm.event.service;
 
-import com.dkm.event.entity.vo.UserEventContentVo;
+import com.dkm.event.entity.vo.AddUserEventVo;
 import com.dkm.event.entity.vo.UserEventVo;
 
 import java.util.List;
@@ -25,5 +25,5 @@ public interface IUserEventService {
      * @param userEventContentVo
      * @return
      */
-    int addEvent(UserEventContentVo userEventContentVo);
+    int addEvent(AddUserEventVo addUserEventVo);
 }

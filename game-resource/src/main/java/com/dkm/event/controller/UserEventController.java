@@ -1,6 +1,6 @@
 package com.dkm.event.controller;
 
-import com.dkm.event.entity.vo.UserEventContentVo;
+import com.dkm.event.entity.vo.AddUserEventVo;
 import com.dkm.event.entity.vo.UserEventVo;
 import com.dkm.event.service.IUserEventService;
 import com.dkm.jwt.islogin.CheckToken;
@@ -54,8 +54,8 @@ public class UserEventController {
     @PostMapping("/addEvent")
     @CrossOrigin
     @CheckToken
-    public int addEvent(@RequestBody UserEventContentVo userEventContentVo){
-        return iEventService.addEvent(userEventContentVo);
+    public int addEvent(@RequestBody AddUserEventVo addUserEventVo){
+        return iEventService.addEvent(addUserEventVo);
     }
 
 

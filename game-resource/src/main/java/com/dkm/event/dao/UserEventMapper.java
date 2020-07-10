@@ -2,7 +2,7 @@ package com.dkm.event.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.event.entity.UserEvent;
-import com.dkm.event.entity.UserEventContent;
+import com.dkm.event.entity.vo.UserEventContentVo;
 import com.dkm.event.entity.vo.UserEventVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -28,5 +28,5 @@ public interface UserEventMapper extends IBaseMapper<UserEvent> {
     /**
      * 查询这个用户是否存在
      */
-    UserEvent queryUserIsExistence(@Param("heUserId") Long heUserId,@Param("userId") Long userId);
+    List<UserEventContentVo> queryUserIsExistence(@Param("userId") Long userId, @Param("heUserId") Long heUserId);
 }

@@ -486,7 +486,7 @@ public class SeedServiceImpl implements ISeedService {
 
 
             //种植一次所获得的金币
-            double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 1000 * userLandUnlocks.size();
+            double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 5000 * userLandUnlocks.size();
             Integer userGoldInteger = Integer.valueOf((int) userGold);
 
             System.out.println("种植一次所获得的金币="+userGold);
