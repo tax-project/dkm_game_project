@@ -64,4 +64,9 @@ public class TbKnapsackServiceImpl implements ITbKnapsackService {
         queryWrapper.eq("user_id",tbKnapsack.getUserId());
         return tbKnapsackMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public TbKnapsack selectByIdTwo(Long userId) {
+        return tbKnapsackMapper.selectByIdTwo(userId);
+    }
 }
