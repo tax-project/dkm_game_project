@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author qf
- * @date 2020/5/27
- * @vesion 1.0
- **/
+ * @author MQ
+ * @PROJECT_NAME: game_project
+ * @DESCRIPTION:
+ * @DATE: 2020/5/11 16:17
+ */
 public interface IStarsService {
 
     /**

@@ -17,6 +17,7 @@ import com.dkm.family.service.FamilyService;
 import com.dkm.union.dao.UnionMapper;
 import com.dkm.union.entity.UnionEntity;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.ObjectUtils;
 import com.dkm.utils.QrCodeUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -26,6 +27,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import io.netty.util.internal.ObjectUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,6 +198,10 @@ public class FamilyServiceImpl implements FamilyService {
         List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId))
                 .stream().mapToLong(FamilyLatelyEntity::getFamilyId).boxed().collect(Collectors.toList());
         //获取热门家族
+        //noinspection ConstantConditions
+        if(familyIds==null||familyIds.size()==0  ){
+            return null;
+        }
         List<HotFamilyVo> hotFamily = familyDao.getLatelyFamily(familyIds,userId);
         if(hotFamily==null||hotFamily.size()==0)return null;
         List<Long> collect = hotFamily.stream().mapToLong(HotFamilyVo::getFamilyId).boxed().collect(Collectors.toList());

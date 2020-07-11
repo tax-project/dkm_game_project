@@ -10,18 +10,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- * @Author Administrator
- * @Date 2020/7/7 10:21
- * @Version 1.0
+ * @Author MQ
+ * @PROJECT_NAME: game_project
+ * @DESCRIPTION:
+ * @DATE: 2020/6/1 14:43
  */
 @FeignClient(value = "resource", fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
 
     /**
-     *
+     * 查询技能的名字和等级
      * @param userId
      * @return
      */
     @GetMapping("/SkillController/querySkillByUserId")
-    Result<List<UserSkillVo>> querySkillByUserId(@RequestParam("userId") Long userId);
+    Result<List<UserSkillVo>> querySkillByUserId(@RequestParam(value = "userId") Long userId);
 }

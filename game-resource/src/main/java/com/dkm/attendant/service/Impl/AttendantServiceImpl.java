@@ -130,20 +130,27 @@ public class AttendantServiceImpl implements IAttendantService {
 
         List<UserInfoAttVo> data = listResult.getData();
 
-        Map<Long, UserInfoAttVo> userInfoAttVoMap = data.stream().
-              collect(Collectors.toMap(UserInfoAttVo::getUserId,
-                    userInfoAttVo -> userInfoAttVo));
-
-        List<AttUserAllInfoVo> collect = list.stream().map(attUserAllInfoVo -> {
-            if (userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()) != null) {
-                attUserAllInfoVo.setAtImg(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeardUrl());
-                attUserAllInfoVo.setAtName(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
-            }
-            return attUserAllInfoVo;
-        }).collect(Collectors.toList());
-
         Map<String, Object> map = new HashMap<>(2);
-        map.put("att",collect);
+        if (null != data && data.size() > 0) {
+            Map<Long, UserInfoAttVo> userInfoAttVoMap = data.stream().
+                  collect(Collectors.toMap(UserInfoAttVo::getUserId,
+                        userInfoAttVo -> userInfoAttVo));
+
+            List<AttUserAllInfoVo> collect = list.stream().map(attUserAllInfoVo -> {
+                if (userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()) != null) {
+                    attUserAllInfoVo.setAtImg(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeardUrl());
+                    attUserAllInfoVo.setAtName(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getNickName());
+                }
+                return attUserAllInfoVo;
+            }).collect(Collectors.toList());
+
+            map.put("att",collect);
+        }
+
+        if (null == data || data.size() == 0) {
+            map.put("att",list);
+        }
+
         map.put("put", outputList);
 
         return map;
