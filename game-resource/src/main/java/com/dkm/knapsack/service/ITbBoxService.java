@@ -25,4 +25,6 @@ public interface ITbBoxService{
     List<Map> selectByBoxIdTwo(String boxId);
 
     List<TbEquipmentVo> selectByBoxIdThree(String boxId);
+
+    List<TbBox> selectAllTwo();
 }
