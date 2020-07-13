@@ -15,4 +15,10 @@
               AND family_id = #{familyId}
         )
     </select>
+    <select id="selectAccept" resultType="com.dkm.diggings.bean.entity.DiggingsHistoryEntity">
+        SELECT * FROM tb_diggings_history WHERE stop_date > #{date}
+        <foreach open="OR" collection="list" item="item" index="index" separator="OR">
+            user_id = #{item.first}
+        </foreach>
+    </select>
 </mapper>

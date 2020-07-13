@@ -4,33 +4,31 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
+import com.dkm.diggings.bean.other.Pair;
 import com.dkm.diggings.bean.vo.DiggingsVo;
 import com.dkm.diggings.bean.vo.MineDetailVo;
 import com.dkm.diggings.bean.vo.MineVo;
-import com.dkm.diggings.bean.vo.OccupyResultVo;
+import com.dkm.diggings.bean.vo.OccupiedVo;
 import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IHistoryService;
+import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.feign.ResourceFeignClient;
-import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,10 +50,10 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private FamilyDao familyDao;
     @Resource
     private IStaticService staticService;
-    @Autowired
-    private ResourceFeignClient resourceFeignClient;
-    @Autowired
-    private UserFeignClient userFeignClient;
+    @Resource
+    private IHistoryService historyService;
+    @Resource
+    private IOccupiedService occupiedService;
 
     public DiggingsServiceImpl() {
     }
@@ -67,9 +65,9 @@ public class DiggingsServiceImpl implements IDiggingsService {
         result.setFamilyId(familyId);
         result.setFamilyName(loadFamilyName(familyId));
         val locationId = entity2Vo(entity, result);
-        includeMineItem(entity.getId(), result.getPublicItem(), 0);
+        includeMineItem(entity.getId(), result.getPublicItem(), 0, userId, familyId);
         // 导入公开矿区信息
-        includeMineItem(entity.getId(), result.getPrivateItem(), locationId);
+        includeMineItem(entity.getId(), result.getPrivateItem(), locationId, userId, familyId);
         // 导入私有矿区信息
         result.setFamilyLevel(getFamilyLevel(familyId));
         return result;
@@ -116,81 +114,44 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "出现不可能发生的错误！");
             }
             result.setSkillName(name);
-            result.setSkillLevel(getSkillLevel(userId));
+            val userSkillLevel = staticService.getSkillLevel(userId);
+            result.setSkillLevel(userSkillLevel);
             val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
             val herUserId = item.getUserId();
-            val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ? info.getNpcSkillLevel() : getSkillLevel(herUserId));
+            val successRate = mineRule.calculateSuccessRate(userSkillLevel, herUserId == 0 ? info.getNpcSkillLevel() : staticService.getSkillLevel(herUserId));
             result.setSuccessRate(successRate);
         }
         return result;
     }
 
-    /**
-     * 获取用户技能等级
-     *
-     * @param userId 用户 ID
-     */
-    private Integer getSkillLevel(Long userId) {
-        val week = LocalDate.now().getDayOfWeek().getValue();
-        val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
-        if (listResult == null) {
-            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "获取技能等级出错。");
-        }
-        if (week > 6) {
-            val renownVoResult = userFeignClient.queryUserSection(userId);
-            return renownVoResult.getData().getUserInfoRenown().intValue();
-        } else {
-            return listResult.get(week - 1).getSkGrade();
-        }
-    }
 
-    @Override
-    public OccupyResultVo occupy(long battleId, Long userId, Long familyId) {
-        val item = mineMapper.selectById(battleId);
-        if (ObjectUtils.isNullOrEmpty(item)) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
-        }
-        val result = new OccupyResultVo();
-        val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
-        result.setInfo(info);
-        val herUserId = item.getUserId();
-        val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ?
-                info.getNpcSkillLevel() : getSkillLevel(herUserId));
-        if (mineRule.occupy(successRate)) {
-            result.setStatus(true);
-            occupied(userId, familyId, item);
-        } else {
-            result.setStatus(false);
-        }
-        return result;
-    }
-
-    /**
-     * 占领成功
-     */
-    @Resource
-    private IHistoryService historyService;
-
-    private void occupied(Long userId, Long familyId, MineEntity item) {
-        val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
-        if (unfinishedHistory != null) {
-            historyService.destroy(unfinishedHistory.getId(), item.getId());
-        }
-    }
-
-
-    private void includeMineItem(Long id, List<MineVo> publicItem, int i) {
+    private void includeMineItem(Long id, List<MineVo> publicItem, int location, Long userId, Long familyId) {
         val itemEntities = mineMapper.selectList(new QueryWrapper<MineEntity>()
-                .lambda().eq(MineEntity::getBattleId, id).eq(MineEntity::getBelongItem, i));
+                .lambda().eq(MineEntity::getBattleId, id).eq(MineEntity::getBelongItem, location));
+        Map<Long, MineVo> map = new LinkedHashMap<>(itemEntities.size());
         for (int j = 0; j < itemEntities.size(); j++) {
             MineVo item = new MineVo();
             MineEntity itemEntity = itemEntities.get(j);
             item.setId(itemEntity.getId());
             item.setIndex(j);
             item.setLevel(itemEntity.getItemLevel());
-            publicItem.add(item);
+            if (itemEntity.getUserId() != 0) {
+                map.put(itemEntity.getUserId(), item);
+            } else {
+                publicItem.add(item);
+            }
         }
+        final List<Pair<Long, Long>> collect = itemEntities.stream().filter(k -> k.getUserId() != 0)
+                .map(t -> new Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
+        Map<Long, OccupiedVo> occupiedVoMap = historyService.selectUserOccupiedList(collect, familyId);
+        if (occupiedVoMap != null && occupiedVoMap.size() > 0 && map.size() > 0) {
+            occupiedVoMap.forEach((k, v) -> map.get(k).setOccupiedInfo(v));
+            publicItem.addAll(map.values());
+        }
+        publicItem.sort((j, k) -> (int)
+                (j.getId() - k.getId()));
     }
+
 
     private int entity2Vo(DiggingsEntity entity, DiggingsVo result) {
         long[] arr = new long[4];

@@ -9,6 +9,7 @@ import com.dkm.diggings.bean.vo.MineDetailVo;
 import com.dkm.diggings.bean.vo.MineInfoVo;
 import com.dkm.diggings.bean.vo.OccupyResultVo;
 import com.dkm.diggings.service.IDiggingsService;
+import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
@@ -44,6 +45,9 @@ public class DiggingsController {
 
     @Resource
     private IStaticService staticService;
+
+    @Resource
+    private IOccupiedService occupiedService;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
@@ -94,7 +98,7 @@ public class DiggingsController {
     @GetMapping(value = "/{mineId}/occupy", produces = "application/json")
     public OccupyResultVo occupy(@PathVariable long mineId) {
         val user2FamilyId = getUser2FamilyId();
-        return diggingsService.occupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
+        return occupiedService.occupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
 

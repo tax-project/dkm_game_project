@@ -25,4 +25,11 @@ public interface IStaticService {
      */
     List<FamilyAddition> getFamilyType();
 
+    /**
+     * 获取用户技能等级
+     *
+     * @param userId 用户 ID
+     */
+    Integer getSkillLevel(Long userId);
+
 }

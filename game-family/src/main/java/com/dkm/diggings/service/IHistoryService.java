@@ -1,6 +1,11 @@
 package com.dkm.diggings.service;
 
 import com.dkm.diggings.bean.entity.DiggingsHistoryEntity;
+import com.dkm.diggings.bean.other.Pair;
+import com.dkm.diggings.bean.vo.OccupiedVo;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IHistoryService {
     /**
@@ -20,4 +25,8 @@ public interface IHistoryService {
      * @param itemId
      */
     void destroy(long id, Long itemId);
+
+    void createNewItem(Long userId, Long familyId, long mineId);
+
+    Map<Long, OccupiedVo> selectUserOccupiedList(List<Pair<Long, Long>> collect, Long familyId);
 }

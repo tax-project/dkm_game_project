@@ -1,15 +1,21 @@
 package com.dkm.diggings.service.impl;
 
+import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.FamilyAddition;
 import com.dkm.diggings.bean.entity.MineLevelEntity;
 import com.dkm.diggings.bean.vo.MineInfoVo;
 import com.dkm.diggings.dao.FamilyAdditionMapper;
 import com.dkm.diggings.dao.MineLevelMapper;
 import com.dkm.diggings.service.IStaticService;
+import com.dkm.exception.ApplicationException;
+import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.UserFeignClient;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +25,14 @@ import java.util.List;
 @Service
 public class StaticServiceImpl implements IStaticService {
 
+    @Resource
+    private FamilyAdditionMapper familyAdditionMapper;
 
+    @Autowired
+    private ResourceFeignClient resourceFeignClient;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
     @Resource
     private MineLevelMapper mineLevelMapper;
 
@@ -50,11 +63,25 @@ public class StaticServiceImpl implements IStaticService {
         return mineInfoVos;
     }
 
-    @Resource
-    private FamilyAdditionMapper familyAdditionMapper;
 
     @Override
     public List<FamilyAddition> getFamilyType() {
         return familyAdditionMapper.selectList(null);
+    }
+
+
+    @Override
+    public Integer getSkillLevel(Long userId) {
+        val week = LocalDate.now().getDayOfWeek().getValue();
+        val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+        if (listResult == null) {
+            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "获取技能等级出错。");
+        }
+        if (week > 6) {
+            val renownVoResult = userFeignClient.queryUserSection(userId);
+            return renownVoResult.getData().getUserInfoRenown().intValue();
+        } else {
+            return listResult.get(week - 1).getSkGrade();
+        }
     }
 }
