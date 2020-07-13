@@ -837,6 +837,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         if(type==2){
             tbEquipmentKnapsack.setTekIsva(1);
             tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setTekMoney(50);
             tbEquipmentKnapsack.setTekDaoju(3);
             tbKnapsack.setUserId(userId);
         }else if(type==1){
