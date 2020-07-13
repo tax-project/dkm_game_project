@@ -32,7 +32,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.dkm</groupId>
             <artifactId>game-common</artifactId>
