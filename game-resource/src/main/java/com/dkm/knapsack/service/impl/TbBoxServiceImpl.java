@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -89,10 +90,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     @Override
     public List<TbBox> selectAll() {
         QueryWrapper queryWrapper=new QueryWrapper();
-        queryWrapper.eq("box_type",1);
-        queryWrapper.eq("box_type",2);
-        queryWrapper.eq("box_type",3);
-        queryWrapper.eq("box_type",4);
+        queryWrapper.in("box_type", Stream.of(1,2,3,4).toArray());
         queryWrapper.orderByAsc("box_type");
         return tbBoxMapper.selectList(queryWrapper);
     }
@@ -100,10 +98,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     @Override
     public List<TbBox> selectAllTwo() {
         QueryWrapper queryWrapper=new QueryWrapper();
-        queryWrapper.ne("box_type",1);
-        queryWrapper.ne("box_type",2);
-        queryWrapper.ne("box_type",3);
-        queryWrapper.ne("box_type",4);
+        queryWrapper.notIn("box_type", Stream.of(1,2,3,4).toArray());
         queryWrapper.orderByAsc("box_type");
         return tbBoxMapper.selectList(queryWrapper);
     }

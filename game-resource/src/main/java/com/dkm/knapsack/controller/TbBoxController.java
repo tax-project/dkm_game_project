@@ -185,7 +185,7 @@ public class TbBoxController {
     })
     @GetMapping("/selectByBoxIdTwo/{boxId}")
     @CrossOrigin
-    @CheckToken
+   /* @CheckToken*/
     public List<TbEquipmentVo> selectByBoxIdTwo(@PathVariable("boxId") String  boxId){
         List<TbEquipmentVo> map=tbBoxService.selectByBoxIdThree(boxId);
         return map;
