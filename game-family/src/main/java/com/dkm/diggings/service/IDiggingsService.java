@@ -41,9 +41,11 @@ public interface IDiggingsService {
      * 占领一座矿山ID
      *
      * @param battleId 矿山ID
+     * @param userId
+     * @param familyId
      * @return 占领的回执信息
      */
-    OccupyResultVo occupy(long battleId);
+    OccupyResultVo occupy(long battleId, Long userId, Long familyId);
 
 
     /**
