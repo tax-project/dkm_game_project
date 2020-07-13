@@ -47,6 +47,10 @@
 		<result column="ed_typeone" jdbcType="DECIMAL" property="edTypeone" />
 		<result column="ed_typeonevalue" jdbcType="DECIMAL" property="edTypeonevalue" />
 	</resultMap>
+	<resultMap id="BaseResultMapVoTwo" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree">
+		<id column="tek_id" property="tekId" />
+		<result column="food_number" property="foodNumber" />
+	</resultMap>
 
 	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
@@ -57,7 +61,7 @@
 	<!--
 	 2020/7/13 加的sql food_id=6 代表金星星 返回它数量给梦琪
 	 -->
-	<select id="selectNumberStar" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+	<select id="selectNumberStar" parameterType="java.lang.Long" resultMap="BaseResultMapVoTwo">
 		SELECT food_number,tek_id FROM tb_equipment_knapsack WHERE knapsack_id=#{knapsackId} AND food_id=6
 	</select>
 

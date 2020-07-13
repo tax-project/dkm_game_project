@@ -19,10 +19,7 @@ import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.TbKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentVo;
-import com.dkm.knapsack.domain.vo.TbNumberVo;
+import com.dkm.knapsack.domain.vo.*;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
@@ -261,13 +258,10 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
     @Override
-    public  Map<String,Object>  selectNumberStar() {
-        Map<String,Object> map=new ConcurrentHashMap<>();
+    public TbEquipmentKnapsackVoThree selectNumberStar() {
         TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
-        TbEquipmentKnapsackVo tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
-        map.put("tekId",tbEquipmentKnapsackVo.getTekId());
-        map.put("foodNumber",tbEquipmentKnapsackVo.getFoodNumber());
-        return map;
+        TbEquipmentKnapsackVoThree tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
+        return tbEquipmentKnapsackVo;
     }
 
     /**
