@@ -89,7 +89,8 @@ public class DiggingsController {
     @CheckToken
     @GetMapping(value = "/{mineId}/occupy", produces = "application/json")
     public OccupyResultVo occupy(@PathVariable long mineId) {
-        return service.occupy(mineId);
+        val user2FamilyId = getUser2FamilyId();
+        return service.occupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
 

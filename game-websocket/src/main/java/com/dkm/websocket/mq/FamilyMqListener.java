@@ -61,9 +61,12 @@ public class FamilyMqListener {
          List<Channel> channels = new ArrayList<>();
          //去redis中找设备id
          for (Long id : msgInfo.getToIdList()) {
-            String cid = (String) redisTemplate.opsForValue().get(id);
+            String cid = null;
+            if (id != null) {
+               cid = (String) redisTemplate.opsForValue().get(id);
+            }
             //将除了自己以外的所有群聊人员都发消息
-            if (StringUtils.isNotBlank(cid) && !cid.equals(msgInfo.getCid())) {
+            if (StringUtils.isNotBlank(cid)) {
                Channel channel = groupUtils.getChannel(cid);
                if (channel != null) {
                   channels.add(channel);
