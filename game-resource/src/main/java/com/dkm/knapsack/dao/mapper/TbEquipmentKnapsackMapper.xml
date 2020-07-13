@@ -63,7 +63,7 @@
 	</select>
 
 	<select id="selectCountAll" resultType="java.lang.Integer" parameterType="java.lang.Long">
-		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1
+		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1 AND tek_sell=2
 	</select>
 	<select id="selectFoodId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_equipment_knapsack tk,tb_goods td,tb_knapsack tdk WHERE
