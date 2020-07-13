@@ -67,7 +67,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
-
         if(landSeedList.size()==0){
            return null;
         }

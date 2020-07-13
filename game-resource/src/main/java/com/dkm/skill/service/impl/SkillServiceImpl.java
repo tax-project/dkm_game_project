@@ -13,6 +13,8 @@ import com.dkm.integral.service.IIntegralService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree;
+import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.skill.dao.SkillMapper;
 import com.dkm.skill.entity.Skill;
@@ -67,6 +69,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Autowired
    private IStarsService iStarsService;
 
+   @Autowired
+   private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
+
    @Override
    public int initSkill(Long userId) {
 
@@ -113,12 +118,6 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       UserLoginQuery user = localUser.getUser();
 
-      LambdaQueryWrapper<Skill> queryWrapper = new LambdaQueryWrapper<>();
-
-      List<Skill> landSeedList = baseMapper.selectList(queryWrapper);
-
-      List<UserSkill> list=new ArrayList<>();
-
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
       if(userInfoQueryBoResult.getCode()!=0){
           log.info("用户模块崩了");
@@ -135,10 +134,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       /**
        * 查询自己当前拥有金星星的数量
        */
-      Stars stars = iStarsService.queryCurrentConsumeByUserId(user.getId());
+      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
 
       //金星星数量
-      map.put("VenusNum",stars.getSkCurrentConsume());
+      map.put("VenusNum",tbEquipmentKnapsackVoThree.getFoodNumber());
 
       map.put("skillUserSkillVo",skillUserSkillVo);
       map.put("gold",10000);
@@ -146,6 +145,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       //积分
       map.put("integral",iIntegralService.queryUserIdIntegral());
+
       //用户金币数量
       map.put("userGold",userInfoQueryBoResult.getData().getUserInfoGold());
 
@@ -162,20 +162,20 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
 
    @Override
-   public Map<String,Object> upgradeSkills(Long id,Integer status) {
+   public Map<String,Object> upGradeSkills(Long id,Integer status) {
       Map<String,Object> map=new HashMap<>(16);
 
+      //根据id查询技能
       UserSkill userSkill = iUserSkillService.querySkillById(id);
 
 
-      System.out.println(localUser.getUser().getId());
+      /**
+       * 查询自己当前拥有金星星的数量
+       */
+      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
 
-       /**
-        * 需要改的地方
-        */
-      Stars stars = iStarsService.queryCurrentConsumeByUserId(localUser.getUser().getId());
-
-      if(stars.getSkCurrentConsume()<userSkill.getSkAllConsume()){
+      //如果自己当前拥有得金星星数量少于需要消耗的数量 抛异常
+      if(tbEquipmentKnapsackVoThree.getFoodNumber()<userSkill.getSkAllConsume()){
          throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
       }
 
@@ -221,8 +221,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
               * 需要改的地方
               */
             //修改用户金星星数量
-            stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
-            iStarsService.updateUserVenusNum(stars);
+            iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
 
             /**
              * 积分加8
@@ -257,9 +256,8 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
              /**
               * 需要改的地方
               */
-             //修改用户金星星数量
-            stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
-            iStarsService.updateUserVenusNum(stars);
+            //修改用户金星星数量
+            iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
 
             /**
              * 积分加8

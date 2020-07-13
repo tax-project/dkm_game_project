@@ -89,10 +89,24 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     @Override
     public List<TbBox> selectAll() {
         QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("box_type",1);
+        queryWrapper.eq("box_type",2);
+        queryWrapper.eq("box_type",3);
+        queryWrapper.eq("box_type",4);
         queryWrapper.orderByAsc("box_type");
         return tbBoxMapper.selectList(queryWrapper);
     }
 
+    @Override
+    public List<TbBox> selectAllTwo() {
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.ne("box_type",1);
+        queryWrapper.ne("box_type",2);
+        queryWrapper.ne("box_type",3);
+        queryWrapper.ne("box_type",4);
+        queryWrapper.orderByAsc("box_type");
+        return tbBoxMapper.selectList(queryWrapper);
+    }
     /**
      *
      * @param boxId 根据前端传过来的字符串id批量查询出宝箱对应的随机装备
@@ -130,26 +144,38 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                         tbEquipmentKnapsack.setKnapsackId(tbKnapsack.getKnapsackId());
                         int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
                         if(count>0){
-                            //查询为装备上的装备数据
+                            //为开出的新装备
                             TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
                             TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
                             tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
                             tbEquipmentKnapsackVo.setKnapsackId(tbKnapsack.getKnapsackId());
                             //查询已经装备上了的装备数据
                             List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
-                            Map<String,Object> map=new HashMap<>();
-                            map.put("code",3);
-                            map.put("msg","此装备已经装备上了");
-                            map.put("dataOne",list3);
-                            map.put("dataTwo",list2);
-                            listMap.add(map);
+                            for (TbEquipmentKnapsackVo equipmentKnapsackVo : list2) {
+                                //判断新装备的声望比旧装备声望高就返回code 2
+                                //低就返回1
+                                if(list3.getEdEquipmentReputation()> equipmentKnapsackVo.getEdEquipmentReputation()){
+                                    //新装备声望比旧装备声望高的数据
+                                    Map<String,Object> map=new HashMap<>();
+                                    map.put("code",2);
+                                    map.put("dataOne",list3);//dataOne为新开装备
+                                    map.put("dataTwo",list2);//dataTwo 旧装备
+                                    listMap.add(map);
+                                }else{
+                                    Map<String,Object> map=new HashMap<>();
+                                    map.put("code",1); // 新开装备声望低的装备
+                                    map.put("dataOne",list3);
+                                    listMap.add(map);
+                                }
+                            }
+
+
                         }else{
                             Map<String,Object> map=new HashMap<>();
                             //查询为装备上的装备数据
                             List<TbEquipmentVo> list3=tbEquipmentService.selectByEquipmentId(tbEquipmentVo.getEquipmentId());
-                            map.put("code",2);
-                            map.put("dataThree",list3);
-                            map.put("msg","此装备没有装备上过");
+                            map.put("code",3);//从未装备上去的装备
+                            map.put("dataOne",list3);
                             listMap.add(map);
                         }
                 }
@@ -182,4 +208,5 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             return null;
         }
     }
+
 }
