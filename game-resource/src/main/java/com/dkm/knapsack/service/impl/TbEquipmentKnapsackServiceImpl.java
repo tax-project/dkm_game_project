@@ -261,12 +261,9 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     }
 
     @Override
-    public  Map<String,Object> selectNumberStar() {
-        Map<String,Object> map=new ConcurrentHashMap<>();
+    public  Integer  selectNumberStar() {
         TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
-        TbEquipmentKnapsackVo tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
-        map.put("foodNumber",tbEquipmentKnapsackVo.getFoodNumber());
-        return map;
+        return tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
     }
 
     /**
