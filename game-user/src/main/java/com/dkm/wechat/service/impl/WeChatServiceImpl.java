@@ -9,8 +9,6 @@ import com.dkm.entity.bo.UserHeardUrlBo;
 import com.dkm.entity.bo.UserInfoBo;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.FileVo;
-import com.dkm.entity.vo.UserInfoAttVo;
-import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.FileFeignClient;
 import com.dkm.jwt.contain.LocalUser;

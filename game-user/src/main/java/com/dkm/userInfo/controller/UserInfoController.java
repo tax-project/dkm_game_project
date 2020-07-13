@@ -8,6 +8,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
+import com.dkm.userInfo.entity.bo.UserSectionInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
 import io.swagger.annotations.Api;
@@ -76,7 +77,6 @@ public class UserInfoController {
       return userInfoService.reputationRanking();
    }
 
-
    @PostMapping("/listOpponent")
    public List<OpponentVo> listOpponent(@RequestBody ListVo listVo){
       return userInfoService.listOpponent(listVo.getList());
@@ -94,5 +94,13 @@ public class UserInfoController {
    @CheckToken
    public WeChatUserInfoVo queryWeChatUserInfo(){
       return userInfoService.queryWeChatUserInfo();
+   }
+
+   /**
+    * 查询用户的声望和金币
+    */
+   @PostMapping("/query/user/section")
+   public UserSectionInfoBO queryUserSection(@RequestParam("userId") Long userId){
+      return userInfoService.queryUserSection(userId);
    }
 }
