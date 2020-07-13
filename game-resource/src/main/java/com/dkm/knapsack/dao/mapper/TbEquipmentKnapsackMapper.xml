@@ -54,7 +54,12 @@
 			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
 
-
+	<!--
+	 2020/7/13 加的sql food_id=6 代表金星星 返回它数量给梦琪
+	 -->
+	<select id="selectNumberStar" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT food_number FROM tb_equipment_knapsack WHERE knapsack_id=#{knapsackId} AND food_id=6
+	</select>
 
 	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk

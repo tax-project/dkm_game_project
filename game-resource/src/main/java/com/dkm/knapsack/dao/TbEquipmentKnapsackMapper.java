@@ -24,6 +24,13 @@ public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsac
 
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodIdTwo(Long userId);
+
+    /**
+     * 返回金星星数量给梦琪
+     * @param knapsackId
+     * @return
+     */
+    TbEquipmentKnapsackVo selectNumberStar(Long knapsackId);
     /**
      * 查询道具的接口
      * @param userId

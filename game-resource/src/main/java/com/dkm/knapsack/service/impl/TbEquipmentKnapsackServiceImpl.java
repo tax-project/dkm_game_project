@@ -37,6 +37,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -257,6 +258,15 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }else{
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
         }
+    }
+
+    @Override
+    public  Map<String,Object> selectNumberStar() {
+        Map<String,Object> map=new ConcurrentHashMap<>();
+        TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
+        TbEquipmentKnapsackVo tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
+        map.put("foodNumber",tbEquipmentKnapsackVo.getFoodNumber());
+        return map;
     }
 
     /**
