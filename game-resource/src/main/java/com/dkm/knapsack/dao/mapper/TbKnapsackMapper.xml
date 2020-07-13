@@ -15,6 +15,12 @@
 		from tb_knapsack
 		where knapsack_id = #{knapsackId,jdbcType=BIGINT}
 	</select>
+	<select id="selectByIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_knapsack
+		where user_id = #{userId}
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from tb_knapsack
 		where knapsack_id = #{knapsackId,jdbcType=BIGINT}
