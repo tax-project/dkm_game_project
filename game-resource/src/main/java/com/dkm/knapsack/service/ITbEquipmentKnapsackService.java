@@ -4,6 +4,7 @@ import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree;
 import com.dkm.knapsack.domain.vo.TbNumberVo;
 
 import java.util.List;
@@ -60,4 +61,10 @@ public interface ITbEquipmentKnapsackService{
     void addTbEquipmentKnapsackThree(TbEquipmentKnapsack tbEquipmentKnapsack,Long userId);
 
     void updateAndInsert(TbEquipmentKnapsackTwoVo tbEquipmentKnapsackTwoVo);
+
+    /**
+     * 返回金星星数量给梦琪
+     * @return
+     */
+    TbEquipmentKnapsackVoThree selectNumberStar();
 }

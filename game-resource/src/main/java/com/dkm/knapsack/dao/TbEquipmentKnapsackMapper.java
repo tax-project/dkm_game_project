@@ -4,6 +4,7 @@ package com.dkm.knapsack.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,13 @@ public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsac
 
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodIdTwo(Long userId);
+
+    /**
+     * 返回金星星数量给梦琪
+     * @param knapsackId
+     * @return
+     */
+    TbEquipmentKnapsackVoThree selectNumberStar(Long knapsackId);
     /**
      * 查询道具的接口
      * @param userId

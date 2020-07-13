@@ -8,6 +8,7 @@ import com.dkm.entity.vo.OpponentVo;
 import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
+import com.dkm.userInfo.entity.bo.UserSectionInfoBO;
 import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
 
 import java.util.List;
@@ -103,4 +104,8 @@ public interface IUserInfoService {
     * @return 返回所有用户信息
     */
    List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
+
+   UserSectionInfoBO queryUserSection(Long userId);
+
+
 }

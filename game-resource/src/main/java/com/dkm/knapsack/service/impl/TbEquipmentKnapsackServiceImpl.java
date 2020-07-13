@@ -19,10 +19,7 @@ import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.TbKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentVo;
-import com.dkm.knapsack.domain.vo.TbNumberVo;
+import com.dkm.knapsack.domain.vo.*;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
@@ -37,6 +34,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -257,6 +255,13 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }else{
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
         }
+    }
+
+    @Override
+    public TbEquipmentKnapsackVoThree selectNumberStar() {
+        TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
+        TbEquipmentKnapsackVoThree tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
+        return tbEquipmentKnapsackVo;
     }
 
     /**
@@ -837,6 +842,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         if(type==2){
             tbEquipmentKnapsack.setTekIsva(1);
             tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setTekMoney(50);
             tbEquipmentKnapsack.setTekDaoju(3);
             tbKnapsack.setUserId(userId);
         }else if(type==1){
