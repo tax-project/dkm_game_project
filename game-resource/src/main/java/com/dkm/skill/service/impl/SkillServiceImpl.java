@@ -119,41 +119,11 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       List<UserSkill> list=new ArrayList<>();
 
-      /**
-       * 根据用户id查询所有技能
-       * 如果没有则初始化
-       */
-      int init=0;
-      List<SkillUserSkillVo> skillUserSkillVos = baseMapper.queryAllSkillByUserId(user.getId());
-      if(skillUserSkillVos.size()==0){
-         log.info("无数据");
-
-         for (int i = 0; i < landSeedList.size(); i++) {
-            UserSkill userSkill=new UserSkill();
-            userSkill.setId(idGenerator.getNumberId());
-            userSkill.setUserId(user.getId());
-            userSkill.setSkId(landSeedList.get(i).getId());
-            userSkill.setSkGrade(1);
-            userSkill.setSkCurrentSuccessRate(100);
-            userSkill.setSkAddPrestige(100);
-            userSkill.setSkDegreeProficiency(0);
-            userSkill.setSkAllConsume(1);
-            list.add(userSkill);
-         }
-
-         init = iUserSkillService.addUserSkill(list);
-
-         //初始用户拥有的金星星
-         int i = iStarsService.addUserVenusNum(user.getId());
-         if(i<=0){
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"初始化用户金星星数量失败");
-         }
-      }
-
-
-
       Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
-
+      if(userInfoQueryBoResult.getCode()!=0){
+          log.info("用户模块崩了");
+          throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了");
+      }
 
       /**
        * 根据用户id查询所有技能
@@ -166,8 +136,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
        * 查询自己当前拥有金星星的数量
        */
       Stars stars = iStarsService.queryCurrentConsumeByUserId(user.getId());
-      System.out.println(user.getId());
-      System.out.println(stars);
+
       //金星星数量
       map.put("VenusNum",stars.getSkCurrentConsume());
 
@@ -201,6 +170,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       System.out.println(localUser.getUser().getId());
 
+       /**
+        * 需要改的地方
+        */
       Stars stars = iStarsService.queryCurrentConsumeByUserId(localUser.getUser().getId());
 
       if(stars.getSkCurrentConsume()<userSkill.getSkAllConsume()){
@@ -244,6 +216,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             //修改用户信息
             userFeignClient.updateInfo(bo);
 
+
+             /**
+              * 需要改的地方
+              */
             //修改用户金星星数量
             stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
             iStarsService.updateUserVenusNum(stars);
@@ -277,7 +253,11 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             //修改用户信息
             userFeignClient.updateInfo(bo);
 
-            //修改用户金星星数量
+
+             /**
+              * 需要改的地方
+              */
+             //修改用户金星星数量
             stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
             iStarsService.updateUserVenusNum(stars);
 
@@ -362,6 +342,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       }
 
 
+
+        /**
+         * 需要改的地方
+         */
       //升级成功 当前用户拥有的数量 减去 需要消耗的一个数量
       stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
       //修改用户拥有金星星的数量

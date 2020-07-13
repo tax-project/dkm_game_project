@@ -195,7 +195,7 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public List<HotFamilyVo> getLatelyFamily(Long userId) {
-        List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId))
+        List<Long> familyIds = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getUserId, userId).orderByDesc(FamilyLatelyEntity::getId))
                 .stream().mapToLong(FamilyLatelyEntity::getFamilyId).boxed().collect(Collectors.toList());
         //获取热门家族
         //noinspection ConstantConditions
