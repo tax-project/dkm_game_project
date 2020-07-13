@@ -17,6 +17,7 @@ public interface IHistoryService {
      * 结算此记录
      *
      * @param id
+     * @param itemId
      */
-    void destroy(long id);
+    void destroy(long id, Long itemId);
 }
