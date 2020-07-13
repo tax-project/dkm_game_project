@@ -19,4 +19,6 @@ public interface ITbKnapsackService{
     void addTbKnapsack(TbKnapsack tbKnapsack);
 
     List<TbKnapsack> findById(TbKnapsack TbKnapsack);
+
+    TbKnapsack selectByIdTwo(Long userId);
 }

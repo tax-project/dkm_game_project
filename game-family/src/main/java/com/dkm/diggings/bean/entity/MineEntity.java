@@ -27,11 +27,11 @@ public class MineEntity {
     /**
      * 用户 ID
      */
-    private int userId;
+    private Long userId;
     /**
      * 家族 ID
      */
-    private int familyId;
+    private Long familyId;
     /**
      * 矿区等级
      */

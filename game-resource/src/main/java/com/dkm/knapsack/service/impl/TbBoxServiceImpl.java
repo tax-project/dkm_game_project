@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -54,7 +55,6 @@ public class TbBoxServiceImpl  implements ITbBoxService {
     ITbEquipmentKnapsackService tbEquipmentKnapsackService;
     @Autowired
     TbEquipmentMapper tbEquipmentMapper;
-
     /**
      * 增加宝箱的方法
      * @param tbBox 宝箱的模型
@@ -113,6 +113,8 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
             list.add(tbEquipmentVo);
         }
+        //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
+        TbKnapsack tbKnapsack=tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
         List<Map> listMap=new ArrayList<>();
 
             for (int i=0;i<list.size();i++) {
@@ -122,25 +124,17 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                 List<TbEquipment> listTwo=tbEquipmentMapper.selectList(queryWrapper);
                 for (int j=0;j<listTwo.size();j++) {
                     TbEquipment tbEquipment=listTwo.get(j);
-                    //得到当前用户的id然后查询出背包的主键 localUser.getUser().getId()
-                    TbKnapsack tbKnapsack=new TbKnapsack();
-
-                    tbKnapsack.setUserId(localUser.getUser().getId());
-                    List<TbKnapsack> list1=tbKnapsackService.findById(tbKnapsack);
-
-                    for (int k=0;k<list1.size();k++) {
-                        TbKnapsack knapsack=list1.get(k);
                         //传入当前用户背包的外键和装备编号
                         TbEquipmentKnapsackVo tbEquipmentKnapsack=new TbEquipmentKnapsackVo();
                         tbEquipmentKnapsack.setExp1(tbEquipment.getExp1());
-                        tbEquipmentKnapsack.setKnapsackId(knapsack.getKnapsackId());
+                        tbEquipmentKnapsack.setKnapsackId(tbKnapsack.getKnapsackId());
                         int count=tbEquipmentKnapsackMapper.selectCountMy(tbEquipmentKnapsack);
                         if(count>0){
                             //查询为装备上的装备数据
                             TbEquipmentVo list3=tbEquipmentService.selectByEquipmentIdTwo(tbEquipment.getExp1());
                             TbEquipmentKnapsackVo tbEquipmentKnapsackVo=new TbEquipmentKnapsackVo();
                             tbEquipmentKnapsackVo.setExp1(tbEquipment.getExp1());
-                            tbEquipmentKnapsackVo.setKnapsackId(knapsack.getKnapsackId());
+                            tbEquipmentKnapsackVo.setKnapsackId(tbKnapsack.getKnapsackId());
                             //查询已经装备上了的装备数据
                             List<TbEquipmentKnapsackVo> list2=tbEquipmentKnapsackService.selectAll(tbEquipmentKnapsackVo);
                             Map<String,Object> map=new HashMap<>();
@@ -158,7 +152,6 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                             map.put("msg","此装备没有装备上过");
                             listMap.add(map);
                         }
-                    }
                 }
 
             }

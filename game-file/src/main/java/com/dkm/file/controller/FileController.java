@@ -35,7 +35,6 @@ public class FileController {
    @CrossOrigin
    @CheckToken
    public FileVo storeFile(@RequestBody MultipartFile file) {
-
       if (file == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "未上传文件");
       }

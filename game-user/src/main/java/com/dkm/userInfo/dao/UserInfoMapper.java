@@ -10,7 +10,9 @@ import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
+import com.dkm.userInfo.entity.bo.UserSectionInfoBO;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -87,5 +89,8 @@ public interface UserInfoMapper extends IBaseMapper<UserInfo> {
      * @return 返回所有用户信息
      */
     List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
+
+    @Select("select user_info_renown , user_info_gold from tb_user_info where user_id = #{userId}")
+    UserSectionInfoBO queryUserSection(@Param("userId") Long userId);
 
 }

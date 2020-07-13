@@ -17,6 +17,7 @@ import com.dkm.userInfo.dao.UserInfoMapper;
 import com.dkm.userInfo.entity.UserInfo;
 import com.dkm.userInfo.entity.bo.IncreaseUserInfoBO;
 import com.dkm.userInfo.entity.bo.ReputationRankingBO;
+import com.dkm.userInfo.entity.bo.UserSectionInfoBO;
 import com.dkm.userInfo.service.IUserInfoService;
 import com.dkm.utils.IdGenerator;
 import com.dkm.wechat.entity.vo.WeChatUserInfoVo;
@@ -187,5 +188,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
          return null;
       }
       return baseMapper.queryUserInfoAtt (list);
+   }
+
+   @Override
+   public UserSectionInfoBO queryUserSection(Long userId) {
+      return baseMapper.queryUserSection(userId);
    }
 }

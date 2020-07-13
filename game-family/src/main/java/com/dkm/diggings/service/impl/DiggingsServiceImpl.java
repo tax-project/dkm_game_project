@@ -17,6 +17,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
@@ -34,6 +35,7 @@ import java.util.Objects;
 /**
  * @author dragon
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class DiggingsServiceImpl implements IDiggingsService {
@@ -53,6 +55,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private FamilyAdditionMapper mapper;
     @Autowired
     private ResourceFeignClient resourceFeignClient;
+    @Autowired
+    private UserFeignClient userFeignClient;
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -85,6 +89,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         val result = new MineDetailVo();
         result.setInfo(getItemsLevelType().get(item.getItemLevel()));
         if (item.getUserId() == 0) {
+            // 如果矿区未被占领
             result.setHerSkillLevel(result.getInfo().getLevel());
             result.setHerName(result.getInfo().getNpcName());
             String name;
@@ -111,44 +116,71 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     name = "声望";
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + LocalDate.now().getDayOfWeek());
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "出现不可能发生的错误！");
             }
             result.setSkillName(name);
-//            val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
-//            result.setSkillLevel(listResult.get(0).getSkGrade());
+            result.setSkillLevel(getSkillLevel(userId));
+            val info = getItemsLevelType().get(item.getItemLevel());
+            val herUserId = item.getUserId();
+            val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ? info.getNpcSkillLevel() : getSkillLevel(herUserId));
+            result.setSuccessRate(successRate);
         }
         return result;
     }
 
+    /**
+     * 获取用户技能等级
+     *
+     * @param userId 用户 ID
+     */
+    private Integer getSkillLevel(Long userId) {
+        val week = LocalDate.now().getDayOfWeek().getValue();
+        val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+        if (week > 6) {
+            val renownVoResult = userFeignClient.queryUserSection(userId);
+            return renownVoResult.getData().getUserInfoRenown().intValue();
+        } else {
+            return listResult.get(week - 1).getSkGrade();
+        }
+    }
+
     @Override
-    public OccupyResultVo occupy(long battleId) {
-        return null;
+    public OccupyResultVo occupy(long battleId, Long userId, Long familyId) {
+        val item = mineMapper.selectById(battleId);
+        if (ObjectUtils.isNullOrEmpty(item)) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
+        }
+        val result = new OccupyResultVo();
+        val info = getItemsLevelType().get(item.getItemLevel());
+        result.setInfo(info);
+        val herUserId = item.getUserId();
+        val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ?
+                info.getNpcSkillLevel() : getSkillLevel(herUserId));
+        return result;
     }
 
 
-    private final List<MineLevelEntity> mineLevelEntities =
+    private final List<MineInfoVo> mineInfoVos =
             new ArrayList<>();
 
     @Override
     public List<MineInfoVo> getItemsLevelType() {
-
-        synchronized (mineLevelEntities) {
-            if (mineLevelEntities.size() == 0) {
+        synchronized (mineInfoVos) {
+            if (mineInfoVos.size() == 0) {
                 val entityList = mineLevelMapper.selectList(null);
-                mineLevelEntities.addAll(entityList);
+                for (MineLevelEntity levelEntity : entityList) {
+                    MineInfoVo mineInfoVo = new MineInfoVo();
+                    mineInfoVo.setNpcName(levelEntity.getNpcName());
+                    mineInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());
+                    mineInfoVo.setGoldYield(levelEntity.getGoldYield());
+                    mineInfoVo.setIntegralYield(levelEntity.getIntegralYield());
+                    mineInfoVo.setLevel(levelEntity.getLevel());
+                    mineInfoVos.add(mineInfoVo);
+                }
             }
         }
-        val result = new ArrayList<MineInfoVo>(mineLevelEntities.size());
-        for (MineLevelEntity levelEntity : mineLevelEntities) {
-            MineInfoVo mineInfoVo = new MineInfoVo();
-            mineInfoVo.setNpcName(levelEntity.getNpcName());
-            mineInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());
-            mineInfoVo.setGoldYield(levelEntity.getGoldYield());
-            mineInfoVo.setIntegralYield(levelEntity.getIntegralYield());
-            mineInfoVo.setLevel(levelEntity.getLevel());
-            result.add(mineInfoVo);
-        }
-        return result;
+
+        return mineInfoVos;
     }
 
     private void includeMineItem(Long id, List<MineVo> publicItem, int i) {
@@ -182,7 +214,6 @@ public class DiggingsServiceImpl implements IDiggingsService {
         if (longs.size() > 3) {
             throw new IndexOutOfBoundsException("数据异常");
         }
-
         result.setTopRightFamilyName(loadFamilyName(longs.get(1)));
         result.setTopLeftFamilyName(loadFamilyName(longs.get(0)));
         result.setTopRightFamilyName(loadFamilyName(longs.get(1)));
@@ -196,7 +227,6 @@ public class DiggingsServiceImpl implements IDiggingsService {
      *
      * @deprecated sql查询可优化
      */
-    @Deprecated
     private String loadFamilyName(Long familyId) {
         if (familyId == 0) {
             return "无";

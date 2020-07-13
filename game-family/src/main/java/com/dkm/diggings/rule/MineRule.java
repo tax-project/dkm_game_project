@@ -63,4 +63,24 @@ public class MineRule {
         mineMapper.insertAll(list);
         return mineBattleEntity;
     }
+
+    /**
+     * 占领的成功率
+     */
+    public Double calculateSuccessRate(int ourSkillLevel, int herSkillLevel) {
+        if (ourSkillLevel - herSkillLevel >= 8) {
+            return 1.0;
+        }
+        if (herSkillLevel - ourSkillLevel >= 8) {
+            return 0.0;
+        }
+        double abs = Math.abs(ourSkillLevel - herSkillLevel) / 8.0;
+        if (herSkillLevel > ourSkillLevel) {
+            return 1 - abs;
+        } else if (herSkillLevel == ourSkillLevel) {
+            return 0.5;
+        } else {
+            return abs;
+        }
+    }
 }
