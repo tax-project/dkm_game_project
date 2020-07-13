@@ -5,7 +5,7 @@
 <mapper namespace="com.dkm.diggings.dao.MineMapper">
     <insert id="insertAll">
         INSERT INTO
-        tb_mine_battle_item(id, battle_id, belong_item, user_id, family_id, item_level)
+        tb_diggings_battle_item(id, battle_id, belong_item, user_id, family_id, item_level)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (

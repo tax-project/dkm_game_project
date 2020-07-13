@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * 矿场的生成规则
@@ -82,5 +83,14 @@ public class MineRule {
         } else {
             return abs;
         }
+    }
+
+    public boolean occupy(Double successRate) {
+        if (successRate > 0.8) {
+            return true;
+        }
+        int v = (int) (successRate * 100.0);
+        val i = new Random().nextInt(100);
+        return v > i;
     }
 }

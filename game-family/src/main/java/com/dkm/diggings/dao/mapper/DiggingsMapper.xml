@@ -5,7 +5,7 @@
 <mapper namespace="com.dkm.diggings.dao.DiggingsMapper">
     <select id="selectByFamilyId" resultType="com.dkm.diggings.bean.entity.DiggingsEntity">
         SELECT *
-        FROM tb_mine_battle
+        FROM tb_diggings_battle
         WHERE first_family_id = #{familyId}
            OR second_family_id = #{familyId}
            OR third_family_id = #{familyId}
@@ -13,7 +13,7 @@
     </select>
     <select id="selectByEmpty" resultType="com.dkm.diggings.bean.entity.DiggingsEntity">
         SELECT *
-        FROM tb_mine_battle
+        FROM tb_diggings_battle
         WHERE second_family_id = 0
            OR third_family_id = 0
            OR fourth_family_id = 0

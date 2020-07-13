@@ -9,7 +9,7 @@ import lombok.Data;
  * @author OpenE
  */
 @Data
-@TableName("tb_mine_battle_item")
+@TableName("tb_diggings_battle_item")
 public class MineEntity {
     /**
      * ID
@@ -27,11 +27,11 @@ public class MineEntity {
     /**
      * 用户 ID
      */
-    private Long userId;
+    private long userId;
     /**
      * 家族 ID
      */
-    private Long familyId;
+    private long familyId;
     /**
      * 矿区等级
      */
