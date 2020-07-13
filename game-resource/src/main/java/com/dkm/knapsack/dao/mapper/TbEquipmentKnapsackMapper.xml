@@ -57,8 +57,8 @@
 	<!--
 	 2020/7/13 加的sql food_id=6 代表金星星 返回它数量给梦琪
 	 -->
-	<select id="selectNumberStar" parameterType="java.lang.Long" resultType="java.lang.Integer">
-		SELECT food_number FROM tb_equipment_knapsack WHERE knapsack_id=#{knapsackId} AND food_id=6
+	<select id="selectNumberStar" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT food_number,tek_id FROM tb_equipment_knapsack WHERE knapsack_id=#{knapsackId} AND food_id=6
 	</select>
 
 	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">

@@ -30,7 +30,7 @@ public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsac
      * @param knapsackId
      * @return
      */
-    Integer selectNumberStar(Long knapsackId);
+    TbEquipmentKnapsackVo selectNumberStar(Long knapsackId);
     /**
      * 查询道具的接口
      * @param userId

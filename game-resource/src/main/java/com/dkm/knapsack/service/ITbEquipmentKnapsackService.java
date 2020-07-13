@@ -65,5 +65,5 @@ public interface ITbEquipmentKnapsackService{
      * 返回金星星数量给梦琪
      * @return
      */
-    Integer selectNumberStar();
+    Map<String,Object> selectNumberStar();
 }
