@@ -13,6 +13,7 @@ import com.dkm.diggings.dao.MineLevelMapper;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IDiggingsService;
+import com.dkm.diggings.service.IHistoryService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
@@ -156,7 +157,26 @@ public class DiggingsServiceImpl implements IDiggingsService {
         val herUserId = item.getUserId();
         val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ?
                 info.getNpcSkillLevel() : getSkillLevel(herUserId));
+        if (mineRule.occupy(successRate)) {
+            result.setStatus(true);
+            occupied(userId, familyId, item);
+        } else {
+            result.setStatus(false);
+        }
         return result;
+    }
+
+    /**
+     * 占领成功
+     */
+    @Resource
+    private IHistoryService historyService;
+
+    private void occupied(Long userId, Long familyId, MineEntity item) {
+        val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
+        if (unfinishedHistory != null) {
+            historyService.destroy(unfinishedHistory.getId());
+        }
     }
 
 

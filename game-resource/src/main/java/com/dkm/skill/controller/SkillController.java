@@ -60,11 +60,11 @@ public class SkillController {
     @GetMapping("/upgradeSkills")
     @CrossOrigin
     @CheckToken
-    public Map<String,Object> upgradeSkills(@RequestParam("id") Long id,@RequestParam("status") Integer status){
+    public Map<String,Object> upGradeSkills(@RequestParam("id") Long id,@RequestParam("status") Integer status){
         if(id==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
-        return iSkillService.upgradeSkills(id,status);
+        return iSkillService.upGradeSkills(id,status);
     }
 
 

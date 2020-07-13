@@ -8,7 +8,7 @@ import lombok.Data;
 
 @ApiModel("家族的等级加成")
 @Data
-@TableName("tb_mine_family_level_addition")
+@TableName("tb_diggings_family_level_addition")
 public class FamilyAddition {
     @ApiModelProperty("家族等级")
     @TableId
