@@ -114,28 +114,34 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
       Result<List<UserPlunderBo>> result = userFeignClient.listUserPlunder();
 
       if (result.getCode() != 0) {
-         throw new ApplicationException(CodeType.SERVICE_ERROR, "feign有误");
+         log.info("query user <listUserPlunder> feign err.");
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
 
       //得到20条随机用户信息
       List<UserPlunderBo> list = result.getData();
       log.info("query random user to 20:" + list);
 
+      //如果没有用户返回，则直接返回Null
       if (null == list || list.size() == 0) {
          log.info("query user feign err.");
          throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
 
+      //创建一个装id集合的参数查询产出信息
       List<Long> longList = new ArrayList<>();
+      //创建一个排除自己的集合
       List<UserPlunderBo> plunderBoList = new ArrayList<>();
       for (UserPlunderBo bo : list) {
 
          if (!bo.getUserId().equals(user.getId())) {
+            //添加去除自己产出的信息
             longList.add(bo.getUserId());
             plunderBoList.add(bo);
          }
       }
 
+      //根据id集合查询所有产出信息
       List<GoodQueryVo> goodsList = goodsService.queryGoodsList(longList);
 
       if (null == goodsList || goodsList.size() == 0) {
@@ -144,6 +150,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
       }
 
       //转成map
+      //用stream将两个集合进行合并
       Map<Long, List<GoodQueryVo>> goodMap = plunderBoList.stream()
             .collect(Collectors.toMap(UserPlunderBo::getUserId, userPlunderBo ->
          new ArrayList<>()
@@ -163,6 +170,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       List<PlunderUserGoodVo> goodVoList = new ArrayList<>();
       for (PlunderUserGoodVo vo : resultList) {
+         //排除没有产出的用户
          if (vo.getGoodList() != null && vo.getGoodList().size() > 0) {
             goodVoList.add(vo);
          }
@@ -170,13 +178,15 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       Map<String,Object> map = new HashMap<>(3);
 
+      //返回集合信息
       map.put("infoList",goodVoList);
 
       //查询用户信息
       Result<UserInfoQueryBo> queryUser = userFeignClient.queryUser(user.getId());
 
       if (queryUser.getCode() != 0) {
-         throw new ApplicationException(CodeType.SERVICE_ERROR, "feign有误");
+         log.info("query user <queryUser> feign err.");
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
 
       UserInfoQueryBo userData = queryUser.getData();
