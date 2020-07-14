@@ -3,6 +3,7 @@ package com.dkm.feign;
 import com.dkm.data.Result;
 import com.dkm.diggings.bean.vo.RenownVo;
 import com.dkm.diggings.bean.vo.UserInfoBO;
+import com.dkm.diggings.bean.vo.UserInfosVo;
 import com.dkm.feign.fallback.UserFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,6 @@ public interface UserFeignClient {
     Result<RenownVo> queryUserSection(@RequestParam(value = "userId") long userId);
 
     @GetMapping("/v1/we/chat/queryUser/{id}")
-    Result<RenownVo> queryUser(@PathVariable long id);
+    Result<UserInfosVo> queryUser(@PathVariable long id);
 
 }

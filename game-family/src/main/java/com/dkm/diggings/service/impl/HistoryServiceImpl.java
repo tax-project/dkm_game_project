@@ -13,6 +13,8 @@ import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
+import com.dkm.family.dao.FamilyDao;
+import com.dkm.family.entity.FamilyEntity;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -51,6 +53,8 @@ public class HistoryServiceImpl implements IHistoryService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private UserFeignClient userFeignClient;
+    @Resource
+    private FamilyDao familyDao;
 
     @Override
     public int getOccupationSizeOnToday(Long userId) {
@@ -106,11 +110,10 @@ public class HistoryServiceImpl implements IHistoryService {
         entity.setSettled(true);
         val startDate = entity.getStartDate();
         long dateSize = rule.getDateSizeMinutes(now, startDate);
-        entity.setStopDate(startDate.plusMinutes(dateSize));
+        entity.setStopDate(now);
         historyMapper.updateById(entity);
         flushData(entity.getMineItemLevel(), entity.getUserId(), mineId, dateSize);
     }
-
 
 
     private void flushData(int mineItemLevel, long userId, long mineId, long dateSize) {
@@ -130,17 +133,22 @@ public class HistoryServiceImpl implements IHistoryService {
         val integralYield = levelType.getIntegralYield();
         userInfoBO.setUserInfoNowExperience(rule.chooseGoldOrIntegralYield(dateSize, integralYield));
         userFeignClient.update(userInfoBO);
+        mineEntity.setUserId(0);
+        mineEntity.setFamilyId(0);
+        mineMapper.updateById(mineEntity);
     }
 
 
     @Override
     public boolean expired(long mineId, Long userId, Long familyId) {
         final val lastHistory = getLastHistory(userId, familyId);
-        if (rule.getDateSizeMinutes(lastHistory.getStopDate(), lastHistory.getStartDate()) >= 60) {
-            destroy(lastHistory.getId(), mineId);
-            return false;
+        if (lastHistory != null) {
+            if (rule.getDateSizeMinutes(LocalDateTime.now(), lastHistory.getStartDate()) >= MineRule.DATE_LEN_MINUTES) {
+                destroy(lastHistory.getId(), mineId);
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -150,8 +158,13 @@ public class HistoryServiceImpl implements IHistoryService {
         Map<Long, OccupiedVo> map = new HashMap<>(diggingsHistoryEntities.size());
         for (DiggingsHistoryEntity entity : diggingsHistoryEntities) {
             final OccupiedVo value = new OccupiedVo();
-            value.setUserName(entity.getUserId());
-            value.setUserFamilyName(entity.getFamilyId());
+            final val data = userFeignClient.queryUser(entity.getUserId()).getData();
+            value.setUserName(data.getWeChatNickName());
+            final val familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, entity.getFamilyId()));
+            if (familyEntity == null) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "错误，未找到家族");
+            }
+            value.setUserFamilyName(familyEntity.getFamilyName());
             value.setStopDate(DateUtils.formatDateTime(entity.getStopDate()));
             val v = rule.getDateSizeMinutes(LocalDateTime.now(), entity.getStartDate()) / 60.0;
             // 计算如果挖矿时间不大于60的情况

@@ -26,6 +26,7 @@ import java.util.Random;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class MineRule {
+    public static final long DATE_LEN_MINUTES = 60;
     @Resource
     private IdGenerator idGenerator;
     @Resource
@@ -89,7 +90,7 @@ public class MineRule {
 
     public long getDateSizeMinutes(LocalDateTime now, LocalDateTime startDate) {
         val between = Duration.between(startDate, now);
-        final long l = between.toMillis();
+        final long l = between.toMinutes();
         return l > 60 ? 60 : l;
     }
 

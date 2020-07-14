@@ -118,7 +118,6 @@ public class DiggingsController {
 
     @ApiOperation("查询挖矿的各种进度")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", name = "mineId", required = true, dataType = "Long", value = "矿山的 id"),
             @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     })
     @CrossOrigin

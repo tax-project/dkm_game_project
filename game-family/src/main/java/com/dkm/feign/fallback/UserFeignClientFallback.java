@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.diggings.bean.vo.RenownVo;
 import com.dkm.diggings.bean.vo.UserInfoBO;
+import com.dkm.diggings.bean.vo.UserInfosVo;
 import com.dkm.feign.UserFeignClient;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class UserFeignClientFallback implements UserFeignClient {
     }
 
     @Override
-    public Result<RenownVo> queryUser(long id) {
+    public Result<UserInfosVo> queryUser(long id) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 }

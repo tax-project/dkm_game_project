@@ -16,10 +16,12 @@ import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,9 +54,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
-
-    public DiggingsServiceImpl() {
-    }
+    @Autowired
+    private UserFeignClient userFeignClient;
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -83,49 +84,56 @@ public class DiggingsServiceImpl implements IDiggingsService {
     @Override
     public MineDetailVo detail(long battleId, Long userId) {
         val item = mineMapper.selectById(battleId);
+
         if (ObjectUtils.isNullOrEmpty(item)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
+        val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
         val result = new MineDetailVo();
+        int herSkillLevel = info.getNpcSkillLevel();
         result.setInfo(staticService.getItemsLevelTypes().get(item.getItemLevel()));
-        if (item.getUserId() == 0) {
+        final val herUserId = item.getUserId();
+        if (herUserId == 0) {
             // 如果矿区未被占领
             result.setHerSkillLevel(result.getInfo().getLevel());
             result.setHerName(result.getInfo().getNpcName());
-            String name;
-            switch (LocalDate.now().getDayOfWeek()) {
-                case MONDAY:
-                    name = "顶猪头";
-                    break;
-                case TUESDAY:
-                    name = "胡言乱语";
-                    break;
-                case WEDNESDAY:
-                    name = "顺手牵羊";
-                    break;
-                case THURSDAY:
-                    name = "踢出家族";
-                    break;
-                case FRIDAY:
-                    name = "禁言";
-                    break;
-                case SATURDAY:
-                    name = "幸运之吻";
-                    break;
-                case SUNDAY:
-                    name = "声望";
-                    break;
-                default:
-                    throw new ApplicationException(CodeType.SERVICE_ERROR, "出现不可能发生的错误！");
-            }
-            result.setSkillName(name);
-            val userSkillLevel = staticService.getSkillLevel(userId);
-            result.setSkillLevel(userSkillLevel);
-            val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
-            val herUserId = item.getUserId();
-            val successRate = mineRule.calculateSuccessRate(userSkillLevel, herUserId == 0 ? info.getNpcSkillLevel() : staticService.getSkillLevel(herUserId));
-            result.setSuccessRate(successRate);
+        } else {
+            herSkillLevel = staticService.getSkillLevel(herUserId);
+            result.setHerSkillLevel(herSkillLevel);
+            final val data = userFeignClient.queryUser(herUserId).getData();
+            result.setHerName(data.getWeChatNickName());
         }
+        String name;
+        switch (LocalDate.now().getDayOfWeek()) {
+            case MONDAY:
+                name = "顶猪头";
+                break;
+            case TUESDAY:
+                name = "胡言乱语";
+                break;
+            case WEDNESDAY:
+                name = "顺手牵羊";
+                break;
+            case THURSDAY:
+                name = "踢出家族";
+                break;
+            case FRIDAY:
+                name = "禁言";
+                break;
+            case SATURDAY:
+                name = "幸运之吻";
+                break;
+            case SUNDAY:
+                name = "声望";
+                break;
+            default:
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "出现不可能发生的错误！");
+        }
+        result.setSkillName(name);
+        val userSkillLevel = staticService.getSkillLevel(userId);
+        result.setSkillLevel(userSkillLevel);
+        val successRate = mineRule.calculateSuccessRate(userSkillLevel, herSkillLevel);
+        result.setSuccessRate(successRate);
         return result;
     }
 

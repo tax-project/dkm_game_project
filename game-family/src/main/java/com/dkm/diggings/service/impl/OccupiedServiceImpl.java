@@ -10,6 +10,7 @@ import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
  *
  * @author OpenE
  */
+@Slf4j
 @Service
 public class OccupiedServiceImpl implements IOccupiedService {
     /**
@@ -52,7 +54,8 @@ public class OccupiedServiceImpl implements IOccupiedService {
         val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
         result.setInfo(info);
         val herUserId = item.getUserId();
-        if (herUserId == userId && historyService.expired(mineId, userId, familyId)) {
+        if (herUserId == userId && !historyService.expired(mineId, userId, familyId)) {
+            log.info("用户尝试自我占领，占领取消");
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "不允许自己攻击自己哦");
         }
         val successRate = mineRule.calculateSuccessRate(staticService.getSkillLevel(userId), herUserId == 0 ?
