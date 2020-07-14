@@ -377,31 +377,6 @@ public class SeedServiceImpl implements ISeedService {
                 //如果不是新种子
             } else {
 
-                //查询已经收取种子的数量  作为种植的次数
-                LambdaQueryWrapper<LandSeed> queryWrapper2 = new LambdaQueryWrapper<LandSeed>()
-                        .eq(LandSeed::getUserId, user.getId())
-                        .eq(LandSeed::getLeStatus, 3)
-                        .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
-
-                List<LandSeed> list2 = landSeedMapper.selectList(queryWrapper2);
-
-                //如果土地的长度大于种子已经种植的次数
-                if (userLandUnlocks.size() > list2.size()) {
-                    LandSeed landSeed = new LandSeed();
-                    landSeed.setId(idGenerator.getNumberId());
-                    landSeed.setPlantTime(LocalDateTime.now());
-                    landSeed.setUserId(localUser.getUser().getId());
-                    landSeed.setSeedId(seedPlantVo.getSeedId());
-                    landSeed.setLeStatus(3);
-                    landSeed.setLaNo(userLandUnlocks.size());
-                    landSeed.setNewSeedIs(null);
-                    int insert = landMapper.insert(landSeed);
-                    if (insert <= 0) {
-                        throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
-                    }
-                }
-
-
                 /**
                  * 添加后在进行查询一次
                  *
@@ -424,7 +399,6 @@ public class SeedServiceImpl implements ISeedService {
                     landSeed.setPlantTime(time2);
 
                     int update = landMapper.update(landSeed, wrapper);
-
 
                     if (update <= 0) {
                         throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
@@ -546,6 +520,21 @@ public class SeedServiceImpl implements ISeedService {
                             if (i1 <= 0) {
                                 throw new ApplicationException(CodeType.SERVICE_ERROR, "等级等于" + userInfoQueryBoResult.getData().getUserInfoGrade() + "！解锁失败");
                             }
+
+                            //如果土地的长度大于种子已经种植的次数 ，在添加一条数据
+                            LandSeed landSeed = new LandSeed();
+                            landSeed.setId(idGenerator.getNumberId());
+                            landSeed.setPlantTime(LocalDateTime.now());
+                            landSeed.setUserId(localUser.getUser().getId());
+                            landSeed.setSeedId(seedPlantVo.getSeedId());
+                            landSeed.setLeStatus(3);
+                            landSeed.setLaNo(userLandUnlocks.size());
+                            landSeed.setNewSeedIs(null);
+                            int insert = landMapper.insert(landSeed);
+                            if (insert <= 0) {
+                                throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
+                            }
+
                         }
                     }
                 }

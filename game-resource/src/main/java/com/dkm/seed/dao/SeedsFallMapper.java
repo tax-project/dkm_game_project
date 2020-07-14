@@ -41,4 +41,11 @@ public interface SeedsFallMapper extends BaseMapper<SeedsFall> {
      * @return
      */
     int updateLeStatus(List<Long> list);
+
+    /**
+     * 查询种子首次产出得金钱
+     * @param userId
+     * @return
+     */
+    Double queryMoney(Long userId);
 }
