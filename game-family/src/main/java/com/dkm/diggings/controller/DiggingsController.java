@@ -9,6 +9,7 @@ import com.dkm.diggings.bean.vo.MineDetailVo;
 import com.dkm.diggings.bean.vo.MineInfoVo;
 import com.dkm.diggings.bean.vo.OccupyResultVo;
 import com.dkm.diggings.service.IDiggingsService;
+import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
@@ -39,21 +40,24 @@ public class DiggingsController {
     private FamilyDetailDao familyDetailDao;
 
     @Resource
-    private IDiggingsService service;
+    private IDiggingsService diggingsService;
+
+    @Resource
+    private IStaticService staticService;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
     @CrossOrigin
     @GetMapping(value = "/getMineLevelType", produces = "application/json")
     public List<MineInfoVo> getMineLevelType() {
-        return service.getItemsLevelType();
+        return staticService.getItemsLevelTypes();
     }
 
     @ApiOperation("获取家族等级信息与金币加成相关的信息 （静态的）")
     @CrossOrigin
     @GetMapping(value = "/getFamilyType", produces = "application/json")
     public List<FamilyAddition> getFamilyType() {
-        return service.getFamilyType();
+        return staticService.getFamilyType();
     }
 
 
@@ -64,7 +68,7 @@ public class DiggingsController {
     @GetMapping(value = "/getMineInfo", produces = "application/json")
     public DiggingsVo getAllInfo() {
         val user2FamilyId = getUser2FamilyId();
-        return service.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
+        return diggingsService.getAllInfo(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
 
@@ -77,7 +81,7 @@ public class DiggingsController {
     @CheckToken
     @GetMapping(value = "/{mineId}/detail", produces = "application/json")
     public MineDetailVo detail(@PathVariable long mineId) {
-        return service.detail(mineId, getUser2FamilyId().getUserId());
+        return diggingsService.detail(mineId, getUser2FamilyId().getUserId());
     }
 
     @ApiOperation("占领矿山")
@@ -90,7 +94,7 @@ public class DiggingsController {
     @GetMapping(value = "/{mineId}/occupy", produces = "application/json")
     public OccupyResultVo occupy(@PathVariable long mineId) {
         val user2FamilyId = getUser2FamilyId();
-        return service.occupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
+        return diggingsService.occupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
     }
 
 

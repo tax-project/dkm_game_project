@@ -2,17 +2,18 @@ package com.dkm.diggings.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
-import com.dkm.diggings.bean.FamilyAddition;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
-import com.dkm.diggings.bean.entity.MineLevelEntity;
-import com.dkm.diggings.bean.vo.*;
+import com.dkm.diggings.bean.vo.DiggingsVo;
+import com.dkm.diggings.bean.vo.MineDetailVo;
+import com.dkm.diggings.bean.vo.MineVo;
+import com.dkm.diggings.bean.vo.OccupyResultVo;
 import com.dkm.diggings.dao.DiggingsMapper;
-import com.dkm.diggings.dao.FamilyAdditionMapper;
-import com.dkm.diggings.dao.MineLevelMapper;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IDiggingsService;
+import com.dkm.diggings.service.IHistoryService;
+import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
@@ -48,15 +49,16 @@ public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
     private MineRule mineRule;
     @Resource
-    private MineLevelMapper mineLevelMapper;
-    @Resource
     private FamilyDao familyDao;
     @Resource
-    private FamilyAdditionMapper mapper;
+    private IStaticService staticService;
     @Autowired
     private ResourceFeignClient resourceFeignClient;
     @Autowired
     private UserFeignClient userFeignClient;
+
+    public DiggingsServiceImpl() {
+    }
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -74,11 +76,6 @@ public class DiggingsServiceImpl implements IDiggingsService {
     }
 
 
-    @Override
-    public List<FamilyAddition> getFamilyType() {
-        return mapper.selectList(null);
-    }
-
     @Deprecated
     @Override
     public MineDetailVo detail(long battleId, Long userId) {
@@ -87,7 +84,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
         val result = new MineDetailVo();
-        result.setInfo(getItemsLevelType().get(item.getItemLevel()));
+        result.setInfo(staticService.getItemsLevelTypes().get(item.getItemLevel()));
         if (item.getUserId() == 0) {
             // 如果矿区未被占领
             result.setHerSkillLevel(result.getInfo().getLevel());
@@ -120,7 +117,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
             }
             result.setSkillName(name);
             result.setSkillLevel(getSkillLevel(userId));
-            val info = getItemsLevelType().get(item.getItemLevel());
+            val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
             val herUserId = item.getUserId();
             val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ? info.getNpcSkillLevel() : getSkillLevel(herUserId));
             result.setSuccessRate(successRate);
@@ -136,6 +133,9 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private Integer getSkillLevel(Long userId) {
         val week = LocalDate.now().getDayOfWeek().getValue();
         val listResult = resourceFeignClient.querySkillByUserId(userId).getData();
+        if (listResult == null) {
+            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "获取技能等级出错。");
+        }
         if (week > 6) {
             val renownVoResult = userFeignClient.queryUserSection(userId);
             return renownVoResult.getData().getUserInfoRenown().intValue();
@@ -151,37 +151,33 @@ public class DiggingsServiceImpl implements IDiggingsService {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
         val result = new OccupyResultVo();
-        val info = getItemsLevelType().get(item.getItemLevel());
+        val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
         result.setInfo(info);
         val herUserId = item.getUserId();
         val successRate = mineRule.calculateSuccessRate(getSkillLevel(userId), herUserId == 0 ?
                 info.getNpcSkillLevel() : getSkillLevel(herUserId));
+        if (mineRule.occupy(successRate)) {
+            result.setStatus(true);
+            occupied(userId, familyId, item);
+        } else {
+            result.setStatus(false);
+        }
         return result;
     }
 
+    /**
+     * 占领成功
+     */
+    @Resource
+    private IHistoryService historyService;
 
-    private final List<MineInfoVo> mineInfoVos =
-            new ArrayList<>();
-
-    @Override
-    public List<MineInfoVo> getItemsLevelType() {
-        synchronized (mineInfoVos) {
-            if (mineInfoVos.size() == 0) {
-                val entityList = mineLevelMapper.selectList(null);
-                for (MineLevelEntity levelEntity : entityList) {
-                    MineInfoVo mineInfoVo = new MineInfoVo();
-                    mineInfoVo.setNpcName(levelEntity.getNpcName());
-                    mineInfoVo.setNpcSkillLevel(levelEntity.getNpcLevel());
-                    mineInfoVo.setGoldYield(levelEntity.getGoldYield());
-                    mineInfoVo.setIntegralYield(levelEntity.getIntegralYield());
-                    mineInfoVo.setLevel(levelEntity.getLevel());
-                    mineInfoVos.add(mineInfoVo);
-                }
-            }
+    private void occupied(Long userId, Long familyId, MineEntity item) {
+        val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
+        if (unfinishedHistory != null) {
+            historyService.destroy(unfinishedHistory.getId(), item.getId());
         }
-
-        return mineInfoVos;
     }
+
 
     private void includeMineItem(Long id, List<MineVo> publicItem, int i) {
         val itemEntities = mineMapper.selectList(new QueryWrapper<MineEntity>()
