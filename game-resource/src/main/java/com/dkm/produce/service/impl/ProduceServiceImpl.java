@@ -196,6 +196,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         if(attendantGoods.size()==0){
             map.put("msg","暂无跟班 快去抓跟班吧");
+            map.put("status",2);
             return map;
         }
 

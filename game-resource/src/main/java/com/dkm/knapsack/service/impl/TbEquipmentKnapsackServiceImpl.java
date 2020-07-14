@@ -25,10 +25,12 @@ import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -44,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zy
  * @since 2020-05-14
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackService {
@@ -260,7 +263,15 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
     @Override
     public TbEquipmentKnapsackVoThree selectNumberStar() {
         TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
+        if(tbKnapsack==null){
+            log.info("装备那边的问题");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"装备bug");
+        }
         TbEquipmentKnapsackVoThree tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
+        if(tbEquipmentKnapsackVo==null){
+            log.info("装备那边的问题00");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"装备bug");
+        }
         return tbEquipmentKnapsackVo;
     }
 
