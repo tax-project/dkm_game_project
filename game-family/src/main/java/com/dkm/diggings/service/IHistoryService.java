@@ -21,12 +21,37 @@ public interface IHistoryService {
     /**
      * 结算此记录
      *
-     * @param id
-     * @param itemId
+     * @param id     主键 ID
+     * @param itemId 矿区ID
      */
     void destroy(long id, Long itemId);
 
+    /**
+     * 创建一个新的历史记录
+     *
+     * @param userId
+     * @param familyId
+     * @param mineId
+     */
     void createNewItem(Long userId, Long familyId, long mineId);
 
     Map<Long, OccupiedVo> selectUserOccupiedList(List<Pair<Long, Long>> collect, Long familyId);
+
+    /**
+     * 判断金矿是否过期
+     *
+     * @param mineId
+     * @param userId
+     * @param familyId
+     * @return
+     */
+    boolean expired(long mineId, Long userId, Long familyId);
+
+    /**
+     * 查询今天剩余的攻击次数
+     *
+     * @param userId
+     * @return
+     */
+    int getOccupationSizeOnToday(Long userId);
 }

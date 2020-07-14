@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.FamilyAddition;
 import com.dkm.diggings.bean.other.User2FamilyId;
-import com.dkm.diggings.bean.vo.DiggingsVo;
-import com.dkm.diggings.bean.vo.MineDetailVo;
-import com.dkm.diggings.bean.vo.MineInfoVo;
-import com.dkm.diggings.bean.vo.OccupyResultVo;
+import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IOccupiedService;
+import com.dkm.diggings.service.IRankService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
@@ -48,6 +46,9 @@ public class DiggingsController {
 
     @Resource
     private IOccupiedService occupiedService;
+
+    @Resource
+    private IRankService rankService;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
@@ -102,9 +103,35 @@ public class DiggingsController {
     }
 
 
+    @ApiOperation("取消占领矿山")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "mineId", required = true, dataType = "Long", value = "矿山的 id"),
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    })
+    @CrossOrigin
+    @CheckToken
+    @GetMapping(value = "/{mineId}/stop", produces = "application/json")
+    public OccupyResultVo disOccupy(@PathVariable long mineId) {
+        val user2FamilyId = getUser2FamilyId();
+        return occupiedService.disOccupy(mineId, user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
+    }
+
+    @ApiOperation("查询挖矿的各种进度")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", name = "mineId", required = true, dataType = "Long", value = "矿山的 id"),
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    })
+    @CrossOrigin
+    @CheckToken
+    @GetMapping(value = "/getStatus", produces = "application/json")
+    public DiggingsStatusVO getStatus() {
+        val user2FamilyId = getUser2FamilyId();
+        return diggingsService.getStatus(user2FamilyId.getUserId(), user2FamilyId.getFamilyId());
+    }
+
+
     /**
      * 根据 Token 来获取各种信息
-     *
      */
     private User2FamilyId getUser2FamilyId() {
         val userId = localUser.getUser().getId();

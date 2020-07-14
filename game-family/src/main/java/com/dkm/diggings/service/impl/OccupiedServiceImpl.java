@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.vo.OccupyResultVo;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
+import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IStaticService;
@@ -34,11 +35,16 @@ public class OccupiedServiceImpl implements IOccupiedService {
 
     @Resource
     private MineRule mineRule;
+    @Resource
+    private IDiggingsService diggingsService;
 
 
     @Override
-    public OccupyResultVo occupy(long battleId, Long userId, Long familyId) {
-        val item = mineMapper.selectById(battleId);
+    public OccupyResultVo occupy(long mineId, Long userId, Long familyId) {
+        val item = mineMapper.selectById(mineId);
+        if (diggingsService.getOccupationSize(userId) <= 0) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "你没有占领次数了");
+        }
         if (ObjectUtils.isNullOrEmpty(item)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
         }
@@ -46,7 +52,7 @@ public class OccupiedServiceImpl implements IOccupiedService {
         val info = staticService.getItemsLevelTypes().get(item.getItemLevel());
         result.setInfo(info);
         val herUserId = item.getUserId();
-        if (herUserId == userId) {
+        if (herUserId == userId && historyService.expired(mineId, userId, familyId)) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "不允许自己攻击自己哦");
         }
         val successRate = mineRule.calculateSuccessRate(staticService.getSkillLevel(userId), herUserId == 0 ?
@@ -60,6 +66,22 @@ public class OccupiedServiceImpl implements IOccupiedService {
         return result;
     }
 
+    @Override
+    public OccupyResultVo disOccupy(long mineId, Long userId, Long familyId) {
+        val item = mineMapper.selectById(mineId);
+        if (ObjectUtils.isNullOrEmpty(item)) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "未找到此矿山.");
+        }
+
+        if (item.getUserId() != userId) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "你没有权限处理他人的挖矿！");
+        }
+        val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
+        historyService.destroy(unfinishedHistory.getId(), mineId);
+        final val occupyResultVo = new OccupyResultVo();
+        occupyResultVo.setStatus(true);
+        return occupyResultVo;
+    }
 
     /**
      * 占领完成

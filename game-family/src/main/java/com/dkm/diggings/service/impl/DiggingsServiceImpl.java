@@ -5,10 +5,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
 import com.dkm.diggings.bean.other.Pair;
-import com.dkm.diggings.bean.vo.DiggingsVo;
-import com.dkm.diggings.bean.vo.MineDetailVo;
-import com.dkm.diggings.bean.vo.MineVo;
-import com.dkm.diggings.bean.vo.OccupiedVo;
+import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
@@ -19,6 +16,7 @@ import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
@@ -27,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,6 @@ import java.util.stream.Collectors;
 /**
  * @author dragon
  */
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class DiggingsServiceImpl implements IDiggingsService {
@@ -70,7 +68,14 @@ public class DiggingsServiceImpl implements IDiggingsService {
         includeMineItem(entity.getId(), result.getPrivateItem(), locationId, userId, familyId);
         // 导入私有矿区信息
         result.setFamilyLevel(getFamilyLevel(familyId));
+        result.setOccupationSize(getOccupationSize(userId));
         return result;
+    }
+
+
+    @Override
+    public int getOccupationSize(Long userId) {
+        return mineRule.getUserOccupationSize(userId) - historyService.getOccupationSizeOnToday(userId);
     }
 
 
@@ -124,6 +129,26 @@ public class DiggingsServiceImpl implements IDiggingsService {
         return result;
     }
 
+    @Override
+    public DiggingsStatusVO getStatus(Long userId, Long familyId) {
+        final val diggingsStatusVO = new DiggingsStatusVO();
+        final val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
+
+        diggingsStatusVO.setRemaining(getOccupationSize(userId));
+        if (unfinishedHistory == null) {
+            diggingsStatusVO.setMining(false);
+        } else {
+            diggingsStatusVO.setMining(true);
+            final val stopDate = DateUtils.formatDateTime(unfinishedHistory.getStopDate());
+            diggingsStatusVO.setStopDate(stopDate);
+            val levelType = staticService.getItemsLevelType(unfinishedHistory.getMineItemLevel());
+            final val dateSize = mineRule.getDateSizeMinutes(LocalDateTime.now(), unfinishedHistory.getStartDate());
+            diggingsStatusVO.setGold(mineRule.chooseGoldOrIntegralYield(dateSize, levelType.getGoldYield()));
+            diggingsStatusVO.setRemaining(mineRule.chooseGoldOrIntegralYield(dateSize, levelType.getIntegralYield()));
+        }
+        return diggingsStatusVO;
+    }
+
 
     private void includeMineItem(Long id, List<MineVo> publicItem, int location, Long userId, Long familyId) {
         val itemEntities = mineMapper.selectList(new QueryWrapper<MineEntity>()
@@ -145,7 +170,13 @@ public class DiggingsServiceImpl implements IDiggingsService {
                 .map(t -> new Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
         Map<Long, OccupiedVo> occupiedVoMap = historyService.selectUserOccupiedList(collect, familyId);
         if (occupiedVoMap != null && occupiedVoMap.size() > 0 && map.size() > 0) {
-            occupiedVoMap.forEach((k, v) -> map.get(k).setOccupiedInfo(v));
+            occupiedVoMap.forEach((k, v) -> {
+                if (map.containsKey(k)) {
+                    final val mineVo = map.get(k);
+                    mineVo.setOccupiedInfo(v);
+                    mineVo.setOccupied(true);
+                }
+            });
             publicItem.addAll(map.values());
         }
         publicItem.sort((j, k) -> (int)
@@ -181,8 +212,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
 
     /**
      * 根据家族ID 来获取家族名称
-     *
-     * @deprecated sql查询可优化
+     * <p>
+     * sql查询可优化
      */
     private String loadFamilyName(Long familyId) {
         if (familyId == 0) {

@@ -1,6 +1,7 @@
 package com.dkm.diggings.service;
 
 
+import com.dkm.diggings.bean.vo.DiggingsStatusVO;
 import com.dkm.diggings.bean.vo.DiggingsVo;
 import com.dkm.diggings.bean.vo.MineDetailVo;
 
@@ -17,8 +18,13 @@ public interface IDiggingsService {
      */
     DiggingsVo getAllInfo(Long userId, Long familyId);
 
-
-
+    /**
+     * 查询用户剩余的挖矿次数
+     *
+     * @param userId 用户ID
+     * @return 次数
+     */
+    int getOccupationSize(Long userId);
 
     /**
      * 查看矿山的详情信息
@@ -28,4 +34,6 @@ public interface IDiggingsService {
      * @return 详情信息
      */
     MineDetailVo detail(long battleId, Long userId);
+
+    DiggingsStatusVO getStatus(Long userId, Long familyId);
 }
