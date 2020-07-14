@@ -253,9 +253,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userFeignClient.updateInfo(bo);
 
 
-             /**
-              * 需要改的地方
-              */
+
             //修改用户金星星数量
             iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
 
@@ -288,7 +286,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    public Integer operation(Long id,Integer status,UserSkill userSkill){
 
-      Stars stars = iStarsService.queryCurrentConsumeByUserId(localUser.getUser().getId());
+      /**
+       * 查询自己当前拥有金星星的数量
+       */
+      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
 
       UserInfoSkillBo bo=new UserInfoSkillBo();
       //增加声望
@@ -341,13 +342,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
 
 
-        /**
-         * 需要改的地方
-         */
       //升级成功 当前用户拥有的数量 减去 需要消耗的一个数量
-      stars.setSkCurrentConsume(stars.getSkCurrentConsume()-userSkill.getSkAllConsume());
-      //修改用户拥有金星星的数量
-      iStarsService.updateUserVenusNum(stars);
+      //修改用户金星星数量
+      iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
 
       //熟练度加7
       userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+7);

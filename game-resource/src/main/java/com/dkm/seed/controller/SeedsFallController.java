@@ -53,7 +53,7 @@ public class SeedsFallController {
      */
     @ApiOperation(value = "单独掉落红包", notes = "单独掉落红包")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "money", value = "种子首次产出的红包金额")
-    @PostMapping("/redBagDroppedSeparately")
+    @GetMapping("/redBagDroppedSeparately")
     @CrossOrigin
     @CheckToken
     List<Double> redBagDroppedSeparately(@RequestParam(value = "money") Double money){

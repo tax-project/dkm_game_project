@@ -526,7 +526,6 @@ public class SeedServiceImpl implements ISeedService {
 
                 //修改用户信息
                 int i = seedMapper.updateUser(seedPlantVo);
-                //Result<UserInfoQueryBo> userInfoQueryBoResults = userFeignClient.queryUser(user.getId());
 
                 //每三级解锁一块土地
                 if (userInfoQueryBoResult.getData().getUserInfoGrade() % 3 == 0) {
