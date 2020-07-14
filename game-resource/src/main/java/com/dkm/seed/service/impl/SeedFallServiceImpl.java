@@ -17,6 +17,7 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
+import com.dkm.seed.entity.vo.moneyVo;
 import com.dkm.seed.service.ISeedFallService;
 import com.dkm.seed.vilidata.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,9 +153,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         UserLoginQuery user = localUser.getUser();
 
         //查询出种子首次产出的金钱
-        Double aDouble = baseMapper.queryMoney(user.getId());
-        log.info("aDouble{}",aDouble);
-        if(aDouble==0){
+        List<moneyVo> moneyVos = baseMapper.queryMoney();
+        log.info("aDouble{}",moneyVos);
+        if(moneyVos.size()==0 || moneyVos==null){
             return;
         }
 
@@ -161,17 +163,27 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //截取小数点后两位
         //钱除以他掉落的一个次数 就是每次掉落的钱
-        BigDecimal b1 = new BigDecimal(aDouble/30);
-        double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-        MsgInfo msgInfo = new MsgInfo();
-        msgInfo.setMsg(String.valueOf(f1));
-        msgInfo.setType(13);
-        msgInfo.setMsgType(1);
-        msgInfo.setToId(user.getId());
+        for (moneyVo moneyVo : moneyVos) {
+            BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
+            double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-        log.info("发送掉落通知...");
-        rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(f1));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(moneyVo.getUserId());
+
+                log.info("发送掉落通知...");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+
+        }
+
+
+
+
+
+
 
     }
 
