@@ -33,5 +33,5 @@ public class GoodQueryVo {
    /**
     * 数量
     */
-   private String number;
+   private Integer number;
 }

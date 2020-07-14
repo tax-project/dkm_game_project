@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -85,6 +87,18 @@ public class MineRule {
         }
     }
 
+    public long getDateSizeMinutes(LocalDateTime now, LocalDateTime startDate) {
+        val between = Duration.between(startDate, now);
+        final long l = between.toMillis();
+        return l > 60 ? 60 : l;
+    }
+
+    public Integer chooseGoldOrIntegralYield(long minutes, double maxSize) {
+        val v = minutes / 60.0;
+        return (int) (maxSize * v);
+    }
+
+
     public boolean occupy(Double successRate) {
         if (successRate > 0.8) {
             return true;
@@ -92,5 +106,9 @@ public class MineRule {
         int v = (int) (successRate * 100.0);
         val i = new Random().nextInt(100);
         return v > i;
+    }
+
+    public int getUserOccupationSize(Long userId) {
+        return 3;
     }
 }
