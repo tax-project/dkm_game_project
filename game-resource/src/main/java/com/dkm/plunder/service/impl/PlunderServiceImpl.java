@@ -119,20 +119,32 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       //得到20条随机用户信息
       List<UserPlunderBo> list = result.getData();
+      log.info("query random user to 20:" + list);
+
+      if (null == list || list.size() == 0) {
+         log.info("query user feign err.");
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
 
       List<Long> longList = new ArrayList<>();
+      List<UserPlunderBo> plunderBoList = new ArrayList<>();
       for (UserPlunderBo bo : list) {
 
          if (!bo.getUserId().equals(user.getId())) {
             longList.add(bo.getUserId());
+            plunderBoList.add(bo);
          }
       }
 
-
       List<GoodQueryVo> goodsList = goodsService.queryGoodsList(longList);
 
+      if (null == goodsList || goodsList.size() == 0) {
+         log.info("query all produce to user is null.");
+         return null;
+      }
+
       //转成map
-      Map<Long, List<GoodQueryVo>> goodMap = list.stream()
+      Map<Long, List<GoodQueryVo>> goodMap = plunderBoList.stream()
             .collect(Collectors.toMap(UserPlunderBo::getUserId, userPlunderBo ->
          new ArrayList<>()
       ));
@@ -142,17 +154,23 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          goodQueryVos.add(vo);
       }
 
-      List<Object> resultList = list.stream().map(userPlunderBo -> {
+      List<PlunderUserGoodVo> resultList = plunderBoList.stream().map(userPlunderBo -> {
          PlunderUserGoodVo vo = new PlunderUserGoodVo();
          BeanUtils.copyProperties(userPlunderBo, vo);
          vo.setGoodList(goodMap.get(userPlunderBo.getUserId()));
          return vo;
       }).collect(Collectors.toList());
 
+      List<PlunderUserGoodVo> goodVoList = new ArrayList<>();
+      for (PlunderUserGoodVo vo : resultList) {
+         if (vo.getGoodList() != null && vo.getGoodList().size() > 0) {
+            goodVoList.add(vo);
+         }
+      }
 
       Map<String,Object> map = new HashMap<>(3);
 
-      map.put("infoList",resultList);
+      map.put("infoList",goodVoList);
 
       //查询用户信息
       Result<UserInfoQueryBo> queryUser = userFeignClient.queryUser(user.getId());
