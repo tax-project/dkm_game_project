@@ -112,9 +112,7 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
             throw new ApplicationException(CodeType.SERVICE_ERROR, "对手feign有误");
         }
 
-        /**
-         * 对手用户信息
-         */
+        //对手用户信息
         List<com.dkm.entity.vo.OpponentVo> userInfo = listResult.getData();
 
         //根据用户id查询物品
