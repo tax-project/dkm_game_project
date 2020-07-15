@@ -65,9 +65,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
 
     @Override
-    public List<GoldOrMoneyVo> seedDrop() {
-
-        List<GoldOrMoneyVo> goldOrMoneyVos=new ArrayList<>();
+    public void seedDrop() {
 
         //查询已经种植的种子
         LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
@@ -76,7 +74,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
         if(landSeedList.size()==0){
-           return null;
+           return;
         }
 
         Integer gold=0;
@@ -88,8 +86,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         SeedsFall seedsFall=null;
 
         for (LandSeed seed : landSeedList) {
-
-            GoldOrMoneyVo goldOrMoneyVo=new GoldOrMoneyVo();
 
             seedsFall=new SeedsFall();
             seedsFall.setId(seed.getId());
@@ -105,9 +101,14 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             if(dropCoins){
                 gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
 
-                seedsFall.setDropCoins(gold);
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(gold));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
-                goldOrMoneyVo.setGold(gold);
+                log.info("发送掉落通知...金币");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
             }
 
@@ -117,33 +118,32 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 //掉落的红包数量
                 money =randomUtils.NumberRedPacketsDropped();
 
-                seedsFall.setDropRedEnvelope(money);
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(money));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
-                goldOrMoneyVo.setMoney(money);
+                log.info("发送掉落通知...红包");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
             }
 
             //掉落花
-            Integer integer =fallingFlowers();
-            seedsFall.setDropFallingFlowers(integer);
+            boolean b = randomUtils.fallingFlowers();
+            if(b){
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(1));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
-            goldOrMoneyVo.setDropFallingFlowers(integer);
-
-            /**
-             * 将对象添加到集合  然后批量添加
-             * 只要有掉落的数据不等于0 则添加到集合中
-             */
-            if(seedsFall.getDropCoins()!=0 || seedsFall.getDropRedEnvelope()!=0.0 || seedsFall.getDropFallingFlowers()!=0){
-                list.add(seedsFall);
-                //将掉落的金币和红包存入数据库
-                seedsFallMapper.insertSeedDropGoldOrRedEnvelopes(list);
+                log.info("发送掉落通知...花");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
             }
-            //将值封装到vo
-            goldOrMoneyVos.add(goldOrMoneyVo);
 
         }
 
-        return goldOrMoneyVos;
     }
 
 
@@ -154,12 +154,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //查询出种子首次产出的金钱
         List<moneyVo> moneyVos = baseMapper.queryMoney();
-        log.info("aDouble{}",moneyVos);
         if(moneyVos.size()==0 || moneyVos==null){
             return;
         }
-
-
 
         //截取小数点后两位
         //钱除以他掉落的一个次数 就是每次掉落的钱
@@ -167,23 +164,16 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
             double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-                MsgInfo msgInfo = new MsgInfo();
-                msgInfo.setMsg(String.valueOf(f1));
-                msgInfo.setType(13);
-                msgInfo.setMsgType(1);
-                msgInfo.setToId(moneyVo.getUserId());
+            MsgInfo msgInfo = new MsgInfo();
+            msgInfo.setMsg(String.valueOf(f1));
+            msgInfo.setType(13);
+            msgInfo.setMsgType(1);
+            msgInfo.setToId(moneyVo.getUserId());
 
-                log.info("发送掉落通知...");
-                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+            log.info("发送掉落通知...");
+            rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
         }
-
-
-
-
-
-
-
     }
 
     /**

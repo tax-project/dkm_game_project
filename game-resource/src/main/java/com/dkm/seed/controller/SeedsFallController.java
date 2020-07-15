@@ -3,6 +3,7 @@ package com.dkm.seed.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.service.ISeedFallService;
@@ -34,7 +35,7 @@ public class SeedsFallController {
      * 种子掉落
      * 金币红包掉落
      */
-    @ApiOperation(value = "种子掉落（金币红包掉落）", notes = "种子掉落（金币红包掉落）")
+ /*   @ApiOperation(value = "种子掉落（金币红包掉落）", notes = "种子掉落（金币红包掉落）")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级")
     @PostMapping("/seedDrop")
     @CrossOrigin
@@ -44,7 +45,7 @@ public class SeedsFallController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return iSeedFallService.seedDrop();
-    }
+    }*/
 
 
 
