@@ -14,6 +14,6 @@ public class PrizeInfoVo {
     @ApiModelProperty("商品名称")
     private String name;
 
-    @ApiModelProperty("商品 ID")
+    @ApiModelProperty("商品 URL")
     private String imageUrl;
 }

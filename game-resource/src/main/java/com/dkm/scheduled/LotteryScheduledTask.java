@@ -1,6 +1,6 @@
 package com.dkm.scheduled;
 
-import com.dkm.campaign.service.ILotterySystemService;
+import com.dkm.campaign.service.ILotteryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,21 +17,19 @@ import javax.annotation.Resource;
 public class LotteryScheduledTask {
 
     @Resource
-    private ILotterySystemService lotterySystemService;
+    private ILotteryService lotterySystemService;
 
     /**
      * 刷新奖池数据，30秒更新一次，到时间自动开奖
      */
     @Scheduled(fixedRate = 1000 * 30)
     public void refreshLottery() {
-        if (!lotterySystemService.isInit()) {
-            log.warn("神秘商店未初始化，已跳过刷新数据。(如果多次看到此消息则可能是神秘商店数据加载失败)");
-        } else {
-            try {
-                lotterySystemService.refresh();
-            } catch (Exception e) {
-                log.error("神秘商店刷新时出现错误 ！", e);
-            }
+
+        try {
+            lotterySystemService.refresh();
+        } catch (Exception e) {
+            log.error("神秘商店刷新时出现错误 ！", e);
         }
+
     }
 }

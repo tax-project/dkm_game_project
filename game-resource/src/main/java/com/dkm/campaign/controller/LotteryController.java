@@ -3,7 +3,6 @@ package com.dkm.campaign.controller;
 
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
 import com.dkm.campaign.service.ILotteryService;
-import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +29,7 @@ public class LotteryController {
 
     @ApiOperation("获取神秘商店下的所有信息")
     @CrossOrigin
-    @CheckToken
+//    @CheckToken
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @GetMapping(value = "/getMineInfo", produces = "application/json")
     public LotteryInfoVo getAllInfo() {

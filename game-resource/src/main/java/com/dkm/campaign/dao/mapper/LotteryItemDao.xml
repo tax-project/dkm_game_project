@@ -6,22 +6,16 @@
 
 
     <select id="selectAll" resultType="com.dkm.campaign.entity.LotteryItemEntity">
-        SELECT lottery.id              id,
-               lottery.expiration      expiration,
-               goods.name              name,
-               goods.id                goods_id,
-               goods.good_money        goods_money,
-               lottery_item.goods_size item_size,
-               goods.url               image_url
-        FROM tb_lottery lottery,
-             tb_lottery_item lottery_item,
-             tb_goods goods
-        WHERE lottery.id IN (
-            SELECT MIN(lottery.id)
-            FROM tb_lottery lottery
-            WHERE lottery.expiration > now()
-        )
-          AND lottery_item.goods_id = goods.id
-          AND lottery.id = lottery_item.lottery_id;
+        SELECT a.id                                                                              id,
+               b.name                                                                            name,
+               b.url                                                                             image_url,
+               a.goods_size                                                                      goods_size,
+               a.goods_id                                                                        goods_id,
+               a.size                                                                            size,
+               b.good_money                                                                      money,
+               (SELECT COUNT(*) FROM tb_lottery_user WHERE tb_lottery_user.tb_lottery_id = a.id) usedSize
+        FROM tb_lottery a,
+             tb_goods b
+        WHERE a.id = b.id;
     </select>
 </mapper>
