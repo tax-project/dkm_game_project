@@ -1,5 +1,7 @@
 package com.dkm.utils;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.val;
 
 import java.util.HashMap;
@@ -17,4 +19,12 @@ public interface CollectionUtils {
         }
         return map;
     }
+
+    @AllArgsConstructor
+    @Data
+    public final class Pair<T, K> {
+        private T first;
+        private K second;
+    }
+
 }
