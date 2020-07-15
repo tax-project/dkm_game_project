@@ -23,6 +23,17 @@ public class TbEquipmentKnapsackVoFour {
      * 道具拥有数量
      */
     private Integer foodNumber;
-
+    /**
+     * 体力加成
+     */
     private String goodContent;
+
+    /**
+     * 体力瓶名字
+     */
+    private String name;
+    /**
+     * 体力瓶图片地址
+     */
+    private String url;
 }
