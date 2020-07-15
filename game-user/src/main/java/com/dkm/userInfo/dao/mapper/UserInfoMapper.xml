@@ -19,7 +19,12 @@
                 user_info_now_experience = user_info_now_experience + #{userInfoNowExperience}
             </if>
             <if test="userInfoStrength != null">
-                user_info_strength = user_info_strength + #{userInfoStrength}
+
+                user_info_strength = case
+                when user_info_strength+#{userInfoStrength} &lt;= user_info_all_strength then user_info_strength + #{userInfoStrength}
+                else user_info_all_strength
+                end
+<!--#                 user_info_strength = user_info_strength + #{userInfoStrength}-->
             </if>
         </set>
         where user_id = #{userId}
