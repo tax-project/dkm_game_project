@@ -16,10 +16,10 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.feign.UserFeignClient;
+import com.dkm.utils.CollectionUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
-import com.dkm.utils.Pair;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -175,8 +175,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
                 publicItem.add(item);
             }
         }
-        final List<Pair<Long, Long>> collect = itemEntities.stream().filter(k -> k.getUserId() != 0)
-                .map(t -> new Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
+        final List<CollectionUtils.Pair<Long, Long>> collect = itemEntities.stream().filter(k -> k.getUserId() != 0)
+                .map(t -> new CollectionUtils.Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
         Map<Long, OccupiedVo> occupiedVoMap = historyService.selectUserOccupiedList(collect, familyId);
         if (occupiedVoMap != null && occupiedVoMap.size() > 0 && map.size() > 0) {
             occupiedVoMap.forEach((k, v) -> {

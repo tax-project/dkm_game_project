@@ -2,7 +2,7 @@ package com.dkm.diggings.service;
 
 import com.dkm.diggings.bean.entity.DiggingsHistoryEntity;
 import com.dkm.diggings.bean.vo.OccupiedVo;
-import com.dkm.utils.Pair;
+import com.dkm.utils.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public interface IHistoryService {
      */
     void createNewItem(Long userId, Long familyId, long mineId);
 
-    Map<Long, OccupiedVo> selectUserOccupiedList(List<Pair<Long, Long>> collect, Long familyId);
+    Map<Long, OccupiedVo> selectUserOccupiedList(List<CollectionUtils.Pair<Long, Long>> collect, Long familyId);
 
     /**
      * 判断金矿是否过期
