@@ -2,7 +2,7 @@ package com.dkm.diggings.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.diggings.bean.entity.DiggingsHistoryEntity;
-import com.dkm.diggings.bean.other.Pair;
+import com.dkm.utils.Pair;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;

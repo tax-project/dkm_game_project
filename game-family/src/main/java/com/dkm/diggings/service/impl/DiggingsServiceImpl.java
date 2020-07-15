@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
-import com.dkm.diggings.bean.other.Pair;
 import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.MineMapper;
@@ -20,6 +19,7 @@ import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
+import com.dkm.utils.Pair;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +54,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private UserFeignClient userFeignClient;
 

@@ -1,8 +1,8 @@
 package com.dkm.diggings.service;
 
 import com.dkm.diggings.bean.entity.DiggingsHistoryEntity;
-import com.dkm.diggings.bean.other.Pair;
 import com.dkm.diggings.bean.vo.OccupiedVo;
+import com.dkm.utils.Pair;
 
 import java.util.List;
 import java.util.Map;
