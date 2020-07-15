@@ -102,7 +102,7 @@ public interface IAttendantService {
      * 查询所有跟班
      * @return
      */
-    List<AttenDant> listAttenDant ();
+    //List<AttenDant> listAttenDant ();
 
    /**
     *  修改产出的次数

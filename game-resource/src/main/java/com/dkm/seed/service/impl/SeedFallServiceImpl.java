@@ -1,10 +1,12 @@
 package com.dkm.seed.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.websocket.MsgInfo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -15,14 +17,17 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
+import com.dkm.seed.entity.vo.moneyVo;
 import com.dkm.seed.service.ISeedFallService;
 import com.dkm.seed.vilidata.RandomUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
     @Autowired
     private SeedsFallMapper seedsFallMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
 
     @Override
@@ -141,49 +149,42 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
 
     @Override
-    public List<Double> redBagDroppedSeparately(Double money) {
-        List<Double> list=new ArrayList<>();
+    public void redBagDroppedSeparately() {
+        UserLoginQuery user = localUser.getUser();
 
-        double sta=0;
-
-        double end=0;
-
-        //掉落次数
-        /**
-         * 一分钟
-         * 两秒钟掉一次
-         * 得出一分钟掉落多少次
-         */
-        int numberDrops= 60 / 2;
-
-        for (int i = 0; i < numberDrops; i++) {
-            //截取小数点后两位
-            //钱除以他掉落的一个次数 就是每次掉落的钱
-            BigDecimal b1 = new BigDecimal(money / numberDrops);
-            double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-
-            end+= f1;
-
-            sta= f1;
-
-            list.add(sta);
+        //查询出种子首次产出的金钱
+        List<moneyVo> moneyVos = baseMapper.queryMoney();
+        log.info("aDouble{}",moneyVos);
+        if(moneyVos.size()==0 || moneyVos==null){
+            return;
         }
 
-        String s = String.valueOf(end);
 
-        String substring = s.substring(0,3);
 
-        BigDecimal bd=new BigDecimal(substring);
+        //截取小数点后两位
+        //钱除以他掉落的一个次数 就是每次掉落的钱
 
-        BigDecimal a=new BigDecimal(money);
+        for (moneyVo moneyVo : moneyVos) {
+            BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
+            double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-        /**
-         * 得到差值放入集合 得到最后一个红包
-         * subtract相减
-         */
-        list.add(a.subtract(bd).doubleValue());
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(f1));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(moneyVo.getUserId());
 
-        return list;
+                log.info("发送掉落通知...");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+
+        }
+
+
+
+
+
+
+
     }
 
     /**

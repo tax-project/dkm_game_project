@@ -51,18 +51,18 @@ public class SeedsFallController {
     /**
      * 单独掉落红包
      */
-    @ApiOperation(value = "单独掉落红包", notes = "单独掉落红包")
+    /*@ApiOperation(value = "单独掉落红包", notes = "单独掉落红包")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "money", value = "种子首次产出的红包金额")
     @GetMapping("/redBagDroppedSeparately")
     @CrossOrigin
     @CheckToken
-    List<Double> redBagDroppedSeparately(@RequestParam(value = "money") Double money){
+    void redBagDroppedSeparately(@RequestParam(value = "money") Double money){
         if (money == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         return iSeedFallService.redBagDroppedSeparately(money);
     }
-
+*/
 
     /**
      * 查询已掉落的数据

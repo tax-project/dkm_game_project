@@ -117,6 +117,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
         String[] sList = boxId.split(",");
+
         List<TbEquipmentVo> list=new ArrayList<>();
         for (String aLong : sList) {
             TbEquipmentVo tbEquipmentVo=tbBoxMapper.selectByBoxId(Long.valueOf(aLong));
@@ -176,7 +177,7 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                 }
 
             }
-
+        System.out.println(listMap.size()+"批量开宝箱的集合大小");
         return listMap;
     }
 

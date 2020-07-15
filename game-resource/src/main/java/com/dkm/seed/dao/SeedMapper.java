@@ -107,5 +107,7 @@ public interface SeedMapper extends BaseMapper<Seed> {
     int updateLeStatusTime(@Param("list") List<LandSeed> list, @Param("plantTime") LocalDateTime plantTime);
 
 
+
+
 }
 

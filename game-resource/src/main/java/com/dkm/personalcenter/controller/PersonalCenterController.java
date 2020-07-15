@@ -5,6 +5,7 @@ import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoFour;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoTwo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.produce.service.IProduceService;
@@ -53,7 +54,7 @@ public class PersonalCenterController {
 
     @GetMapping("/PersonalCenterAll")
     public Map<String,Object> personalCenterAll(@RequestParam("userId") Long userId){
-        Map<String,Object> map=new HashMap<>(6);
+        Map<String,Object> map=new HashMap<>(7);
 
         //初始化技能
         iSkillService.initSkill(userId);
@@ -90,8 +91,11 @@ public class PersonalCenterController {
         }
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
-
-
+        /**
+         * 查询个人主页的体力瓶数据
+         */
+        List<TbEquipmentKnapsackVoFour> listOne=tbEquipmentKnapsackService.selectPersonCenter(userId);
+        map.put("bottle",listOne);
         map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillVos);
         map.put("AttendantGoods",map1);

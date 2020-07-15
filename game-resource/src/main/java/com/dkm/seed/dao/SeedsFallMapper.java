@@ -5,6 +5,7 @@ import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.vo.GoldRedVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
+import com.dkm.seed.entity.vo.moneyVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,4 +42,10 @@ public interface SeedsFallMapper extends BaseMapper<SeedsFall> {
      * @return
      */
     int updateLeStatus(List<Long> list);
+
+    /**
+     * 查询种子首次产出得金钱和用户id
+     * @return
+     */
+    List<moneyVo> queryMoney();
 }

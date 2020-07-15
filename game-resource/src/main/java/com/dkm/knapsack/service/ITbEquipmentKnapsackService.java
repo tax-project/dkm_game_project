@@ -2,10 +2,7 @@ package com.dkm.knapsack.service;
 
 import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree;
-import com.dkm.knapsack.domain.vo.TbNumberVo;
+import com.dkm.knapsack.domain.vo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -42,9 +39,13 @@ public interface ITbEquipmentKnapsackService{
      * 食物和道具试用修改的方法
      */
     void updateIsva(Long tekId,Integer foodNumber);
+    /**
+     * 体力瓶的修改方法 并且加体力
+     */
+    void updateIsvaTwo(Long tekId,Integer foodNumber);
 
     List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId);
-
+    TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     /**
      * 查询当前用户的背包容量
      * @return
@@ -67,4 +68,10 @@ public interface ITbEquipmentKnapsackService{
      * @return
      */
     TbEquipmentKnapsackVoThree selectNumberStar();
+
+    /**
+     * 个人中心返回体力瓶数量
+     * @return
+     */
+    List<TbEquipmentKnapsackVoFour> selectPersonCenter(Long userId);
 }

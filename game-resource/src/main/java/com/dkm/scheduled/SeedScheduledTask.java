@@ -34,8 +34,8 @@ public class SeedScheduledTask {
    private ISeedFallService iSeedFallService;
 
 
-   //@Scheduled(cron = "0 */1 * * * ?")
+   //@Scheduled(cron = "0/2 * * * * ?")
    public void toDeleteApply () {
-      iSeedFallService.seedDrop();
+      iSeedFallService.redBagDroppedSeparately();
    }
 }
