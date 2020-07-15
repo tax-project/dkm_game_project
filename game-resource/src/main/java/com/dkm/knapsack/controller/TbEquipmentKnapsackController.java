@@ -413,8 +413,8 @@ public class TbEquipmentKnapsackController {
     })
     @PostMapping("/updateIsvaTwo")
     @CrossOrigin
-    /*@CheckToken*/
-    public void updateIsvaTwo(TbEquipmentKnapsackVoFive tg){
+    @CheckToken
+    public void updateIsvaTwo(@RequestBody TbEquipmentKnapsackVoFive tg){
         tbEquipmentKnapsackService.updateIsvaTwo(tg.getTekId(),tg.getFoodNumber(),tg.getGoodContent());
     }
 

@@ -581,7 +581,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
                         IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
                         increaseUserInfoBO.setUserId(localUser.getUser().getId());
                         //判断 体力瓶的体力 加上现有的体力超过总体力就给总体力的值
-                        increaseUserInfoBO.setUserInfoRenown(Integer.valueOf(goodContent));
+                        increaseUserInfoBO.setUserInfoStrength(Integer.valueOf(goodContent));
                         Result result=userFeignClient.increaseUserInfo(increaseUserInfoBO);
                         QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
                         queryWrapper2.eq("tek_id",tekId);
