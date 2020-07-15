@@ -36,7 +36,7 @@ public interface IUserInfoService {
    void updateUserInfo (Integer much, Long userId,Integer userInfoDiamonds);
 
    /**
-    * 增加用户金币、钻石、声望
+    * 增加用户金币、钻石、声望、经验、体力
     * @param increaseUserInfoBO 参数对象
     */
    void increaseUserInfo(IncreaseUserInfoBO increaseUserInfoBO);
