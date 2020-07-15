@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.campaign.dao.LotteryItemDao">
+
+
+    <select id="selectAll" resultType="com.dkm.campaign.entity.LotteryItemEntity">
+        SELECT lottery.id              id,
+               lottery.expiration      expiration,
+               goods.name              name,
+               goods.id                goods_id,
+               goods.good_money        goods_money,
+               lottery_item.goods_size item_size,
+               goods.url               image_url
+        FROM tb_lottery lottery,
+             tb_lottery_item lottery_item,
+             tb_goods goods
+        WHERE lottery.id IN (
+            SELECT MIN(lottery.id)
+            FROM tb_lottery lottery
+            WHERE lottery.expiration > now()
+        )
+          AND lottery_item.goods_id = goods.id
+          AND lottery.id = lottery_item.lottery_id;
+    </select>
+</mapper>
