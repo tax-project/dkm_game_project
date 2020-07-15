@@ -32,34 +32,65 @@ CREATE TABLE IF NOT EXISTS `tb_game_options`
 # )
 #     COMMENT '商品表';
 
+DROP TABLE IF EXISTS `tb_lottery_user_attended`;
+DROP TABLE IF EXISTS `tb_lottery_item_status`;
+DROP TABLE IF EXISTS `tb_lottery_status`;
 DROP TABLE IF EXISTS `tb_lottery_item`;
 DROP TABLE IF EXISTS `tb_lottery`;
 
 CREATE TABLE IF NOT EXISTS `tb_lottery`
 (
-    id         BIGINT(20) PRIMARY KEY NOT NULL COMMENT 'ID',
+    id         BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT 'ID',
     expiration DATETIME               NOT NULL COMMENT '过期时间'
 )
-    COMMENT '神秘商店';
+    COMMENT '神秘商店奖池';
+
+CREATE TABLE IF NOT EXISTS `tb_lottery_status`
+(
+    id         BIGINT(20) NOT NULL PRIMARY KEY COMMENT 'id',
+    lottery_id BIGINT(20) NOT NULL COMMENT '奖池ID',
+    expiration DATETIME   NOT NULL COMMENT '过期时间',
+    foreign key (lottery_id) references tb_lottery (id)
+        on update cascade
+        on delete cascade
+) COMMENT '奖池的实时状态';
 
 CREATE TABLE IF NOT EXISTS `tb_lottery_item`
 (
-    id                BIGINT(20) NOT NULL PRIMARY KEY COMMENT 'id',
-    lottery_id        BIGINT(20) NOT NULL COMMENT '神秘商店当前数据',
-    goods_id          BIGINT(20) NOT NULL COMMENT '物品id',
-    goods_size        INT        NOT NULL COMMENT '物品的数目',
-    already_used_size INT        NOT NULL COMMENT '已经参与的次数',
-    all_size          INT        NOT NULL COMMENT '总参与的次数',
-    foreign key (lottery_id) references tb_goods (id)
+    id         BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'id',
+    lottery_id BIGINT(20) NOT NULL COMMENT '神秘商店当前数据',
+    goods_id   BIGINT(20) NOT NULL COMMENT '物品id',
+    goods_size INT        NOT NULL COMMENT '物品的数目',
+    size       INT        NOT NULL COMMENT '总次数',
+    foreign key (lottery_id) references tb_lottery (id)
         on update cascade
         on delete cascade,
-    foreign key (goods_id) references tb_lottery (id)
+    foreign key (goods_id) references tb_goods (id)
         on update cascade
         on delete cascade
-) COMMENT '抽取的物品';
+) COMMENT '奖池项';
+
+
+CREATE TABLE IF NOT EXISTS `tb_lottery_item_status`
+(
+    id              BIGINT(20) NOT NULL PRIMARY KEY COMMENT 'id',
+    lottery_item_id BIGINT(20) NOT NULL COMMENT '奖池项的代号',
+    used_size       INT        NOT NULL COMMENT '已经参与的次数',
+    foreign key (lottery_item_id) references tb_lottery_item (id)
+        on update cascade
+        on delete cascade
+) COMMENT '当前奖池项状态';
+
+
 
 CREATE TABLE IF NOT EXISTS `tb_lottery_user_attended`
 (
-    id BIGINT(20) NOT NULL PRIMARY KEY COMMENT 'id'
+    id                     BIGINT(20) NOT NULL PRIMARY KEY COMMENT 'id',
+    user_id                BIGINT(20) NOT NULL COMMENT '用户ID',
+    lottery_item_status_id BIGINT(20) NOT NULL COMMENT '参与的奖池',
+    size                   INT        NOT NULL DEFAULT 0 COMMENT '已经参与的数目',
+    foreign key (lottery_item_status_id) references tb_lottery_item_status (id)
+        on update cascade
+        on delete cascade
 
-) COMMENT '用户参与的奖池';
+) COMMENT '用户参与的奖池数目';
