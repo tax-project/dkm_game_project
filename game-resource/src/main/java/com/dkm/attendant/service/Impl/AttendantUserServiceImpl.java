@@ -9,6 +9,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.IdGenerator;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.List;
  * @DESCRIPTION:
  * @DATE: 2020/6/4 17:52
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, AttendantUser> implements IAttendantUserService {

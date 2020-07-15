@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  *
@@ -32,8 +33,9 @@ public class SeedScheduledTask {
    @Autowired
    private ISeedFallService iSeedFallService;
 
-   //@Scheduled(cron = "0 */1 * * * ?")
+
+   //@Scheduled(cron = "0/2 * * * * ?")
    public void toDeleteApply () {
-      iSeedFallService.seedDrop();
+      iSeedFallService.redBagDroppedSeparately();
    }
 }

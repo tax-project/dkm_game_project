@@ -84,9 +84,6 @@ public class AttendantServiceImpl implements IAttendantService {
     private IProduceService produceService;
 
     @Autowired
-    private UserEventMapper eventMapper;
-
-    @Autowired
     private IOpponentService iOpponentService;
 
 
@@ -959,10 +956,7 @@ public class AttendantServiceImpl implements IAttendantService {
         return map;
     }
 
-    @Override
-    public List<AttenDant> listAttenDant() {
-        return attendantMapper.selectList(null);
-    }
+
 
     @Override
     public void updateMuch(Long attUserId, Integer status) {

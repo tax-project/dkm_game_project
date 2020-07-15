@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * 矿场的生成规则
@@ -23,6 +26,7 @@ import java.util.Arrays;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class MineRule {
+    public static final long DATE_LEN_MINUTES = 60;
     @Resource
     private IdGenerator idGenerator;
     @Resource
@@ -62,5 +66,50 @@ public class MineRule {
         }
         mineMapper.insertAll(list);
         return mineBattleEntity;
+    }
+
+    /**
+     * 占领的成功率
+     */
+    public Double calculateSuccessRate(int ourSkillLevel, int herSkillLevel) {
+        if (ourSkillLevel - herSkillLevel >= 8) {
+            return 1.0;
+        }
+        if (herSkillLevel - ourSkillLevel >= 8) {
+            return 0.0;
+        }
+        double abs = Math.abs(ourSkillLevel - herSkillLevel) / 8.0;
+        if (herSkillLevel > ourSkillLevel) {
+            return 1 - abs;
+        } else if (herSkillLevel == ourSkillLevel) {
+            return 0.5;
+        } else {
+            return abs;
+        }
+    }
+
+    public long getDateSizeMinutes(LocalDateTime now, LocalDateTime startDate) {
+        val between = Duration.between(startDate, now);
+        final long l = between.toMinutes();
+        return l > 60 ? 60 : l;
+    }
+
+    public Integer chooseGoldOrIntegralYield(long minutes, double maxSize) {
+        val v = minutes / 60.0;
+        return (int) (maxSize * v);
+    }
+
+
+    public boolean occupy(Double successRate) {
+        if (successRate > 0.8) {
+            return true;
+        }
+        int v = (int) (successRate * 100.0);
+        val i = new Random().nextInt(100);
+        return v > i;
+    }
+
+    public int getUserOccupationSize(Long userId) {
+        return 3;
     }
 }

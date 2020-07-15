@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * @author OpenE
  */
@@ -13,11 +11,11 @@ import java.time.LocalDateTime;
 @Data
 public class OccupiedVo {
     @ApiModelProperty("占领的用户名称")
-    private Long userName;
+    private Object userName;
     @ApiModelProperty("占领的家族名称")
-    private Long userFamilyName;
+    private Object userFamilyName;
     @ApiModelProperty("结束挖矿的时间")
-    private LocalDateTime stopDate;
+    private String stopDate;
     @ApiModelProperty("已获得的金币")
     private Long goldSize;
     @ApiModelProperty("已获得的积分")

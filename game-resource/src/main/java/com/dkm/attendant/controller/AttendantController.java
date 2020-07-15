@@ -31,6 +31,7 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/Attendant")
 public class AttendantController {
+
     @Autowired
     private IAttendantService iAttendantService;
 

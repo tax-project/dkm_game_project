@@ -8,7 +8,7 @@ import lombok.Data;
  * @author 符凯龙
  */
 @Data
-@TableName("tb_mine_battle")
+@TableName("tb_diggings_battle")
 public class DiggingsEntity {
     @TableId
     private long id;

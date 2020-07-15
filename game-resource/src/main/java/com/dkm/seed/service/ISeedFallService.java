@@ -20,7 +20,7 @@ public interface ISeedFallService {
     /**
      * 单独掉落红包
      */
-    List<Double> redBagDroppedSeparately(Double money);
+    void redBagDroppedSeparately();
 
 
     /**

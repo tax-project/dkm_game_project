@@ -19,24 +19,24 @@ import com.dkm.knapsack.domain.TbEquipment;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
 import com.dkm.knapsack.domain.TbKnapsack;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentVo;
-import com.dkm.knapsack.domain.vo.TbNumberVo;
+import com.dkm.knapsack.domain.vo.*;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.service.ITbEquipmentService;
 import com.dkm.knapsack.service.ITbKnapsackService;
 import com.dkm.utils.IdGenerator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -46,6 +46,7 @@ import java.util.Map;
  * @author zy
  * @since 2020-05-14
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackService {
@@ -257,6 +258,32 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }else{
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "增加失败");
         }
+    }
+
+    @Override
+    public TbEquipmentKnapsackVoThree selectNumberStar() {
+        TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(localUser.getUser().getId());
+        if(tbKnapsack==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"该用户没有分配背包");
+        }
+        TbEquipmentKnapsackVoThree tbEquipmentKnapsackVo = tbEquipmentKnapsackMapper.selectNumberStar(tbKnapsack.getKnapsackId());
+        if(tbEquipmentKnapsackVo==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"查不到有券");
+        }
+        return tbEquipmentKnapsackVo;
+    }
+
+    @Override
+    public List<TbEquipmentKnapsackVoFour> selectPersonCenter(Long userId) {
+        TbKnapsack tbKnapsack = tbKnapsackService.selectByIdTwo(userId);
+        if(tbKnapsack==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"该用户没有分配背包");
+        }
+        List<TbEquipmentKnapsackVoFour> list = tbEquipmentKnapsackMapper.selectPersonCenter(tbKnapsack.getKnapsackId());
+        if(list.size()==0&&list==null){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"没有体力瓶数据");
+        }
+        return list;
     }
 
     /**
@@ -694,6 +721,54 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
+    @Override
+    public void updateIsvaTwo(Long tekId, Integer foodNumber) {
+        if(StringUtils.isEmpty(tekId) &&StringUtils.isEmpty(foodNumber)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("tek_id",tekId);
+        List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+        for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
+            if(foodNumber>tbEquipmentKnapsack.getFoodNumber()){
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "数量没有那么多了");
+            }else{
+                Result<UserInfoQueryBo> data = userFeignClient.queryUser(localUser.getUser().getId());
+                if(data.getData().getUserInfoAllStrength()>data.getData().getUserInfoAllStrength()){
+                    //体力已满 返回1004
+                    throw new ApplicationException(CodeType.RESOURCES_EXISTING, "体力已满");
+                }
+                if(tbEquipmentKnapsack.getFoodId()!=null){
+                    TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                    tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
+                    QueryWrapper queryWrapper1=new QueryWrapper();
+                    queryWrapper1.eq("tek_id",tekId);
+                    int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                    if(rows<=0){
+                        //如果失败将回滚
+                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                    }else{
+                        QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
+                        queryWrapper2.eq("tek_id",tekId);
+                        List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
+                        for (TbEquipmentKnapsack equipmentKnapsack : list2) {
+                            if(equipmentKnapsack.getFoodNumber()<=0){
+                                QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
+                                queryWrapper3.eq("tek_id",tekId);
+                                TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
+                                tbEquipmentKnapsack2.setTekIsva(0);
+                                tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
     /**
      * 查询出 食物的数据
      * @param userId 用户的id
@@ -837,6 +912,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         if(type==2){
             tbEquipmentKnapsack.setTekIsva(1);
             tbEquipmentKnapsack.setTekSell(2);
+            tbEquipmentKnapsack.setTekMoney(50);
             tbEquipmentKnapsack.setTekDaoju(3);
             tbKnapsack.setUserId(userId);
         }else if(type==1){

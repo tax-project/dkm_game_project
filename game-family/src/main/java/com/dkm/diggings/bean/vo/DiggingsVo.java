@@ -20,7 +20,7 @@ public class DiggingsVo {
     @ApiModelProperty("家族等级")
     private Integer familyLevel;
     @ApiModelProperty("剩余攻击次数")
-    private Long occupationSize;
+    private int occupationSize;
     @ApiModelProperty("地图上左上角的家族名称")
     private String topLeftFamilyName;
     @ApiModelProperty("地图上又上角的家族名称")

@@ -8,7 +8,7 @@ import lombok.Data;
  * @author OpenE
  */
 @Data
-@TableName("tb_mine_battle_level")
+@TableName("tb_diggings_battle_level")
 public class MineLevelEntity {
 
     @TableId
