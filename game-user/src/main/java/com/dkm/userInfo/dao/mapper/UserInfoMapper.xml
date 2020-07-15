@@ -18,6 +18,9 @@
             <if test="userInfoNowExperience != null">
                 user_info_now_experience = user_info_now_experience + #{userInfoNowExperience}
             </if>
+            <if test="userInfoStrength != null">
+                user_info_strength = user_info_strength + #{userInfoStrength}
+            </if>
         </set>
         where user_id = #{userId}
     </update>

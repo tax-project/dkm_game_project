@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
-import com.dkm.diggings.bean.other.Pair;
 import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.MineMapper;
@@ -17,6 +16,7 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
 import com.dkm.feign.UserFeignClient;
+import com.dkm.utils.CollectionUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
@@ -54,6 +54,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private UserFeignClient userFeignClient;
 
@@ -174,8 +175,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
                 publicItem.add(item);
             }
         }
-        final List<Pair<Long, Long>> collect = itemEntities.stream().filter(k -> k.getUserId() != 0)
-                .map(t -> new Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
+        final List<CollectionUtils.Pair<Long, Long>> collect = itemEntities.stream().filter(k -> k.getUserId() != 0)
+                .map(t -> new CollectionUtils.Pair<>(t.getId(), t.getUserId())).collect(Collectors.toList());
         Map<Long, OccupiedVo> occupiedVoMap = historyService.selectUserOccupiedList(collect, familyId);
         if (occupiedVoMap != null && occupiedVoMap.size() > 0 && map.size() > 0) {
             occupiedVoMap.forEach((k, v) -> {
