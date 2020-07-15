@@ -163,7 +163,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //截取小数点后两位
         //钱除以他掉落的一个次数 就是每次掉落的钱
-
         for (moneyVo moneyVo : moneyVos) {
             BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
             double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
