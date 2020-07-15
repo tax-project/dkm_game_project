@@ -45,7 +45,7 @@ public interface ITbEquipmentKnapsackService{
     void updateIsvaTwo(Long tekId,Integer foodNumber);
 
     List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId);
-
+    TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     /**
      * 查询当前用户的背包容量
      * @return

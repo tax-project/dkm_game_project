@@ -779,6 +779,11 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
 
+    @Override
+    public TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
+        return tbEquipmentKnapsackMapper.selectAllTwo(tbEquipmentKnapsackVo);
+    }
+
     /**
      * 查询有效装备的数量
      * @return
