@@ -20,7 +20,7 @@
         where a.user_id=#{userId} and a.id=b.id
     </select>
 
-    <select id="queryMoney" resultType="com.dkm.seed.entity.vo.moneyVo" parameterType="java.lang.Long">
+    <select id="queryMoney" resultType="com.dkm.seed.entity.vo.moneyVo">
         select a.user_id,b.seed_prodred from tb_land_seed a,tb_seed b where a.seed_id=b.seed_id  and a.new_seed_is=1
     </select>
 

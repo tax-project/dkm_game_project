@@ -959,10 +959,7 @@ public class AttendantServiceImpl implements IAttendantService {
         return map;
     }
 
-    @Override
-    public List<AttenDant> listAttenDant() {
-        return attendantMapper.selectList(null);
-    }
+
 
     @Override
     public void updateMuch(Long attUserId, Integer status) {
