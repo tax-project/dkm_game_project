@@ -540,6 +540,67 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectAll(tbEquipmentKnapsackVo);
     }
 
+    /**
+     * 修改用户体力
+     * @param tekId
+     * @param foodNumber
+     */
+    @Override
+    public void updateIsvaTwo(Long tekId, Integer foodNumber,String goodContent) {
+        Result<UserInfoQueryBo> data = userFeignClient.queryUser(localUser.getUser().getId());
+        //判断当前体力大于总体力
+        if(data.getData().getUserInfoStrength()>data.getData().getUserInfoAllStrength()){
+            //体力已满 返回1004
+            throw new ApplicationException(CodeType.RESOURCES_EXISTING, "体力已满");
+        }
+        if(StringUtils.isEmpty(tekId) &&StringUtils.isEmpty(foodNumber) &&StringUtils.isEmpty(goodContent)){
+            //如果失败将回滚
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
+        }
+        QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("tek_id",tekId);
+        List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
+        for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
+            if(foodNumber>tbEquipmentKnapsack.getFoodNumber()){
+                //如果失败将回滚
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "数量没有那么多了");
+            }else{
+                if(tbEquipmentKnapsack.getFoodId()!=null){
+                    TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
+                    tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
+                    QueryWrapper queryWrapper1=new QueryWrapper();
+                    queryWrapper1.eq("tek_id",tekId);
+                    int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
+                    if(rows<=0){
+                        //如果失败将回滚
+                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
+                    }else{
+                        /**
+                         * 修改用户的体力
+                         */
+                        IncreaseUserInfoBO increaseUserInfoBO=new IncreaseUserInfoBO();
+                        increaseUserInfoBO.setUserId(localUser.getUser().getId());
+                        //判断 体力瓶的体力 加上现有的体力超过总体力就给总体力的值
+                        increaseUserInfoBO.setUserInfoStrength(Integer.valueOf(goodContent));
+                        Result result=userFeignClient.increaseUserInfo(increaseUserInfoBO);
+                        QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
+                        queryWrapper2.eq("tek_id",tekId);
+                        List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
+                        for (TbEquipmentKnapsack equipmentKnapsack : list2) {
+                            if(equipmentKnapsack.getFoodNumber()<=0){
+                                QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
+                                queryWrapper3.eq("tek_id",tekId);
+                                TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
+                                tbEquipmentKnapsack2.setTekIsva(0);
+                                tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
     @Override
     public void updateSell(Long tekId) {
         if (StringUtils.isEmpty(tekId)) {
@@ -721,53 +782,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         }
     }
 
-    @Override
-    public void updateIsvaTwo(Long tekId, Integer foodNumber) {
-        if(StringUtils.isEmpty(tekId) &&StringUtils.isEmpty(foodNumber)){
-            //如果失败将回滚
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-        }
-        QueryWrapper<TbEquipmentKnapsack> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("tek_id",tekId);
-        List<TbEquipmentKnapsack> list=tbEquipmentKnapsackMapper.selectList(queryWrapper);
-        for (TbEquipmentKnapsack tbEquipmentKnapsack : list) {
-            if(foodNumber>tbEquipmentKnapsack.getFoodNumber()){
-                //如果失败将回滚
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "数量没有那么多了");
-            }else{
-                Result<UserInfoQueryBo> data = userFeignClient.queryUser(localUser.getUser().getId());
-                if(data.getData().getUserInfoAllStrength()>data.getData().getUserInfoAllStrength()){
-                    //体力已满 返回1004
-                    throw new ApplicationException(CodeType.RESOURCES_EXISTING, "体力已满");
-                }
-                if(tbEquipmentKnapsack.getFoodId()!=null){
-                    TbEquipmentKnapsack tbEquipmentKnapsack1=new TbEquipmentKnapsack();
-                    tbEquipmentKnapsack1.setFoodNumber(tbEquipmentKnapsack.getFoodNumber()-foodNumber);
-                    QueryWrapper queryWrapper1=new QueryWrapper();
-                    queryWrapper1.eq("tek_id",tekId);
-                    int rows=tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack1,queryWrapper1);
-                    if(rows<=0){
-                        //如果失败将回滚
-                        throw new ApplicationException(CodeType.PARAMETER_ERROR, "失败");
-                    }else{
-                        QueryWrapper<TbEquipmentKnapsack> queryWrapper2=new QueryWrapper<>();
-                        queryWrapper2.eq("tek_id",tekId);
-                        List<TbEquipmentKnapsack> list2=tbEquipmentKnapsackMapper.selectList(queryWrapper2);
-                        for (TbEquipmentKnapsack equipmentKnapsack : list2) {
-                            if(equipmentKnapsack.getFoodNumber()<=0){
-                                QueryWrapper<TbEquipmentKnapsack> queryWrapper3=new QueryWrapper<>();
-                                queryWrapper3.eq("tek_id",tekId);
-                                TbEquipmentKnapsack tbEquipmentKnapsack2=new TbEquipmentKnapsack();
-                                tbEquipmentKnapsack2.setTekIsva(0);
-                                tbEquipmentKnapsackMapper.update(tbEquipmentKnapsack2,queryWrapper3);
-                            }
-                        }
-                    }
-                }
 
-            }
-        }
-    }
 
     /**
      * 查询出 食物的数据
@@ -779,10 +794,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
         return tbEquipmentKnapsackMapper.selectFoodId(userId);
     }
 
-    @Override
-    public TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo) {
-        return tbEquipmentKnapsackMapper.selectAllTwo(tbEquipmentKnapsackVo);
-    }
+
 
     /**
      * 查询有效装备的数量

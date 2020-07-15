@@ -177,7 +177,6 @@ public class TbBoxServiceImpl  implements ITbBoxService {
                 }
 
             }
-        System.out.println(listMap.size()+"批量开宝箱的集合大小");
         return listMap;
     }
 

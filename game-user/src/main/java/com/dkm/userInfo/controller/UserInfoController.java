@@ -41,6 +41,10 @@ public class UserInfoController {
       userInfoService.updateUserInfo(much,userId,userInfoDiamonds);
    }
 
+   /**
+    * 增加用户金币、钻石、声望、经验、体力
+    * @param increaseUserInfoBO 入参对象只传输有用参数
+    */
    @PostMapping("/increase")
    @CrossOrigin
    public void increaseUserInfo(@RequestBody IncreaseUserInfoBO increaseUserInfoBO){

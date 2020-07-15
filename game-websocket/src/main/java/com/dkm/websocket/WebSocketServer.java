@@ -90,11 +90,8 @@ public class WebSocketServer implements CommandLineRunner {
                   pipeline.addLast(familyWebSocketHandle);
                   //文件
                   pipeline.addLast(fileWebSocketHandle);
-
-
                }
             });
-
       ChannelFuture future = bootstrap.bind(port);
 
       future.addListener(new ChannelFutureListener() {
@@ -105,22 +102,16 @@ public class WebSocketServer implements CommandLineRunner {
                //开启连接
                log.info("WebSocket服务已经启动，端口为："+ port);
                channel = future.channel();
-
-
             } else {
                //关闭连接
                destory ();
-
                Throwable e = channelFuture.cause();
                e.printStackTrace();
             }
          }
       });
-
-
       return future;
    }
-
    /**
     * 销毁线程
     * 关闭连接
@@ -132,21 +123,15 @@ public class WebSocketServer implements CommandLineRunner {
       MASTER_GROUP.shutdownGracefully();
       SLAVE_GROUP.shutdownGracefully();
    }
-
-
    @Override
    public void run(String... args) throws Exception {
-
       ChannelFuture channelFuture = init();
-
       Runtime.getRuntime().addShutdownHook(new Thread(){
-
          @Override
          public void run() {
             destory();
          }
       });
-
       //同步堵塞
       channelFuture.channel().closeFuture().syncUninterruptibly();
    }

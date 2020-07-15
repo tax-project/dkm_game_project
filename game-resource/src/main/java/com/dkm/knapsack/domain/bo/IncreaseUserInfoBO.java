@@ -25,6 +25,13 @@ public class IncreaseUserInfoBO {
      * 钻石
      */
     private Integer userInfoDiamonds;
-
+    /**
+     * 经验
+     */
+    private Long userInfoNowExperience;
+    /**
+     * 体力
+     */
+    private Integer userInfoStrength;
 
 }
