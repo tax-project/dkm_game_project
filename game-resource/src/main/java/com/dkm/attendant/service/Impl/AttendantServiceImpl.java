@@ -84,9 +84,6 @@ public class AttendantServiceImpl implements IAttendantService {
     private IProduceService produceService;
 
     @Autowired
-    private UserEventMapper eventMapper;
-
-    @Autowired
     private IOpponentService iOpponentService;
 
 
