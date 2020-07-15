@@ -4,12 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.attendant.dao.AttendantUserMapper;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.AttUserInfoBo;
 import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
+import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
 import com.dkm.utils.IdGenerator;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,8 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, AttendantUser> implements IAttendantUserService {
 
+    @Autowired
+    private UserFeignClient userFeignClient;
 
     @Override
     public void insert(AttendantUser attendantUser) {
@@ -77,5 +84,38 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
     @Override
     public AttendantUser queryAttUser(Long id) {
         return baseMapper.selectById(id);
+    }
+
+
+    @Override
+    public AttUserInfoBo queryAttUserInfo(Long userId) {
+        LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
+              .eq(AttendantUser::getCaughtPeopleId, userId);
+
+        AttendantUser attendantUser = baseMapper.selectOne(wrapper);
+
+        AttUserInfoBo result = new AttUserInfoBo();
+
+        if (attendantUser == null) {
+            //没有主人
+            result.setStatus(0);
+            return result;
+        }
+
+        //根据他主人的用户id查询用户信息
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(attendantUser.getUserId());
+
+        if (userInfoQueryBoResult.getCode() != 0) {
+            log.info("user <queryUser> feign err.");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+
+        UserInfoQueryBo data = userInfoQueryBoResult.getData();
+
+        BeanUtils.copyProperties(data, result);
+
+        result.setStatus(1);
+
+        return result;
     }
 }
