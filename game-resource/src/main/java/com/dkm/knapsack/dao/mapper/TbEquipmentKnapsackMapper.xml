@@ -51,15 +51,12 @@
 		<id column="tek_id" property="tekId" />
 		<result column="food_number" property="foodNumber" />
 	</resultMap>
-	<resultMap id="BaseResultMapVoTwo" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree">
-		<id column="tek_id" property="tekId" />
-		<result column="food_number" property="foodNumber" />
-
-	</resultMap>
 	<resultMap id="BaseResultMapVoThree" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoFour">
 		<id column="tek_id" property="tekId" />
 		<result column="food_number" property="foodNumber" />
 		<result column="good_content" property="goodContent" />
+        <result column="url" property="url" />
+        <result column="name" property="name" />
 	</resultMap>
 	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
 		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
@@ -78,7 +75,7 @@
 	 2020/7/14 查询个人中心的体力瓶
 	 -->
 	<select id="selectPersonCenter" parameterType="java.lang.Long" resultMap="BaseResultMapVoThree">
-		SELECT tk.food_number,tk.tek_id,tg.good_content FROM tb_equipment_knapsack tk,tb_goods tg WHERE
+		SELECT tk.food_number,tk.tek_id,tg.good_content,tg.url,tg.name FROM tb_equipment_knapsack tk,tb_goods tg WHERE
 	 tk.food_id=tg.id AND tk.knapsack_id=#{knapsackId}
 	AND tk.food_id IN(722958015550165460,707431394650138541,707441015150160242)
 	</select>
