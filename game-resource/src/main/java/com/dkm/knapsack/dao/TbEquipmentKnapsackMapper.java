@@ -46,7 +46,6 @@ public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsac
      * @return
      */
     List<TbEquipmentKnapsackVo> selectProps(Long userId);
-    TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     List<TbEquipmentKnapsackVo> selectPropsTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
 
     int selectCountMy(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
