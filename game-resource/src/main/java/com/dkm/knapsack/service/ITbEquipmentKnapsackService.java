@@ -42,10 +42,9 @@ public interface ITbEquipmentKnapsackService{
     /**
      * 体力瓶的修改方法 并且加体力
      */
-    void updateIsvaTwo(Long tekId,Integer foodNumber);
+    void updateIsvaTwo(Long tekId,Integer foodNumber,String goodContent);
 
     List<TbEquipmentKnapsackVo> selectUserIdAndFoodId(Long userId);
-    TbEquipmentKnapsackVo selectAllTwo(TbEquipmentKnapsackVo tbEquipmentKnapsackVo);
     /**
      * 查询当前用户的背包容量
      * @return

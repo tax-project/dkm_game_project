@@ -4,10 +4,7 @@ package com.dkm.knapsack.controller;
 
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackTwoVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentVoTwo;
-import com.dkm.knapsack.domain.vo.TbNumberVo;
+import com.dkm.knapsack.domain.vo.*;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
 import com.dkm.knapsack.utils.Message;
 import io.swagger.annotations.*;
@@ -399,6 +396,26 @@ public class TbEquipmentKnapsackController {
     @CrossOrigin
     public void updateIsva(Long tekId,Integer foodNumber){
         tbEquipmentKnapsackService.updateIsva(tekId,foodNumber);
+    }
+
+    @ApiOperation(value = "个人中心增加体力的接口",notes = "成功返回成功")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query",dataType = "Long",name = "tekId",value = "用户背包装备主键",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "String",name = "goodContent",value = "加的体力",required = true),
+            @ApiImplicitParam(paramType = "query",dataType = "Integer",name = "foodNumber",value = "食物数量",required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 401,message="没有权限"),
+            @ApiResponse(code = 403,message = "服务器拒绝请求"),
+            @ApiResponse(code = 404,message="请求路径没有或页面跳转路径不对"),
+            @ApiResponse(code = 500,message="后台报错"),
+            @ApiResponse(code = 200,message="返回成功")
+    })
+    @PostMapping("/updateIsvaTwo")
+    @CrossOrigin
+    /*@CheckToken*/
+    public void updateIsvaTwo(TbEquipmentKnapsackVoFive tg){
+        tbEquipmentKnapsackService.updateIsvaTwo(tg.getTekId(),tg.getFoodNumber(),tg.getGoodContent());
     }
 
     @ApiOperation(value = "后台专用接口",notes = "成功返回成功")
