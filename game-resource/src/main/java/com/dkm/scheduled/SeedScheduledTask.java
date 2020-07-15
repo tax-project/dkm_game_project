@@ -1,26 +1,17 @@
 package com.dkm.scheduled;
 
-
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.dkm.seed.dao.LandSeedMapper;
-import com.dkm.seed.dao.SeedsFallMapper;
-import com.dkm.seed.entity.LandSeed;
-import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.service.ISeedFallService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
+
 
 /**
  *
- * 种子掉落  10S一次
+ * 单独红包掉落  2S一次
+ * 平常掉落   1分钟一次
  * @author qf
  * @date 2020/6/29
  * @vesion 1.0
@@ -37,5 +28,10 @@ public class SeedScheduledTask {
    //@Scheduled(cron = "0/2 * * * * ?")
    public void toDeleteApply () {
       iSeedFallService.redBagDroppedSeparately();
+   }
+
+   //@Scheduled(cron = "0 /1 * * * * ?")
+   public void seedDrop(){
+      iSeedFallService.seedDrop();
    }
 }

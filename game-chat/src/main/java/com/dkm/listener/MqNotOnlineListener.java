@@ -44,6 +44,7 @@ public class MqNotOnlineListener {
          e.printStackTrace();
       }
 
+
       //将数据加进数据库
       FriendNotOnlineVo vo = new FriendNotOnlineVo();
       if (msg != null) {
@@ -54,14 +55,13 @@ public class MqNotOnlineListener {
 
          friendNotOnlineService.insertNotOnline(vo);
 
-      }
+         //确认消息
+         try {
+            channel.basicAck(deliveryTag,true);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
 
-      //确认消息
-      try {
-         channel.basicAck(deliveryTag,true);
-      } catch (IOException e) {
-         e.printStackTrace();
       }
-
    }
 }
