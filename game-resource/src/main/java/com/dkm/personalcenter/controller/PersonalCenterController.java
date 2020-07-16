@@ -5,6 +5,7 @@ import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
+import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoCenter;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoFour;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoTwo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
@@ -82,7 +83,7 @@ public class PersonalCenterController {
          * 根据当前用户查询装备
          * @return
          */
-        List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
+        List<TbEquipmentKnapsackVoCenter> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
 
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);

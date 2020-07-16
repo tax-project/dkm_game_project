@@ -1,29 +1,33 @@
 package com.dkm.knapsack.domain.vo;
 
-
-
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 /**
  * @PROJECT_NAME: game_project
- * @DESCRIPTION:
+ * @DESCRIPTION: 个人中心的vo
  * @USER: 周佳佳
- * @DATE: 2020/5/15 11:00
+ * @DATE: 2020/7/16 14:01
  */
 @Data
-public class TbEquipmentKnapsackVoTwo {
-
-
+public class TbEquipmentKnapsackVoCenter {
+    /**
+     * 装备背包表主键
+     */
+    private Long tekId;
     /**
      * 装备主键
      */
     private Long equipmentId;
+
+
     /**
-     * 我的装备 1为装备上了 2为背包装备
+     * 道具50金币 穿戴品只有5金币
      */
-    private Integer tekSell;
+    private Integer tekMoney;
+
+
     /**
      * 装备等级
      */
@@ -59,7 +63,10 @@ public class TbEquipmentKnapsackVoTwo {
      * 属性加成 1就代表有加成 0代表没有加成
      */
     private BigDecimal edAttribute;
-
+    /**
+     * 背包主键
+     */
+    private Long knapsackId;
 
     /**
      * 装备生命
@@ -93,18 +100,4 @@ public class TbEquipmentKnapsackVoTwo {
      * 踢出群聊和胡言乱语闪避的值
      */
     private BigDecimal edTypeonevalue;
-    /**
-     * 道具50金币 穿戴品只有5金币
-     */
-    private Integer tekMoney;
-
-    /**
-     * 1为没有被卖 0被卖了
-     */
-    private Integer tekIsva;
-
-    /**
-     * 装备背包表主键
-     */
-    private Long tekId;
 }
