@@ -29,7 +29,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dkm/tbBlackHouse")
-@ResponseBody
 @Api(description = "游戏项目黑屋的接口文档")
 public class TbBlackHouseController {
 
