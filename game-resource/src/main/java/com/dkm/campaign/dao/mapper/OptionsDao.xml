@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.campaign.dao.OptionsDao">
+    <update id="updateRefreshDate">
+        UPDATE tb_game_options
+        SET option_value = #{date}
+        WHERE option_key = 'LOTTERY_REFRESH_DATE'
+    </update>
+    <update id="updateNextUpdateDate">
+        UPDATE tb_game_options
+        SET option_value = #{date}
+        WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+    </update>
+
+    <select id="selectRefreshDateStr" resultType="java.lang.String">
+        SELECT option_value
+        FROM tb_game_options
+        WHERE option_key = 'LOTTERY_REFRESH_DATE'
+        LIMIT 1
+    </select>
+    <select id="selectNextUpdateDateStr" resultType="java.lang.String">
+        SELECT option_value
+        FROM tb_game_options
+        WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+        LIMIT 1
+    </select>
+</mapper>

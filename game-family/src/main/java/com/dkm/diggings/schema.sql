@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_battle`
     third_family_id  BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第三个家族位置',
     fourth_family_id BIGINT(20) NOT NULL DEFAULT 0 COMMENT '第四个家族位置'
 )
-    COMMENT '家族矿区表，一个矿区4个家族，至少存在一个家族';
+    COMMENT '家族矿区表，一个矿区4个家族，至少存在一个家族'
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `tb_diggings_battle_level`
 (
@@ -20,6 +22,8 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_battle_level`
     integral_yield INT(10)         NOT NULL COMMENT '积分每小时产出效率',
     npc_level      INT(10)         NOT NULL COMMENT '守护者的等级'
 )
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
     COMMENT '矿场等级表';
 INSERT INTO tb_diggings_battle_level VALUE
     (1, '初级守护者', 8280, 300, 1),
@@ -52,6 +56,8 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_battle_item`
         on update cascade
         on delete cascade
 )
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
     COMMENT '矿场表';
 
 DROP TABLE IF EXISTS `tb_diggings_family_level_addition`;
@@ -61,6 +67,8 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_family_level_addition`
     level_name   VARCHAR(255)    NOT NULL COMMENT '等级名称',
     addition     DOUBLE          NOT NULL COMMENT '金币加成'
 )
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
     COMMENT '家族等级加成表';
 
 INSERT INTO `tb_diggings_family_level_addition` VALUE
@@ -101,7 +109,9 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_history`
     mine_item_level INT        NOT NULL COMMENT '占领的矿区等级',
     settled         BOOLEAN    NOT NULL DEFAULT FALSE COMMENT '是否已经结算经验和积分'
 )
-    COMMENT '历史记录';
+    COMMENT '历史记录'
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB;
 
 
 # CREATE TABLE IF NOT EXISTS `tb_diggings_user_info`
@@ -123,4 +133,7 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_history_goods`
     foreign key (goods_id) references tb_goods (id)
         on update cascade
         on delete cascade
-) COMMENT '历史记录下获得的额外道具';
+)
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
+    COMMENT '历史记录下获得的额外道具';

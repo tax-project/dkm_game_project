@@ -14,8 +14,10 @@ public class LotteryItemVo {
     private long id;
     @ApiModelProperty("价值")
     private int marketPrice;
-    @ApiModelProperty("商品信息")
-    private PrizeInfoVo prize;
+    @ApiModelProperty("商品名称")
+    private String goodsName;
+    @ApiModelProperty("商品 URL")
+    private String goodsImageUrl;
     @ApiModelProperty("商品数目")
     private int prizeSize;
     @ApiModelProperty("参与次数")
