@@ -3,9 +3,7 @@ package com.dkm.knapsack.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dkm.knapsack.domain.TbEquipmentKnapsack;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoFour;
-import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree;
+import com.dkm.knapsack.domain.vo.*;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +20,7 @@ import java.util.List;
 @Service
 public interface TbEquipmentKnapsackMapper extends BaseMapper<TbEquipmentKnapsack> {
     List<TbEquipmentKnapsackVo> selectUserId(Long userId);
-    List<TbEquipmentKnapsackVo> selectUserIdTwo(Long userId);
+    List<TbEquipmentKnapsackVoCenter> selectUserIdTwo(Long userId);
 
     List<TbEquipmentKnapsackVo> selectFoodId(Long userId);
     List<TbEquipmentKnapsackVo> selectFoodIdTwo(Long userId);
