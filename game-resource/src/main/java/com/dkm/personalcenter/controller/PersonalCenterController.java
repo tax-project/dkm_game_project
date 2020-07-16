@@ -59,38 +59,42 @@ public class PersonalCenterController {
 
         /*//初始化技能
         iSkillService.initSkill(userId);*/
-
+        System.out.println("进入了服务");
         /**
          * 查询已经解锁种子
          */
         List<SeedUnlockVo> seedUnlockVos = iSeedService.queryAreUnlocked(userId);
+        System.out.println("查询已经解锁种子");
         /**
          *查询我的技能
          */
         List<SkillVo> skillVos = iSkillService.queryAllSkillByUserIdImgGrade(userId);
+        System.out.println("查询我的技能");
         /**
          *查询跟班产出的产物
          */
         Map<String, Object> map1 = iProduceService.queryImgFood(userId);
-
+        System.out.println("查询跟班产出的产物");
         /**
          * 主人信息
          */
         Map<String, Object> stringObjectMap = iAttendantService.queryAidUser();
-
+        System.out.println("主人信息");
 
         /**
          * 根据当前用户查询装备
          * @return
          */
         List<TbEquipmentKnapsackVoCenter> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
-
+        System.out.println("根据当前用户查询装备");
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
+        System.out.println("黑屋");
         /**
          * 查询个人主页的体力瓶数据
          */
         List<TbEquipmentKnapsackVoFour> listOne=tbEquipmentKnapsackService.selectPersonCenter(userId);
+        System.out.println("查询个人主页的体力瓶数据");
         map.put("bottle",listOne);
         map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillVos);
