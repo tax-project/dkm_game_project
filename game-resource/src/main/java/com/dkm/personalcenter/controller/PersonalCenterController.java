@@ -102,6 +102,7 @@ public class PersonalCenterController {
         map.put("equipment",tbEquipmentKnapsackVos);
         map.put("blackHouse",houseVo);
         map.put("queryAidUser",stringObjectMap);
+        System.out.println("返回结果"+map.size());
         return map;
     }
 }
