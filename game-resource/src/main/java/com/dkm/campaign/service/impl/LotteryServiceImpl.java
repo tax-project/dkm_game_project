@@ -22,16 +22,20 @@ public class LotteryServiceImpl implements ILotteryService {
     private OptionsDao optionsDao;
 
     @Override
-    public LotteryInfoVo getAllInfo() {
+    public LotteryInfoVo getAllInfo(Long userId) {
         final val res = new LotteryInfoVo();
-        final val lotteryItemEntities = lotteryItemDao.selectAll();
+        final val lotteryItemEntities = lotteryItemDao.selectAll(userId);
         res.setRefreshDate(optionsDao.selectNextUpdateDateStr());
         final val items = res.getItems();
         lotteryItemEntities.forEach(it -> {
             final val lotteryItemVo = new LotteryItemVo();
             lotteryItemVo.setId(it.getId());
+            lotteryItemVo.setGoodsName(it.getName());
             lotteryItemVo.setGoodsImageUrl(it.getImageUrl());
-
+            lotteryItemVo.setTotal(it.getSize());
+            lotteryItemVo.setMarketPrice((int) (it.getMoney() * it.getGoodsSize()));
+            lotteryItemVo.setUserParticipation(it.getUserSize());
+//            lotteryItemVo.set;
             items.add(lotteryItemVo);
         });
         return res;

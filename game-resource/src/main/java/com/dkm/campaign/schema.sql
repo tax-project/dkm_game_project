@@ -159,4 +159,15 @@ CREATE TABLE IF NOT EXISTS `tb_lottery_user`
     ENGINE = InnoDB
     COMMENT '神秘商店用户';
 
-# CREATE TABLE IF NOT EXISTS `tb_lottery_last`
+CREATE TABLE IF NOT EXISTS `tb_lottery_last_history`
+(
+    id         BIGINT(20)  NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'id',
+    user_id    BIGINT(20)  NOT NULL,
+    prize_text BIGINT(255) NOT NULL,
+    foreign key (user_id) references tb_user (user_id)
+        on update cascade
+        on delete cascade
+
+) COLLATE = 'utf8_bin'
+  ENGINE = InnoDB
+    COMMENT '上次的数据';

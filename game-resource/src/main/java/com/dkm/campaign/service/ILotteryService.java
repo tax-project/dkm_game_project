@@ -9,8 +9,10 @@ import com.dkm.campaign.entity.vo.LotteryInfoVo;
 public interface ILotteryService {
     /**
      * 获取全部的神秘商店信息
+     *
+     * @param userId
      */
-    LotteryInfoVo getAllInfo();
+    LotteryInfoVo getAllInfo(Long userId);
 
     /**
      * 刷新

@@ -73,3 +73,29 @@ WHERE name = '1';
 
 # UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_REFRESH_DATE'
 # UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+
+
+-- 获取上次的用户
+SELECT user.we_chat_nick_name name, history.prize_text
+FROM tb_lottery_last_history history,
+     tb_user user
+WHERE history.user_id = user.user_id;
+
+
+SELECT a.id                           id,
+       b.name                         name,
+       b.url                          image_url,
+       a.goods_size                   goods_size,
+       a.goods_id                     goods_id,
+       a.size                         size,
+       b.good_money                   money,
+       (SELECT COUNT(*)
+        FROM tb_lottery_user c
+        WHERE c.tb_lottery_id = a.id) usedSize,
+       (SELECT COUNT(*)
+        FROM tb_lottery_user tlu
+        WHERE tlu.tb_lottery_id = a.id
+          AND tlu.user_id = '')       userSize
+FROM tb_lottery a,
+     tb_goods b
+WHERE a.id = b.id;
