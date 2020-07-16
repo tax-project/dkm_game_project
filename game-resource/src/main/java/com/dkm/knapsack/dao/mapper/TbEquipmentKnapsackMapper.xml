@@ -12,6 +12,24 @@
 		<result column="tek_daoju" property="tekDaoju" />
 		<result column="tek_isva" property="tekIsva" />
 	</resultMap>
+	<resultMap id="BaseResultMapVoFour" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoTwo">
+		<result column="equipment_id" property="equipmentId" />
+		<result column="tek_sell" property="tekSell" />
+		<result column="equipment_level" property="equipmentLevel" />
+		<result column="equipment_image" property="equipmentImage" />
+		<result column="exp1" property="exp1" />
+		<result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+		<result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+		<result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+		<result column="ed_defense" jdbcType="DECIMAL" property="edDefense" />
+		<result column="ed_attribute" jdbcType="DECIMAL" property="edAttribute" />
+		<result column="ed_life" jdbcType="DECIMAL" property="edLife" />
+		<result column="ed_attack" jdbcType="DECIMAL" property="edAttack" />
+		<result column="ed_type" jdbcType="DECIMAL" property="edType" />
+		<result column="ed_typevalue" jdbcType="DECIMAL" property="edTypevalue" />
+		<result column="ed_typeone" jdbcType="DECIMAL" property="edTypeone" />
+		<result column="ed_typeonevalue" jdbcType="DECIMAL" property="edTypeonevalue" />
+	</resultMap>
 	<resultMap id="BaseResultMapVo" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo">
 		<id column="tek_id" property="tekId" />
 		<result column="equipment_id" property="equipmentId" />
@@ -58,8 +76,9 @@
         <result column="url" property="url" />
         <result column="name" property="name" />
 	</resultMap>
-	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
-		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+	<select id="selectUserId" parameterType="java.lang.Long" resultMap="BaseResultMapVoFour">
+		SELECT tk.equipment_id,tk.tek_sell,te.equipment_level,te.equipment_image,te.exp1,td.*
+		FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
 			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
