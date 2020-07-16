@@ -55,14 +55,21 @@ FROM tb_lottery a,
      tb_goods b
 WHERE a.id = b.id;
 
-INSERT INTO tb_game_options (option_key, option_value)
-    VALUE ('LOTTERY_REFRESH_DATE', '86400');
-INSERT INTO tb_game_options (option_key, option_value)
-    VALUE ('LOTTERY_NEXT_UPDATE_DATE', '2020-08-10 00:00:00');
 SELECT *
 FROM tb_game_options;
 
+SELECT row_count(), id, option_key, option_value
+FROM tb_game_options
+WHERE option_key = 'LOTTERY_REFRESH_DATE'
+LIMIT 1;
+SELECT option_value
+FROM tb_game_options
+WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+LIMIT 1;
 
 select count(1) len
 from tb_goods
 WHERE name = '1';
+
+# UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_REFRESH_DATE'
+# UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'

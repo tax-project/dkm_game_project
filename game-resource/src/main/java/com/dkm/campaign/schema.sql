@@ -5,8 +5,16 @@ CREATE TABLE IF NOT EXISTS `tb_game_options`
     `option_key`   VARCHAR(255)           NOT NULL,
     `option_value` VARCHAR(255)           NULL DEFAULT NULL COMMENT '默认的配置选项'
 )
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
     COMMENT '一些配置的表'
 ;
+
+
+INSERT INTO tb_game_options (option_key, option_value)
+    VALUE ('LOTTERY_REFRESH_DATE', '86400');
+INSERT INTO tb_game_options (option_key, option_value)
+    VALUE ('LOTTERY_NEXT_UPDATE_DATE', '2020-08-10 00:00:00');
 # DROP TABLE IF EXISTS `tb_commodity`;
 # DROP TABLE IF EXISTS `tb_commodity_type`;
 # CREATE TABLE IF NOT EXISTS `tb_commodity_type`
@@ -130,7 +138,10 @@ CREATE TABLE IF NOT EXISTS `tb_lottery`
         on update cascade
         on delete cascade
 
-);
+)
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
+    COMMENT '神秘商店';
 
 CREATE TABLE IF NOT EXISTS `tb_lottery_user`
 (
@@ -143,4 +154,9 @@ CREATE TABLE IF NOT EXISTS `tb_lottery_user`
     foreign key (user_id) references tb_user (user_id)
         on update cascade
         on delete cascade
-);
+)
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB
+    COMMENT '神秘商店用户';
+
+# CREATE TABLE IF NOT EXISTS `tb_lottery_last`
