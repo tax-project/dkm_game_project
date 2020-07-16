@@ -91,6 +91,7 @@ public class PersonalCenterController {
         }
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
+
         /**
          * 查询个人主页的体力瓶数据
          */
