@@ -57,7 +57,6 @@ public class EventMqListener {
       String cid = (String) redisTemplate.opsForValue().get(msgInfo.getToId());
 
       if (cid == null || "".equals(cid)) {
-         log.info("等于空");
          log.error("redis中未找到对应的设备ID,有可能是对方未在线,将事件消息通过mq发送存入数据库");
          rabbitTemplate.convertAndSend("game_msg_not_online_queue",msg);
          return;

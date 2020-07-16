@@ -79,7 +79,7 @@ public class RandomUtils {
 
         int end1 = (int) end;*/
         //金币
-        int random = new Random().nextInt(1);
+        int random = new Random().nextInt(3);
         if(random<500){
             random = new Random().nextInt(500);
             return random;
@@ -90,14 +90,14 @@ public class RandomUtils {
      * 花朵掉落
      *
      */
-    public static Integer fallingFlowers(){
+    public boolean fallingFlowers(){
 
         Random random=new Random();
         int i = random.nextInt(100) + 1;
         if(i<=20){
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 
 

@@ -56,8 +56,8 @@ public class PersonalCenterController {
     public Map<String,Object> personalCenterAll(@RequestParam("userId") Long userId){
         Map<String,Object> map=new HashMap<>(7);
 
-        //初始化技能
-        iSkillService.initSkill(userId);
+        /*//初始化技能
+        iSkillService.initSkill(userId);*/
 
         /**
          * 查询已经解锁种子
@@ -83,12 +83,7 @@ public class PersonalCenterController {
          * @return
          */
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
-        List<TbEquipmentKnapsackVoTwo> list=new ArrayList<>();
-        for (TbEquipmentKnapsackVo tbEquipmentKnapsackVo : tbEquipmentKnapsackVos) {
-            TbEquipmentKnapsackVoTwo tbEquipmentKnapsackVoTwo=new TbEquipmentKnapsackVoTwo();
-            BeanUtils.copyProperties(tbEquipmentKnapsackVo,tbEquipmentKnapsackVoTwo);
-            list.add(tbEquipmentKnapsackVoTwo);
-        }
+
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
         /**
@@ -99,7 +94,7 @@ public class PersonalCenterController {
         map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillVos);
         map.put("AttendantGoods",map1);
-        map.put("equipment",list);
+        map.put("equipment",tbEquipmentKnapsackVos);
         map.put("blackHouse",houseVo);
         map.put("queryAidUser",stringObjectMap);
         return map;

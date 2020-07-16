@@ -1,10 +1,12 @@
 package com.dkm.attendant.controller;
 
+import com.dkm.attendant.entity.bo.AttUserInfoBo;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.entity.vo.AttUserVo;
 import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.attendant.service.IAttendantUserService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
@@ -34,6 +36,9 @@ public class AttendantController {
 
     @Autowired
     private IAttendantService iAttendantService;
+
+    @Autowired
+    private IAttendantUserService attendantUserService;
 
     /**
      * 获取用户抓到的跟班信息
@@ -213,6 +218,20 @@ public class AttendantController {
 
         return iAttendantService.queryUserIdMaster(userId);
     }
+
+
+
+   @ApiOperation(value = "根据用户Id查询主人信息",notes = "根据用户Id查询主人信息")
+   @ApiImplicitParam(paramType = "query",dataType = "Long",name = "userId",value = "用户id")
+   @GetMapping("/queryAttUserInfo")
+   @CrossOrigin
+   @CheckToken
+   public AttUserInfoBo queryAttUserInfo(@RequestParam("userId") Long userId){
+       if (userId == null) {
+          throw new ApplicationException(CodeType.PARAMETER_ERROR);
+       }
+      return attendantUserService.queryAttUserInfo(userId);
+   }
 
 
 }
