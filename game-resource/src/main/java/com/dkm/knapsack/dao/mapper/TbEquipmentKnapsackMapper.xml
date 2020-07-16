@@ -82,7 +82,13 @@
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
 			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
-
+	<select id="selectUserIdThree" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT tk.tek_id,te.equipment_id,tsk.user_id,tk.knapsack_id,tk.tek_sell,tk.tek_money,tk.tek_daoju,tk.tek_isva
+		,tk.food_id,tk.food_number,tb.box_id,tb.box_type,te.equipment_level,te.equipment_image,te.equipment_image,te.exp1,te.exp2,te.exp3
+		td.* FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
+			tsk.user_id=#{userId} AND tk.tek_isva=1  AND tbx.box_id=te.box_id
+	</select>
 	<!--
 	 2020/7/13 加的sql food_id=6 代表金星星 返回它数量给梦琪
 	 -->
@@ -128,11 +134,7 @@
 		SELECT COUNT(*) FROM tb_equipment_knapsack tk,tb_equipment te
 		WHERE te.`equipment_id`=tk.equipment_id AND   tk.tek_sell=1 AND tk.tek_isva=1  AND te.`exp1`=#{exp1} and tk.knapsack_id=#{knapsackId}
 	</select>
-	<select id="selectUserIdThree" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
-		SELECT *FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
-		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
-			tsk.user_id=#{userId} AND tk.tek_isva=1  AND tbx.box_id=te.box_id
-	</select>
+
 	<select id="selectAll" parameterType="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo" resultMap="BaseResultMapVo">
 		SELECT tk.tek_id,td.*,te.* FROM tb_equipment_knapsack tk,tb_equipment te,tb_equipment_details td
 		WHERE te.`equipment_id`=tk.equipment_id AND tk.tek_isva=1  and  tk.tek_sell=1 and te.equipment_id=td.equipment_id AND te.`exp1`=#{exp1}
