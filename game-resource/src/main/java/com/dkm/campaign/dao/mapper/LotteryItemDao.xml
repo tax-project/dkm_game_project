@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.campaign.dao.LotteryItemDao">
+
+
+    <select id="selectAll" resultType="com.dkm.campaign.entity.LotteryItemEntity">
+        SELECT a.id                                                                              id,
+               b.name                                                                            name,
+               b.url                                                                             image_url,
+               a.goods_size                                                                      goods_size,
+               a.goods_id                                                                        goods_id,
+               a.size                                                                            size,
+               b.good_money                                                                      money,
+               (SELECT COUNT(*) FROM tb_lottery_user WHERE tb_lottery_user.tb_lottery_id = a.id) usedSize
+        FROM tb_lottery a,
+             tb_goods b
+        WHERE a.id = b.id;
+    </select>
+</mapper>

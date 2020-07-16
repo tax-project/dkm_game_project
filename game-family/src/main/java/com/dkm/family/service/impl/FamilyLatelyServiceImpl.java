@@ -28,13 +28,14 @@ public class FamilyLatelyServiceImpl implements IFamilyLatelyService {
         List<FamilyLatelyEntity> familyLatelyEntities = familyLatelyDao.selectList(new LambdaQueryWrapper<FamilyLatelyEntity>()
                 .eq(FamilyLatelyEntity::getUserId, userId).orderByDesc(FamilyLatelyEntity::getId));
         List<Long> ids = new ArrayList<>();
-        if(familyLatelyEntities.size()>=3){
+        boolean have = familyLatelyEntities.stream().noneMatch(a -> a.getFamilyId().equals(familyId));
+        if(have&&familyLatelyEntities.size()>=3){
             for (int i = 2; i < familyLatelyEntities.size(); i++) {
                 ids.add(familyLatelyEntities.get(i).getId());
             }
             familyLatelyDao.deleteBatchIds(ids);
         }
-        if(familyLatelyEntities.stream().noneMatch(a-> a.getFamilyId().equals(familyId))){
+        if(have){
             FamilyLatelyEntity familyLatelyEntity = new FamilyLatelyEntity();
             familyLatelyEntity.setId(idGenerator.getNumberId());
             familyLatelyEntity.setFamilyId(familyId);
