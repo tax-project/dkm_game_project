@@ -39,8 +39,6 @@ public class LotteryController {
         return lotteryService.getAllInfo(getUserId());
     }
 
-
-
     @Resource
     private LocalUser localUser;
 

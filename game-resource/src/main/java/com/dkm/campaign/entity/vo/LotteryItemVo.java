@@ -33,7 +33,7 @@ public class LotteryItemVo {
     /**
      * 商品数目
      */
-    @ApiModelProperty("奖池商品的")
+    @ApiModelProperty("奖池商品的总数目")
     private int goodsSize;
     /**
      * 参与次数
