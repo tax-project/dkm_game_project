@@ -6,16 +6,23 @@
 
 
     <select id="selectAll" resultType="com.dkm.campaign.entity.LotteryItemEntity">
-        SELECT a.id                                                                              id,
-               b.name                                                                            name,
-               b.url                                                                             image_url,
-               a.goods_size                                                                      goods_size,
-               a.goods_id                                                                        goods_id,
-               a.size                                                                            size,
-               b.good_money                                                                      money,
-               (SELECT COUNT(*) FROM tb_lottery_user WHERE tb_lottery_user.tb_lottery_id = a.id) usedSize
+        SELECT a.id                           id,
+               b.name                         name,
+               b.url                          image_url,
+               a.goods_size                   goods_size,
+               a.goods_id                     goods_id,
+               a.size                         size,
+               b.good_money                   money,
+               (SELECT COUNT(*)
+                FROM tb_lottery_user c
+                WHERE c.tb_lottery_id = a.id) usedSize,
+               (SELECT COUNT(*)
+                FROM tb_lottery_user tlu
+                WHERE tlu.tb_lottery_id = a.id
+                  AND tlu.user_id = #{user})  userSize
         FROM tb_lottery a,
              tb_goods b
-        WHERE a.id = b.id;
+        WHERE a.id = b.id
     </select>
+
 </mapper>

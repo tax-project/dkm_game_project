@@ -55,14 +55,47 @@ FROM tb_lottery a,
      tb_goods b
 WHERE a.id = b.id;
 
-INSERT INTO tb_game_options (option_key, option_value)
-    VALUE ('LOTTERY_REFRESH_DATE', '86400');
-INSERT INTO tb_game_options (option_key, option_value)
-    VALUE ('LOTTERY_NEXT_UPDATE_DATE', '2020-08-10 00:00:00');
 SELECT *
 FROM tb_game_options;
 
+SELECT row_count(), id, option_key, option_value
+FROM tb_game_options
+WHERE option_key = 'LOTTERY_REFRESH_DATE'
+LIMIT 1;
+SELECT option_value
+FROM tb_game_options
+WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+LIMIT 1;
 
 select count(1) len
 from tb_goods
 WHERE name = '1';
+
+# UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_REFRESH_DATE'
+# UPDATE tb_game_options SET option_value = #{date} WHERE option_key = 'LOTTERY_NEXT_UPDATE_DATE'
+
+
+-- 获取上次的用户
+SELECT user.we_chat_nick_name name, history.prize_text
+FROM tb_lottery_last_history history,
+     tb_user user
+WHERE history.user_id = user.user_id;
+
+
+SELECT a.id                           id,
+       b.name                         name,
+       b.url                          image_url,
+       a.goods_size                   goods_size,
+       a.goods_id                     goods_id,
+       a.size                         size,
+       b.good_money                   money,
+       (SELECT COUNT(*)
+        FROM tb_lottery_user c
+        WHERE c.tb_lottery_id = a.id) usedSize,
+       (SELECT COUNT(*)
+        FROM tb_lottery_user tlu
+        WHERE tlu.tb_lottery_id = a.id
+          AND tlu.user_id = '')       userSize
+FROM tb_lottery a,
+     tb_goods b
+WHERE a.id = b.id;
