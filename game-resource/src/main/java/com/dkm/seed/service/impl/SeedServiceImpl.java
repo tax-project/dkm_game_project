@@ -329,8 +329,6 @@ public class SeedServiceImpl implements ISeedService {
             int PlantingTimes = 0;
 
             //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
-            System.out.println(userLandUnlocks.size());
-            System.out.println(listLand.size());
             PlantingTimes = userLandUnlocks.size() - listLand.size();
 
 
@@ -367,7 +365,6 @@ public class SeedServiceImpl implements ISeedService {
 
                 }
 
-                System.out.println(list);
                 //增加要种植种子的信息和用户信息
                 int i = seedMapper.addPlant(list);
                 if (i <= 0) {
