@@ -29,13 +29,22 @@ public class LotteryServiceImpl implements ILotteryService {
         final val items = res.getItems();
         lotteryItemEntities.forEach(it -> {
             final val lotteryItemVo = new LotteryItemVo();
+            //設置代號
             lotteryItemVo.setId(it.getId());
+            // 设置商品名称
             lotteryItemVo.setGoodsName(it.getName());
+            // 商品数目
+            lotteryItemVo.setGoodsSize(it.getGoodsSize());
+            // 设置商品图片URL
             lotteryItemVo.setGoodsImageUrl(it.getImageUrl());
-            lotteryItemVo.setTotal(it.getSize());
+            // 奖品的总价值
             lotteryItemVo.setMarketPrice((int) (it.getMoney() * it.getGoodsSize()));
-            lotteryItemVo.setUserParticipation(it.getUserSize());
-//            lotteryItemVo.set;
+            // 设置奖品的总数目
+            lotteryItemVo.setPrizeSize(it.getSize());
+            // 用户已经参与的数目
+            lotteryItemVo.setPrizeAlreadyUsedSize(it.getUsedSize());
+            // 自己参与的次数
+            lotteryItemVo.setUserAlreadyUsedSize(it.getUserSize());
             items.add(lotteryItemVo);
         });
         return res;
