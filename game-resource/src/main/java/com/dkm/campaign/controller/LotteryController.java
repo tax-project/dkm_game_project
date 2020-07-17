@@ -1,17 +1,13 @@
 package com.dkm.campaign.controller;
 
 
+import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
 import com.dkm.campaign.service.ILotteryService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -38,6 +34,20 @@ public class LotteryController {
     public LotteryInfoVo getAllInfo() {
         return lotteryService.getAllInfo(getUserId());
     }
+
+    @ApiOperation("获取神秘商店下的所有信息")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "path", name = "lotteryId", required = true, dataType = "Long", value = "选中的奖池的id"),
+            @ApiImplicitParam(paramType = "path", name = "size", required = true, dataType = "Int", value = "购买的数目")
+    })
+    @GetMapping(value = "/{lotteryId}/buy/{size}", produces = "application/json")
+    public LotteryBuyResultVo buy(@PathVariable Long lotteryId, @PathVariable Integer size) {
+        return lotteryService.buy(lotteryId, size, getUserId());
+    }
+
 
     @Resource
     private LocalUser localUser;

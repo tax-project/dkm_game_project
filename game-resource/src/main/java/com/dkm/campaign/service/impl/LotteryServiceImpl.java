@@ -2,6 +2,7 @@ package com.dkm.campaign.service.impl;
 
 import com.dkm.campaign.dao.LotteryItemDao;
 import com.dkm.campaign.dao.OptionsDao;
+import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
 import com.dkm.campaign.entity.vo.LotteryItemVo;
 import com.dkm.campaign.service.ILotteryService;
@@ -53,5 +54,10 @@ public class LotteryServiceImpl implements ILotteryService {
     @Override
     public void refresh() {
 
+    }
+
+    @Override
+    public LotteryBuyResultVo buy(Long lotteryId, Integer size, Long userId) {
+        return null;
     }
 }
