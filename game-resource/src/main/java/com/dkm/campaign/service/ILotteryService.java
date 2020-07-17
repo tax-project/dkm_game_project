@@ -1,5 +1,6 @@
 package com.dkm.campaign.service;
 
+import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
 
 /**
@@ -18,4 +19,10 @@ public interface ILotteryService {
      * 刷新
      */
     void refresh();
+
+    /**
+     *  购买
+     * @return
+     */
+    LotteryBuyResultVo buy(Long lotteryId, Integer size, Long userId);
 }
