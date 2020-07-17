@@ -1,11 +1,11 @@
-package com.dkm.openbox.service.impl;
+package com.dkm.box.service.impl;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.openbox.dao.UserBoxMapper;
-import com.dkm.openbox.entity.UserBoxEntity;
-import com.dkm.openbox.entity.vo.BoxInfoVo;
-import com.dkm.openbox.service.IUserBoxService;
+import com.dkm.box.dao.UserBoxMapper;
+import com.dkm.box.entity.UserBoxEntity;
+import com.dkm.box.entity.vo.BoxInfoVo;
+import com.dkm.box.service.IUserBoxService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;

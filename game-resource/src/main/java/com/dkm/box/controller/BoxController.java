@@ -1,12 +1,11 @@
-package com.dkm.openbox.controller;
+package com.dkm.box.controller;
 
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.openbox.entity.vo.BoxInfoVo;
-import com.dkm.openbox.service.IUserBoxService;
+import com.dkm.box.entity.vo.BoxInfoVo;
+import com.dkm.box.service.IUserBoxService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
