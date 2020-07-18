@@ -22,6 +22,7 @@ import com.dkm.wechat.dao.UserMapper;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserBO;
 import com.dkm.wechat.entity.bo.UserDataBO;
+import com.dkm.wechat.entity.bo.UserPartBO;
 import com.dkm.wechat.entity.vo.UserChatInfoVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
@@ -325,5 +326,10 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         BeanUtils.copyProperties(user1, vo);
 
         return vo;
+    }
+
+    @Override
+    public List<UserPartBO> queryUserPartAll(List<Long> userIdList) {
+        return baseMapper.queryUserPartAll(userIdList);
     }
 }
