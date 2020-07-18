@@ -13,10 +13,10 @@
                 user_info_renown = user_info_renown + #{userInfoRenown},
             </if>
             <if test="userInfoDiamonds != null">
-                user_info_diamonds = user_info_diamonds + #{userInfoDiamonds}
+                user_info_diamonds = user_info_diamonds + #{userInfoDiamonds},
             </if>
             <if test="userInfoNowExperience != null">
-                user_info_now_experience = user_info_now_experience + #{userInfoNowExperience}
+                user_info_now_experience = user_info_now_experience + #{userInfoNowExperience},
             </if>
             <if test="userInfoStrength != null">
                 user_info_strength = case
@@ -33,18 +33,42 @@
         update tb_user_info
         <set>
             <if test="userInfoGold != null">
-                user_info_gold = user_info_gold - #{userInfoGold} ,
+                user_info_gold = case
+                when  user_info_gold  &lt; #{userInfoGold} then user_info_gold
+                else user_info_gold - #{userInfoGold}
+                end
+                ,
             </if>
             <if test="userInfoRenown != null">
-                user_info_renown = user_info_renown - #{userInfoRenown},
+                user_info_renown = case
+                when  user_info_renown  &lt; #{userInfoRenown} then user_info_renown
+                else user_info_renown - #{userInfoRenown}
+                end
+                ,
             </if>
             <if test="userInfoDiamonds != null">
-                user_info_diamonds = user_info_diamonds - #{userInfoDiamonds}
+                user_info_diamonds = case
+                when  user_info_diamonds  &lt; #{userInfoDiamonds} then user_info_diamonds
+                else user_info_diamonds - #{userInfoDiamonds}
+                end
             </if>
         </set>
-        where user_id = #{userId}
-    </update>
+        <where>
+            <if test="userId != null">
+                user_id = #{userId} and
+            </if>
+            <if test="userInfoDiamonds != null">
+                user_info_diamonds  &gt; #{userInfoDiamonds}
+            </if>
+            <if test="userInfoGold != null">
+                user_info_gold &gt; #{userInfoGold}
+            </if>
+            <if test="userInfoRenown != null">
+                user_info_renown  &gt; #{userInfoRenown}
+            </if>
 
+        </where>
+    </update>
 
     <select id="listUserPlunder" resultType="com.dkm.entity.bo.UserPlunderBo">
         SELECT a.user_id as 'userId',a.we_chat_head_img_url as 'heardUrl',

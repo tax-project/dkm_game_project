@@ -116,12 +116,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public void cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
       Integer integer = baseMapper.cutUserInfo(increaseUserInfoBO);
+      System.out.println(integer);
       if (integer<=0){
          throw new ApplicationException(CodeType.SERVICE_ERROR, "减少失败");
       }
    }
-
-
 
    @Override
    public List<UserPlunderBo> listUserPlunder() {
