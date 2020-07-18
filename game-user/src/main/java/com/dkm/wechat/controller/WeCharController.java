@@ -10,6 +10,7 @@ import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.utils.StringUtils;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
+import com.dkm.wechat.entity.bo.UserPartBO;
 import com.dkm.wechat.entity.vo.ResultVo;
 import com.dkm.wechat.entity.vo.UserChatInfoVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
@@ -150,4 +151,14 @@ public class WeCharController {
         return weChatService.queryUserQrInfo();
     }
 
+    /**
+     * 根据ID集合查询用户信息
+     * @param userIdList 用户ID集合
+     * @return 用户信息集合
+     */
+    @PostMapping("query/list/user/part")
+    @CrossOrigin
+    public List<UserPartBO> queryUserPartAll(@RequestBody List<Long> userIdList){
+        return weChatService.queryUserPartAll(userIdList);
+    }
 }

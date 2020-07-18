@@ -7,6 +7,7 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.wechat.entity.User;
 import com.dkm.wechat.entity.bo.UserDataBO;
+import com.dkm.wechat.entity.bo.UserPartBO;
 import com.dkm.wechat.entity.vo.UserChatInfoVo;
 import com.dkm.wechat.entity.vo.UserLoginVo;
 import com.dkm.wechat.entity.vo.UserRegisterVo;
@@ -74,4 +75,11 @@ public interface IWeChatService {
      * @return 返回二维码等其他信息
      */
     UserChatInfoVo queryUserQrInfo ();
+
+    /**
+     * 根据用户ID集合查询用户信息
+     * @param userIdList 用户ID集合
+     * @return 用户信息集合
+     */
+    List<UserPartBO> queryUserPartAll(List<Long> userIdList);
 }
