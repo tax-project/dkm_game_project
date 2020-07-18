@@ -65,6 +65,26 @@
 		<result column="ed_typeone" jdbcType="DECIMAL" property="edTypeone" />
 		<result column="ed_typeonevalue" jdbcType="DECIMAL" property="edTypeonevalue" />
 	</resultMap>
+
+    <resultMap id="BaseResultMapVoFive" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoCenter">
+        <id column="tek_id" property="tekId" />
+        <result column="equipment_id" property="equipmentId" />
+        <result column="tek_money" property="tekMoney" />
+        <result column="equipment_level" property="equipmentLevel" />
+        <result column="equipment_image" property="equipmentImage" />
+        <result column="exp1" property="exp1" />
+        <result column="ed_detailed_description" jdbcType="VARCHAR" property="edDetailedDescription" />
+        <result column="ed_Equipment_reputation" jdbcType="INTEGER" property="edEquipmentReputation" />
+        <result column="ed_Red_envelope_acceleration" jdbcType="DECIMAL" property="edRedEnvelopeAcceleration" />
+        <result column="ed_defense" jdbcType="DECIMAL" property="edDefense" />
+        <result column="ed_attribute" jdbcType="DECIMAL" property="edAttribute" />
+        <result column="ed_life" jdbcType="DECIMAL" property="edLife" />
+        <result column="ed_attack" jdbcType="DECIMAL" property="edAttack" />
+        <result column="ed_type" jdbcType="DECIMAL" property="edType" />
+        <result column="ed_typevalue" jdbcType="DECIMAL" property="edTypevalue" />
+        <result column="ed_typeone" jdbcType="DECIMAL" property="edTypeone" />
+        <result column="ed_typeonevalue" jdbcType="DECIMAL" property="edTypeonevalue" />
+    </resultMap>
 	<resultMap id="BaseResultMapVoTwo" type="com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoThree">
 		<id column="tek_id" property="tekId" />
 		<result column="food_number" property="foodNumber" />
@@ -82,13 +102,7 @@
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
 			tsk.user_id=#{userId} AND tk.tek_isva=1 AND tk.tek_sell=1 AND tbx.box_id=te.box_id
 	</select>
-	<select id="selectUserIdThree" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
-		SELECT tk.tek_id,te.equipment_id,tsk.user_id,tk.knapsack_id,tk.tek_sell,tk.tek_money,tk.tek_daoju,tk.tek_isva
-		,tk.food_id,tk.food_number,tb.box_id,tb.box_type,te.equipment_level,te.equipment_image,te.equipment_image,te.exp1,te.exp2,te.exp3
-		td.* FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
-		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
-			tsk.user_id=#{userId} AND tk.tek_isva=1  AND tbx.box_id=te.box_id
-	</select>
+
 	<!--
 	 2020/7/13 加的sql food_id=6 代表金星星 返回它数量给梦琪
 	 -->
@@ -104,12 +118,21 @@
 	 tk.food_id=tg.id AND tk.knapsack_id=#{knapsackId}
 	AND tk.food_id IN(722958015550165460,707431394650138541,707441015150160242)
 	</select>
-	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
-		SELECT *FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+	<!--
+		这个个人中心用的
+	-->
+	<select id="selectUserIdTwo" parameterType="java.lang.Long" resultMap="BaseResultMapVoFive">
+		SELECT te.*,td.*,tk.* FROM tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
 		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
 			tsk.user_id=#{userId} AND tk.tek_isva=1 and tk.tek_sell=1
 	</select>
-
+	<select id="selectUserIdThree" parameterType="java.lang.Long" resultMap="BaseResultMapVo">
+		SELECT tk.tek_id,te.equipment_id,tsk.user_id,tk.knapsack_id,tk.tek_sell,tk.tek_money,tk.tek_daoju,tk.tek_isva
+				,tk.food_id,tk.food_number,tbx.box_id,tbx.box_type,te.equipment_level,te.equipment_image,te.equipment_image,te.exp1,te.exp2,te.exp3
+				,td.* FROM tb_box tbx,tb_equipment te,tb_equipment_details td,tb_equipment_knapsack tk,tb_knapsack tsk
+		WHERE te.`equipment_id`=td.`equipment_id` AND te.`equipment_id`=tk.equipment_id AND tsk.knapsack_id=tk.knapsack_id AND
+			tsk.user_id=#{userId} AND tk.tek_isva=1  AND tbx.box_id=te.box_id
+	</select>
 	<select id="selectCountAll" resultType="java.lang.Integer" parameterType="java.lang.Long">
 		select count(*) from tb_equipment_knapsack where knapsack_id=#{knapsackId} and tek_isva=1 AND tek_sell=2
 	</select>

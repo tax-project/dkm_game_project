@@ -106,7 +106,7 @@ public class TbEquipmentKnapsackServiceImpl implements ITbEquipmentKnapsackServi
      * @return 返回对应的装备数据
      */
     @Override
-    public List<TbEquipmentKnapsackVo> selectUserIdThree(Long userId) {
+    public List<TbEquipmentKnapsackVoCenter> selectUserIdThree(Long userId) {
         return tbEquipmentKnapsackMapper.selectUserIdTwo(userId);
     }
 

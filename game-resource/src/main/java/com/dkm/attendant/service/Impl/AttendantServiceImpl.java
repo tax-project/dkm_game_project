@@ -919,18 +919,22 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public Map<String,Object> queryAidUser() {
+        System.out.println("进入主人信息");
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-
+        System.out.println("得到用户登录的token信息");
         if(query==null){
+            System.out.println("token为空");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"调用失败token为空  请登录拿到token！");
         }
-
+        System.out.println("token不为空");
         Map<String,Object> map=new HashMap<>();
 
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
+        System.out.println("主人信息");
         if(attendantUserVo == null){
+            System.out.println("没有主人");
             map.put("msg","没有主人");
             map.put("num",0);
         }else{

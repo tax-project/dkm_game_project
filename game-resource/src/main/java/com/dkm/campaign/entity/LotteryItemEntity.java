@@ -17,5 +17,6 @@ public class LotteryItemEntity {
     private Integer size;
     private Long money;
     private Integer usedSize = 0;
+    private Integer userSize = 0;
 
 }

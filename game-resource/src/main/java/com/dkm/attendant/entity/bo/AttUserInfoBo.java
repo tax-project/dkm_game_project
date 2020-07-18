@@ -28,7 +28,7 @@ public class AttUserInfoBo {
    /**
     * 声望
     */
-   private String userInfoRenown;
+   private Integer userInfoRenown;
 
    /**
     * 0--没有主人
