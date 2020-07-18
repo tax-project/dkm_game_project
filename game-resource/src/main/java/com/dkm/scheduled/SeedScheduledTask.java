@@ -30,7 +30,7 @@ public class SeedScheduledTask {
       iSeedFallService.redBagDroppedSeparately();
    }
 
-   //@Scheduled(cron = "0 /1 * * * * ?")
+//   @Scheduled(cron = "0/5 * * * * ?")
    public void seedDrop(){
       iSeedFallService.seedDrop();
    }

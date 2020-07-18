@@ -55,6 +55,11 @@ FROM tb_lottery a,
      tb_goods b
 WHERE a.id = b.id;
 
+SELECT (a.size - COUNT(*)) remaining_size
+FROM tb_lottery a,
+     tb_lottery_user b
+WHERE a.id = b.tb_lottery_id AND a.id = 1;
+
 SELECT *
 FROM tb_game_options;
 
@@ -99,3 +104,16 @@ SELECT a.id                           id,
 FROM tb_lottery a,
      tb_goods b
 WHERE a.id = b.id;
+
+
+SELECT user.we_chat_nick_name `姓名`, info.user_info_diamonds `钻石`
+FROM tb_user user,
+     tb_user_info info
+WHERE user.user_id = info.user_id
+  AND user.we_chat_nick_name = 'asd';
+
+UPDATE tb_user user,
+    tb_user_info info
+SET info.user_info_diamonds = 10000
+WHERE user.user_id = info.user_id
+  AND user.we_chat_nick_name = 'asd';
