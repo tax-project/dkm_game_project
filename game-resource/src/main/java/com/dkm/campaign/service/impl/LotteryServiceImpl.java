@@ -86,7 +86,7 @@ public class LotteryServiceImpl implements ILotteryService {
         val localDateTime = DateUtils.parseDateTime(optionsDao.selectNextUpdateDateStr());
         if (localDateTime.isBefore(LocalDateTime.now())) {
             log.info("需要刷新了");
-            optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(localDateTime.plusHours(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
+            optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(localDateTime.plusSeconds(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
         }
     }
 
