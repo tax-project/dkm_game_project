@@ -144,7 +144,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
         equipmentEntity.setBlood(userGrade * userGrade + userGrade * 50 + random.nextInt(userGrade * 50) - random.nextInt(userGrade * 50));
         equipmentEntity.setBloodAdd(new BigDecimal(userGrade / 100.00));
         equipmentEntity.setCrit(new BigDecimal(userGrade / 100.00));
-        equipmentEntity.setNeedGrade(Math.min(userGrade + random.nextInt(5) - random.nextInt(5),1));
+        equipmentEntity.setNeedGrade(Math.max(userGrade + random.nextInt(5) - random.nextInt(5),1));
         equipmentEntity.setEqDrop(new BigDecimal(userGrade / 100.00));
         equipmentEntity.setRenown(userGrade * userGrade + userGrade * 100 + random.nextInt(userGrade * 100) - random.nextInt(userGrade * 100));
         equipmentEntity.setIsEquip(0);
