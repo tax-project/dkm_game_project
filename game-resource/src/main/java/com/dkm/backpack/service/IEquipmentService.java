@@ -1,6 +1,9 @@
 package com.dkm.backpack.service;
 
 import com.dkm.backpack.entity.vo.EquipmentVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
+
+import java.util.List;
 
 /**
  * @description:
@@ -15,4 +18,11 @@ public interface IEquipmentService {
      * @return
      */
     EquipmentVo getEquipmentInfo(Long backpackId);
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    List<UserEquipmentVo> getUserEquipment(Long userId);
 }

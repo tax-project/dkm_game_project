@@ -2,11 +2,13 @@ package com.dkm.backpack.service.impl;
 
 import com.dkm.backpack.dao.EquipmentMapper;
 import com.dkm.backpack.entity.vo.EquipmentVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IEquipmentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @program: game_project
@@ -24,5 +26,10 @@ public class EquipmentServiceImpl implements IEquipmentService {
     @Override
     public EquipmentVo getEquipmentInfo(Long backpackId) {
         return equipmentMapper.getEquipmentInfo(backpackId);
+    }
+
+    @Override
+    public List<UserEquipmentVo> getUserEquipment(Long userId) {
+        return equipmentMapper.getUserEquipment(userId);
     }
 }

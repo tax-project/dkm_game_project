@@ -4,6 +4,7 @@ import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.bo.SellGoodsInfo;
 import com.dkm.backpack.entity.vo.EquipmentVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.constanct.CodeType;
@@ -95,5 +96,17 @@ public class BackPackController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         return equipmentService.getEquipmentInfo(backpackId);
+    }
+
+    @ApiOperation(value = "获取用户当前所有已装备数据")
+    @GetMapping("/getUserEquipment")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public List<UserEquipmentVo> getUserEquipment(@RequestParam("backpackId") Long backpackId){
+        if(backpackId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return equipmentService.getUserEquipment(localUser.getUser().getId());
     }
 }
