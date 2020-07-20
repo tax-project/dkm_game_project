@@ -58,9 +58,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private RandomUtils randomUtils;
 
     @Autowired
-    private SeedsFallMapper seedsFallMapper;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
 

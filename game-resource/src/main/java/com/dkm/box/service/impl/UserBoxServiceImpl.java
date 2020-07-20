@@ -128,7 +128,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
-            userBoxMapper.
+            //userBoxMapper.
             if(!integer.equals(integer1)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }
     }
