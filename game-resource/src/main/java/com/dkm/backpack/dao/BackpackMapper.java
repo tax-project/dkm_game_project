@@ -2,6 +2,8 @@ package com.dkm.backpack.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
 import com.dkm.backpack.entity.BackPackEntity;
+import com.dkm.backpack.entity.vo.FoodInfoVo;
+import com.dkm.backpack.entity.vo.GoldStarVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,9 +27,16 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
     List<UserBackpackGoodsVo> getBackpackGoods(@Param("userId") Long userId);
 
     @Select("SELECT COUNT(*) FROM" +
-            "(SELECT backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) ub " +
-            "LEFT JOIN ( SELECT  backpack_id FROM tb_user_equipment WHERE is_equip=0)  ue on ub.backpack_id = ue.backpack_id ")
+            " (SELECT backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) ub " +
+            " LEFT JOIN tb_user_equipment   ue on ub.backpack_id = ue.backpack_id WHERE ue.is_equip = 0 ")
     Integer getBackpackNumber(@Param("userId") Long userId);
 
     Integer insertList(@Param("list") List<BackPackEntity> backPackEntities);
+
+    @Select("SELECT backpack_id,number FROM tb_user_backpack WHERE user_id = #{userId} and good_id = 6")
+    GoldStarVo getStars(@Param("userId") Long userId);
+
+    @Select("SELECT g.id as good_id,IFNULL(ub.number,0) as food_number,g.url,g.name FROM " +
+            "(SELECT * FROM tb_user_backpack WHERE user_id = #{userId})ub RIGHT JOIN (SELECT * FROM tb_goods WHERE good_type = 3) g on g.id = ub.good_id")
+    List<FoodInfoVo> getFoods(@Param("userId") Long userId);
 }
