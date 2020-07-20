@@ -159,6 +159,9 @@ public class HistoryServiceImpl implements IHistoryService {
         for (DiggingsHistoryEntity entity : diggingsHistoryEntities) {
             final OccupiedVo value = new OccupiedVo();
             final val data = userFeignClient.queryUser(entity.getUserId()).getData();
+            if (data == null) {
+                throw new ApplicationException(CodeType.DATABASE_ERROR,"网络链接超时 （无法获取用户名）");
+            }
             value.setUserName(data.getWeChatNickName());
             final val familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, entity.getFamilyId()));
             if (familyEntity == null) {

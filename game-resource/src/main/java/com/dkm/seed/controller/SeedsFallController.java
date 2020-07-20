@@ -76,19 +76,7 @@ public class SeedsFallController {
         return iSeedFallService.queryDroppedItems();
     }
 
-    @ApiOperation(value = " 修改种子状态为2 待收取", notes = " 修改种子状态为2 待收取")
-    @PostMapping("/updateLeStatus")
-    @CrossOrigin
-    @CheckToken
-    public int updateLeStatus(@RequestParam(value = "id[]")Integer[] id){
 
-        List<Long> list=new ArrayList<>();
-
-        for (int i = 0; i < id.length; i++) {
-            list.add(Long.valueOf(id[i]));
-        }
-        return iSeedFallService.updateLeStatus(list);
-    }
 
 
 }
