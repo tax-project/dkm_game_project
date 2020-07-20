@@ -9,10 +9,18 @@
             (#{box.boxId},#{box.userId},#{box.openTime},#{box.boxLevel})
         </foreach>
     </insert>
-    <update id="updateBoxTime" parameterType="java.util.List">
-
-        <foreach collection="list" item="box" separator=";" >
-            UPDATE tb_user_box SET open_time = #{box.openTime} where box_id = #{box.boxId}
-        </foreach>
+    <update id="updateBoxTime" parameterType="java.time.LocalDateTime">
+        UPDATE tb_user_box
+        <set>
+            open_time = #{date}
+        </set>
+        where box_id =734058900281790469
+        <!--<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE tb_user_box
+            <set>
+                open_time = #{item.openTime}
+            </set>
+            where box_id = #{item.boxId}
+        </foreach>-->
     </update>
 </mapper>
