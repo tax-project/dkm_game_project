@@ -1,5 +1,7 @@
 package com.dkm.campaign.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.campaign.dao.LotteryItemDao;
 import com.dkm.campaign.dao.LotteryUserDao;
@@ -89,12 +91,27 @@ public class LotteryServiceImpl implements ILotteryService {
         val localDateTime = DateUtils.parseDateTime(optionsDao.selectNextUpdateDateStr());
         List<LotteryItemEntity> all = lotteryItemDao.selectAllFull();
         if (!all.isEmpty()) {
-            List<Long> fullLotteryArr = all.stream().map(LotteryItemEntity::getId).collect(Collectors.toList());
-            lotteryUserDao.selectList(null).stream().filter(it -> fullLotteryArr.contains(it.getTbLotteryId()))
-                    .forEach(t -> {
-                        // 中奖的
+            List<Long> fullLotteryArr = all.stream().map(LotteryItemEntity::getGoodsId).collect(Collectors.toList());
+            val userEntities = lotteryUserDao.selectList(null);
+            val map = new HashMap<Long, Map<Long, Long>>();
+            for (Long aLong : fullLotteryArr) {
+                val m2 = new HashMap<Long, Long>();
+                map.put(aLong, m2);
+                userEntities.stream().filter(t -> Objects.equals(t.getTbLotteryId(), aLong)).forEach(t -> {
+                    m2.put(t.getUserId(), m2.getOrDefault(t.getUserId(), 1L));
+                });
+            }
+            map.forEach((t1,u1)->{
+                u1.forEach((t2,u2)->{
+                    val addGoodsInfo = new AddGoodsInfo();
+                    addGoodsInfo.setUserId(t2);
+                    addGoodsInfo.setGoodId(t1);
+                    addGoodsInfo.setNumber(u2.intValue());
+                    backpackService.addBackpackGoods(addGoodsInfo);
+                });
+            });
 
-                    });
+            fullLotteryArr.forEach(it -> lotteryUserDao.deleteByLotteryId(it));
         }
         val now = LocalDateTime.now();
         if (localDateTime.isBefore(now)) {
