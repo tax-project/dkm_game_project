@@ -72,7 +72,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
     }
 
     @Override
-    public List<EquipmentEntity> getUserAllEquipment(Long userId) {
-        return null;
+    public EquipmentEntity getUserAllEquipment(Long userId) {
+        return equipmentMapper.getAllAttributes(userId);
     }
 }

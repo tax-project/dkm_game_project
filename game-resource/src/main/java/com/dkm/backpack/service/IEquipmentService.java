@@ -39,5 +39,5 @@ public interface IEquipmentService {
      * @param userId
      * @return
      */
-    List<EquipmentEntity> getUserAllEquipment(Long userId);
+    EquipmentEntity getUserAllEquipment(Long userId);
 }
