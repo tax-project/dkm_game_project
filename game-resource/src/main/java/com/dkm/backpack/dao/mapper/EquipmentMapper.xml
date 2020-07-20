@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dkm.equipment.dao.EquipmentMapper">
+<mapper namespace="com.dkm.backpack.dao.EquipmentMapper">
 
     <insert id="insertList" parameterType="java.util.List">
         INSERT INTO `tb_user_equipment`(`backpack_id`, `blood`, `blood_add`, `renown`, `grade`, `talent`, `talent_add`, `exp`, `crit`, `eq_drop`, `need_grade`, `eq_type`, `is_equip`) VALUES

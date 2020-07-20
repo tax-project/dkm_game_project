@@ -122,7 +122,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
             if(!integer.equals(integer1)||!integer2.equals(integer)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }else {
             UserBoxEntity userBoxEntity = userBoxMapper.selectOne(new LambdaQueryWrapper<UserBoxEntity>()
-                    .eq(UserBoxEntity::getBoxId, boxId).le(UserBoxEntity::getOpenTime,now));
+                    .eq(UserBoxEntity::getUserId,userId).eq(UserBoxEntity::getBoxId, boxId).le(UserBoxEntity::getOpenTime,now));
             if(userBoxEntity==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"现在还不能开启该宝箱");}
             userBoxEntity.setOpenTime(userBoxEntity.getBoxLevel()==1?now.minusMinutes(-20):now.minusMinutes(-50));
             GoodsEntity goodsEntity = goodsEntities.get(random.nextInt(goodsEntities.size()));
