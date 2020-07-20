@@ -45,6 +45,8 @@ public class EventMqListener {
    @RabbitHandler
    public void rabbitHandle (String msg) {
 
+      log.info("收到消息-->" + msg);
+
       MsgInfo msgInfo = null;
       try {
          msgInfo = JSONObject.parseObject(msg, MsgInfo.class);
