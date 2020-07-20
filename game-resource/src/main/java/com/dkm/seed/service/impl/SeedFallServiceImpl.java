@@ -58,9 +58,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private RandomUtils randomUtils;
 
     @Autowired
-    private SeedsFallMapper seedsFallMapper;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
 
@@ -161,6 +158,11 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         //截取小数点后两位
         //钱除以他掉落的一个次数 就是每次掉落的钱
         for (moneyVo moneyVo : moneyVos) {
+            //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
+            if(System.currentTimeMillis()/1000>=moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+                    baseMapper.updateLeStatusTime(moneyVo.getId());
+                    return;
+            }
             BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
             double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
@@ -187,15 +189,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     }
 
 
-    /**
-     * 修改种子状态为2 待收取
-     * @param list
-     * @return
-     */
-    @Override
-    public int updateLeStatus(List<Long> list) {
-        return baseMapper.updateLeStatus(list);
-    }
 
 
 }

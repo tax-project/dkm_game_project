@@ -14,7 +14,6 @@ import com.dkm.campaign.entity.vo.LotteryLastVo;
 import com.dkm.campaign.service.ILotteryService;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
-import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.UserNameVo;
@@ -81,16 +80,14 @@ public class LotteryServiceImpl implements ILotteryService {
         return res;
     }
 
-
     @Override
     public void refresh() {
         log.info(optionsDao.selectRefreshDateStr());
         val localDateTime = DateUtils.parseDateTime(optionsDao.selectNextUpdateDateStr());
         if (localDateTime.isBefore(LocalDateTime.now())) {
             log.info("需要刷新了");
-            optionsDao.updateNextUpdateDate(DateUtils.formatSimpleDateTime(localDateTime));
+            optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(localDateTime.plusHours(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
         }
-
     }
 
     @Override
@@ -119,7 +116,6 @@ public class LotteryServiceImpl implements ILotteryService {
 
     @Resource
     private LotteryHistoryDao lotteryHistoryDao;
-
 
     @Override
     public List<LotteryLastVo> getLotteryLastVo() {
