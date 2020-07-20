@@ -4,6 +4,8 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
+import com.dkm.backpack.service.IBackpackService;
 import com.dkm.entity.vo.UserAttAllVo;
 import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.plunder.entity.Opponent;
@@ -65,6 +67,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
+
+    @Autowired
+    private IBackpackService iBackpackService;
 
     @Autowired
     private UserFeignClient userFeignClient;
@@ -869,16 +874,14 @@ public class AttendantServiceImpl implements IAttendantService {
                 //修改用户金币
                 userFeignClient.increaseUserInfo(increaseUserInfoBO);
             } else {
+
                 //穿戴物品
-                TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-                tbEquipmentKnapsack.setFoodId(bo.getGoodId());
-                tbEquipmentKnapsack.setFoodNumber(bo.getGoodNumber());
-                tbEquipmentKnapsack.setTekIsva(1);
-                tbEquipmentKnapsack.setTekDaoju(bo.getGoodType());
-                tbEquipmentKnapsack.setTekMoney(50);
-                tbEquipmentKnapsack.setTekSell(2);
+                AddGoodsInfo addGoodsInfo=new AddGoodsInfo();
+                addGoodsInfo.setGoodId(bo.getGoodId());
+                addGoodsInfo.setNumber(bo.getGoodNumber());
+                addGoodsInfo.setUserId(user.getId());
                 //添加食物到背包
-                iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
+                iBackpackService.addBackpackGoods(addGoodsInfo);
             }
 
             idList.add(bo.getProduceId());

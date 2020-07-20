@@ -217,9 +217,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userFeignClient.updateInfo(bo);
 
 
-             /**
-              * 需要改的地方
-              */
+
             //修改用户金星星数量
             iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
 
