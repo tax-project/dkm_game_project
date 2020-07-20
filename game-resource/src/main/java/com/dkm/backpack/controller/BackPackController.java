@@ -40,8 +40,8 @@ public class BackPackController {
     @Resource
     private LocalUser localUser;
 
-    @ApiOperation(value = "获取宝箱列表")
-    @GetMapping("/selectBoxInfo")
+    @ApiOperation(value = "获取背包物品")
+    @GetMapping("/getUserBackpackGoods")
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @CrossOrigin
     @CheckToken
