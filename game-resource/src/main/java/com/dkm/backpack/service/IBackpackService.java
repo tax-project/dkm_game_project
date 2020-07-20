@@ -44,5 +44,5 @@ public interface IBackpackService {
      * @param userId
      * @return
      */
-    List<FoodInfoVo> getFood(Long userId);s
+    List<FoodInfoVo> getFood(Long userId);
 }
