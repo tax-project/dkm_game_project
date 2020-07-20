@@ -2,12 +2,15 @@ package com.dkm.backpack.controller;
 
 import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.bo.SellGoodsInfo;
+import com.dkm.backpack.entity.vo.EquipmentVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
 import com.dkm.backpack.service.IBackpackService;
+import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.knapsack.service.ITbEquipmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,10 +35,13 @@ public class BackPackController {
     private IBackpackService backpackService;
 
     @Resource
+    private IEquipmentService equipmentService;
+
+    @Resource
     private LocalUser localUser;
 
-    @ApiOperation(value = "获取宝箱列表")
-    @GetMapping("/selectBoxInfo")
+    @ApiOperation(value = "获取背包物品")
+    @GetMapping("/getUserBackpackGoods")
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @CrossOrigin
     @CheckToken
@@ -76,7 +82,7 @@ public class BackPackController {
         backpackService.sellBackpackGoods(sellGoodsInfo);
     }
 
-    @ApiOperation(value = "装备详情接口")
+    @ApiOperation(value = "获取装备详情接口")
     @GetMapping("/equipmentInfo")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
@@ -84,10 +90,10 @@ public class BackPackController {
     })
     @CrossOrigin
     @CheckToken
-    public void equipmentInfo(@RequestParam("backpackId") Long backpackId){
+    public EquipmentVo equipmentInfo(@RequestParam("backpackId") Long backpackId){
         if(backpackId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
-
+        return equipmentService.getEquipmentInfo(backpackId);
     }
 }

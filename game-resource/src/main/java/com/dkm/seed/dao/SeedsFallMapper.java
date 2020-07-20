@@ -42,4 +42,11 @@ public interface SeedsFallMapper extends BaseMapper<SeedsFall> {
      * @return
      */
     List<moneyVo> queryMoney();
+
+    /**
+     * 修改种子状态为2 （待收取）
+     * @param Id
+     * @return
+     */
+    int updateLeStatusTime(Long Id);
 }
