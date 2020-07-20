@@ -11,6 +11,16 @@
             ( #{item.tbLotteryId},#{item.userId} )
         </foreach>
     </insert>
+    <!--suppress SqlWithoutWhere -->
+    <delete id="deleteAll">
+        DELETE
+        FROM tb_lottery_user
+    </delete>
+    <delete id="deleteByLotteryId">
+        DELETE
+        FROM tb_lottery_user
+        WHERE tb_lottery_id = #{lotteryId}
+    </delete>
     <select id="selectRemainingSize" resultType="java.lang.Integer">
         SELECT (a.size - COUNT(*)) remaining_size
         FROM tb_lottery a,

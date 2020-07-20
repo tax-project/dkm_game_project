@@ -25,4 +25,15 @@
         WHERE a.id = b.id
     </select>
 
+    <select id="selectAllFull" resultType="com.dkm.campaign.entity.LotteryItemEntity">
+        SELECT a.id         id,
+               a.goods_size goods_size,
+               a.goods_id   goods_id,
+               a.size       size
+        FROM tb_lottery a
+        WHERE (a.size &lt;= (SELECT COUNT(*)
+                             FROM tb_lottery_user c
+                             WHERE c.tb_lottery_id = a.id)) = 1
+    </select>
+
 </mapper>

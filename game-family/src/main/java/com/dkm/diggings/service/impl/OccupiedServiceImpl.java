@@ -58,6 +58,7 @@ public class OccupiedServiceImpl implements IOccupiedService {
             log.info("用户尝试自我占领，占领取消");
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "不允许自己攻击自己哦");
         }
+        clearLast(userId, familyId);
         val successRate = mineRule.calculateSuccessRate(staticService.getSkillLevel(userId), herUserId == 0 ?
                 info.getNpcSkillLevel() : staticService.getSkillLevel(herUserId));
         if (mineRule.occupy(successRate)) {
@@ -68,6 +69,14 @@ public class OccupiedServiceImpl implements IOccupiedService {
         }
         return result;
     }
+
+    private void clearLast(Long userId, Long familyId) {
+        val unfinishedHistory = historyService.getUnfinishedHistory(userId, familyId);
+        if (unfinishedHistory != null) {
+            historyService.destroy(unfinishedHistory.getId(), unfinishedHistory.getMineId());
+        }
+    }
+
 
     @Override
     public OccupyResultVo disOccupy(long mineId, Long userId, Long familyId) {

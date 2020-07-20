@@ -18,5 +18,9 @@ public class LotteryItemEntity {
     private Long money;
     private Integer usedSize = 0;
     private Integer userSize = 0;
+    /**
+     * 是否满了
+     */
+    private Integer full = 0;
 
 }
