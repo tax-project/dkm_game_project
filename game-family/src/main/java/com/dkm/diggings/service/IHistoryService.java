@@ -37,6 +37,8 @@ public interface IHistoryService {
 
     Map<Long, OccupiedVo> selectUserOccupiedList(List<CollectionUtils.Pair<Long, Long>> collect, Long familyId);
 
+    boolean expired(long mineId);
+
     /**
      * 判断金矿是否过期
      *

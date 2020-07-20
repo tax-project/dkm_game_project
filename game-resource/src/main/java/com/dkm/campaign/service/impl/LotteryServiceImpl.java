@@ -1,11 +1,12 @@
 package com.dkm.campaign.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.dkm.backpack.service.IBackpackService;
 import com.dkm.campaign.dao.LotteryItemDao;
 import com.dkm.campaign.dao.LotteryUserDao;
 import com.dkm.campaign.dao.LotteryHistoryDao;
 import com.dkm.campaign.dao.OptionsDao;
 import com.dkm.campaign.entity.LotteryHistoryEntity;
+import com.dkm.campaign.entity.LotteryItemEntity;
 import com.dkm.campaign.entity.LotteryUserEntity;
 import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
@@ -80,13 +81,30 @@ public class LotteryServiceImpl implements ILotteryService {
         return res;
     }
 
+    @Resource
+    private IBackpackService backpackService;
+
     @Override
     public void refresh() {
-        log.info(optionsDao.selectRefreshDateStr());
         val localDateTime = DateUtils.parseDateTime(optionsDao.selectNextUpdateDateStr());
-        if (localDateTime.isBefore(LocalDateTime.now())) {
-            log.info("需要刷新了");
-            optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(localDateTime.plusSeconds(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
+        List<LotteryItemEntity> all = lotteryItemDao.selectAllFull();
+        if (!all.isEmpty()) {
+            List<Long> fullLotteryArr = all.stream().map(LotteryItemEntity::getId).collect(Collectors.toList());
+            lotteryUserDao.selectList(null).stream().filter(it -> fullLotteryArr.contains(it.getTbLotteryId()))
+                    .forEach(t -> {
+                        // 中奖的
+
+                    });
+        }
+        val now = LocalDateTime.now();
+        if (localDateTime.isBefore(now)) {
+            log.info("刷新了开奖时间");
+            optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(now
+                    .plusSeconds(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
+            // 查询所有没满的ID
+            lotteryUserDao.deleteAll();
+
+
         }
     }
 

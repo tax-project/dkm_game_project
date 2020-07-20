@@ -138,6 +138,18 @@ public class HistoryServiceImpl implements IHistoryService {
         mineMapper.updateById(mineEntity);
     }
 
+    @Override
+    public boolean expired(long mineId) {
+        val mineEntity = mineMapper.selectById(mineId);
+        if (mineEntity == null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"未找到家族矿区");
+        }
+        val userId = mineEntity.getUserId();
+        if (userId  == 0){
+            return true;
+        }
+        return expired(mineId,userId,mineEntity.getFamilyId());
+    }
 
     @Override
     public boolean expired(long mineId, Long userId, Long familyId) {
@@ -196,6 +208,7 @@ public class HistoryServiceImpl implements IHistoryService {
         historyEntity.setStartDate(now);
         historyEntity.setStopDate(now.plusHours(1));
         historyEntity.setMineItemLevel(mineEntity.getItemLevel());
+        historyEntity.setMineId(mineId);
         historyEntity.setId(idGenerator.getNumberId());
         historyMapper.insert(historyEntity);
         mineEntity.setFamilyId(familyId);

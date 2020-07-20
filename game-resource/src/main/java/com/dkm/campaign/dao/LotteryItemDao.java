@@ -12,4 +12,5 @@ public interface LotteryItemDao extends BaseMapper<LotteryItemEntity> {
 
     List<LotteryItemEntity> selectAll(@Param("user") long userId);
 
+    List<LotteryItemEntity> selectAllFull();
 }
