@@ -3,6 +3,7 @@ package com.dkm.campaign.controller;
 
 import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
+import com.dkm.campaign.entity.vo.LotteryLastVo;
 import com.dkm.campaign.service.ILotteryService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
@@ -10,6 +11,8 @@ import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.swing.text.rtf.RTFEditorKit;
+import java.util.List;
 
 /**
  * 活动下的神秘商店
@@ -46,6 +49,14 @@ public class LotteryController {
     @GetMapping(value = "/{lotteryId}/buy/{size}", produces = "application/json")
     public LotteryBuyResultVo buy(@PathVariable Long lotteryId, @PathVariable Integer size) {
         return lotteryService.buy(lotteryId, size, getUserId());
+    }
+
+    @ApiOperation("获取上次夺宝中中奖的玩家")
+    @CrossOrigin
+    @CheckToken
+    @GetMapping(value = "/last", produces = "application/json")
+    public List<LotteryLastVo> getLotteryLastVo() {
+        return lotteryService.getLotteryLastVo();
     }
 
 
