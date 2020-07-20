@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.box.dao.UserBoxMapper">
-
+    updateBoxTime
     <insert id="insertList" parameterType="java.util.List">
         INSERT INTO tb_user_box (box_id, user_id,open_time,box_level) VALUES
         <foreach collection="list" item="box" separator=",">

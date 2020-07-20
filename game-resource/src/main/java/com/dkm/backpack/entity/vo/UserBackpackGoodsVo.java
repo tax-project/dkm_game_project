@@ -23,4 +23,6 @@ public class UserBackpackGoodsVo{
     private String name;
     @ApiModelProperty("物品图片")
     private String url;
+    @ApiModelProperty("物品类型  (1-装备)（2 - 道具） （3 - 食物）")
+    private Integer goodType;
 }

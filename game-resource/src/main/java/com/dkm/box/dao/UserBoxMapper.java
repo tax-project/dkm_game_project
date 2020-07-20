@@ -22,4 +22,9 @@ public interface UserBoxMapper extends IBaseMapper<UserBoxEntity> {
 
     Integer insertList(@Param("list") List<UserBoxEntity> list);
 
+    @Select("select user_info_grade from tb_user_info where user_id = #{userId}")
+    Integer getUserGrade(@Param("userId") Long userId);
+
+    Integer updateBoxTime(@Param("list")List<Long> id);
+
 }

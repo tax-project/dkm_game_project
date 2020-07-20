@@ -18,4 +18,12 @@ public interface IUserBoxService {
      * @return
      */
     List<BoxInfoVo> getBoxInfo(Long userId);
+
+    /**
+     * 开启宝箱
+     * @param boxId
+     * @param userId
+     */
+    void openBox(Long userId,Long boxId);
+
 }

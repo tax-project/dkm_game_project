@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @program: game_project
  * @description: 装备属性
@@ -13,12 +15,11 @@ import lombok.Data;
 @Data
 @TableName("tb_user_equipment")
 public class EquipmentEntity {
-    @TableId
-    private Long eqId;
     /**
      * 背包id
      */
-    private Integer backpackId;
+    @TableId
+    private Long backpackId;
     /**
      * 血量
      */
@@ -26,7 +27,7 @@ public class EquipmentEntity {
     /**
      * 血量加成
      */
-    private Integer bloodAdd;
+    private BigDecimal bloodAdd;
     /**
      * 声望
      */
@@ -42,7 +43,7 @@ public class EquipmentEntity {
     /**
      * 才华加成
      */
-    private Integer talentAdd;
+    private BigDecimal talentAdd;
     /**
      * 经验掉落
      */
@@ -50,11 +51,11 @@ public class EquipmentEntity {
     /**
      * 暴击率
      */
-    private Integer crit;
+    private BigDecimal crit;
     /**
      * 装备掉落
      */
-    private Integer eqDrop;
+    private BigDecimal eqDrop;
     /**
      * 需要等级
      */
