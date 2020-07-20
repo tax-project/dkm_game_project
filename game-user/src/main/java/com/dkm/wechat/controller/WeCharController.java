@@ -78,10 +78,6 @@ public class WeCharController {
     }
 
     @ApiOperation(value = "登录", notes = "登录")
-    @ApiImplicitParams({
-          @ApiImplicitParam(name = "userName", value = "账号", required = true, dataType = "String", paramType = "path"),
-          @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "path")
-    })
     @PostMapping("/loginUser")
     @CrossOrigin
     public Map<String, Object> loginUser (@RequestBody UserLoginVo vo) {
