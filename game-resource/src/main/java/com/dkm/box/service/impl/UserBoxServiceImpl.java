@@ -133,7 +133,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
-            Integer integer2 = userBoxMapper.updateBoxTime(now.minusMinutes(-15));
+            Integer integer2 = userBoxMapper.updateBoxTime(userBoxEntities);
             if(!integer.equals(integer1)||!integer2.equals(integer)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }
     }
