@@ -59,13 +59,15 @@ public class EquipmentServiceImpl implements IEquipmentService {
             if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"暂时无法卸下该装备");}
         }else{
             EquipmentEntity equipId = equipmentMapper.getEquipId(userId, equipmentEntity.getEqType());
+            int update = 0;
             if(equipId!=null){
                 equipId.setIsEquip(0);
-                if(equipmentMapper.updateById(equipId)<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新装备失败");}
+                update=equipmentMapper.updateById(equipId);
             }else {
                 equipmentEntity.setIsEquip(1);
-                if(equipmentMapper.updateById(equipmentEntity)<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新装备失败");}
+                update=equipmentMapper.updateById(equipmentEntity);
             }
+            if(update<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新装备失败");}
         }
     }
 }
