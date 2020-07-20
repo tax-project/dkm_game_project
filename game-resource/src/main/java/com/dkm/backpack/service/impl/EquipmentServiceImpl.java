@@ -41,7 +41,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
     public List<UserEquipmentVo> getUserEquipment(Long userId) {
         List<UserEquipmentVo> userEquipment = equipmentMapper.getUserEquipment(userId);
         ArrayList<UserEquipmentVo> userEquipmentVos = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             int finalI = i;
             List<UserEquipmentVo> collect = userEquipment.stream().filter(a -> a.getEqType() == (finalI + 1)).collect(Collectors.toList());
             userEquipmentVos.add((collect==null||collect.size()==0)?null:collect.get(0));
