@@ -2,6 +2,7 @@ package com.dkm.backpack.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.backpack.dao.BackpackMapper;
+import com.dkm.backpack.dao.EquipmentMapper;
 import com.dkm.backpack.dao.GoodsMapper;
 import com.dkm.backpack.entity.BackPackEntity;
 import com.dkm.backpack.entity.GoodsEntity;
@@ -11,7 +12,6 @@ import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
-import com.dkm.equipment.dao.EquipmentMapper;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
