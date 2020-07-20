@@ -3,6 +3,9 @@ package com.dkm.skill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
+import com.dkm.backpack.entity.vo.GoldStarVo;
+import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
@@ -59,6 +62,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    @Autowired
    private IIntegralService iIntegralService;
+
+   @Autowired
+   private IBackpackService iBackpackService;
 
    @Autowired
    private SkillMapper skillMapper;
@@ -134,10 +140,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       /**
        * 查询自己当前拥有金星星的数量
        */
-      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
+      GoldStarVo star = iBackpackService.getStar(user.getId());
 
       //金星星数量
-      map.put("VenusNum",tbEquipmentKnapsackVoThree.getFoodNumber());
+      map.put("VenusNum",star.getNumber());
 
       map.put("skillUserSkillVo",skillUserSkillVo);
       map.put("gold",10000);
@@ -163,6 +169,9 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    @Override
    public Map<String,Object> upGradeSkills(Long id,Integer status) {
+
+      UserLoginQuery user = localUser.getUser();
+
       Map<String,Object> map=new HashMap<>(16);
 
       //根据id查询技能
@@ -172,10 +181,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
       /**
        * 查询自己当前拥有金星星的数量
        */
-      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
+      GoldStarVo star = iBackpackService.getStar(user.getId());
 
       //如果自己当前拥有得金星星数量少于需要消耗的数量 抛异常
-      if(tbEquipmentKnapsackVoThree.getFoodNumber()<userSkill.getSkAllConsume()){
+      if(star.getNumber()<userSkill.getSkAllConsume()){
          throw new ApplicationException(CodeType.SERVICE_ERROR,"金星星数量不足");
       }
 
@@ -217,9 +226,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userFeignClient.updateInfo(bo);
 
 
-
+            AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
+            addGoodsInfo.setUserId(user.getId());
+            addGoodsInfo.setNumber(-userSkill.getSkAllConsume());
+            addGoodsInfo.setGoodId(6L);
             //修改用户金星星数量
-            iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
+            iBackpackService.addBackpackGoods(addGoodsInfo);
 
             /**
              * 积分加8
@@ -252,8 +264,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
 
 
+            AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
+            addGoodsInfo.setUserId(user.getId());
+            addGoodsInfo.setNumber(-userSkill.getSkAllConsume());
+            addGoodsInfo.setGoodId(6L);
             //修改用户金星星数量
-            iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
+            iBackpackService.addBackpackGoods(addGoodsInfo);
 
             /**
              * 积分加8
@@ -284,10 +300,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
    public Integer operation(Long id,Integer status,UserSkill userSkill){
 
+      UserLoginQuery user = localUser.getUser();
+
       /**
        * 查询自己当前拥有金星星的数量
        */
-      TbEquipmentKnapsackVoThree tbEquipmentKnapsackVoThree = iTbEquipmentKnapsackService.selectNumberStar();
+      GoldStarVo star = iBackpackService.getStar(user.getId());
 
       UserInfoSkillBo bo=new UserInfoSkillBo();
       //增加声望
@@ -342,7 +360,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       //升级成功 当前用户拥有的数量 减去 需要消耗的一个数量
       //修改用户金星星数量
-      iTbEquipmentKnapsackService.updateIsva(tbEquipmentKnapsackVoThree.getTekId(),userSkill.getSkAllConsume());
+      AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
+      addGoodsInfo.setUserId(user.getId());
+      addGoodsInfo.setNumber(-userSkill.getSkAllConsume());
+      addGoodsInfo.setGoodId(6L);
+      //修改用户金星星数量
+      iBackpackService.addBackpackGoods(addGoodsInfo);
 
       //熟练度加7
       userSkill.setSkDegreeProficiency(userSkill.getSkDegreeProficiency()+7);
