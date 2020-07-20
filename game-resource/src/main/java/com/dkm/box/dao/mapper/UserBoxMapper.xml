@@ -9,5 +9,10 @@
             (#{box.boxId},#{box.userId},#{box.openTime},#{box.boxLevel})
         </foreach>
     </insert>
+    <update id="updateBoxTime" parameterType="java.util.List">
 
+        <foreach collection="list" item="box" separator=";" >
+            UPDATE tb_user_box SET open_time = #{box.openTime} where box_id = #{box.boxId}
+        </foreach>
+    </update>
 </mapper>
