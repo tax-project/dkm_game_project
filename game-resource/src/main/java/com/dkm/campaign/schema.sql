@@ -161,9 +161,10 @@ CREATE TABLE IF NOT EXISTS `tb_lottery_user`
 
 CREATE TABLE IF NOT EXISTS `tb_lottery_last_history`
 (
-    id         BIGINT(20)  NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'id',
-    user_id    BIGINT(20)  NOT NULL,
-    prize_text BIGINT(255) NOT NULL,
+    id         BIGINT(20)   NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'id',
+    user_id    BIGINT(20)   NOT NULL,
+    `diamonds` INT(11)      NOT NULL COMMENT '花的钻石数',
+    prize_text VARCHAR(255) NOT NULL,
     foreign key (user_id) references tb_user (user_id)
         on update cascade
         on delete cascade

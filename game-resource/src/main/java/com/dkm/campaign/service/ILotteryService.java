@@ -2,6 +2,9 @@ package com.dkm.campaign.service;
 
 import com.dkm.campaign.entity.vo.LotteryBuyResultVo;
 import com.dkm.campaign.entity.vo.LotteryInfoVo;
+import com.dkm.campaign.entity.vo.LotteryLastVo;
+
+import java.util.List;
 
 /**
  * @author fkl
@@ -25,4 +28,7 @@ public interface ILotteryService {
      * @return
      */
     LotteryBuyResultVo buy(Long lotteryId, Integer size, Long userId);
+
+
+    List<LotteryLastVo> getLotteryLastVo();
 }

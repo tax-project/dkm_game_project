@@ -1,4 +1,4 @@
-package com.dkm.openbox.entity.vo;
+package com.dkm.box.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;

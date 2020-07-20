@@ -33,7 +33,7 @@ public class ManyChatInfoServiceImpl extends ServiceImpl<ManyChatInfoMapper, Man
     */
    @Override
    public void insertAllUser(List<ManyChatInfoVo> list) {
-       Integer integer = baseMapper.insertAllUser(list);
+      Integer integer = baseMapper.insertAllUser(list);
       if (integer <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "建立群聊错误");
       }

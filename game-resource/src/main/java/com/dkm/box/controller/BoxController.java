@@ -1,17 +1,14 @@
-package com.dkm.openbox.controller;
+package com.dkm.box.controller;
 
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.openbox.entity.vo.BoxInfoVo;
-import com.dkm.openbox.service.IUserBoxService;
+import com.dkm.box.entity.vo.BoxInfoVo;
+import com.dkm.box.service.IUserBoxService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,5 +36,17 @@ public class BoxController {
     @CheckToken
     List<BoxInfoVo> selectBoxInfo(){
         return  userBoxService.getBoxInfo(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "开启宝箱")
+    @PostMapping(value = "/openBoxes")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "body", name = "boxId", required = true, dataType = "long", value = "开启的宝箱id 传0全部开启")
+    })
+    @CrossOrigin
+    @CheckToken
+    public void openBoxes(@RequestBody Long  boxId){
+        userBoxService.openBox(localUser.getUser().getId(),boxId);
     }
 }

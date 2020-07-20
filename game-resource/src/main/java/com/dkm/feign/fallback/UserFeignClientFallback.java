@@ -6,6 +6,7 @@ import com.dkm.entity.bo.*;
 import com.dkm.entity.vo.*;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.ReputationRankingBO;
+import com.dkm.feign.entity.UserNameVo;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,11 @@ public class UserFeignClientFallback implements UserFeignClient {
 
    @Override
    public Result cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result<List<UserNameVo>> queryUserName(List<Long> userIds) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 

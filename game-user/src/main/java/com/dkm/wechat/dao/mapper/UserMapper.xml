@@ -20,12 +20,18 @@
     </select>
 
 
-
     <select id="queryAllHeardByUserId" resultType="com.dkm.entity.bo.UserHeardUrlBo" parameterType="Long">
         select we_chat_head_img_url as 'headUrl',user_id as 'userId',we_chat_nick_name as 'nickName'
         from tb_user where
         <foreach collection="list" item="item" index="index" separator="or">
             user_id = #{item}
+        </foreach>
+    </select>
+
+    <select id="queryUserPartAll" resultType="com.dkm.wechat.entity.bo.UserPartBO" parameterType="Long">
+        select user_id, we_chat_nick_name from tb_user
+        <foreach collection="userIdList" item="userId" index="index" open="where user_id in ( " separator="," close=")">
+            #{userId}
         </foreach>
     </select>
 

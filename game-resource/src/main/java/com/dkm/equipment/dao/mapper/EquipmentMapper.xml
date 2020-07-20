@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.equipment.dao.EquipmentMapper">
+
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO `tb_user_equipment`(`backpack_id`, `blood`, `blood_add`, `renown`, `grade`, `talent`, `talent_add`, `exp`, `crit`, `eq_drop`, `need_grade`, `eq_type`, `is_equip`) VALUES
+        <foreach collection="list" item="eq" separator=",">
+            (#{eq.backpackId}, #{eq.blood}, #{eq.bloodAdd}, #{eq.renown}, #{eq.grade}, #{eq.talent}, #{eq.talentAdd}, #{eq.exp}, #{eq.crit}, #{eq.eqDrop}, #{eq.needGrade}, #{eq.eqType}, #{eq.isEquip})
+        </foreach>
+    </insert>
+
+</mapper>

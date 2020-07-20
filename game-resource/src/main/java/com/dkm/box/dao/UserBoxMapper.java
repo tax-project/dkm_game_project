@@ -1,8 +1,8 @@
-package com.dkm.openbox.dao;
+package com.dkm.box.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
-import com.dkm.openbox.entity.UserBoxEntity;
-import com.dkm.openbox.entity.vo.BoxInfoVo;
+import com.dkm.box.entity.UserBoxEntity;
+import com.dkm.box.entity.vo.BoxInfoVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -21,5 +21,10 @@ public interface UserBoxMapper extends IBaseMapper<UserBoxEntity> {
     List<BoxInfoVo> selectBoxById(@Param("userId") Long userId);
 
     Integer insertList(@Param("list") List<UserBoxEntity> list);
+
+    @Select("select user_info_grade from tb_user_info where user_id = #{userId}")
+    Integer getUserGrade(@Param("userId") Long userId);
+
+    Integer updateBoxTime(@Param("list")List<Long> id);
 
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.campaign.dao.LotteryUserDao">
+
+
+    <insert id="insertAll">
+        INSERT INTO tb_lottery_user (tb_lottery_id, user_id) VALUES
+        <foreach collection="array" index="index" item="item" separator=",">
+            ( #{item.tbLotteryId},#{item.userId} )
+        </foreach>
+    </insert>
+    <select id="selectRemainingSize" resultType="java.lang.Integer">
+        SELECT (a.size - COUNT(*)) remaining_size
+        FROM tb_lottery a,
+             tb_lottery_user b
+        WHERE a.id = b.tb_lottery_id
+          AND a.id = #{lotteryId}
+    </select>
+
+</mapper>
