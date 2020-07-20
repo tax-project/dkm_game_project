@@ -1,6 +1,8 @@
 package com.dkm.personalcenter.controller;
 
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
+import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
 import com.dkm.entity.bo.SkillBo;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,9 @@ public class PersonalCenterController {
     private IProduceService iProduceService;
     @Autowired
     private IAttendantService iAttendantService;
+
+    @Resource
+    private IEquipmentService equipmentService;
 
     @Autowired
     private ITbEquipmentKnapsackService tbEquipmentKnapsackService;
@@ -85,7 +91,7 @@ public class PersonalCenterController {
          * 根据当前用户查询装备
          * @return
          */
-        List<TbEquipmentKnapsackVoCenter> tbEquipmentKnapsackVos = tbEquipmentKnapsackService.selectUserIdThree(userId);
+        List<UserEquipmentVo> userEquipment = equipmentService.getUserEquipment(userId);
         System.out.println("根据当前用户查询装备");
 
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
@@ -102,7 +108,7 @@ public class PersonalCenterController {
         map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillVos);
         map.put("AttendantGoods",map1);
-        map.put("equipment",tbEquipmentKnapsackVos);
+        map.put("equipment",userEquipment);
         map.put("blackHouse",houseVo);
         map.put("queryAidUser",stringObjectMap);
         System.out.println("返回结果"+map.size());
