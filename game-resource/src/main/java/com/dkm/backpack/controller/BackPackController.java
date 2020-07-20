@@ -109,4 +109,19 @@ public class BackPackController {
         }
         return equipmentService.getUserEquipment(localUser.getUser().getId());
     }
+
+    @ApiOperation(value = "装备当前装备（已装备则卸下该装备）")
+    @GetMapping("/removeOrEquipment")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
+            @ApiImplicitParam(paramType = "path", name = "backpackId", required = true, dataType = "long", value = "背包id")
+    })
+    @CrossOrigin
+    @CheckToken
+    public void removeOrEquipment(@RequestParam("backpackId") Long backpackId){
+        if(backpackId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        equipmentService.removeOrEquipment(localUser.getUser().getId(),backpackId);
+    }
 }

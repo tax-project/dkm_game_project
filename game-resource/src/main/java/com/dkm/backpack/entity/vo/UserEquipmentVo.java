@@ -1,5 +1,6 @@
 package com.dkm.backpack.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,4 +24,7 @@ public class UserEquipmentVo {
     private Long backpackId;
     @ApiModelProperty("物品id")
     private Long goodId;
+
+    @JsonIgnore
+    private Integer eqType;
 }
