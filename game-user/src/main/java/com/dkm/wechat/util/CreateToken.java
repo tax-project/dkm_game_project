@@ -18,9 +18,6 @@ public class CreateToken {
    @Autowired
    private JwtUtils jwtUtil;
 
-//   @Autowired
-//   private RedisConfig redisConfig;
-
    public String getToken (UserBO bo) {
       UserLoginQuery query = new UserLoginQuery();
       query.setId(bo.getUserId());
@@ -30,7 +27,6 @@ public class CreateToken {
       String jwt = jwtUtil.createJWT(1000 * 60 * 60 * 24L, query);
 
       //更新redis
-//      redisConfig.setString("token::"+bo.getUserId(),jwt);
 
       return jwt;
    }
