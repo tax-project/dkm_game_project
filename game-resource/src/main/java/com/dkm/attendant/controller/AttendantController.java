@@ -71,7 +71,7 @@ public class AttendantController {
     @GetMapping("/selectUserIdAndFood")
     @CrossOrigin
     @CheckToken
-    public  List<TbEquipmentKnapsackVo> selectUserIdAndFood(){
+    public List<TbEquipmentKnapsackVo> selectUserIdAndFood(){
         return iAttendantService.selectUserIdAndFood();
     }
 

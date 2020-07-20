@@ -25,7 +25,7 @@
     </select>
 
     <update id="updateLeStatusTime" parameterType="java.lang.Long">
-        update tb_land_seed le_status=2 where id=#{Id}
+        update tb_land_seed set le_status=2 where id=#{Id}
     </update>
 
 

@@ -4,6 +4,10 @@ package com.dkm.attendant.service.Impl;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
+import com.dkm.backpack.service.IBackpackService;
+import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.entity.vo.UserAttAllVo;
 import com.dkm.entity.vo.UserInfoAttVo;
 import com.dkm.plunder.entity.Opponent;
@@ -62,6 +66,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Autowired
     private IdGenerator idGenerator;
+
+
+    @Autowired
+    private IBackpackService iBackpackService;
+
+    @Autowired
+    private IEquipmentService iEquipmentService;
 
     @Autowired
     private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
@@ -307,10 +318,13 @@ public class AttendantServiceImpl implements IAttendantService {
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
 
-        //得到他方装备信息
         List<TbEquipmentKnapsackVo> tbEquipmentKnapsackVos1 = iTbEquipmentKnapsackService.selectUserIdTwo(caughtPeopleId);
+
+
+        //得到他方装备信息
+        List<UserEquipmentVo> userEquipment = iEquipmentService.getUserEquipment(caughtPeopleId);
         //如果没有装备
-        if(tbEquipmentKnapsackVos1.size()==0){
+        if(userEquipment.size()==0){
             //血量
             heEquipBonus=500;
             //他方装备防御力
@@ -318,10 +332,11 @@ public class AttendantServiceImpl implements IAttendantService {
             //得到他方的战力
             heRipetime1=100;
         }else {
-            for (int i = 0; i < tbEquipmentKnapsackVos1.size(); i++) {
+            for (int i = 0; i < userEquipment.size(); i++) {
                 /**
                  * 属性加成 1就代表有加成 0代表没有加成
                  */
+               // userEquipment.get(i).get
                 if (tbEquipmentKnapsackVos1.get(i).getEdAttribute().intValue() == 1) {
                     // 1 为生命加成 2为才华加成
                     if (tbEquipmentKnapsackVos1.get(i).getEdType().intValue() == 1) {
@@ -869,16 +884,14 @@ public class AttendantServiceImpl implements IAttendantService {
                 //修改用户金币
                 userFeignClient.increaseUserInfo(increaseUserInfoBO);
             } else {
+
                 //穿戴物品
-                TbEquipmentKnapsack tbEquipmentKnapsack=new TbEquipmentKnapsack();
-                tbEquipmentKnapsack.setFoodId(bo.getGoodId());
-                tbEquipmentKnapsack.setFoodNumber(bo.getGoodNumber());
-                tbEquipmentKnapsack.setTekIsva(1);
-                tbEquipmentKnapsack.setTekDaoju(bo.getGoodType());
-                tbEquipmentKnapsack.setTekMoney(50);
-                tbEquipmentKnapsack.setTekSell(2);
+                AddGoodsInfo addGoodsInfo=new AddGoodsInfo();
+                addGoodsInfo.setGoodId(bo.getGoodId());
+                addGoodsInfo.setNumber(bo.getGoodNumber());
+                addGoodsInfo.setUserId(user.getId());
                 //添加食物到背包
-                iTbEquipmentKnapsackService.addTbEquipmentKnapsack(tbEquipmentKnapsack);
+                iBackpackService.addBackpackGoods(addGoodsInfo);
             }
 
             idList.add(bo.getProduceId());
