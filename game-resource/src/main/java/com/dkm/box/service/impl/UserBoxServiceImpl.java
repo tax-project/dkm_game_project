@@ -103,6 +103,11 @@ public class UserBoxServiceImpl implements IUserBoxService {
             Integer userGrade = userBoxMapper.getUserGrade(userId);
             for (int i = 0; i < userBoxEntities.size(); i++) {
                 Integer boxLevel = userBoxEntities.get(i).getBoxLevel();
+                if(userBoxEntities.get(i).getBoxLevel()==1){
+                    userBoxEntities.get(i).setOpenTime(now.minusMinutes(-20));
+                }else{
+                    userBoxEntities.get(i).setOpenTime(now.minusMinutes(-50));
+                }
                 GoodsEntity goodsEntity = goodsEntities.get(random.nextInt(goodsEntities.size()));
                 BackPackEntity backPackEntity = new BackPackEntity();
                 backPackEntity.setBackpackId(idGenerator.getNumberId());
@@ -128,8 +133,13 @@ public class UserBoxServiceImpl implements IUserBoxService {
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
+<<<<<<< HEAD
             //userBoxMapper.
             if(!integer.equals(integer1)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+=======
+            Integer integer2 = userBoxMapper.updateBoxTime(now.minusMinutes(-15));
+            if(!integer.equals(integer1)||!integer2.equals(integer)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+>>>>>>> 5bea402d65110c30ea1a5ce3758cd1f5ccf84b81
         }
     }
 }

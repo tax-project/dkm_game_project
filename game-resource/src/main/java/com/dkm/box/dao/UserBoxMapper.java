@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public interface UserBoxMapper extends IBaseMapper<UserBoxEntity> {
     @Select("select user_info_grade from tb_user_info where user_id = #{userId}")
     Integer getUserGrade(@Param("userId") Long userId);
 
-    Integer updateBoxTime(@Param("list")List<Long> id);
+//    Integer updateBoxTime(@Param("list")List<UserBoxEntity> list);
+    Integer updateBoxTime(@Param("date")LocalDateTime now);
 
 }
