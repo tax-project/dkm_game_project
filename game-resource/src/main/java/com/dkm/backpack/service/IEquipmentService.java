@@ -1,5 +1,7 @@
 package com.dkm.backpack.service;
 
+import com.dkm.backpack.entity.vo.EquipmentVo;
+
 /**
  * @description:
  * @author: zhd
@@ -7,4 +9,10 @@ package com.dkm.backpack.service;
  **/
 public interface IEquipmentService {
 
+    /**
+     * 获取装备信息
+     * @param backpackId
+     * @return
+     */
+    EquipmentVo getEquipmentInfo(Long backpackId);
 }
