@@ -82,7 +82,6 @@ public class LotteryServiceImpl implements ILotteryService {
     }
 
 
-
     @Override
     public void refresh() {
         log.info(optionsDao.selectRefreshDateStr());
