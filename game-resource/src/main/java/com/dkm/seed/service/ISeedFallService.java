@@ -30,12 +30,7 @@ public interface ISeedFallService {
     List<SeedsFallVo> queryDroppedItems();
 
 
-    /**
-     * 批量修改种子状态为2 待收取状态
-     * @param list
-     * @return
-     */
-    int updateLeStatus(List<Long> list);
+
 
 
 }

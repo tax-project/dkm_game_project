@@ -1,5 +1,6 @@
 package com.dkm.backpack.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class BackPackEntity {
     /**
      * 背包id
      */
+    @TableId
     private Long backpackId;
     /**
      * 物品id

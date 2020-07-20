@@ -170,7 +170,11 @@ public class DiggingsServiceImpl implements IDiggingsService {
             item.setIndex(j);
             item.setLevel(itemEntity.getItemLevel());
             if (itemEntity.getUserId() != 0) {
-                map.put(itemEntity.getUserId(), item);
+                if (historyService.expired(itemEntity.getId())) {
+                    publicItem.add(item);
+                } else {
+                    map.put(itemEntity.getUserId(), item);
+                }
             } else {
                 publicItem.add(item);
             }
@@ -186,7 +190,9 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     mineVo.setOccupied(true);
                 }
             });
-            publicItem.addAll(map.values());
+            map.forEach((k, v) -> {
+                publicItem.add(v);
+            });
         }
         publicItem.sort((j, k) -> (int)
                 (j.getId() - k.getId()));

@@ -21,4 +21,5 @@ public class DiggingsHistoryEntity {
     private long integral;
     private int mineItemLevel;
     private boolean settled;
+    private Long mineId;
 }

@@ -138,6 +138,18 @@ public class HistoryServiceImpl implements IHistoryService {
         mineMapper.updateById(mineEntity);
     }
 
+    @Override
+    public boolean expired(long mineId) {
+        val mineEntity = mineMapper.selectById(mineId);
+        if (mineEntity == null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"未找到家族矿区");
+        }
+        val userId = mineEntity.getUserId();
+        if (userId  == 0){
+            return true;
+        }
+        return expired(mineId,userId,mineEntity.getFamilyId());
+    }
 
     @Override
     public boolean expired(long mineId, Long userId, Long familyId) {
@@ -159,6 +171,9 @@ public class HistoryServiceImpl implements IHistoryService {
         for (DiggingsHistoryEntity entity : diggingsHistoryEntities) {
             final OccupiedVo value = new OccupiedVo();
             final val data = userFeignClient.queryUser(entity.getUserId()).getData();
+            if (data == null) {
+                throw new ApplicationException(CodeType.DATABASE_ERROR,"网络链接超时 （无法获取用户名）");
+            }
             value.setUserName(data.getWeChatNickName());
             final val familyEntity = familyDao.selectOne(new QueryWrapper<FamilyEntity>().lambda().eq(FamilyEntity::getFamilyId, entity.getFamilyId()));
             if (familyEntity == null) {
@@ -193,6 +208,7 @@ public class HistoryServiceImpl implements IHistoryService {
         historyEntity.setStartDate(now);
         historyEntity.setStopDate(now.plusHours(1));
         historyEntity.setMineItemLevel(mineEntity.getItemLevel());
+        historyEntity.setMineId(mineId);
         historyEntity.setId(idGenerator.getNumberId());
         historyMapper.insert(historyEntity);
         mineEntity.setFamilyId(familyId);

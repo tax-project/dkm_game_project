@@ -10,9 +10,19 @@
         </foreach>
     </insert>
     <update id="updateBoxTime" parameterType="java.util.List">
-
-        <foreach collection="list" item="box" separator=";" >
-            UPDATE tb_user_box SET open_time = #{box.openTime} where box_id = #{box.boxId}
+        UPDATE tb_user_box
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="open_time =case" suffix="end," >
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.openTime!=null">
+                        when box_id=#{i.boxId} then #{i.openTime}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            box_id=#{i.boxId}
         </foreach>
     </update>
 </mapper>

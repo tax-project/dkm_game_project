@@ -2,12 +2,14 @@ package com.dkm.backpack.controller;
 
 import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.bo.SellGoodsInfo;
-import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
+import com.dkm.backpack.entity.vo.*;
 import com.dkm.backpack.service.IBackpackService;
+import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.knapsack.service.ITbEquipmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,10 +34,13 @@ public class BackPackController {
     private IBackpackService backpackService;
 
     @Resource
+    private IEquipmentService equipmentService;
+
+    @Resource
     private LocalUser localUser;
 
-    @ApiOperation(value = "获取宝箱列表")
-    @GetMapping("/selectBoxInfo")
+    @ApiOperation(value = "获取背包物品")
+    @GetMapping("/getUserBackpackGoods")
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @CrossOrigin
     @CheckToken
@@ -74,5 +79,69 @@ public class BackPackController {
         }
         sellGoodsInfo.setUserId(localUser.getUser().getId());
         backpackService.sellBackpackGoods(sellGoodsInfo);
+    }
+
+    @ApiOperation(value = "获取装备详情接口")
+    @GetMapping("/equipmentInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
+            @ApiImplicitParam(paramType = "path", name = "backpackId", required = true, dataType = "long", value = "背包id")
+    })
+    @CrossOrigin
+    @CheckToken
+    public EquipmentVo equipmentInfo(@RequestParam("backpackId") Long backpackId){
+        if(backpackId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        return equipmentService.getEquipmentInfo(backpackId);
+    }
+
+    @ApiOperation(value = "获取用户当前所有已装备数据")
+    @GetMapping("/getUserEquipment")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public List<UserEquipmentVo> getUserEquipment(){
+        return equipmentService.getUserEquipment(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "装备当前装备（已装备则卸下该装备）")
+    @GetMapping("/removeOrEquipment")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
+            @ApiImplicitParam(paramType = "path", name = "backpackId", required = true, dataType = "long", value = "背包id")
+    })
+    @CrossOrigin
+    @CheckToken
+    public void removeOrEquipment(@RequestParam("backpackId") Long backpackId){
+        if(backpackId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+        equipmentService.removeOrEquipment(localUser.getUser().getId(),backpackId);
+    }
+
+    @ApiOperation(value = "获取金星星数量")
+    @GetMapping("/getStars")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public GoldStarVo getStars(){
+        return backpackService.getStar(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "获取用户食物信息")
+    @GetMapping("/getFoods")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public List<FoodInfoVo> getFoods(){
+        return  backpackService.getFood(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "(fegin调用食物信息)")
+    @GetMapping("/getFoodsFegin")
+    @CrossOrigin
+    public List<FoodInfoVo> getFoodsFegin(@RequestParam("userId") Long userId){
+        return  backpackService.getFood(userId);
     }
 }

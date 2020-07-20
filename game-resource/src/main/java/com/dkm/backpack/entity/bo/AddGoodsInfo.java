@@ -1,6 +1,8 @@
 package com.dkm.backpack.entity.bo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @program: game_project
@@ -8,6 +10,8 @@ import lombok.Data;
  * @author: zhd
  * @create: 2020-07-18 09:21
  **/
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class AddGoodsInfo {
     /**

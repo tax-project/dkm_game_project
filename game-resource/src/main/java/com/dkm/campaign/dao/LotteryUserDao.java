@@ -11,4 +11,8 @@ public interface LotteryUserDao extends BaseMapper<LotteryUserEntity> {
     Integer insertAll(LotteryUserEntity[] array);
 
     Integer selectRemainingSize(@Param("lotteryId") Long lotteryId);
+
+    Integer deleteAll();
+
+    Integer deleteByLotteryId(@Param("lotteryId") Long lotteryId);
 }
