@@ -2,9 +2,7 @@ package com.dkm.backpack.controller;
 
 import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.bo.SellGoodsInfo;
-import com.dkm.backpack.entity.vo.EquipmentVo;
-import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
-import com.dkm.backpack.entity.vo.UserEquipmentVo;
+import com.dkm.backpack.entity.vo.*;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.constanct.CodeType;
@@ -123,5 +121,30 @@ public class BackPackController {
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
         equipmentService.removeOrEquipment(localUser.getUser().getId(),backpackId);
+    }
+
+    @ApiOperation(value = "获取金星星数量")
+    @GetMapping("/getStars")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public GoldStarVo getStars(){
+        return backpackService.getStar(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "获取用户食物信息")
+    @GetMapping("/getFoods")
+    @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
+    @CrossOrigin
+    @CheckToken
+    public List<FoodInfoVo> getFoods(){
+        return  backpackService.getFood(localUser.getUser().getId());
+    }
+
+    @ApiOperation(value = "(fegin调用食物信息)")
+    @GetMapping("/getFoodsFegin")
+    @CrossOrigin
+    public List<FoodInfoVo> getFoodsFegin(@RequestParam("userId") Long userId){
+        return  backpackService.getFood(userId);
     }
 }

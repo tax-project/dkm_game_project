@@ -8,6 +8,8 @@ import com.dkm.backpack.entity.BackPackEntity;
 import com.dkm.backpack.entity.GoodsEntity;
 import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.bo.SellGoodsInfo;
+import com.dkm.backpack.entity.vo.FoodInfoVo;
+import com.dkm.backpack.entity.vo.GoldStarVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
@@ -109,5 +111,15 @@ public class BackpackServiceImpl implements IBackpackService {
         userInfoBO.setUserId(sellGoodsInfo.getUserId());
         userInfoBO.setUserInfoGold(goodsEntity.getGoodType()==1?50:sellGoodsInfo.getNumber()*50);
         userFeignClient.increaseUserInfo(userInfoBO);
+    }
+
+    @Override
+    public GoldStarVo getStar(Long userId) {
+        return backpackMapper.getStars(userId);
+    }
+
+    @Override
+    public List<FoodInfoVo> getFood(Long userId) {
+        return backpackMapper.getFoods(userId);
     }
 }
