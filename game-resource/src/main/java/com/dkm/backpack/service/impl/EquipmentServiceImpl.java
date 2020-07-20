@@ -70,4 +70,9 @@ public class EquipmentServiceImpl implements IEquipmentService {
             if(update<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新装备失败");}
         }
     }
+
+    @Override
+    public List<EquipmentEntity> getUserAllEquipment(Long userId) {
+        return null;
+    }
 }

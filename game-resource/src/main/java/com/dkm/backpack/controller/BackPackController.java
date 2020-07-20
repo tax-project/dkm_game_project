@@ -101,10 +101,7 @@ public class BackPackController {
     @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token")
     @CrossOrigin
     @CheckToken
-    public List<UserEquipmentVo> getUserEquipment(@RequestParam("backpackId") Long backpackId){
-        if(backpackId==null){
-            throw new ApplicationException(CodeType.PARAMETER_ERROR);
-        }
+    public List<UserEquipmentVo> getUserEquipment(){
         return equipmentService.getUserEquipment(localUser.getUser().getId());
     }
 
