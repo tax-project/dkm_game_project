@@ -1,5 +1,7 @@
 package com.dkm.box.controller;
 
+import com.dkm.constanct.CodeType;
+import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.box.entity.vo.BoxInfoVo;
@@ -39,14 +41,15 @@ public class BoxController {
     }
 
     @ApiOperation(value = "开启宝箱")
-    @PostMapping(value = "/openBoxes")
+    @GetMapping(value = "/openBoxes")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
-            @ApiImplicitParam(paramType = "body", name = "boxId", required = true, dataType = "long", value = "开启的宝箱id 传0全部开启")
+            @ApiImplicitParam(paramType = "path", name = "boxId", required = true, dataType = "long", value = "开启的宝箱id 传0全部开启")
     })
     @CrossOrigin
     @CheckToken
-    public void openBoxes(@RequestBody Long  boxId){
+    public void openBoxes(@RequestParam("boxId") Long  boxId){
+        if(boxId==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"参数异常"); }
         userBoxService.openBox(localUser.getUser().getId(),boxId);
     }
 }

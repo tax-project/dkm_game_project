@@ -1,4 +1,4 @@
-package com.dkm.equipment.service;
+package com.dkm.backpack.service;
 
 /**
  * @description:

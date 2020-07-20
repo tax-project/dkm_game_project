@@ -75,4 +75,19 @@ public class BackPackController {
         sellGoodsInfo.setUserId(localUser.getUser().getId());
         backpackService.sellBackpackGoods(sellGoodsInfo);
     }
+
+    @ApiOperation(value = "装备详情接口")
+    @GetMapping("/equipmentInfo")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
+            @ApiImplicitParam(paramType = "path", name = "backpackId", required = true, dataType = "long", value = "背包id")
+    })
+    @CrossOrigin
+    @CheckToken
+    public void equipmentInfo(@RequestParam("backpackId") Long backpackId){
+        if(backpackId==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR);
+        }
+
+    }
 }

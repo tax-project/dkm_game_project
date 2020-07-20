@@ -1,7 +1,7 @@
-package com.dkm.equipment.dao;
+package com.dkm.backpack.dao;
 
 import com.dkm.IBaseMapper.IBaseMapper;
-import com.dkm.equipment.entity.EquipmentEntity;
+import com.dkm.backpack.entity.EquipmentEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
