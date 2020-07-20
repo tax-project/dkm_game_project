@@ -29,4 +29,6 @@ public interface IBackpackService {
      * @param sellGoodsInfo
      */
     void sellBackpackGoods(SellGoodsInfo sellGoodsInfo);
+
+
 }

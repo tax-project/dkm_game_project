@@ -36,12 +36,6 @@ public interface SeedsFallMapper extends BaseMapper<SeedsFall> {
      */
     List<SeedsFallVo> queryDroppedItems(Long userId);
 
-    /**
-     * 批量修改种子状态为2 待收取状态
-     * @param list
-     * @return
-     */
-    int updateLeStatus(List<Long> list);
 
     /**
      * 查询种子首次产出得金钱和用户id

@@ -58,9 +58,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private RandomUtils randomUtils;
 
     @Autowired
-    private SeedsFallMapper seedsFallMapper;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
 
@@ -187,15 +184,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     }
 
 
-    /**
-     * 修改种子状态为2 待收取
-     * @param list
-     * @return
-     */
-    @Override
-    public int updateLeStatus(List<Long> list) {
-        return baseMapper.updateLeStatus(list);
-    }
 
 
 }

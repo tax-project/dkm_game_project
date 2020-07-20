@@ -24,13 +24,18 @@ public class SeedScheduledTask {
    @Autowired
    private ISeedFallService iSeedFallService;
 
-
+   /**
+    * 单独红包掉落  2S一次
+    */
    //@Scheduled(cron = "0/2 * * * * ?")
    public void toDeleteApply () {
       iSeedFallService.redBagDroppedSeparately();
    }
 
-//   @Scheduled(cron = "0/5 * * * * ?")
+   /**
+    * 平常掉落   1分钟一次
+    */
+   //@Scheduled(cron = "0 0/1 * * * ?")
    public void seedDrop(){
       iSeedFallService.seedDrop();
    }

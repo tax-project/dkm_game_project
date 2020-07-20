@@ -1,11 +1,8 @@
-package com.dkm.equipment.service.impl;
+package com.dkm.backpack.service.impl;
 
-import com.dkm.backpack.dao.BackpackMapper;
-import com.dkm.equipment.service.IEquipmentService;
+import com.dkm.backpack.service.IEquipmentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
 
 /**
  * @program: game_project

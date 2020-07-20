@@ -2,13 +2,13 @@ package com.dkm.box.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.backpack.dao.BackpackMapper;
+import com.dkm.backpack.dao.EquipmentMapper;
 import com.dkm.backpack.dao.GoodsMapper;
 import com.dkm.backpack.entity.BackPackEntity;
+import com.dkm.backpack.entity.EquipmentEntity;
 import com.dkm.backpack.entity.GoodsEntity;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
-import com.dkm.equipment.dao.EquipmentMapper;
-import com.dkm.equipment.entity.EquipmentEntity;
 import com.dkm.exception.ApplicationException;
 import com.dkm.box.dao.UserBoxMapper;
 import com.dkm.box.entity.UserBoxEntity;
@@ -88,6 +88,9 @@ public class UserBoxServiceImpl implements IUserBoxService {
         LocalDateTime now = LocalDateTime.now();
         int backpackNumber =30 - backpackMapper.getBackpackNumber(userId);
         if (backpackNumber<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"背包空间不足");}
+        Random random = new Random();
+        List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 1));
+        Integer userGrade = userBoxMapper.getUserGrade(userId);
         if(boxId==0){
             List<UserBoxEntity> userBoxEntities = userBoxMapper.selectList(new LambdaQueryWrapper<UserBoxEntity>()
                     .eq(UserBoxEntity::getUserId, userId).le(UserBoxEntity::getOpenTime,now));
@@ -95,15 +98,11 @@ public class UserBoxServiceImpl implements IUserBoxService {
             if(userBoxEntities.size()>backpackNumber){
                 userBoxEntities = userBoxEntities.subList(0,backpackNumber);
             }
-            List<Long> ids = userBoxEntities.stream().mapToLong(UserBoxEntity::getBoxId).boxed().collect(Collectors.toList());
-            List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 1));
             List<BackPackEntity> backPackEntities = new ArrayList<>();
             List<EquipmentEntity> equipmentEntities = new ArrayList<>();
-            Random random = new Random();
-            Integer userGrade = userBoxMapper.getUserGrade(userId);
             for (int i = 0; i < userBoxEntities.size(); i++) {
                 Integer boxLevel = userBoxEntities.get(i).getBoxLevel();
-                if(userBoxEntities.get(i).getBoxLevel()==1){
+                if(boxLevel==1){
                     userBoxEntities.get(i).setOpenTime(now.minusMinutes(-20));
                 }else{
                     userBoxEntities.get(i).setOpenTime(now.minusMinutes(-50));
@@ -115,26 +114,45 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 backPackEntity.setNumber(1);
                 backPackEntity.setUserId(userId);
                 backPackEntities.add(backPackEntity);
-                EquipmentEntity equipmentEntity = new EquipmentEntity();
-                equipmentEntity.setBackpackId(backPackEntity.getBackpackId());
-                equipmentEntity.setBlood(userGrade * userGrade + userGrade * 50 + random.nextInt(userGrade * 50) - random.nextInt(userGrade * 50));
-                equipmentEntity.setBloodAdd(new BigDecimal(userGrade / 100.00));
-                equipmentEntity.setCrit(new BigDecimal(userGrade / 100.00));
-                equipmentEntity.setNeedGrade(userGrade + random.nextInt(5) - random.nextInt(5));
-                equipmentEntity.setEqDrop(new BigDecimal(userGrade / 100.00));
-                equipmentEntity.setRenown(userGrade * userGrade + userGrade * 100 + random.nextInt(userGrade * 100) - random.nextInt(userGrade * 100));
-                equipmentEntity.setIsEquip(0);
-                equipmentEntity.setTalent(userGrade * userGrade);
-                equipmentEntity.setTalentAdd(new BigDecimal(userGrade / 100.00));
-                equipmentEntity.setEqType(Integer.valueOf(goodsEntity.getGoodContent()));
-                equipmentEntity.setExp(random.nextInt(8) + 1);
-                equipmentEntity.setGrade((boxLevel + 1) + random.nextInt(boxLevel) - random.nextInt(boxLevel));
-                equipmentEntities.add(equipmentEntity);
+                equipmentEntities.add(setEquipmentEntity(goodsEntity,backPackEntity,userGrade,boxLevel,random));
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
-            Integer integer2 = userBoxMapper.updateBoxTime(now.minusMinutes(-15));
+            Integer integer2 = userBoxMapper.updateBoxTime(userBoxEntities);
             if(!integer.equals(integer1)||!integer2.equals(integer)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+        }else {
+            UserBoxEntity userBoxEntity = userBoxMapper.selectOne(new LambdaQueryWrapper<UserBoxEntity>()
+                    .eq(UserBoxEntity::getUserId,userId).eq(UserBoxEntity::getBoxId, boxId).le(UserBoxEntity::getOpenTime,now));
+            if(userBoxEntity==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"现在还不能开启该宝箱");}
+            userBoxEntity.setOpenTime(userBoxEntity.getBoxLevel()==1?now.minusMinutes(-20):now.minusMinutes(-50));
+            GoodsEntity goodsEntity = goodsEntities.get(random.nextInt(goodsEntities.size()));
+            BackPackEntity backPackEntity = new BackPackEntity();
+            backPackEntity.setBackpackId(idGenerator.getNumberId());
+            backPackEntity.setGoodId(goodsEntity.getId());
+            backPackEntity.setNumber(1);
+            backPackEntity.setUserId(userId);
+            int insert = backpackMapper.insert(backPackEntity);
+            int insert1 = equipmentMapper.insert(setEquipmentEntity(goodsEntity, backPackEntity, userGrade, userBoxEntity.getBoxLevel(), random));
+            int i = userBoxMapper.updateById(userBoxEntity);
+            if( insert!=insert1||insert1!=i){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }
+    }
+
+    EquipmentEntity setEquipmentEntity( GoodsEntity goodsEntity,BackPackEntity backPackEntity,Integer userGrade,Integer boxLevel,Random random ){
+        EquipmentEntity equipmentEntity = new EquipmentEntity();
+        equipmentEntity.setBackpackId(backPackEntity.getBackpackId());
+        equipmentEntity.setBlood(userGrade * userGrade + userGrade * 50 + random.nextInt(userGrade * 50) - random.nextInt(userGrade * 50));
+        equipmentEntity.setBloodAdd(new BigDecimal(userGrade / 100.00));
+        equipmentEntity.setCrit(new BigDecimal(userGrade / 100.00));
+        equipmentEntity.setNeedGrade(Math.min(userGrade + random.nextInt(5) - random.nextInt(5),1));
+        equipmentEntity.setEqDrop(new BigDecimal(userGrade / 100.00));
+        equipmentEntity.setRenown(userGrade * userGrade + userGrade * 100 + random.nextInt(userGrade * 100) - random.nextInt(userGrade * 100));
+        equipmentEntity.setIsEquip(0);
+        equipmentEntity.setTalent(userGrade * userGrade);
+        equipmentEntity.setTalentAdd(new BigDecimal(userGrade / 100.00));
+        equipmentEntity.setEqType(Integer.valueOf(goodsEntity.getGoodContent()));
+        equipmentEntity.setExp(random.nextInt(8) + 1);
+        equipmentEntity.setGrade((boxLevel + 1) + random.nextInt(boxLevel) - random.nextInt(boxLevel));
+        return equipmentEntity;
     }
 }
