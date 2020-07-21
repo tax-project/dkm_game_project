@@ -18,7 +18,7 @@ import java.util.Map;
  * @author: zhd
  * @create: 2020-05-16 15:25
  **/
-@FeignClient(value = "resource",fallback = ResourceFeignClientFallback.class)
+@FeignClient(value = "resource")
 public interface ResourceFeignClient {
 
     /**
