@@ -314,12 +314,9 @@ public class AttendantServiceImpl implements IAttendantService {
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
         //随机获取他方宠物
-        if (petInfo1.getCode() != 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "fegin有误");
-        }
-
-        if (petInfo1.getData() == null || petInfo1.getData().size() == 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "数据异常");
+        if(petInfo1.getCode()!=0){
+            log.info("query pet error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
@@ -370,6 +367,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
+        if(petInfo.getCode()!=0){
+            log.info("query pet error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
         //随机获取我方宠物
         PetsDto myPetsDto = petInfo.getData().get(new Random().nextInt(petInfo.getData().size()));
         myPet=myPetsDto.getPetName();
