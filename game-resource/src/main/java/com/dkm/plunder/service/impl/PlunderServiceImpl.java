@@ -63,6 +63,11 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
    @Autowired
    private RabbitTemplate rabbitTemplate;
 
+   /**
+    *  物品金币
+    */
+   private final String GOOD_NAME = "金币";
+
    @Override
    public void insertPlunder(PlunderVo vo) {
 
@@ -199,6 +204,23 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
    @Override
    public List<GoodQueryVo> getGoodByUserId(Long userId) {
-      return goodsService.getGoodList(userId);
+
+      List<GoodQueryVo> goodList = goodsService.getGoodList(userId);
+
+      for (GoodQueryVo vo : goodList) {
+         if (GOOD_NAME.equals(vo.getGoodName())) {
+
+            //随机生成100-200的金币
+            int number = (int) (Math.random() * (200 - 100 + 1)) + 100;
+            vo.setNumber(number);
+
+         } else {
+            //随机生成1-3的随机数
+            int number = (int) (Math.random() * (3 - 1 + 1)) + 1;
+            vo.setNumber(number);
+         }
+      }
+
+      return goodList;
    }
 }
