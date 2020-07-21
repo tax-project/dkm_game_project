@@ -5,7 +5,7 @@ import com.dkm.data.Result;
 import com.dkm.diggings.bean.vo.RenownVo;
 import com.dkm.diggings.bean.vo.UserInfoBO;
 import com.dkm.diggings.bean.vo.UserInfosVo;
-import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.FamilyUserFeignClient;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @vesion 1.0
  **/
 @Component
-public class UserFeignClientFallback implements UserFeignClient {
+public class FamilyUserFeignClientFallback implements FamilyUserFeignClient {
     @Override
     public Result<RenownVo> queryUserSection(long userId) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
