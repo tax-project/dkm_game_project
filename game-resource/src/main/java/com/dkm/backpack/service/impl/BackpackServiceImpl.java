@@ -51,7 +51,12 @@ public class BackpackServiceImpl implements IBackpackService {
 
     @Override
     public List<UserBackpackGoodsVo> getUserBackpackGoods(Long userId) {
-        return backpackMapper.getBackpackGoods(userId);
+        List<UserBackpackGoodsVo> backpackGoods = backpackMapper.getBackpackGoods(userId);
+        int number = backpackGoods==null?30:(30-backpackGoods.size());
+        for (int i = 0; i < number; i++) {
+            backpackGoods.add(null);
+        }
+        return backpackGoods;
     }
 
     @Override
