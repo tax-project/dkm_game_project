@@ -24,6 +24,10 @@ public interface EquipmentMapper extends IBaseMapper<EquipmentEntity> {
              "LEFT JOIN tb_goods g on g.id=ub.good_id LEFT JOIN tb_user_equipment ue on ue.backpack_id=#{backpackId}")
      EquipmentVo getEquipmentInfo(@Param("backpackId")Long backpackId);
 
+     @Select("SELECT ue.*,g.name,g.url FROM (SELECT good_id,backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) ub " +
+             "LEFT JOIN tb_user_equipment ue on ue.backpack_id=ub.backpack_id LEFT JOIN tb_goods g on g.id=ub.good_id  WHERE ue.is_equip = 1 and ue.eq_type = #{type}")
+     EquipmentVo getEquipingInfo(@Param("usrId")Long userId,@Param("type") Integer type);
+
      @Select("SELECT ub.*,g.name,g.url,ue.grade,ue.eq_type FROM (SELECT good_id,backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) ub " +
              "LEFT JOIN tb_user_equipment ue ON ue.backpack_id=ub.backpack_id LEFT JOIN tb_goods g on ub.good_id=g.id WHERE ue.is_equip = 1 ")
      List<UserEquipmentVo> getUserEquipment(@Param("userId")Long userId);

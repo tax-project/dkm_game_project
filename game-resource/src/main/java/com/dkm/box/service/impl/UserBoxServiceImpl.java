@@ -7,6 +7,8 @@ import com.dkm.backpack.dao.GoodsMapper;
 import com.dkm.backpack.entity.BackPackEntity;
 import com.dkm.backpack.entity.EquipmentEntity;
 import com.dkm.backpack.entity.GoodsEntity;
+import com.dkm.backpack.entity.vo.OpenEquipmentVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
@@ -84,13 +86,14 @@ public class UserBoxServiceImpl implements IUserBoxService {
     }
 
     @Override
-    public void openBox(Long userId,Long boxId) {
+    public List<OpenEquipmentVo> openBox(Long userId, Long boxId) {
         LocalDateTime now = LocalDateTime.now();
         int backpackNumber =30 - backpackMapper.getBackpackNumber(userId);
         if (backpackNumber<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"背包空间不足");}
         Random random = new Random();
         List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 1));
         Integer userGrade = userBoxMapper.getUserGrade(userId);
+        List<OpenEquipmentVo> result = new ArrayList<>();
         if(boxId==0){
             List<UserBoxEntity> userBoxEntities = userBoxMapper.selectList(new LambdaQueryWrapper<UserBoxEntity>()
                     .eq(UserBoxEntity::getUserId, userId).le(UserBoxEntity::getOpenTime,now));
@@ -115,6 +118,10 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 backPackEntity.setUserId(userId);
                 backPackEntities.add(backPackEntity);
                 equipmentEntities.add(setEquipmentEntity(goodsEntity,backPackEntity,userGrade,boxLevel,random));
+                OpenEquipmentVo openEquipmentVo = new OpenEquipmentVo();
+                openEquipmentVo.setBackpackId(backPackEntity.getBackpackId());
+                openEquipmentVo.setUrl(goodsEntity.getUrl());
+                result.add(openEquipmentVo);
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
@@ -131,11 +138,16 @@ public class UserBoxServiceImpl implements IUserBoxService {
             backPackEntity.setGoodId(goodsEntity.getId());
             backPackEntity.setNumber(1);
             backPackEntity.setUserId(userId);
+            OpenEquipmentVo openEquipmentVo = new OpenEquipmentVo();
+            openEquipmentVo.setBackpackId(backPackEntity.getBackpackId());
+            openEquipmentVo.setUrl(goodsEntity.getUrl());
+            result.add(openEquipmentVo);
             int insert = backpackMapper.insert(backPackEntity);
             int insert1 = equipmentMapper.insert(setEquipmentEntity(goodsEntity, backPackEntity, userGrade, userBoxEntity.getBoxLevel(), random));
             int i = userBoxMapper.updateById(userBoxEntity);
             if( insert!=insert1||insert1!=i){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }
+        return result;
     }
 
     EquipmentEntity setEquipmentEntity( GoodsEntity goodsEntity,BackPackEntity backPackEntity,Integer userGrade,Integer boxLevel,Random random ){
