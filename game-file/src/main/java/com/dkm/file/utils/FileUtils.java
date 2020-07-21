@@ -81,6 +81,7 @@ public class FileUtils {
 
    public Path name2Path(String fileName) {
       String fileStorePath = "E:\\img/game-img";
+//      String fileStorePath = "/root/img/game-img";
       return Paths.get(fileStorePath, fileName.substring(0, 8), fileName);
    }
 

@@ -4,6 +4,7 @@ import com.dkm.data.Result;
 import com.dkm.feign.entity.UserSkillVo;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @DATE: 2020/6/1 14:43
  */
 @FeignClient(value = "resource", fallback = ResourceFeignClientFallback.class)
+@Component
 public interface ResourceFeignClient {
 
     /**

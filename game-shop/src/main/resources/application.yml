@@ -1,11 +1,11 @@
 server:
-  port: 8004
+  port: 8005
   max-http-header-size: 102400
 mybatis-plus:
   mapper-locations: classpath:com/dkm/*/dao/mapper/*.xml
 spring:
   profiles:
-    active: local
+    active: dev
   application:
     name: shop
   jmx:

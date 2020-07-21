@@ -1,1 +1,27 @@
 
+spring:
+  rabbitmq:
+    host: 124.232.163.75
+    username: guest
+    password: guest
+    port: 5672
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+  redis:
+    host: 124.232.163.75
+    timeout: 2000
+    jedis:
+      pool:
+        min-idle: 1
+        max-active: 20
+        max-wait: 1000
+
+
+app:
+  workerId: 1
+  dataCenterId: 2
+

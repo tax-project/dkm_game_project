@@ -49,7 +49,7 @@ zuul:
     socket-timeout-millis: 20000
 
 service:
-  ip: 124.232.163.75
+  ip: 192.168.10.133
 
 ribbon:
   ReadTimeout: 10000
