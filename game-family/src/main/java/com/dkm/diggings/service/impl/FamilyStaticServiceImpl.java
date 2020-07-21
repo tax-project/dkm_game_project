@@ -6,7 +6,7 @@ import com.dkm.diggings.bean.entity.MineLevelEntity;
 import com.dkm.diggings.bean.vo.MineInfoVo;
 import com.dkm.diggings.dao.FamilyAdditionMapper;
 import com.dkm.diggings.dao.MineLevelMapper;
-import com.dkm.diggings.service.IStaticService;
+import com.dkm.diggings.service.IFamilyStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.FamilyUserFeignClient;
@@ -23,18 +23,16 @@ import java.util.List;
 /**
  * @author OpenE
  */
-@Service("DStaticImpl")
-public class StaticServiceImpl implements IStaticService {
+@Service
+public class FamilyStaticServiceImpl implements IFamilyStaticService {
 
     @Resource
     private FamilyAdditionMapper familyAdditionMapper;
 
-    @Qualifier("resourceFeignClient")
-    @Autowired
+    @Resource
     private ResourceFeignClient resourceFeignClient;
 
-    @Qualifier("userFeignClient")
-    @Autowired
+    @Resource
     private FamilyUserFeignClient familyUserFeignClient;
     @Resource
     private MineLevelMapper mineLevelMapper;

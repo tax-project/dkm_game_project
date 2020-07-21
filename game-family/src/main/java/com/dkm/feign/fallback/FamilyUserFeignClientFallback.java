@@ -20,7 +20,6 @@ public class FamilyUserFeignClientFallback implements FamilyUserFeignClient {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
-
     @Override
     public Result<String> update(UserInfoBO userInfoBO) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);

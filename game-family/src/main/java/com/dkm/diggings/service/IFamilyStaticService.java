@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 静态的接口
  */
-public interface IStaticService {
+public interface IFamilyStaticService {
     /**
      * 得到矿山的等级映射关系
      *
