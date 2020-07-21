@@ -12,6 +12,7 @@ import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.UserFeignClient;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,9 +29,11 @@ public class StaticServiceImpl implements IStaticService {
     @Resource
     private FamilyAdditionMapper familyAdditionMapper;
 
+    @Qualifier("resourceFeignClient")
     @Autowired
     private ResourceFeignClient resourceFeignClient;
 
+    @Qualifier("userFeignClient")
     @Autowired
     private UserFeignClient userFeignClient;
     @Resource
