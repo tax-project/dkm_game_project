@@ -24,18 +24,6 @@ public class FeedPetInfoVo{
      */
     public Long pId;
     /**
-     * 蜂蜜背包id
-     */
-    public Long beeTekId;
-    /**
-     * 鱼背包id
-     */
-    public Long fishTekId;
-    /**
-     * 奶瓶背包id
-     */
-    public Long milkTekId;
-    /**
      * userId
      */
     public Long userId;

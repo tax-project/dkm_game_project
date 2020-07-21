@@ -2,13 +2,9 @@ package com.dkm.feign.fallback;
 
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
-import com.dkm.entity.bo.SkillBo;
 import com.dkm.feign.ResourceFeignClient;
 import com.dkm.feign.entity.*;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
-import com.dkm.personalCenter.domain.Seed;
-import com.dkm.personalCenter.domain.vo.TbBlackHouseVo;
-import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,16 +17,6 @@ import java.util.Map;
  **/
 @Component
 public class ResourceFeignClientFallback implements ResourceFeignClient {
-   @Override
-   public Result updateIsva(Long tekId, Integer foodNumber) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
-
-   @Override
-   public Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(Long userId) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
-
 
    @Override
    public Result<List<TbEquipmentVo>> selectByBoxIdTwo(String boxId) {
@@ -43,7 +29,17 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    }
 
    @Override
+   public Result<List<FoodInfoVo>> getFoodsFegin(Long userId) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
    public Result plant(SeedPlantVo seedPlantVo) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result addBackpackGoods(AddGoodsInfo addGoodsInfo) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 
@@ -61,11 +57,5 @@ public class ResourceFeignClientFallback implements ResourceFeignClient {
    public Result<Map<String, Object>> queryUserIdMaster(Long userId) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
-
-   @Override
-   public Result addTbEquipmentKnapsackThree(TbEquipmentVoTwo tbEquipmentKnapsack) {
-      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
-   }
-
 
 }
