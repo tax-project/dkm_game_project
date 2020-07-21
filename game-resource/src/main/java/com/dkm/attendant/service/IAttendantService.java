@@ -5,6 +5,7 @@ import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.bo.AttInfoWithPutBo;
 import com.dkm.attendant.entity.bo.CollectResultBo;
 import com.dkm.attendant.entity.vo.*;
+import com.dkm.backpack.entity.vo.FoodInfoVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.land.entity.vo.Message;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,7 @@ public interface IAttendantService {
      * 根据用户id查询食物信息
      * @return
      */
-     List<TbEquipmentKnapsackVo> selectUserIdAndFood();
+    List<FoodInfoVo> selectUserIdAndFood();
 
    /**
     *  随机查询用户表9条数

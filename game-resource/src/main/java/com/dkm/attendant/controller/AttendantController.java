@@ -7,6 +7,7 @@ import com.dkm.attendant.entity.vo.AttendantVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
+import com.dkm.backpack.entity.vo.FoodInfoVo;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
@@ -71,7 +72,7 @@ public class AttendantController {
     @GetMapping("/selectUserIdAndFood")
     @CrossOrigin
     @CheckToken
-    public List<TbEquipmentKnapsackVo> selectUserIdAndFood(){
+    public List<FoodInfoVo> selectUserIdAndFood(){
         return iAttendantService.selectUserIdAndFood();
     }
 
