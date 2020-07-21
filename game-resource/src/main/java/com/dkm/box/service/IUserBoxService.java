@@ -1,5 +1,7 @@
 package com.dkm.box.service;
 
+import com.dkm.backpack.entity.vo.OpenEquipmentVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.box.entity.vo.BoxInfoVo;
 
 import java.util.List;
@@ -24,6 +26,6 @@ public interface IUserBoxService {
      * @param boxId
      * @param userId
      */
-    void openBox(Long userId,Long boxId);
+    List<OpenEquipmentVo> openBox(Long userId, Long boxId);
 
 }

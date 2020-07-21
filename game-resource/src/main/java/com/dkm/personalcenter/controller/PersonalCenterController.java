@@ -84,7 +84,7 @@ public class PersonalCenterController {
         /**
          * 主人信息
          */
-        Map<String, Object> stringObjectMap = iAttendantService.queryAidUser();
+        Map<String, Object> stringObjectMap = iAttendantService.queryUserIdMaster(userId);
         System.out.println("主人信息");
 
         /**
