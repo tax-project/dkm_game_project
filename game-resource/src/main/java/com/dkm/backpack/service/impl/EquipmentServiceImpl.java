@@ -31,9 +31,6 @@ public class EquipmentServiceImpl implements IEquipmentService {
     @Resource
     private EquipmentMapper equipmentMapper;
 
-    @Resource
-    private BackpackMapper backpackMapper;
-
     @Override
     public Map<String,EquipmentVo> getEquipmentInfo(Long userId,Long backpackId) {
         EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
