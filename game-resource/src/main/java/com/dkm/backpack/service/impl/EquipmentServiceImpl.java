@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +35,16 @@ public class EquipmentServiceImpl implements IEquipmentService {
     private BackpackMapper backpackMapper;
 
     @Override
-    public EquipmentVo getEquipmentInfo(Long backpackId) {
-        return equipmentMapper.getEquipmentInfo(backpackId);
+    public Map<String,EquipmentVo> getEquipmentInfo(Long userId,Long backpackId) {
+        EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
+        Map<String,EquipmentVo> result = new HashMap<>();
+        if(equipmentEntity==null||equipmentEntity.getIsEquip()==1){
+            result.put("nowEquip",equipmentMapper.getEquipmentInfo(backpackId));
+        }else {
+            result.put("selectEquip",equipmentMapper.getEquipmentInfo(backpackId));
+            result.put("nowEquip",equipmentMapper.getEquipingInfo(userId,equipmentEntity.getEqType()));
+        }
+        return  result;
     }
 
     @Override

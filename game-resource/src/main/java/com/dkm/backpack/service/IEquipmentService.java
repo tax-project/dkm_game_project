@@ -5,6 +5,7 @@ import com.dkm.backpack.entity.vo.EquipmentVo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -18,7 +19,7 @@ public interface IEquipmentService {
      * @param backpackId
      * @return
      */
-    EquipmentVo getEquipmentInfo(Long backpackId);
+    Map<String,EquipmentVo> getEquipmentInfo(Long userId,Long backpackId);
 
     /**
      * 获取用户当前装备中的数据

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: game_project
@@ -89,11 +90,11 @@ public class BackPackController {
     })
     @CrossOrigin
     @CheckToken
-    public EquipmentVo equipmentInfo(@RequestParam("backpackId") Long backpackId){
+    public Map<String,EquipmentVo> equipmentInfo(@RequestParam("backpackId") Long backpackId){
         if(backpackId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
-        return equipmentService.getEquipmentInfo(backpackId);
+        return equipmentService.getEquipmentInfo(localUser.getUser().getId(),backpackId);
     }
 
     @ApiOperation(value = "获取用户当前所有已装备数据")
