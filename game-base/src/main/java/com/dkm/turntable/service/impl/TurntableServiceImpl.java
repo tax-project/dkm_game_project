@@ -5,7 +5,6 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
-import com.dkm.feign.entity.TbEquipmentVoTwo;
 import com.dkm.turntable.dao.GoodsDao;
 import com.dkm.turntable.dao.TurntableCouponDao;
 import com.dkm.turntable.entity.GoodsEntity;
