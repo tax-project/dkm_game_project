@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FamilyUserFeignClientFallback implements FamilyUserFeignClient {
     @Override
-    public Result<RenownVo> queryUserSection(long userId) {
+    public Result<RenownVo> queryUserSection(Long userId) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 
@@ -27,7 +27,7 @@ public class FamilyUserFeignClientFallback implements FamilyUserFeignClient {
     }
 
     @Override
-    public Result<UserInfosVo> queryUser(long id) {
+    public Result<UserInfosVo> queryUser(Long id) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
 }

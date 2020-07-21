@@ -19,9 +19,9 @@ public interface FamilyUserFeignClient {
     Result<String> update(UserInfoBO userInfoBO);
 
     @GetMapping("/v1/userInfo/query/user/section")
-    Result<RenownVo> queryUserSection(@RequestParam(value = "userId") long userId);
+    Result<RenownVo> queryUserSection(@RequestParam(value = "userId") Long userId);
 
     @GetMapping("/v1/we/chat/queryUser/{id}")
-    Result<UserInfosVo> queryUser(@PathVariable long id);
+    Result<UserInfosVo> queryUser(@PathVariable Long id);
 
 }
