@@ -9,7 +9,7 @@ import com.dkm.diggings.dao.MineLevelMapper;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
-import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.FamilyUserFeignClient;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author OpenE
  */
-@Service
+@Service("DStaticImpl")
 public class StaticServiceImpl implements IStaticService {
 
     @Resource
@@ -35,7 +35,7 @@ public class StaticServiceImpl implements IStaticService {
 
     @Qualifier("userFeignClient")
     @Autowired
-    private UserFeignClient userFeignClient;
+    private FamilyUserFeignClient familyUserFeignClient;
     @Resource
     private MineLevelMapper mineLevelMapper;
 
@@ -81,7 +81,7 @@ public class StaticServiceImpl implements IStaticService {
             throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "获取技能等级出错。");
         }
         if (week > 6) {
-            val renownVoResult = userFeignClient.queryUserSection(userId);
+            val renownVoResult = familyUserFeignClient.queryUserSection(userId);
             return renownVoResult.getData().getUserInfoRenown().intValue();
         } else {
             return listResult.get(week - 1).getSkGrade();

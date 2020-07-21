@@ -15,7 +15,7 @@ import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.FamilyUserFeignClient;
 import com.dkm.utils.CollectionUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * @author dragon
  */
-@Service
+@Service("DDiggingsServiceImpl")
 @Transactional(rollbackFor = Exception.class)
 public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
@@ -56,9 +56,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
     private IOccupiedService occupiedService;
 
-    @Qualifier("userFeignClient")
     @Autowired
-    private UserFeignClient userFeignClient;
+    private FamilyUserFeignClient familyUserFeignClient;
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -103,7 +102,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         } else {
             herSkillLevel = staticService.getSkillLevel(herUserId);
             result.setHerSkillLevel(herSkillLevel);
-            final val data = userFeignClient.queryUser(herUserId).getData();
+            final val data = familyUserFeignClient.queryUser(herUserId).getData();
             result.setHerName(data.getWeChatNickName());
         }
         String name;
