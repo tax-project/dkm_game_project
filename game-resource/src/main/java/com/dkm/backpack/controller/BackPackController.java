@@ -69,7 +69,7 @@ public class BackPackController {
     @PostMapping("/sellBackpackGoods")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
-            @ApiImplicitParam(paramType = "query", name = "goodId", required = true, dataType = "long", value = "物品id"),
+            @ApiImplicitParam(paramType = "query", name = "backpackId", required = true, dataType = "long", value = "物品id"),
             @ApiImplicitParam(paramType = "query", name = "number", required = true, dataType = "int", value = "出售数量")
     })
     @CrossOrigin
