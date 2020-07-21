@@ -314,12 +314,9 @@ public class AttendantServiceImpl implements IAttendantService {
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
 
         //随机获取他方宠物
-        if (petInfo1.getCode() != 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "fegin有误");
-        }
-
-        if (petInfo1.getData() == null || petInfo1.getData().size() == 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "数据异常");
+        if(petInfo1.getCode()!=0){
+            log.info("query pet error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
@@ -355,8 +352,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double v = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
 
+            double v2 = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * userAllEquipment.getTalentAdd().doubleValue()- userInfoQueryBoResult.getData().getUserInfoRenown() * v);
+                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v);
             log.info(" 得到他方最终的战斗力"+heRipetime1);
 
             /**
@@ -370,6 +369,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
+        if(petInfo.getCode()!=0){
+            log.info("query pet error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
         //随机获取我方宠物
         PetsDto myPetsDto = petInfo.getData().get(new Random().nextInt(petInfo.getData().size()));
         myPet=myPetsDto.getPetName();
