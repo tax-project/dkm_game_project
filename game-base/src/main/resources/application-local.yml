@@ -18,6 +18,8 @@ spring:
     password: guest
     port: 5672
     virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
 
 eureka:
   instance:

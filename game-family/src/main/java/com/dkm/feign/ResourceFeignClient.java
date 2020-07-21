@@ -11,13 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-/**
- * @Author MQ
- * @PROJECT_NAME: game_project
- * @DESCRIPTION:
- * @DATE: 2020/6/1 14:43
- */
-@Qualifier("resourceFeignClient")
+
 @FeignClient(value = "resource", fallback = ResourceFeignClientFallback.class)
 @Component
 public interface ResourceFeignClient {

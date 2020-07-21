@@ -14,9 +14,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class EventMqListener {
    private RabbitTemplate rabbitTemplate;
 
    @RabbitHandler
-   public void rabbitHandle (String msg) {
+   public void rabbitHandle (String msg, com.rabbitmq.client.Channel mqChannel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) {
 
       log.info("收到消息-->" + msg);
 
@@ -52,6 +54,12 @@ public class EventMqListener {
          msgInfo = JSONObject.parseObject(msg, MsgInfo.class);
       } catch (Exception e) {
          log.info("rabbitMq接收业务平台的消息转换有误...");
+         e.printStackTrace();
+      }
+
+      try {
+         mqChannel.basicAck(deliveryTag,true);
+      } catch (IOException e) {
          e.printStackTrace();
       }
 
