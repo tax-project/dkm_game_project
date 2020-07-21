@@ -5,11 +5,7 @@ spring:
     password: dkm123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
-<<<<<<< HEAD
-    host: 124.232.163.75
-=======
     host: localhost
->>>>>>> 03f5895658cde03afba7a72c16b02772b2078b9e
     username: guest
     password: guest
     port: 5672
@@ -20,11 +16,7 @@ spring:
       simple:
         acknowledge-mode: manual
   redis:
-<<<<<<< HEAD
-    host: 124.232.163.75
-=======
     host: localhost
->>>>>>> 03f5895658cde03afba7a72c16b02772b2078b9e
     timeout: 2000
     jedis:
       pool:
@@ -37,11 +29,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-<<<<<<< HEAD
-      defaultZone: http://124.232.163.75:10000/eureka
-=======
       defaultZone: http://localhost:10000/eureka
->>>>>>> 03f5895658cde03afba7a72c16b02772b2078b9e
 
 feign:
   hystrix:
@@ -53,9 +41,3 @@ hystrix:
   metrics:
     enabled: true
     polling-interval-ms: 4000
-<<<<<<< HEAD
-=======
-family:
-  url: http://localhost:8002
->>>>>>> 03f5895658cde03afba7a72c16b02772b2078b9e
-
