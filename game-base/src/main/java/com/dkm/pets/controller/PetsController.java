@@ -56,8 +56,7 @@ public class PetsController  {
     @CrossOrigin
     @CheckToken
     public void feedPets(@RequestBody FeedPetInfoVo petInfoVo){
-        if(petInfoVo==null||petInfoVo.getPGrade()==null||petInfoVo.getPGrade()<=0||petInfoVo.getPId()==null
-                ||petInfoVo.getBeeTekId()==null||(petInfoVo.getPGrade()>=10&&petInfoVo.getFishTekId()==null)){
+        if(petInfoVo==null||petInfoVo.getPGrade()==null||petInfoVo.getPGrade()<=0||petInfoVo.getPId()==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数有误");
         }
         petInfoVo.setUserId(localUser.getUser().getId());
@@ -75,7 +74,7 @@ public class PetsController  {
     @CheckToken
     public void upLevel(@RequestBody FeedPetInfoVo petInfoVo){
         if(petInfoVo==null||petInfoVo.getPGrade()==null||petInfoVo.getPGrade()<=0
-                ||petInfoVo.getPId()==null||petInfoVo.getMilkTekId()==null){
+                ||petInfoVo.getPId()==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数有误");
         }
         petInfoVo.setUserId(localUser.getUser().getId());

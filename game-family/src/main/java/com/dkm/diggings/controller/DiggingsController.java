@@ -7,7 +7,6 @@ import com.dkm.diggings.bean.other.User2FamilyId;
 import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IOccupiedService;
-import com.dkm.diggings.service.IRankService;
 import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
@@ -46,9 +45,6 @@ public class DiggingsController {
 
     @Resource
     private IOccupiedService occupiedService;
-
-    @Resource
-    private IRankService rankService;
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
