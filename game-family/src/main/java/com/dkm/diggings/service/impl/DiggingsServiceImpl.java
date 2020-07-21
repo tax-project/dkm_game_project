@@ -22,6 +22,7 @@ import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+
+    @Qualifier("userFeignClient")
     @Autowired
     private UserFeignClient userFeignClient;
 
@@ -190,9 +192,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     mineVo.setOccupied(true);
                 }
             });
-            map.forEach((k, v) -> {
-                publicItem.add(v);
-            });
+            map.forEach((k, v) -> publicItem.add(v));
         }
         publicItem.sort((j, k) -> (int)
                 (j.getId() - k.getId()));

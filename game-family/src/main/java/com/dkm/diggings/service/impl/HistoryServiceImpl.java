@@ -21,6 +21,7 @@ import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,7 +51,7 @@ public class HistoryServiceImpl implements IHistoryService {
     private IdGenerator idGenerator;
     @Resource
     private MineRule rule;
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Qualifier("userFeignClient")
     @Autowired
     private UserFeignClient userFeignClient;
     @Resource
