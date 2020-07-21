@@ -352,8 +352,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double v = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
 
+            double v2 = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * userAllEquipment.getTalentAdd().doubleValue()- userInfoQueryBoResult.getData().getUserInfoRenown() * v);
+                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v);
             log.info(" 得到他方最终的战斗力"+heRipetime1);
 
             /**
