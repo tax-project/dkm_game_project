@@ -188,9 +188,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //跟班
         List<AttendantImgVo> attendantImg = new ArrayList<>();
 
-        //查询所有跟班
-//        List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
-
         //查询出所有用户跟班图片
         List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
 
