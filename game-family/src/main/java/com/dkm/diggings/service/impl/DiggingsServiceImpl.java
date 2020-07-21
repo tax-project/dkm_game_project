@@ -15,13 +15,14 @@ import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.FamilyUserFeignClient;
 import com.dkm.utils.CollectionUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * @author dragon
  */
-@Service
+@Service("DDiggingsServiceImpl")
 @Transactional(rollbackFor = Exception.class)
 public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
@@ -54,9 +55,9 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+
     @Autowired
-    private UserFeignClient userFeignClient;
+    private FamilyUserFeignClient familyUserFeignClient;
 
     @Override
     public DiggingsVo getAllInfo(Long userId, Long familyId) {
@@ -101,7 +102,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         } else {
             herSkillLevel = staticService.getSkillLevel(herUserId);
             result.setHerSkillLevel(herSkillLevel);
-            final val data = userFeignClient.queryUser(herUserId).getData();
+            final val data = familyUserFeignClient.queryUser(herUserId).getData();
             result.setHerName(data.getWeChatNickName());
         }
         String name;
@@ -170,7 +171,11 @@ public class DiggingsServiceImpl implements IDiggingsService {
             item.setIndex(j);
             item.setLevel(itemEntity.getItemLevel());
             if (itemEntity.getUserId() != 0) {
-                map.put(itemEntity.getUserId(), item);
+                if (historyService.expired(itemEntity.getId())) {
+                    publicItem.add(item);
+                } else {
+                    map.put(itemEntity.getUserId(), item);
+                }
             } else {
                 publicItem.add(item);
             }
@@ -186,7 +191,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
                     mineVo.setOccupied(true);
                 }
             });
-            publicItem.addAll(map.values());
+            map.forEach((k, v) -> publicItem.add(v));
         }
         publicItem.sort((j, k) -> (int)
                 (j.getId() - k.getId()));

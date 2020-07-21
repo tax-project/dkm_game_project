@@ -1,12 +1,11 @@
 package com.dkm.feign;
 
 import com.dkm.data.Result;
-import com.dkm.feign.entity.SeedPlantUnlock;
-import com.dkm.feign.entity.SeedPlantVo;
-import com.dkm.feign.entity.TbEquipmentVoTwo;
+import com.dkm.feign.entity.*;
 import com.dkm.feign.fallback.ResourceFeignClientFallback;
 import com.dkm.housekeeper.entity.vo.TbEquipmentVo;
-import com.dkm.pets.entity.vo.TbEquipmentKnapsackVo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,22 +20,6 @@ import java.util.Map;
  **/
 @FeignClient(value = "resource",fallback = ResourceFeignClientFallback.class)
 public interface ResourceFeignClient {
-    /**
-     * 更新背包
-     * @param tekId
-     * @param foodNumber
-     * @return
-     */
-    @GetMapping("/dkm/tbEquipmentKnapsack/updateIsva")
-    Result updateIsva(@RequestParam("tekId") Long tekId, @RequestParam("foodNumber") Integer foodNumber);
-
-    /**
-     * 获取背包食物
-     * @param userId
-     * @return
-     */
-    @GetMapping("/dkm/tbEquipmentKnapsack/selectUserIdAndFoodId")
-    Result<List<TbEquipmentKnapsackVo>> selectUserIdAndFoodId(@RequestParam("userId") Long userId);
 
     /**
      * 管家收装备
@@ -54,6 +37,8 @@ public interface ResourceFeignClient {
     @GetMapping("/center/PersonalCenterAll")
     Result<Map<String,Object>>  personalCenterAll(@RequestParam("userId") Long userId);
 
+    @GetMapping("/backpack/getFoodsFegin")
+    Result<List<FoodInfoVo>> getFoodsFegin(@RequestParam("userId") Long userId);
     /**
      * 收取、种植种子
      * @param seedPlantVo
@@ -61,6 +46,9 @@ public interface ResourceFeignClient {
      */
     @PostMapping("/Seed/plants")
     Result plant(@RequestBody SeedPlantVo seedPlantVo);
+
+    @PostMapping("/backpack/addBackpackGoods")
+    Result addBackpackGoods(@RequestBody AddGoodsInfo addGoodsInfo);
 
     /**
      * 查询用户种子
@@ -84,11 +72,4 @@ public interface ResourceFeignClient {
      */
     @GetMapping("/Attendant/queryUserIdMaster")
     Result<Map<String,Object>> queryUserIdMaster(@RequestParam(value = "userId") Long userId);
-
-    /**
-     * 更新背包物品
-     * @param tbEquipmentKnapsack
-     */
-    @PostMapping("/dkm/tbEquipmentKnapsack/addTbEquipmentKnapsackThree")
-    Result addTbEquipmentKnapsackThree(@RequestBody TbEquipmentVoTwo tbEquipmentKnapsack);
 }

@@ -1,4 +1,4 @@
-package com.dkm.backpack.entity.bo;
+package com.dkm.feign.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

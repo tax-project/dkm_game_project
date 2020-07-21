@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `tb_diggings_history`
     family_id       BIGINT(20) NOT NULL COMMENT '家族 ID',
     start_date      DATETIME   NOT NULL DEFAULT '2000-01-01 00:00:00' COMMENT '开始时间',
     stop_date       DATETIME   NOT NULL DEFAULT '2000-01-01 01:00:00' COMMENT '结束时间',
+    mine_id         BIGINT(20) NOT NULL COMMENT '历史矿区ID',
     integral        INT(10)    NOT NULL DEFAULT '300' COMMENT '贡献的积分',
     mine_item_level INT        NOT NULL COMMENT '占领的矿区等级',
     settled         BOOLEAN    NOT NULL DEFAULT FALSE COMMENT '是否已经结算经验和积分'

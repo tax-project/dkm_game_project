@@ -14,13 +14,14 @@ import com.dkm.diggings.service.IStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
-import com.dkm.feign.UserFeignClient;
+import com.dkm.feign.FamilyUserFeignClient;
 import com.dkm.utils.CollectionUtils.Pair;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,9 +51,9 @@ public class HistoryServiceImpl implements IHistoryService {
     private IdGenerator idGenerator;
     @Resource
     private MineRule rule;
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Qualifier("userFeignClient")
     @Autowired
-    private UserFeignClient userFeignClient;
+    private FamilyUserFeignClient familyUserFeignClient;
     @Resource
     private FamilyDao familyDao;
 
@@ -132,12 +133,24 @@ public class HistoryServiceImpl implements IHistoryService {
         userInfoBO.setUserInfoGold(rule.chooseGoldOrIntegralYield(dateSize, goldYield));
         val integralYield = levelType.getIntegralYield();
         userInfoBO.setUserInfoNowExperience(rule.chooseGoldOrIntegralYield(dateSize, integralYield));
-        userFeignClient.update(userInfoBO);
+        familyUserFeignClient.update(userInfoBO);
         mineEntity.setUserId(0);
         mineEntity.setFamilyId(0);
         mineMapper.updateById(mineEntity);
     }
 
+    @Override
+    public boolean expired(long mineId) {
+        val mineEntity = mineMapper.selectById(mineId);
+        if (mineEntity == null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"未找到家族矿区");
+        }
+        val userId = mineEntity.getUserId();
+        if (userId  == 0){
+            return true;
+        }
+        return expired(mineId,userId,mineEntity.getFamilyId());
+    }
 
     @Override
     public boolean expired(long mineId, Long userId, Long familyId) {
@@ -158,7 +171,7 @@ public class HistoryServiceImpl implements IHistoryService {
         Map<Long, OccupiedVo> map = new HashMap<>(diggingsHistoryEntities.size());
         for (DiggingsHistoryEntity entity : diggingsHistoryEntities) {
             final OccupiedVo value = new OccupiedVo();
-            final val data = userFeignClient.queryUser(entity.getUserId()).getData();
+            final val data = familyUserFeignClient.queryUser(entity.getUserId()).getData();
             if (data == null) {
                 throw new ApplicationException(CodeType.DATABASE_ERROR,"网络链接超时 （无法获取用户名）");
             }
@@ -196,6 +209,7 @@ public class HistoryServiceImpl implements IHistoryService {
         historyEntity.setStartDate(now);
         historyEntity.setStopDate(now.plusHours(1));
         historyEntity.setMineItemLevel(mineEntity.getItemLevel());
+        historyEntity.setMineId(mineId);
         historyEntity.setId(idGenerator.getNumberId());
         historyMapper.insert(historyEntity);
         mineEntity.setFamilyId(familyId);

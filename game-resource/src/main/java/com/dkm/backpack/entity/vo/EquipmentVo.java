@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @create: 2020-07-20 11:13
  **/
 @Data
-@ApiModel("装备信息")
+@ApiModel("装备详细信息")
 public class EquipmentVo {
     @ApiModelProperty("背包id")
     private Long backpackId;
@@ -38,7 +38,7 @@ public class EquipmentVo {
     private BigDecimal eqDrop;
     @ApiModelProperty("需要等级")
     private Integer needGrade;
-    @ApiModelProperty("装备类型 1 - 8 ")
+    @ApiModelProperty("装备类型 1 - 10")
     private Integer eqType;
     @ApiModelProperty("是否装备 0 为未装备 1为装备")
     private Integer isEquip;

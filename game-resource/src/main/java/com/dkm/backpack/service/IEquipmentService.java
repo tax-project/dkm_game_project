@@ -1,5 +1,6 @@
 package com.dkm.backpack.service;
 
+import com.dkm.backpack.entity.EquipmentEntity;
 import com.dkm.backpack.entity.vo.EquipmentVo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
 
@@ -32,4 +33,11 @@ public interface IEquipmentService {
      * @param backpackId
      */
     void removeOrEquipment(Long userId,Long backpackId);
+
+    /**(
+     * 获取用户详细数据
+     * @param userId
+     * @return
+     */
+    EquipmentEntity getUserAllEquipment(Long userId);
 }

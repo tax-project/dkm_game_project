@@ -75,7 +75,7 @@ public class FamilyServiceImpl implements FamilyService {
         family.setFamilyGrade(1);
         family.setFamilyJoin(0);
         family.setFamilyUserNumber(1);
-        family.setFamilyQrcode(familyUrl+"/family/joinFamily?familyId="+family.getFamilyId());
+        family.setFamilyQrcode("/family/joinFamily?familyId="+family.getFamilyId());
         FamilyDetailEntity familyDetailEntity = new FamilyDetailEntity();
         familyDetailEntity.setIsAdmin(2);
         familyDetailEntity.setUserId(userId);
