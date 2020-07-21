@@ -130,7 +130,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     msgInfo.setMsgType(1);
                     msgInfo.setToId(seed.getUserId());
 
-                    log.info("发送掉落通知...红包");
+                    log.info("发送掉落通知.红包");
                     rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
                 }
