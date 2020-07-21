@@ -7,7 +7,7 @@ import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
-import com.dkm.diggings.service.IStaticService;
+import com.dkm.diggings.service.IFamilyStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class OccupiedServiceImpl implements IOccupiedService {
     private MineMapper mineMapper;
 
     @Resource
-    private IStaticService staticService;
+    private IFamilyStaticService staticService;
 
     @Resource
     private MineRule mineRule;
