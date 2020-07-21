@@ -135,8 +135,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             number = (int) (Math.random() * (2000 - 1000 + 1)) + 1000;
 
         } else {
-            //随机生成1-3的随机数
-            number = (int) (Math.random() * (3 - 1 + 1)) + 1;
+            //随机生成2-6的随机数
+            number = (int) (Math.random() * (6 - 2 + 2)) + 2;
         }
          produce.setNumber(number);
 
@@ -187,9 +187,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //跟班
         List<AttendantImgVo> attendantImg = new ArrayList<>();
-
-        //查询所有跟班
-        List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(userId);
 
         //查询出所有用户跟班图片
         List<AttendantImgVo> attendantGoods = produceMapper.queryImgFood(userId);
