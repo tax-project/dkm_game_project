@@ -24,6 +24,6 @@ public interface FamilyUserFeignClient {
     Result<RenownVo> queryUserSection(@RequestParam(value = "userId") Long userId);
 
     @GetMapping("/v1/we/chat/queryUser/{id}")
-    Result<UserInfosVo> queryUser(@PathVariable Long id);
+    Result<UserInfosVo> queryUser(@PathVariable("id") Long id);
 
 }

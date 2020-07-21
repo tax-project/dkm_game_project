@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +35,17 @@ public class EquipmentServiceImpl implements IEquipmentService {
     private BackpackMapper backpackMapper;
 
     @Override
-    public EquipmentVo getEquipmentInfo(Long backpackId) {
-        return equipmentMapper.getEquipmentInfo(backpackId);
+    public Map<String, EquipmentVo> getEquipmentInfo(Long userId, Long backpackId) {
+        EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
+        Map<String, EquipmentVo> result = new HashMap<>();
+        if(equipmentEntity==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"找不到当前装备信息");}
+        if ( equipmentEntity.getIsEquip() == 1) {
+            result.put("nowEquip", equipmentMapper.getEquipmentInfo(backpackId));
+        } else {
+            result.put("selectEquip", equipmentMapper.getEquipmentInfo(backpackId));
+            result.put("nowEquip", equipmentMapper.getEquipingInfo(userId, equipmentEntity.getEqType()));
+        }
+        return result;
     }
 
     @Override
@@ -44,7 +55,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
         for (int i = 0; i < 10; i++) {
             int finalI = i;
             List<UserEquipmentVo> collect = userEquipment.stream().filter(a -> a.getEqType() == (finalI + 1)).collect(Collectors.toList());
-            userEquipmentVos.add((collect==null||collect.size()==0)?null:collect.get(0));
+            userEquipmentVos.add((collect == null || collect.size() == 0) ? null : collect.get(0));
         }
         return userEquipmentVos;
     }
@@ -52,22 +63,28 @@ public class EquipmentServiceImpl implements IEquipmentService {
     @Override
     public void removeOrEquipment(Long userId, Long backpackId) {
         EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
-        if(equipmentEntity==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"找不到该装备");}
-        if(equipmentEntity.getIsEquip()==1){
+        if (equipmentEntity == null) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "找不到该装备");
+        }
+        if (equipmentEntity.getIsEquip() == 1) {
             equipmentEntity.setIsEquip(0);
             int i = equipmentMapper.updateById(equipmentEntity);
-            if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"暂时无法卸下该装备");}
-        }else{
-            EquipmentEntity equipId = equipmentMapper.getEquipId(userId, equipmentEntity.getEqType());
-            int update = 0;
-            if(equipId!=null){
-                equipId.setIsEquip(0);
-                update=equipmentMapper.updateById(equipId);
-            }else {
-                equipmentEntity.setIsEquip(1);
-                update=equipmentMapper.updateById(equipmentEntity);
+            if(backpackMapper.getBackpackNumber(userId)>=30){throw new ApplicationException(CodeType.SERVICE_ERROR, "背包已满");}
+            if (i <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "暂时无法卸下该装备");
             }
-            if(update<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新装备失败");}
+        } else {
+            EquipmentEntity equipId = equipmentMapper.getEquipId(userId, equipmentEntity.getEqType());
+            if (equipId != null) {
+                equipId.setIsEquip(0);
+                if (equipmentMapper.updateById(equipId) <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "更新装备失败");
+                }
+            }
+            equipmentEntity.setIsEquip(1);
+            if (equipmentMapper.updateById(equipmentEntity) <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "更新装备失败");
+            }
         }
     }
 

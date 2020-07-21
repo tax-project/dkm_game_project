@@ -86,67 +86,69 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         for (LandSeed seed : landSeedList) {
 
             //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
-            if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+          /*  if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 baseMapper.updateLeStatusTime(seed.getId());
 
             }else{
 
-                seedsFall=new SeedsFall();
-                seedsFall.setId(seed.getId());
-                seedsFall.setSeedId(seed.getSeedId());
 
-                Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(seed.getUserId());
-                if(userInfoQueryBoResult.getCode()!=0){
-                    throw new ApplicationException(CodeType.SERVICE_ERROR,"feign异常");
-                }
+            }*/
 
-                //true掉落金币   false 没有金币掉落
-                boolean dropCoins = randomUtils.probabilityDroppingGold(seed.getSeedId());
-                if(dropCoins){
-                    gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
+            seedsFall=new SeedsFall();
+            seedsFall.setId(seed.getId());
+            seedsFall.setSeedId(seed.getSeedId());
 
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(gold));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
+            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(seed.getUserId());
+            if(userInfoQueryBoResult.getCode()!=0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"feign异常");
+            }
+
+            //true掉落金币   false 没有金币掉落
+            boolean dropCoins = randomUtils.probabilityDroppingGold(seed.getSeedId());
+            if(dropCoins){
+                gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
+
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(gold));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
 
 
-                    log.info("发送掉落通知...金币");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+                log.info("发送掉落通知...金币");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
-                }
+            }
 
-                //true 掉落红包   false 没有红包掉落
-                boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
-                if(produceGoldRed){
-                    //掉落的红包数量
-                    money =randomUtils.NumberRedPacketsDropped();
+            //true 掉落红包   false 没有红包掉落
+            boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
+            if(produceGoldRed){
+                //掉落的红包数量
+                money =randomUtils.NumberRedPacketsDropped();
 
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(money));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(money));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
-                    log.info("发送掉落通知.红包");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
+                log.info("发送掉落通知.红包");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
-                }
+            }
 
-                //掉落花
-                boolean b = randomUtils.fallingFlowers();
-                if(b){
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(1));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
+            //掉落花
+            boolean b = randomUtils.fallingFlowers();
+            if(b){
+                MsgInfo msgInfo = new MsgInfo();
+                msgInfo.setMsg(String.valueOf(1));
+                msgInfo.setType(13);
+                msgInfo.setMsgType(1);
+                msgInfo.setToId(seed.getUserId());
 
-                    log.info("发送掉落通知...花");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-                }
+                log.info("发送掉落通知...花");
+                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
             }
 
         }

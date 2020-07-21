@@ -15,3 +15,6 @@ spring:
 app:
   workerId: 9
   dataCenterId: 1
+ribbon:
+  ConnectTimeout: 10000
+  ReadTimeout: 10000

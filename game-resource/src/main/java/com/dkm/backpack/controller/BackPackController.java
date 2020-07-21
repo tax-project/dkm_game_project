@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: game_project
@@ -68,7 +69,7 @@ public class BackPackController {
     @PostMapping("/sellBackpackGoods")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "Token", required = true, dataType = "string", value = "token"),
-            @ApiImplicitParam(paramType = "query", name = "goodId", required = true, dataType = "long", value = "物品id"),
+            @ApiImplicitParam(paramType = "query", name = "backpackId", required = true, dataType = "long", value = "物品id"),
             @ApiImplicitParam(paramType = "query", name = "number", required = true, dataType = "int", value = "出售数量")
     })
     @CrossOrigin
@@ -89,11 +90,11 @@ public class BackPackController {
     })
     @CrossOrigin
     @CheckToken
-    public EquipmentVo equipmentInfo(@RequestParam("backpackId") Long backpackId){
+    public Map<String,EquipmentVo> equipmentInfo(@RequestParam("backpackId") Long backpackId){
         if(backpackId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
-        return equipmentService.getEquipmentInfo(backpackId);
+        return equipmentService.getEquipmentInfo(localUser.getUser().getId(),backpackId);
     }
 
     @ApiOperation(value = "获取用户当前所有已装备数据")

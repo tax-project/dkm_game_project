@@ -1,5 +1,7 @@
 package com.dkm.box.controller;
 
+import com.dkm.backpack.entity.vo.OpenEquipmentVo;
+import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
@@ -48,8 +50,8 @@ public class BoxController {
     })
     @CrossOrigin
     @CheckToken
-    public void openBoxes(@RequestParam("boxId") Long  boxId){
+    public List<OpenEquipmentVo> openBoxes(@RequestParam("boxId") Long  boxId){
         if(boxId==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"参数异常"); }
-        userBoxService.openBox(localUser.getUser().getId(),boxId);
+        return  userBoxService.openBox(localUser.getUser().getId(),boxId);
     }
 }
