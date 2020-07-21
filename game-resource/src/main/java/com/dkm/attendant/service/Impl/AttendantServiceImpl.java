@@ -43,6 +43,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -286,9 +287,17 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
+        if(userInfoQueryBoResult.getCode()!=0){
+            log.info("my user error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
 
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
+        if(userInfoQueryBoResultCaughtPeopleId.getCode()!=0){
+            log.info("he user error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
 
         //增加对手信息
         Opponent opponent=new Opponent();
@@ -321,9 +330,10 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到我方装备信息
         EquipmentEntity userAllEquipment1 = iEquipmentService.getUserAllEquipment(query.getId());
-
+        System.out.println("==========="+userAllEquipment1);
         //如果没有装备
-        if(userAllEquipment==null){
+
+        if(ObjectUtils.isEmpty(userAllEquipment)){
             //血量
             heEquipBonus=500;
             //他方装备防御力
@@ -333,19 +343,27 @@ public class AttendantServiceImpl implements IAttendantService {
         }else {
 
             /**
-             * 得到最终的血量
+             * 得到他方最终的血量
              */
             heEquipBonus = userAllEquipment.getBlood()+(userAllEquipment.getBlood() * userAllEquipment.getBloodAdd().doubleValue());
 
+            log.info(" 得到他方最终的血量"+heEquipBonus);
             /**
-             * 得到最终的战斗力
+             * 得到他方最终的战斗力
              */
+
+
+            double v = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * userAllEquipment.getTalentAdd().doubleValue() - userInfoQueryBoResult.getData().getUserInfoRenown() * userAllEquipment1.getTalentAdd().doubleValue());
+                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * userAllEquipment.getTalentAdd().doubleValue()- userInfoQueryBoResult.getData().getUserInfoRenown() * v);
+            log.info(" 得到他方最终的战斗力"+heRipetime1);
+
             /**
-             * 得到最终的防御力
+             * 得到他方最终的防御力
              */
             heDefense =userAllEquipment.getTalent()+(userAllEquipment.getTalent() * userAllEquipment.getTalentAdd().doubleValue());
+            log.info(" 得到他方最终的防御力"+heDefense);
         }
 
 
@@ -370,17 +388,22 @@ public class AttendantServiceImpl implements IAttendantService {
              */
             ourHealth= userAllEquipment1.getBlood()+(userAllEquipment1.getBlood() * userAllEquipment1.getBloodAdd().doubleValue());
 
+            log.info(" 得到我方最终血量"+ourHealth);
             /**
              * 得到我方最终战斗力
              */
-            myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResult.getData().getUserInfoRenown() * userAllEquipment1.getTalentAdd().doubleValue() - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * userAllEquipment.getTalentAdd().doubleValue());
+            double v = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
 
+            double v2 = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+
+            myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
+                    (userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v);
+            log.info(" 得到我方最终战斗力"+myRipetime);
             /**
              * 得到我方最终防御力
              */
             ourDefenses=userAllEquipment1.getTalent()+(userAllEquipment1.getTalent() * userAllEquipment1.getTalentAdd().doubleValue());
-
+            log.info(" 得到我方最终防御力"+ourDefenses);
         }
 
         //如果双方宠物相同 等级高的先动手
