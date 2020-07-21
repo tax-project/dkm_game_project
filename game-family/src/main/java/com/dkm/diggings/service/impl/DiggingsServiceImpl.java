@@ -11,7 +11,7 @@ import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IDiggingsService;
 import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
-import com.dkm.diggings.service.IStaticService;
+import com.dkm.diggings.service.IFamilyStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * @author dragon
  */
-@Service("DDiggingsServiceImpl")
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
@@ -50,13 +50,13 @@ public class DiggingsServiceImpl implements IDiggingsService {
     @Resource
     private FamilyDao familyDao;
     @Resource
-    private IStaticService staticService;
+    private IFamilyStaticService staticService;
     @Resource
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
 
-    @Autowired
+    @Resource
     private FamilyUserFeignClient familyUserFeignClient;
 
     @Override

@@ -10,7 +10,7 @@ import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
 import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
-import com.dkm.diggings.service.IStaticService;
+import com.dkm.diggings.service.IFamilyStaticService;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDao;
 import com.dkm.family.entity.FamilyEntity;
@@ -44,15 +44,14 @@ public class HistoryServiceImpl implements IHistoryService {
     @Resource
     private IOccupiedService occupiedService;
     @Resource
-    private IStaticService staticService;
+    private IFamilyStaticService staticService;
     @Resource
     private MineMapper mineMapper;
     @Resource
     private IdGenerator idGenerator;
     @Resource
     private MineRule rule;
-    @Qualifier("userFeignClient")
-    @Autowired
+    @Resource
     private FamilyUserFeignClient familyUserFeignClient;
     @Resource
     private FamilyDao familyDao;
