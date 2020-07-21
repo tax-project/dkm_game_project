@@ -31,6 +31,9 @@ public class EquipmentServiceImpl implements IEquipmentService {
     @Resource
     private EquipmentMapper equipmentMapper;
 
+    @Resource
+    private BackpackMapper backpackMapper;
+
     @Override
     public Map<String, EquipmentVo> getEquipmentInfo(Long userId, Long backpackId) {
         EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
@@ -66,6 +69,7 @@ public class EquipmentServiceImpl implements IEquipmentService {
         if (equipmentEntity.getIsEquip() == 1) {
             equipmentEntity.setIsEquip(0);
             int i = equipmentMapper.updateById(equipmentEntity);
+            if(backpackMapper.getBackpackNumber(userId)>=30){throw new ApplicationException(CodeType.SERVICE_ERROR, "背包已满");}
             if (i <= 0) {
                 throw new ApplicationException(CodeType.SERVICE_ERROR, "暂时无法卸下该装备");
             }
