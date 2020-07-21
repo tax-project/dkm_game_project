@@ -35,7 +35,8 @@ public class EquipmentServiceImpl implements IEquipmentService {
     public Map<String, EquipmentVo> getEquipmentInfo(Long userId, Long backpackId) {
         EquipmentEntity equipmentEntity = equipmentMapper.selectById(backpackId);
         Map<String, EquipmentVo> result = new HashMap<>();
-        if (equipmentEntity != null && equipmentEntity.getIsEquip() == 1) {
+        if(equipmentEntity==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"找不到当前装备信息");}
+        if ( equipmentEntity.getIsEquip() == 1) {
             result.put("nowEquip", equipmentMapper.getEquipmentInfo(backpackId));
         } else {
             result.put("selectEquip", equipmentMapper.getEquipmentInfo(backpackId));
