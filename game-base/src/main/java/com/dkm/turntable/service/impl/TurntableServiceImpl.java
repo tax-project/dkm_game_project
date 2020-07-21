@@ -5,6 +5,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.ResourceFeignClient;
+import com.dkm.feign.entity.AddGoodsInfo;
 import com.dkm.turntable.dao.GoodsDao;
 import com.dkm.turntable.dao.TurntableCouponDao;
 import com.dkm.turntable.entity.GoodsEntity;
@@ -44,7 +45,7 @@ public class TurntableServiceImpl implements ITurntableService {
     @Override
     public List<TurntableInfoVo> getTurntable(Long userId, Integer type) {
         //获取物品表物品
-        List<GoodsEntity> goodsEntities = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>().in(GoodsEntity::getGoodType, 3, 1));
+        List<GoodsEntity> goodsEntities = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>().in(GoodsEntity::getGoodType, 3, 2));
         if (goodsEntities == null) throw new ApplicationException(CodeType.SERVICE_ERROR, "不好意思,物品备货中！");
         List<TurntableInfoVo> list = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -80,12 +81,12 @@ public class TurntableServiceImpl implements ITurntableService {
         } else throw new ApplicationException(CodeType.SERVICE_ERROR, "优惠券不足！");
         turntableCouponDao.updateById(turntableCouponEntity);
         //调用背包增加feign
-        TbEquipmentVoTwo tbEquipmentKnapsack = new TbEquipmentVoTwo();
-        tbEquipmentKnapsack.setFoodId(addGoodsInfoVo.getId());
-        tbEquipmentKnapsack.setFoodNumber(addGoodsInfoVo.getNumber());
-        tbEquipmentKnapsack.setUserId(userId);
+        AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
+        addGoodsInfo.setUserId(userId);
+        addGoodsInfo.setNumber(addGoodsInfoVo.getNumber());
+        addGoodsInfo.setGoodId(addGoodsInfoVo.getId());
         //增加物品
-        Result result = resourceFeignClient.addTbEquipmentKnapsackThree(tbEquipmentKnapsack);
+        Result result = resourceFeignClient.addBackpackGoods(addGoodsInfo);
         if (result.getCode() != 0) throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, result.getMsg());
     }
 }
