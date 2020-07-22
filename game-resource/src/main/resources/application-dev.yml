@@ -1,1 +1,63 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dkm_game?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: dkm123456..
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    timeout: 2000
+    jedis:
+      pool:
+        max-wait: 1000
+        max-active: 20
+        min-idle: 1
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    port: 5672
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:10000/eureka
+
+file:
+  url: http://localhost:8000/game/resource/img
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    connection-timeout: 10000
+hystrix:
+  metrics:
+    enabled: true
+    polling-interval-ms: 4000
+
+ribbon:
+  eureka:
+    enabled: true
+
+
+pay:
+  #支付设备key
+  authUserKey: 20200615204058722188929742311424
+  #支付设备密钥
+  authPassword: 518eff0233a24401b20a66720d3f20f4
+  #地址
+  url: http://192.168.10.133:8000/game/resource
+  # 支付模块地址
+  payUrl: http://192.168.10.133:20001/pay
+
+
 
