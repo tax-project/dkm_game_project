@@ -15,8 +15,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.rmi.runtime.Log;
 
 import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
 
@@ -31,6 +33,7 @@ import java.util.Map;
  * @DATE: 2020/5/10 11:47
  */
 @Api(tags = "种子api")
+@Slf4j
 @RestController
 @RequestMapping("/Seed")
 public class SeedController {
@@ -170,7 +173,23 @@ public class SeedController {
            return iSeedService.querySeedById(seedId);
     }
 
-
+    /**
+     * 批量修改种子状态
+     */
+    @ApiOperation(value = "批量修改种子状态", notes = "批量修改种子状态")
+    @GetMapping("/updateSeedStatus")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "种子id"),
+    })
+    @CrossOrigin
+    @CheckToken
+    int updateSeedStatus(@RequestParam("id") List<Long> id){
+        if(id==null){
+            log.info("参数为空");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+        }
+        return iSeedService.updateSeedStatus(id);
+    }
 
 
 

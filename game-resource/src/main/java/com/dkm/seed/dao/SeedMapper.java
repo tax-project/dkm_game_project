@@ -101,10 +101,9 @@ public interface SeedMapper extends BaseMapper<Seed> {
     /**
      * 批量修改种植状态时间
      * @param list
-     * @param plantTime
      * @return
      */
-    int updateLeStatusTime(@Param("list") List<LandSeed> list, @Param("plantTime") LocalDateTime plantTime);
+    int updateSeedStatus(@Param("list") List<Long> list);
 
 
 

@@ -413,6 +413,7 @@ public class SeedServiceImpl implements ISeedService {
 
 
     public void updateUser(SeedPlantVo seedPlantVo) {
+
             //得到用户token信息
             UserLoginQuery user = localUser.getUser();
 
@@ -600,6 +601,14 @@ public class SeedServiceImpl implements ISeedService {
         }
 
         return landYesVos;
+    }
+
+    /**
+     * 批量修改种子状态
+     */
+    @Override
+    public int updateSeedStatus(List<Long> id) {
+        return seedMapper.updateSeedStatus(id);
     }
 
 }
