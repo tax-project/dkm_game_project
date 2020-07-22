@@ -150,12 +150,22 @@ public class UserBoxServiceImpl implements IUserBoxService {
         return result;
     }
 
+    /**
+     * 随机生成装备属性
+     * @param goodsEntity
+     * @param backPackEntity
+     * @param userGrade
+     * @param boxLevel
+     * @param random
+     * @return
+     */
     EquipmentEntity setEquipmentEntity( GoodsEntity goodsEntity,BackPackEntity backPackEntity,Integer userGrade,Integer boxLevel,Random random ){
         EquipmentEntity equipmentEntity = new EquipmentEntity();
+        int grade = (boxLevel + 1) + random.nextInt(boxLevel) - random.nextInt(boxLevel);
         equipmentEntity.setBackpackId(backPackEntity.getBackpackId());
         equipmentEntity.setBlood(userGrade * userGrade + userGrade * 50 + random.nextInt(userGrade * 50) - random.nextInt(userGrade * 50));
-        equipmentEntity.setBloodAdd(new BigDecimal(userGrade / 100.00));
-        equipmentEntity.setCrit(new BigDecimal(userGrade / 100.00));
+        equipmentEntity.setBloodAdd(new BigDecimal(grade / 100.00));
+        equipmentEntity.setCrit(new BigDecimal(Math.abs(Math.max(userGrade-grade,1)) / 100.00));
         equipmentEntity.setNeedGrade(Math.max(userGrade + random.nextInt(5) - random.nextInt(5),1));
         equipmentEntity.setEqDrop(new BigDecimal(userGrade / 100.00));
         equipmentEntity.setRenown(userGrade * userGrade + userGrade * 100 + random.nextInt(userGrade * 100) - random.nextInt(userGrade * 100));
@@ -164,7 +174,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
         equipmentEntity.setTalentAdd(new BigDecimal(userGrade / 100.00));
         equipmentEntity.setEqType(Integer.valueOf(goodsEntity.getGoodContent()));
         equipmentEntity.setExp(random.nextInt(8) + 1);
-        equipmentEntity.setGrade((boxLevel + 1) + random.nextInt(boxLevel) - random.nextInt(boxLevel));
+        equipmentEntity.setGrade(grade);
         return equipmentEntity;
     }
 }
