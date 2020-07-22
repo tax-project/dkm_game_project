@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -350,12 +351,12 @@ public class AttendantServiceImpl implements IAttendantService {
              */
 
 
-            double v = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
-
-            double v2 = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
-
+            double v = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+            double v2 = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+            log.info("ppp="+v2);
+            log.info("aaa="+userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown());
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v);
+                    (Math.max(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v,0));
             log.info(" 得到他方最终的战斗力"+heRipetime1);
 
             /**
@@ -395,12 +396,12 @@ public class AttendantServiceImpl implements IAttendantService {
             /**
              * 得到我方最终战斗力
              */
-            double v = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+            double v = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
 
-            double v2 = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+            double v2 = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
 
             myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v);
+                    (Math.max(userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v,0));
             log.info(" 得到我方最终战斗力"+myRipetime);
             /**
              * 得到我方最终防御力
