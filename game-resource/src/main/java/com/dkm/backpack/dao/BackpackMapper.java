@@ -28,7 +28,7 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
 
     @Select("SELECT COUNT(*) FROM" +
             " (SELECT backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) ub " +
-            " LEFT JOIN tb_user_equipment   ue on ub.backpack_id = ue.backpack_id WHERE ue.is_equip = 0 ")
+            " LEFT JOIN tb_user_equipment   ue on ub.backpack_id = ue.backpack_id WHERE ue.is_equip = 0 or ue.is_equip is null")
     Integer getBackpackNumber(@Param("userId") Long userId);
 
     Integer insertList(@Param("list") List<BackPackEntity> backPackEntities);
