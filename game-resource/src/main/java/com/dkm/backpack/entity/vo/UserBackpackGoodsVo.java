@@ -17,7 +17,7 @@ public class UserBackpackGoodsVo{
     private Long backpackId;
     @ApiModelProperty("物品数量")
     private Integer number;
-    @ApiModelProperty("物品数量")
+    @ApiModelProperty("物品详情")
     private String goodContent;
     @ApiModelProperty("物品名称")
     private String name;
