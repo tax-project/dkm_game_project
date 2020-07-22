@@ -67,7 +67,7 @@
 
             <!-- 设置缺少web.xml的配置 -->
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
 
