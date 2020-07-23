@@ -21,4 +21,53 @@
             user_id = #{item.first}
         </foreach>
     </select>
+    <select id="selectAllTheIntegral" resultType="com.dkm.diggings.bean.vo.PersonalVo">
+        SELECT dl.user_id user_id,
+        ifnull(sum(history.integral), 0) integral,
+        user.we_chat_nick_name name,
+        user.we_chat_head_img_url user_image
+        from tb_user user
+        RIGHT JOIN tb_family_details dl ON
+        user.user_id = dl.user_id
+        LEFT JOIN tb_diggings_history history ON
+        dl.family_id = history.family_id AND
+        dl.user_id = history.user_id
+        AND history.stop_date &lt; NOW()
+        <if test="afterDate != null">
+            AND history.stop_date > #{param2}
+        </if>
+        WHERE dl.family_id = #{param1}
+        GROUP BY dl.user_id
+        ORDER BY integral DESC
+    </select>
+    <select id="selectDiggingsExperienceSort" resultType="com.dkm.diggings.bean.vo.FamilyExperienceVo">
+        SELECT sum(integral) integral,
+               f.family_name name,
+               (SELECT u.we_chat_head_img_url url
+                FROM tb_user u
+                WHERE user_id IN
+                      (SELECT dl.user_id
+                       FROM tb_family_details dl
+                       WHERE family_id = #{family}
+                       ORDER BY dl.user_id
+                      )
+                LIMIT 1)     image
+        FROM tb_family f
+                 left join
+             tb_diggings_history h on f.family_id = h.family_id
+        where f.family_id = #{family}
+        GROUP BY h.family_id;
+    </select>
+    <select id="selectRanking" resultType="java.lang.Integer">
+        SELECT @rowNum := @rowNum + 1 row
+        FROM (SELECT ifnull(SUM(h.integral), 0) integral
+              FROM tb_family f
+                       LEFT JOIN
+                   tb_diggings_history h
+                   ON f.family_id = h.family_id
+              WHERE f.family_id = #{familyId}
+              GROUP BY f.family_id
+              ORDER BY integral DESC) t,
+             (SELECT @rowNum := 0) n
+    </select>
 </mapper>
