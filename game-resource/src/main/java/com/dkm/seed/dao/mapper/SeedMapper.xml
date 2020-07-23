@@ -10,7 +10,7 @@
 
     <select id="queryAlreadyPlantSd" resultType="com.dkm.seed.entity.vo.LandYesVo" parameterType="java.lang.Long">
         select a.seed_name,a.seed_grade,a.seed_prodgold,a.seed_prodred,a.seed_experience,a.seed_gold,a.seed_img,b.plant_time,b.new_seed_is,b.id
-        from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId} and b.le_status=1
+        from tb_seed a,tb_land_seed b where a.seed_id=b.seed_id and b.user_id=#{userId} and b.le_status=1 and (b.le_status=1 or b.le_status=2)
     </select>
 
     <select id="queryAreUnlocked" resultType="com.dkm.seed.entity.vo.SeedUnlockVo" parameterType="java.lang.Long">

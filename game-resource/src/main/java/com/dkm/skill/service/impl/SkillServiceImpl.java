@@ -142,8 +142,12 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
        */
       GoldStarVo star = iBackpackService.getStar(user.getId());
 
-      //金星星数量
-      map.put("VenusNum",star.getNumber());
+      if (star == null) {
+         map.put("VenusNum", 0);
+      } else {
+         //金星星数量
+         map.put("VenusNum",star.getNumber());
+      }
 
       map.put("skillUserSkillVo",skillUserSkillVo);
       map.put("gold",10000);

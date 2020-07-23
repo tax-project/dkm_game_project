@@ -83,7 +83,7 @@
         a.we_chat_nick_name as 'weChatNickName', b.user_info_gold as 'userInfoGold'
         FROM tb_user a JOIN tb_user_info b on a.user_id = b.user_id
         where a.user_id != #{userId}
-        ORDER BY RAND() LIMIT 9
+        ORDER BY RAND() LIMIT 10
     </select>
 
 
