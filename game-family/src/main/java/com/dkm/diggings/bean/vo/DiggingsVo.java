@@ -21,8 +21,8 @@ public class DiggingsVo {
     private Integer familyLevel;
     @ApiModelProperty("家族排名")
     private Integer familyRanking;
-    @ApiModelProperty("用户排名")
-    private Integer userRanking = 0;
+    @ApiModelProperty("用户的积分")
+    private Integer userIntegral = 0;
     @ApiModelProperty("剩余攻击次数")
     private int occupationSize;
     @ApiModelProperty("地图上左上角的家族名称")
