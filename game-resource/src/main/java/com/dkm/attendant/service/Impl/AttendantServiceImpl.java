@@ -197,6 +197,19 @@ public class AttendantServiceImpl implements IAttendantService {
         //随机返回9条数据
         Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
 
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
+
+        List<AttendantWithUserVo> data = result.getData();
+        if(attendantUserVo!=null){
+            for (int i = 0; i < data.size(); i++) {
+                if(data.get(i).getUserId()==attendantUserVo.getUserId()){
+                    data.remove(i);
+                }
+            }
+        }
+
+
+
         if (result.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "Feign有误");
         }
@@ -455,9 +468,9 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方血量
         map.put("heHealth",(int)heEquipBonus+heDefense);
         //我方战力
-        map.put("ourCapabilities",myRipetime);
+        map.put("ourCapabilities",(int)myRipetime);
         //他方战力
-        map.put("heRipetime1",heRipetime1);
+        map.put("heRipetime1",(int)heRipetime1);
         return map;
     }
 
