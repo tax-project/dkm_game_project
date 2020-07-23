@@ -8,6 +8,7 @@ import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  * @create: 2020-07-18 09:19
  **/
 @Service
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class EquipmentServiceImpl implements IEquipmentService {
 
@@ -68,8 +70,9 @@ public class EquipmentServiceImpl implements IEquipmentService {
         }
         if (equipmentEntity.getIsEquip() == 1) {
             equipmentEntity.setIsEquip(0);
+            Integer backpackNumber = backpackMapper.getBackpackNumber(userId);
+            if(backpackNumber>=30){ throw new ApplicationException(CodeType.SERVICE_ERROR, "背包已满");}
             int i = equipmentMapper.updateById(equipmentEntity);
-            if(backpackMapper.getBackpackNumber(userId)>=30){throw new ApplicationException(CodeType.SERVICE_ERROR, "背包已满");}
             if (i <= 0) {
                 throw new ApplicationException(CodeType.SERVICE_ERROR, "暂时无法卸下该装备");
             }
