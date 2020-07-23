@@ -64,10 +64,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-
     @Override
     public void seedDrop() {
-
         //查询已经种植的种子
         LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
                 .eq(LandSeed::getLeStatus, 1);
@@ -75,18 +73,15 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
         if(landSeedList.size()==0){
+            log.info("查询种子未种植...");
            return;
         }
 
         Integer gold=0;
-
         double money=0;
 
         List<SeedsFall> list=new ArrayList<>();
-
         SeedsFall seedsFall=null;
-
-
 
         for (LandSeed seed : landSeedList) {
 
@@ -120,7 +115,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
 
                 }
-
                 //true 掉落红包   false 没有红包掉落
                 boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
                 if(produceGoldRed){
@@ -135,9 +129,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
                     log.info("发送掉落通知.红包");
                     rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-
                 }
-
                 //掉落花
                 boolean b = randomUtils.fallingFlowers();
                 if(b){
@@ -151,21 +143,16 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
                 }
             }
-
-
         }
-
     }
-
-
 
     @Override
     public void redBagDroppedSeparately() {
-        UserLoginQuery user = localUser.getUser();
 
         //查询出种子首次产出的金钱
         List<moneyVo> moneyVos = baseMapper.queryMoney();
         if(moneyVos.size()==0){
+            log.info("查询种子产出金钱---->" + moneyVos);
             return;
         }
 
@@ -176,7 +163,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             if(System.currentTimeMillis()/1000 >= moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 baseMapper.updateLeStatusTime(moneyVo.getId());
             }
-
 
             if(System.currentTimeMillis()/1000<moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
@@ -191,7 +177,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 log.info("发送掉落通知...单独掉落");
                 rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
             }
-
         }
     }
 
@@ -204,8 +189,5 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         List<SeedsFallVo> seedsFallVos = baseMapper.queryDroppedItems(localUser.getUser().getId());
         return seedsFallVos;
     }
-
-
-
 
 }

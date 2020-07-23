@@ -127,10 +127,11 @@
 
     </update>
 
-
-
-
-
-
+    <update id="updateTimeAndStatus">
+        update tb_land_seed set le_status=1,plant_time = #{time}  where
+        <foreach collection="list" index="index" item="item" separator="or">
+            id = #{item}
+        </foreach>
+    </update>
 
 </mapper>

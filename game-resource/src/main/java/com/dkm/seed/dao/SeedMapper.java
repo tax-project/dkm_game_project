@@ -105,6 +105,14 @@ public interface SeedMapper extends BaseMapper<Seed> {
      */
     int updateSeedStatus(@Param("list") List<Long> list);
 
+    /**
+     *  批量修改状态和时间
+     * @param time 时间
+     * @param list id集合
+     * @return 修改结果
+     */
+    Integer updateTimeAndStatus (@Param("time") LocalDateTime time, @Param("list") List<Long> list);
+
 
 
 
