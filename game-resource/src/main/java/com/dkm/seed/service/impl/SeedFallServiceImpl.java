@@ -3,6 +3,7 @@ package com.dkm.seed.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ctc.wstx.util.DataUtil;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
@@ -20,6 +21,7 @@ import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.entity.vo.moneyVo;
 import com.dkm.seed.service.ISeedFallService;
 import com.dkm.seed.vilidata.RandomUtils;
+import com.dkm.utils.DateUtils;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -73,7 +75,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
 
         if(landSeedList.size()==0){
-            log.info("空空");
            return;
         }
 
@@ -165,7 +166,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         //查询出种子首次产出的金钱
         List<moneyVo> moneyVos = baseMapper.queryMoney();
         if(moneyVos.size()==0){
-            log.info("空");
             return;
         }
 
@@ -177,7 +177,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 baseMapper.updateLeStatusTime(moneyVo.getId());
             }
 
-            if(moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))<System.currentTimeMillis()/1000){
+
+            if(System.currentTimeMillis()/1000<moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
                 double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
