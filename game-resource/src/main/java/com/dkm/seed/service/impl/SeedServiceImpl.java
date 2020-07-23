@@ -260,6 +260,7 @@ public class SeedServiceImpl implements ISeedService {
     /**
      * 种植种子
      * 收取种子
+     *
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
@@ -325,7 +326,7 @@ public class SeedServiceImpl implements ISeedService {
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
 
-
+            System.out.println("-->"+list1);
             int PlantingTimes = 0;
 
             //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
@@ -386,22 +387,21 @@ public class SeedServiceImpl implements ISeedService {
 
                 List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
 
-                for (int i = 0; i < PlantingTimes; i++) {
-
-                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getId, list3.get(i).getId());
-
-                    LandSeed landSeed = new LandSeed();
-                    landSeed.setLeStatus(1);
-                    landSeed.setPlantTime(time2);
-
-                    int update = landMapper.update(landSeed, wrapper);
-
-                    if (update <= 0) {
-                        throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
-                    }
-
+                System.out.println("--->" + list3.size());
+                if (null == list3 || list3.size() == 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR);
                 }
+
+                List<Long> longList = new ArrayList<>();
+                for (LandSeed landSeed : list3) {
+                    longList.add(landSeed.getId());
+                }
+                Integer status = seedMapper.updateTimeAndStatus(time2, longList);
+
+                if (status <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+                }
+
             }
 
         }
@@ -431,7 +431,7 @@ public class SeedServiceImpl implements ISeedService {
             //查询已种植的种子 判断这个种子的成熟时间是否小于等于当前时间，如果小于等于当前时间则可以收取
             LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
                     .eq(LandSeed::getUserId, user.getId())
-                    .eq(LandSeed::getLeStatus, 1);
+                    .eq(LandSeed::getLeStatus, 2);
             List<LandSeed> LandSeedList = landSeedMapper.selectList(queryWrapper1);
 
             for (int i = 0; i < LandSeedList.size(); i++) {

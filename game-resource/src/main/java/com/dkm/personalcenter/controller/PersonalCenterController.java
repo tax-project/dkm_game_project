@@ -97,13 +97,6 @@ public class PersonalCenterController {
          */
         TbBlackHouseVo houseVo = tbBlackHouseService.selectIsBlackTwo(userId);
 
-
-
-        /**
-         * 查询个人主页的体力瓶数据
-         */
-        List<TbEquipmentKnapsackVoFour> listOne=tbEquipmentKnapsackService.selectPersonCenter(userId);
-        map.put("bottle",listOne);
         map.put("Seed",seedUnlockVos);
         map.put("queryMySkill",skillVos);
         map.put("AttendantGoods",map1);

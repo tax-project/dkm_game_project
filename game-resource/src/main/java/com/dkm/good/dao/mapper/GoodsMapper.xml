@@ -28,7 +28,7 @@
     </select>
 
     <select id="queryRandomGoods" resultType="com.dkm.good.entity.Goods">
-        select * from tb_goods ORDER BY RAND() LIMIT 1
+        select * from tb_goods where good_type!=1 ORDER BY RAND() LIMIT 1
     </select>
 
 </mapper>
