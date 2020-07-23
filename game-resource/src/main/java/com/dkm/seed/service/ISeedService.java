@@ -40,10 +40,6 @@ public interface ISeedService {
      *
      */
     SeedDetailsVo querySeedById(Integer seeId);
-    /**
-     * 修改用户信息
-     */
-   // int updateUser(UserInIf userInIf);
 
     /**
      * 根据用户id查询已解锁的种子
@@ -62,8 +58,13 @@ public interface ISeedService {
      */
     List<LandYesVo> queryAlreadyPlantSd();
 
+    /**
+     * 批量修改种子状态
+     */
+    int updateSeedStatus(List<Long> id);
 
-    
+
+
 
 
 

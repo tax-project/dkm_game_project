@@ -33,7 +33,8 @@ public class BoxController {
     @Resource
     private LocalUser localUser;
 
-    @ApiOperation(value = "获取宝箱列表")
+    @ApiOperation(value = "获取用户宝箱列表")
+
     @GetMapping("/selectBoxInfo")
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @CrossOrigin

@@ -260,6 +260,7 @@ public class SeedServiceImpl implements ISeedService {
     /**
      * 种植种子
      * 收取种子
+     *
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
@@ -385,23 +386,18 @@ public class SeedServiceImpl implements ISeedService {
                         .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
 
                 List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
-                System.out.println("测试List3"+list3.size()+"=>"+PlantingTimes);
-                for (int i = 0; i < PlantingTimes; i++) {
 
-                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getId, list3.get(i).getId());
 
-                    LandSeed landSeed = new LandSeed();
-                    landSeed.setLeStatus(1);
-                    landSeed.setPlantTime(time2);
-
-                    int update = landMapper.update(landSeed, wrapper);
-
-                    if (update <= 0) {
-                        throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
-                    }
-
+                List<Long> longList = new ArrayList<>();
+                for (LandSeed landSeed : list3) {
+                    longList.add(landSeed.getId());
                 }
+                Integer status = seedMapper.updateTimeAndStatus(time2, longList);
+
+                if (status <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
+                }
+
             }
 
         }
@@ -413,6 +409,7 @@ public class SeedServiceImpl implements ISeedService {
 
 
     public void updateUser(SeedPlantVo seedPlantVo) {
+
             //得到用户token信息
             UserLoginQuery user = localUser.getUser();
 
@@ -600,6 +597,14 @@ public class SeedServiceImpl implements ISeedService {
         }
 
         return landYesVos;
+    }
+
+    /**
+     * 批量修改种子状态
+     */
+    @Override
+    public int updateSeedStatus(List<Long> id) {
+        return seedMapper.updateSeedStatus(id);
     }
 
 }

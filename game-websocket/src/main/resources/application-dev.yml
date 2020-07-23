@@ -1,7 +1,11 @@
 
 spring:
   rabbitmq:
+<<<<<<< HEAD
     host: 127.0.0.1
+=======
+    host: localhost
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
     username: guest
     password: guest
     port: 5672
@@ -12,7 +16,11 @@ spring:
       simple:
         acknowledge-mode: manual
   redis:
+<<<<<<< HEAD
     host: 127.0.0.1
+=======
+    host: localhost
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
     timeout: 2000
     jedis:
       pool:

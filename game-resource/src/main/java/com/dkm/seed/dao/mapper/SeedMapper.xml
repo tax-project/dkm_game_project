@@ -119,9 +119,19 @@
     </delete>
 
 
+    <update id="updateSeedStatus" parameterType="java.util.List">
+        update tb_land_seed set le_status=2 where id in
+        <foreach open="(" close=")" collection="list" item="lists" index="index" separator=",">
+             #{lists}
+        </foreach>
 
+    </update>
 
-
-
+    <update id="updateTimeAndStatus">
+        update tb_land_seed set le_status=1,plant_time = #{time}  where
+        <foreach collection="list" index="index" item="item" separator="or">
+            id = #{item}
+        </foreach>
+    </update>
 
 </mapper>

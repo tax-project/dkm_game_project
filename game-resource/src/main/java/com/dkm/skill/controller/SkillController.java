@@ -71,9 +71,8 @@ public class SkillController {
 
     @GetMapping("/querySkillByUserId")
     public List<UserSkillVo> querySkillByUserId(@RequestParam("userId") Long userId){
-        log.info("userID {}",userId);
         List<UserSkillVo> userSkillVos = iSkillService.querySkillByUserId(userId);
-        System.out.println(userSkillVos);
+
         return iSkillService.querySkillByUserId(userId);
     }
 }

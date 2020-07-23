@@ -94,17 +94,24 @@ public interface SeedMapper extends BaseMapper<Seed> {
      */
     List<SeedUnlockVo> queryAreUnlocked(Long userId);
 
-    SeedDetailsVo querySeedById(@Param("seedId") Integer seedId ,@Param("userId") Long userId);
+    SeedDetailsVo querySeedById(@Param("seedId") Integer seedId ,@Param("userId")Long userId);
 
     List<CountIdVo> queryStatus(@Param("userId") Long userId,@Param("list")List<Integer> list);
 
     /**
      * 批量修改种植状态时间
      * @param list
-     * @param plantTime
      * @return
      */
-    int updateLeStatusTime(@Param("list") List<LandSeed> list, @Param("plantTime") LocalDateTime plantTime);
+    int updateSeedStatus(@Param("list") List<Long> list);
+
+    /**
+     *  批量修改状态和时间
+     * @param time 时间
+     * @param list id集合
+     * @return 修改结果
+     */
+    Integer updateTimeAndStatus (@Param("time") LocalDateTime time, @Param("list") List<Long> list);
 
 
 

@@ -1,11 +1,19 @@
 spring:
   datasource:
+<<<<<<< HEAD
     url: jdbc:mysql://127.0.0.1:3306/dkm_game?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+=======
+    url: jdbc:mysql://localhost:3306/dkm_game?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
     username: root
     password: dkm123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
+<<<<<<< HEAD
     host: 127.0.0.1
+=======
+    host: localhost
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
     username: guest
     password: guest
     port: 5672
@@ -16,19 +24,31 @@ spring:
       simple:
         acknowledge-mode: manual
   redis:
+<<<<<<< HEAD
     host: 127.0.0.1
+=======
+    host: localhost
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
     timeout: 2000
     jedis:
       pool:
         max-wait: 1000
         max-active: 20
         min-idle: 1
+<<<<<<< HEAD
+=======
+
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
 eureka:
   instance:
     prefer-ip-address: true
   client:
     service-url:
+<<<<<<< HEAD
       defaultZone: http://127.0.0.1:10000/eureka
+=======
+      defaultZone: http://localhost:10000/eureka
+>>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
 file:
   # 前端地址   跳转搜索群聊的页面
   qrCodeUrl: http://www.baidu.com

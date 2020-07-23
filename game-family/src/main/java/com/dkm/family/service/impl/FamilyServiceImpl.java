@@ -162,6 +162,7 @@ public class FamilyServiceImpl implements FamilyService {
         if(familyDetailEntity.getIsAdmin()==2){
             //是族长则删除家族所有信息
             int i = familyDao.deleteById(familyDetailEntity.getFamilyId());
+            familyLatelyDao.delete(new LambdaQueryWrapper<FamilyLatelyEntity>().eq(FamilyLatelyEntity::getFamilyId,familyDetailEntity.getFamilyId()));
             int delete = familyDetailDao.delete(new QueryWrapper<FamilyDetailEntity>().lambda().eq(FamilyDetailEntity::getFamilyId, familyDetailEntity.getFamilyId()));
             if(i<1||delete<1){
                 throw new ApplicationException(CodeType.SERVICE_ERROR,"解散家族失败");

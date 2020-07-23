@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -195,6 +196,19 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //随机返回9条数据
         Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
+
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
+
+        List<AttendantWithUserVo> data = result.getData();
+        if(attendantUserVo!=null){
+            for (int i = 0; i < data.size(); i++) {
+                if(data.get(i).getUserId()==attendantUserVo.getUserId()){
+                    data.remove(i);
+                }
+            }
+        }
+
+
 
         if (result.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "Feign有误");
@@ -350,12 +364,12 @@ public class AttendantServiceImpl implements IAttendantService {
              */
 
 
-            double v = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
-
-            double v2 = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
-
+            double v = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+            double v2 = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+            log.info("ppp="+v2);
+            log.info("aaa="+userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown());
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v);
+                    (Math.max(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v,0));
             log.info(" 得到他方最终的战斗力"+heRipetime1);
 
             /**
@@ -395,12 +409,12 @@ public class AttendantServiceImpl implements IAttendantService {
             /**
              * 得到我方最终战斗力
              */
-            double v = userAllEquipment == null ? 1 : userAllEquipment.getTalentAdd().doubleValue();
+            double v = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
 
-            double v2 = userAllEquipment1 == null ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
+            double v2 = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
 
             myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
-                    (userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v);
+                    (Math.max(userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v,0));
             log.info(" 得到我方最终战斗力"+myRipetime);
             /**
              * 得到我方最终防御力
@@ -454,9 +468,9 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方血量
         map.put("heHealth",(int)heEquipBonus+heDefense);
         //我方战力
-        map.put("ourCapabilities",myRipetime);
+        map.put("ourCapabilities",(int)myRipetime);
         //他方战力
-        map.put("heRipetime1",heRipetime1);
+        map.put("heRipetime1",(int)heRipetime1);
         return map;
     }
 
@@ -796,22 +810,16 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public Map<String,Object> queryAidUser() {
-        System.out.println("进入主人信息");
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-        System.out.println("得到用户登录的token信息");
         if(query==null){
-            System.out.println("token为空");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"调用失败token为空  请登录拿到token！");
         }
-        System.out.println("token不为空");
         Map<String,Object> map=new HashMap<>();
 
         //主人信息
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
-        System.out.println("主人信息");
         if(attendantUserVo == null){
-            System.out.println("没有主人");
             map.put("msg","没有主人");
             map.put("num",0);
         }else{
