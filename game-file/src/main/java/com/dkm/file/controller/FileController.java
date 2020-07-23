@@ -6,6 +6,8 @@ import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
 import com.dkm.jwt.islogin.CheckToken;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ public class FileController {
     * @return
     * @throws Exception
     */
+   @ApiOperation(value = "storeFile",notes = "图片上传")
+   @ApiImplicitParam(name = "Token",value = "Token",required = true,dataType = "String",paramType = "header")
    @PostMapping("/storeFile")
    @CrossOrigin
    @CheckToken

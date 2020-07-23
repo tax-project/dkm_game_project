@@ -324,7 +324,7 @@ public class SeedServiceImpl implements ISeedService {
                     .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
-
+            System.out.println("测试List1=>"+list1.size()+"=>数据->"+list1.toString());
 
             int PlantingTimes = 0;
 
@@ -385,7 +385,7 @@ public class SeedServiceImpl implements ISeedService {
                         .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
 
                 List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
-
+                System.out.println("测试List3"+list3.size()+"=>"+PlantingTimes);
                 for (int i = 0; i < PlantingTimes; i++) {
 
                     LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()

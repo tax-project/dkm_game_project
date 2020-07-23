@@ -5,7 +5,7 @@ mybatis-plus:
   mapper-locations: classpath:com/dkm/*/dao/mapper/*.xml
 spring:
   profiles:
-    active: dev
+    active: local
   application:
     name: user
   jmx:
