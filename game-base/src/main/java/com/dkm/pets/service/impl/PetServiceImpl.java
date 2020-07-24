@@ -21,6 +21,7 @@ import com.dkm.turntable.entity.GoodsEntity;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.StringUtils;
+import javassist.runtime.Desc;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,7 @@ public class PetServiceImpl implements PetService {
         //查询背包食物信息
         Result<List<FoodInfoVo>> listResult = resourceFeignClient.getFoodsFegin(userId);
         if (listResult.getCode() != 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"获取不到食物信息");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "获取不到食物信息");
         }
         List<FoodInfoVo> goodsEntities = listResult.getData();
         map.put("foodInfo", goodsEntities);
@@ -91,6 +92,8 @@ public class PetServiceImpl implements PetService {
         }
         //查询宠物信息
         List<PetsDto> petInfo = petsMapper.findById(userId);
+        //食物重新排序
+        List<FoodInfoVo> collect = goodsEntities.stream().sorted((o1, o2) -> (int) (o1.getFoodId() - o2.getFoodId())).collect(Collectors.toList());
         for (PetsDto petsDto : petInfo) {
             //获取喂食进度  >>  每5级加一次喂食
             double roles = (double) petsDto.getPGrade() / 5 + 2;
@@ -99,14 +102,14 @@ public class PetServiceImpl implements PetService {
             List<EatFoodDto> role = new ArrayList<>();
             if (petsDto.getSchedule() >= 100) {
                 //升级
-                FoodInfoVo foodInfoVo = goodsEntities.get(goodsEntities.size() - 1);
+                FoodInfoVo foodInfoVo = goodsEntities.stream().filter(good -> good.getFoodId() == 3).collect(Collectors.toList()).get(0);
                 EatFoodDto eatFoodDto = new EatFoodDto();
                 eatFoodDto.setFoodUrl(foodInfoVo.getUrl());
                 eatFoodDto.setFoodName(foodInfoVo.getName());
                 eatFoodDto.setFoodId(foodInfoVo.getFoodId());
                 //奶瓶数量
                 eatFoodDto.setENumber(1);
-                eatFoodDto.setFoodNumber(listResult.getData().stream().filter(item -> item.getFoodId()==3).collect(Collectors.toList()).get(0).getFoodNumber());
+                eatFoodDto.setFoodNumber(listResult.getData().stream().filter(item -> item.getFoodId() == 3).collect(Collectors.toList()).get(0).getFoodNumber());
                 role.add(eatFoodDto);
             } else {
                 //10级之后才喂食鱼干 >> 喂食种类
@@ -114,21 +117,17 @@ public class PetServiceImpl implements PetService {
                 //食物数量
                 int c = petsDto.getPGrade() / 10 + 1;
                 //喂食
-                goodsEntities.forEach(food->{
                     for (int i = 0; i < feed; i++) {
-                        FoodInfoVo foodDetailEntity = goodsEntities.get(i);
+                        FoodInfoVo foodDetailEntity = collect.get(i);
                         EatFoodDto eatFoodDto = new EatFoodDto();
                         eatFoodDto.setFoodUrl(foodDetailEntity.getUrl());
                         eatFoodDto.setFoodName(foodDetailEntity.getName());
                         eatFoodDto.setFoodId(foodDetailEntity.getFoodId());
                         //食物数量
                         eatFoodDto.setENumber(i == 0 ? c : c - 1);
-                        if(foodDetailEntity.getFoodId().equals(food.getFoodId())){
-                            eatFoodDto.setFoodNumber(food.getFoodNumber());
-                            role.add(eatFoodDto);
-                        }
+                        eatFoodDto.setFoodNumber(foodDetailEntity.getFoodNumber());
+                        role.add(eatFoodDto);
                     }
-                });
             }
             petsDto.setEatFood(role);
         }
@@ -146,14 +145,14 @@ public class PetServiceImpl implements PetService {
         petUserEntity.setPNowFood(petUserEntity.getPNowFood() + 1);
         AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
         addGoodsInfo.setGoodId(1L);
-        addGoodsInfo.setNumber( petInfoVo.getPGrade() / 10 + 1);
+        addGoodsInfo.setNumber(-(petInfoVo.getPGrade() / 10 + 1));
         addGoodsInfo.setUserId(petInfoVo.getUserId());
         Result result = resourceFeignClient.addBackpackGoods(addGoodsInfo);
         //大于十级喂食鱼干
         Result result1 = null;
-        if(petInfoVo.getPGrade() >= 10 && result.getCode() == 0){
+        if (petInfoVo.getPGrade() >= 10 && result.getCode() == 0) {
             addGoodsInfo.setGoodId(2L);
-            addGoodsInfo.setNumber(petInfoVo.getPGrade() / 10);
+            addGoodsInfo.setNumber(-(petInfoVo.getPGrade() / 10));
             result1 = resourceFeignClient.addBackpackGoods(addGoodsInfo);
         }
         //更新背包食物
@@ -162,11 +161,12 @@ public class PetServiceImpl implements PetService {
                 || (petInfoVo.getPGrade() >= 10 && result1.getCode() != 0)) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "喂食失败");
         }
-        redisConfig.setString("pet"+petInfoVo.getUserId(),DateUtils.formatDateTime(LocalDateTime.now()));
+        redisConfig.setString("pet" + petInfoVo.getUserId(), DateUtils.formatDateTime(LocalDateTime.now()));
     }
 
     /**
      * 宠物升级
+     *
      * @param petInfoVo
      */
     @Override
@@ -177,7 +177,7 @@ public class PetServiceImpl implements PetService {
         petUserEntity.setPGrade(petUserEntity.getPGrade() + 1);
         AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
         addGoodsInfo.setGoodId(3L);
-        addGoodsInfo.setNumber(1);
+        addGoodsInfo.setNumber(-1);
         addGoodsInfo.setUserId(petInfoVo.getUserId());
         //更新背包食物 >> 升级需要一个奶瓶
         if (petsMapper.updateUserRenown(petInfoVo.getUserId(), petInfoVo.getPGrade() / 5 + 70) < 1
@@ -214,11 +214,10 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public String isHunger(Long userId) {
-        String string = (String)redisConfig.getString("pet"+userId);
-        if (StringUtils.isNotEmpty(string)&&DateUtils.parseDateTime(string).minusSeconds(-10).isBefore(LocalDateTime.now())){
+        String string = (String) redisConfig.getString("pet" + userId);
+        if (StringUtils.isNotEmpty(string) && DateUtils.parseDateTime(string).minusSeconds(-10).isBefore(LocalDateTime.now())) {
             return "宠物已经饿的不行了！";
-        }
-        else throw new ApplicationException(CodeType.SERVICE_ERROR,"不需要喂食！");
+        } else throw new ApplicationException(CodeType.SERVICE_ERROR, "不需要喂食！");
     }
 
 }
