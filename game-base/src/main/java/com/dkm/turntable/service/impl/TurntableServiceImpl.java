@@ -15,6 +15,7 @@ import com.dkm.turntable.entity.vo.TurntableInfoVo;
 import com.dkm.turntable.service.ITurntableService;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ import java.util.Random;
  * @create: 2020-06-11 10:05
  **/
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TurntableServiceImpl implements ITurntableService {
 
 

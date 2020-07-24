@@ -197,6 +197,21 @@ public class AttendantServiceImpl implements IAttendantService {
         //随机返回9条数据
         Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
 
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
+
+        List<AttendantWithUserVo> data = result.getData();
+        System.out.println(data.size());
+        if(attendantUserVo!=null){
+
+            for (int i = 0; i < data.size(); i++) {
+                //如果被抓的跟班中有自己的主人就从集合中删除
+                if(data.get(i).getUserId()==attendantUserVo.getUserId()){
+                    data.remove(i);
+                }
+
+            }
+        }
+
         if (result.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "Feign有误");
         }
@@ -455,9 +470,9 @@ public class AttendantServiceImpl implements IAttendantService {
         //他方血量
         map.put("heHealth",(int)heEquipBonus+heDefense);
         //我方战力
-        map.put("ourCapabilities",myRipetime);
+        map.put("ourCapabilities",(int)myRipetime);
         //他方战力
-        map.put("heRipetime1",heRipetime1);
+        map.put("heRipetime1",(int)heRipetime1);
         return map;
     }
 
@@ -716,7 +731,6 @@ public class AttendantServiceImpl implements IAttendantService {
     public Map<String, Object> collect(Long attId, Long attUserId) {
 
         AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
-
         if (attUser == null) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId有误");
         }
@@ -733,13 +747,11 @@ public class AttendantServiceImpl implements IAttendantService {
         if (until >= 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "现在不能收取");
         }
-
         UserLoginQuery user = localUser.getUser();
         //得到产出的物品集合
         List<CollectResultBo> list = attendantMapper.collect(user.getId(), attUserId);
 
         List<Long> idList = new ArrayList<>();
-
         for (CollectResultBo bo : list) {
             //如果是金币  加入用户的总金币
             if (bo.getGoodType() == 0) {
