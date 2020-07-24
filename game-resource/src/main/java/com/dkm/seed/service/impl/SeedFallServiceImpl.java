@@ -92,7 +92,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 baseMapper.updateLeStatusTime(seed.getId());
             }
 
-            if(System.currentTimeMillis()/1000<seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+            if(System.currentTimeMillis()/1000 < seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 seedsFall=new SeedsFall();
                 seedsFall.setId(seed.getId());
                 seedsFall.setSeedId(seed.getSeedId());

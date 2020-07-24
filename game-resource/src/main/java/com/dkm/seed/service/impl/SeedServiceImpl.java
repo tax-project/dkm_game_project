@@ -428,7 +428,7 @@ public class SeedServiceImpl implements ISeedService {
 
             GoldRedVo goldRedVo = null;
 
-            //查询已种植的种子 判断这个种子的成熟时间是否小于等于当前时间，如果小于等于当前时间则可以收取
+            //查询待收取的的种子 判断这个种子的成熟时间是否小于等于当前时间，如果小于等于当前时间则可以收取
             LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
                     .eq(LandSeed::getUserId, user.getId())
                     .eq(LandSeed::getLeStatus, 2);
