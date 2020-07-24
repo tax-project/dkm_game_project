@@ -76,7 +76,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         if(landSeedList.size()==0){
             log.info("查询种子未种植...");
-           return;
+            return;
         }
 
         Integer gold=0;
