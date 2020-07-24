@@ -4,6 +4,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.good.entity.vo.GoodQueryVo;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.plunder.entity.bo.PlunderBO;
 import com.dkm.plunder.entity.vo.PlunderVo;
 import com.dkm.plunder.service.IPlunderService;
 import io.swagger.annotations.Api;
@@ -32,14 +33,14 @@ public class PlunderController {
    @ApiOperation(value = "增加掠夺表", notes = "增加掠夺表")
    @ApiImplicitParams({
          @ApiImplicitParam(name = "userId", value = "被抢人的用户id", required = true, dataType = "Long", paramType = "path"),
-         @ApiImplicitParam(name = "goodsId", value = "物品id", required = true, dataType = "Long", paramType = "path"),
+         @ApiImplicitParam(name = "goodsIdList", value = "物品id数组", required = true, dataType = "Long", paramType = "path"),
          @ApiImplicitParam(name = "grade", value = "被抢人的等级", required = true, dataType = "int", paramType = "path")
    })
    @PostMapping("/insertPlunder")
    @CrossOrigin
    @CheckToken
    public void insertPlunder (@RequestBody PlunderVo vo) {
-      if (vo.getGoodsId() == null || vo.getUserId() == null || vo.getGrade() == null) {
+      if (vo.getGoodsIdList().size() == 0 || vo.getUserId() == null || vo.getGrade() == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
       }
 
@@ -62,7 +63,7 @@ public class PlunderController {
    @GetMapping("/getGoodByUserId")
    @CrossOrigin
    @CheckToken
-   public List<GoodQueryVo> getGoodByUserId (@RequestParam("UserId") Long userId) {
+   public PlunderBO getGoodByUserId (@RequestParam("UserId") Long userId) {
       return plunderService.getGoodByUserId(userId);
    }
 

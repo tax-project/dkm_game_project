@@ -1,6 +1,7 @@
 package com.dkm.plunder.service;
 
 import com.dkm.good.entity.vo.GoodQueryVo;
+import com.dkm.plunder.entity.bo.PlunderBO;
 import com.dkm.plunder.entity.vo.PlunderVo;
 
 import java.util.List;
@@ -32,5 +33,5 @@ public interface IPlunderService {
     * @param userId
     * @return
     */
-   List<GoodQueryVo> getGoodByUserId (Long userId);
+   PlunderBO getGoodByUserId (Long userId);
 }

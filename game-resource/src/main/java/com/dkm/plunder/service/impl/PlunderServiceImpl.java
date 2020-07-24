@@ -16,6 +16,7 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.plunder.dao.PlunderMapper;
 import com.dkm.plunder.entity.Plunder;
+import com.dkm.plunder.entity.bo.PlunderBO;
 import com.dkm.plunder.entity.vo.PlunderGoodsVo;
 import com.dkm.plunder.entity.vo.PlunderUserGoodVo;
 import com.dkm.plunder.entity.vo.PlunderVo;
@@ -87,12 +88,19 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          throw new ApplicationException(CodeType.SERVICE_ERROR);
       }
 
-      PlunderGoodsVo goodsVo = new PlunderGoodsVo();
-      goodsVo.setId(idGenerator.getNumberId());
-      goodsVo.setGoodId(vo.getGoodsId());
-      goodsVo.setPlunderId(plunderId);
+      if (null == vo.getGoodsIdList() || vo.getGoodsIdList().size() == 0) {
+         throw new ApplicationException(CodeType.PARAMETER_ERROR);
+      }
 
-      plunderGoodsService.insertPlunderGoods(goodsVo);
+      for (Long goodsId : vo.getGoodsIdList()) {
+         PlunderGoodsVo goodsVo = new PlunderGoodsVo();
+         goodsVo.setId(idGenerator.getNumberId());
+         goodsVo.setGoodId(goodsId);
+         goodsVo.setPlunderId(plunderId);
+
+         plunderGoodsService.insertPlunderGoods(goodsVo);
+      }
+
 
 
       //修改体力值
@@ -203,7 +211,9 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
    }
 
    @Override
-   public List<GoodQueryVo> getGoodByUserId(Long userId) {
+   public PlunderBO getGoodByUserId(Long userId) {
+
+      UserLoginQuery user = localUser.getUser();
 
       List<GoodQueryVo> goodList = goodsService.getGoodList(userId);
 
@@ -221,6 +231,19 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          }
       }
 
-      return goodList;
+      PlunderBO bo = new PlunderBO();
+      bo.setList(goodList);
+
+      //是否是vip
+      Result<UserInfoQueryBo> result = userFeignClient.queryUser(user.getId());
+
+      if (result.getCode() != 0) {
+         log.info("用户feign查询有误");
+         throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "网络繁忙,请稍后再试");
+      }
+
+      bo.setIsVip(result.getData().getUserInfoIsVip());
+
+      return bo;
    }
 }
