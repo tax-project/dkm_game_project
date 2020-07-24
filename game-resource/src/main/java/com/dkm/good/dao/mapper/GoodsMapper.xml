@@ -25,6 +25,7 @@
         <where>
             a.user_id = #{userId}
         </where>
+        GROUP BY c.id
     </select>
 
     <select id="queryRandomGoods" resultType="com.dkm.good.entity.Goods">

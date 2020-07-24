@@ -5,6 +5,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.diggings.bean.entity.DiggingsEntity;
 import com.dkm.diggings.bean.entity.MineEntity;
 import com.dkm.diggings.bean.vo.*;
+import com.dkm.diggings.dao.DiggingsHistoryMapper;
 import com.dkm.diggings.dao.DiggingsMapper;
 import com.dkm.diggings.dao.MineMapper;
 import com.dkm.diggings.rule.MineRule;
@@ -21,8 +22,6 @@ import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import com.dkm.utils.ObjectUtils;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +54,8 @@ public class DiggingsServiceImpl implements IDiggingsService {
     private IHistoryService historyService;
     @Resource
     private IOccupiedService occupiedService;
-
+    @Resource
+    private DiggingsHistoryMapper historyMapper;
     @Resource
     private FamilyUserFeignClient familyUserFeignClient;
 
@@ -72,6 +72,7 @@ public class DiggingsServiceImpl implements IDiggingsService {
         // 导入私有矿区信息
         result.setFamilyLevel(getFamilyLevel(familyId));
         result.setOccupationSize(getOccupationSize(userId));
+        result.setFamilyRanking(historyMapper.selectRanking(familyId));
         return result;
     }
 

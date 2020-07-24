@@ -1,7 +1,9 @@
 package com.dkm.diggings.service;
 
 import com.dkm.diggings.bean.entity.DiggingsHistoryEntity;
+import com.dkm.diggings.bean.vo.FamilyExperienceVo;
 import com.dkm.diggings.bean.vo.OccupiedVo;
+import com.dkm.diggings.bean.vo.PersonalVo;
 import com.dkm.utils.CollectionUtils;
 
 import java.util.List;
@@ -56,4 +58,22 @@ public interface IHistoryService {
      * @return
      */
     int getOccupationSizeOnToday(Long userId);
+
+    /**
+     * 查询一天的积分贡献榜
+     *
+     * @param familyId 家族ID
+     * @return
+     */
+    List<PersonalVo> getOneDayIntegral(Long familyId);
+
+    /**
+     * 查询整个积分贡献版
+     *
+     * @param familyId
+     * @return
+     */
+    List<PersonalVo> getAllTheIntegral(Long familyId);
+
+    List<FamilyExperienceVo> getDiggingsExperienceSort(Long familyId);
 }

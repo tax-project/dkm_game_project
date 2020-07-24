@@ -6,8 +6,10 @@ import com.dkm.diggings.bean.FamilyAddition;
 import com.dkm.diggings.bean.other.User2FamilyId;
 import com.dkm.diggings.bean.vo.*;
 import com.dkm.diggings.service.IDiggingsService;
+import com.dkm.diggings.service.IHistoryService;
 import com.dkm.diggings.service.IOccupiedService;
 import com.dkm.diggings.service.IFamilyStaticService;
+import com.dkm.diggings.service.impl.HistoryServiceImpl;
 import com.dkm.exception.ApplicationException;
 import com.dkm.family.dao.FamilyDetailDao;
 import com.dkm.family.entity.FamilyDetailEntity;
@@ -36,6 +38,8 @@ public class DiggingsController {
     private LocalUser localUser;
     @Resource
     private FamilyDetailDao familyDetailDao;
+    @Resource
+    private IHistoryService historyService;
 
     @Resource
     private IDiggingsService diggingsService;
@@ -45,6 +49,44 @@ public class DiggingsController {
 
     @Resource
     private IOccupiedService occupiedService;
+
+    /**
+     * 获取经验排名
+     * @return
+     */
+    @ApiOperation("获取家族一天的金矿排名")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    @GetMapping(value = "/getOneDayIntegral", produces = "application/json")
+    public List<PersonalVo> getOneDayIntegral(){
+        return historyService.getOneDayIntegral(getUser2FamilyId().getFamilyId());
+    }
+
+    /**
+     * 获取经验排名
+     * @return
+     */
+    @CrossOrigin
+    @GetMapping(value = "/getDiggingsExperienceSort", produces = "application/json")
+    @ApiOperation("获取家族的经验排名")
+    @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    public List<FamilyExperienceVo> getDiggingsExperienceSort(){
+        return historyService.getDiggingsExperienceSort(getUser2FamilyId().getFamilyId());
+    }
+
+
+    @CrossOrigin
+    @GetMapping(value = "/getAllTheIntegral", produces = "application/json")
+    @ApiOperation("获取家族排名")
+    @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    public List<PersonalVo> getAllTheIntegral(){
+        return historyService.getAllTheIntegral(getUser2FamilyId().getFamilyId());
+    }
+
+
 
 
     @ApiOperation("获取金矿的基础信息和等级相关的信息（静态的）")
