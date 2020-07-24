@@ -107,7 +107,7 @@ public class FamilyController {
         return familyService.getHotFamily(localUser.getUser().getId());
     }
 
-    @ApiOperation("最近访问家族（最多5条记录）")
+    @ApiOperation("最近访问家族（最多3条记录）")
     @GetMapping("/latelyFamily")
     @CrossOrigin
     @CheckToken

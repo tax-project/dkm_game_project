@@ -99,7 +99,7 @@ public class PetServiceImpl implements PetService {
             List<EatFoodDto> role = new ArrayList<>();
             if (petsDto.getSchedule() >= 100) {
                 //升级
-                FoodInfoVo foodInfoVo = goodsEntities.get(goodsEntities.size() - 1);
+                FoodInfoVo foodInfoVo = goodsEntities.stream().filter(good->good.getFoodId()==3).collect(Collectors.toList()).get(0);
                 EatFoodDto eatFoodDto = new EatFoodDto();
                 eatFoodDto.setFoodUrl(foodInfoVo.getUrl());
                 eatFoodDto.setFoodName(foodInfoVo.getName());
@@ -116,16 +116,18 @@ public class PetServiceImpl implements PetService {
                 //喂食
                 goodsEntities.forEach(food->{
                     for (int i = 0; i < feed; i++) {
-                        FoodInfoVo foodDetailEntity = goodsEntities.get(i);
-                        EatFoodDto eatFoodDto = new EatFoodDto();
-                        eatFoodDto.setFoodUrl(foodDetailEntity.getUrl());
-                        eatFoodDto.setFoodName(foodDetailEntity.getName());
-                        eatFoodDto.setFoodId(foodDetailEntity.getFoodId());
-                        //食物数量
-                        eatFoodDto.setENumber(i == 0 ? c : c - 1);
-                        if(foodDetailEntity.getFoodId().equals(food.getFoodId())){
-                            eatFoodDto.setFoodNumber(food.getFoodNumber());
-                            role.add(eatFoodDto);
+                        if(goodsEntities.get(i).getFoodId()!=3){
+                            FoodInfoVo foodDetailEntity = goodsEntities.get(i);
+                            EatFoodDto eatFoodDto = new EatFoodDto();
+                            eatFoodDto.setFoodUrl(foodDetailEntity.getUrl());
+                            eatFoodDto.setFoodName(foodDetailEntity.getName());
+                            eatFoodDto.setFoodId(foodDetailEntity.getFoodId());
+                            //食物数量
+                            eatFoodDto.setENumber(i == 0 ? c : c - 1);
+                            if(foodDetailEntity.getFoodId().equals(food.getFoodId())){
+                                eatFoodDto.setFoodNumber(food.getFoodNumber());
+                                role.add(eatFoodDto);
+                            }
                         }
                     }
                 });
@@ -146,14 +148,14 @@ public class PetServiceImpl implements PetService {
         petUserEntity.setPNowFood(petUserEntity.getPNowFood() + 1);
         AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
         addGoodsInfo.setGoodId(1L);
-        addGoodsInfo.setNumber( petInfoVo.getPGrade() / 10 + 1);
+        addGoodsInfo.setNumber( -(petInfoVo.getPGrade() / 10 + 1));
         addGoodsInfo.setUserId(petInfoVo.getUserId());
         Result result = resourceFeignClient.addBackpackGoods(addGoodsInfo);
         //大于十级喂食鱼干
         Result result1 = null;
         if(petInfoVo.getPGrade() >= 10 && result.getCode() == 0){
             addGoodsInfo.setGoodId(2L);
-            addGoodsInfo.setNumber(petInfoVo.getPGrade() / 10);
+            addGoodsInfo.setNumber(-(petInfoVo.getPGrade() / 10));
             result1 = resourceFeignClient.addBackpackGoods(addGoodsInfo);
         }
         //更新背包食物
@@ -177,7 +179,7 @@ public class PetServiceImpl implements PetService {
         petUserEntity.setPGrade(petUserEntity.getPGrade() + 1);
         AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
         addGoodsInfo.setGoodId(3L);
-        addGoodsInfo.setNumber(1);
+        addGoodsInfo.setNumber(-1);
         addGoodsInfo.setUserId(petInfoVo.getUserId());
         //更新背包食物 >> 升级需要一个奶瓶
         if (petsMapper.updateUserRenown(petInfoVo.getUserId(), petInfoVo.getPGrade() / 5 + 70) < 1
