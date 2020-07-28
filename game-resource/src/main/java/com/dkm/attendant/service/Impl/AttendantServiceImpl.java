@@ -118,7 +118,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         List<AttendantPutVo> outputList = produceService.queryOutput(query.getId());
 
-        System.out.println("--->" + outputList);
 
         for (AttUserAllInfoVo infoVo : list1) {
             list.add(infoVo);

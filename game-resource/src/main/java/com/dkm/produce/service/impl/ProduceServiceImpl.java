@@ -79,12 +79,12 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    private final String put = "PUT::REDIS::";
+    private String put = "PUT::REDIS::";
 
     /**
      *  物品金币
      */
-    private final String GOOD_NAME = "金币";
+    private String GOOD_NAME = "金币";
 
     @Override
     public Map<String,Object> insertProduce(Long attendantId, Long attUserId) {

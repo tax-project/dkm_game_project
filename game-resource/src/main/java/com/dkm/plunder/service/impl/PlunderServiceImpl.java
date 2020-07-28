@@ -17,6 +17,7 @@ import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.plunder.dao.PlunderMapper;
 import com.dkm.plunder.entity.Plunder;
 import com.dkm.plunder.entity.bo.PlunderBO;
+import com.dkm.plunder.entity.bo.PlunderIdBO;
 import com.dkm.plunder.entity.vo.PlunderGoodsVo;
 import com.dkm.plunder.entity.vo.PlunderUserGoodVo;
 import com.dkm.plunder.entity.vo.PlunderVo;
@@ -67,7 +68,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
    /**
     *  物品金币
     */
-   private final String GOOD_NAME = "金币";
+   private String GOOD_NAME = "金币";
 
    @Override
    public void insertPlunder(PlunderVo vo) {
@@ -92,10 +93,10 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          throw new ApplicationException(CodeType.PARAMETER_ERROR);
       }
 
-      for (Long goodsId : vo.getGoodsIdList()) {
+      for (PlunderIdBO goods : vo.getGoodsIdList()) {
          PlunderGoodsVo goodsVo = new PlunderGoodsVo();
          goodsVo.setId(idGenerator.getNumberId());
-         goodsVo.setGoodId(goodsId);
+         goodsVo.setGoodId(goods.getGoodId());
          goodsVo.setPlunderId(plunderId);
 
          plunderGoodsService.insertPlunderGoods(goodsVo);

@@ -5,6 +5,7 @@ package com.dkm.jwt.contain;
 import com.dkm.jwt.entity.UserLoginQuery;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LocalUser {
 
 
-    private Map<String,Object> map = new ConcurrentHashMap<>();
+    private Map<String,Object> map = new HashMap<>();
 
 
     /**

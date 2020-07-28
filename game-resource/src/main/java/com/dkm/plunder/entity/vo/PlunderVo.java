@@ -1,5 +1,6 @@
 package com.dkm.plunder.entity.vo;
 
+import com.dkm.plunder.entity.bo.PlunderIdBO;
 import lombok.Data;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class PlunderVo {
    /**
     * 物品id
     */
-   private List<Long> goodsIdList;
+   private List<PlunderIdBO> goodsIdList;
 
    /**
     * 被抢人的等级
