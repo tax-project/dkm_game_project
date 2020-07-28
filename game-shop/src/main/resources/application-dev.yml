@@ -1,19 +1,11 @@
 spring:
   datasource:
-<<<<<<< HEAD
-    url: jdbc:mysql://127.0.0.1:3306/dkm_game?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: dkm123456..
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    host: 127.0.0.1
-=======
     url: jdbc:mysql://localhost:3306/dkm_game?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: dkm123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
-    host: localhost
+    host: 127.0.0.1
     username: guest
     password: guest
     port: 5672
@@ -24,8 +16,7 @@ spring:
       simple:
         acknowledge-mode: manual
   redis:
-    host: localhost
->>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
+    host: 127.0.0.1
     timeout: 2000
     jedis:
       pool:
@@ -38,11 +29,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-<<<<<<< HEAD
       defaultZone: http://127.0.0.1:10000/eureka
-=======
-      defaultZone: http://localhost:10000/eureka
->>>>>>> 14fcf3cab314a04f95f8167b8a168f0a435fb63e
 feign:
   hystrix:
     enabled: true

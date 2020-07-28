@@ -242,7 +242,9 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "网络繁忙,请稍后再试");
       }
 
-      bo.setIsVip(result.getData().getUserInfoIsVip());
+      if (result.getData() != null) {
+         bo.setIsVip(result.getData().getUserInfoIsVip());
+      }
 
       return bo;
    }
