@@ -199,6 +199,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //随机返回9条数据
         Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
 
+        //查看自己是否有主人
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
 
         List<AttendantWithUserVo> data = result.getData();
@@ -345,7 +346,6 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //得到我方装备信息
         EquipmentEntity userAllEquipment1 = iEquipmentService.getUserAllEquipment(query.getId());
-        System.out.println("==========="+userAllEquipment1);
         //如果没有装备
 
         if(ObjectUtils.isEmpty(userAllEquipment)){
@@ -362,7 +362,6 @@ public class AttendantServiceImpl implements IAttendantService {
              */
             heEquipBonus = userAllEquipment.getBlood()+(userAllEquipment.getBlood() * userAllEquipment.getBloodAdd().doubleValue());
 
-            log.info(" 得到他方最终的血量"+heEquipBonus);
             /**
              * 得到他方最终的战斗力
              */
@@ -370,17 +369,13 @@ public class AttendantServiceImpl implements IAttendantService {
 
             double v = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
             double v2 = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
-            log.info("ppp="+v2);
-            log.info("aaa="+userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown());
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
                     (Math.max(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v,0));
-            log.info(" 得到他方最终的战斗力"+heRipetime1);
 
             /**
              * 得到他方最终的防御力
              */
             heDefense =userAllEquipment.getTalent()+(userAllEquipment.getTalent() * userAllEquipment.getTalentAdd().doubleValue());
-            log.info(" 得到他方最终的防御力"+heDefense);
         }
 
 
@@ -409,7 +404,6 @@ public class AttendantServiceImpl implements IAttendantService {
              */
             ourHealth= userAllEquipment1.getBlood()+(userAllEquipment1.getBlood() * userAllEquipment1.getBloodAdd().doubleValue());
 
-            log.info(" 得到我方最终血量"+ourHealth);
             /**
              * 得到我方最终战斗力
              */
@@ -419,45 +413,51 @@ public class AttendantServiceImpl implements IAttendantService {
 
             myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
                     (Math.max(userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v,0));
-            log.info(" 得到我方最终战斗力"+myRipetime);
             /**
              * 得到我方最终防御力
              */
             ourDefenses=userAllEquipment1.getTalent()+(userAllEquipment1.getTalent() * userAllEquipment1.getTalentAdd().doubleValue());
-            log.info(" 得到我方最终防御力"+ourDefenses);
         }
 
-        //如果双方宠物相同 等级高的先动手
-        if(myPet.equals(hePet)){
-            if(myPetsDto.getPGrade()>hePetsDto.getPGrade()){
-                //我方先动手
-                map.put("status",0);
-            }else{
-                //他方先动手
-                map.put("status",1);
+        //如果我方声望比对方高 我方先动手
+        if(userInfoQueryBoResult.getData().getUserInfoRenown()>userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()) {
+            //我方先动手
+            map.put("status", 0);
+        }else{
+            //如果双方宠物相同 等级高的先动手
+            if(myPet.equals(hePet)){
+                if(myPetsDto.getPGrade()>hePetsDto.getPGrade()){
+                    //我方先动手
+                    map.put("status",0);
+                }else{
+                    //他方先动手
+                    map.put("status",1);
+                }
+            }
+            if ("老鼠".equals(myPet)) {
+                if("大象".equals(hePet)){
+                    //我方先动手
+                    map.put("status",0);
+                }else{
+                    //他方先动手
+                    map.put("status",1);
+                }
+            }else if("老虎".equals(myPet)){
+                if("老鼠".equals(hePet)){
+                    map.put("status",0);
+                }else{
+                    map.put("status",1);
+                }
+            }else if("大象".equals(myPet)){
+                if("老虎".equals(hePet)){
+                    map.put("status",0);
+                }else{
+                    map.put("status",1);
+                }
             }
         }
-        if ("老鼠".equals(myPet)) {
-           if("大象".equals(hePet)){
-               //我方先动手
-               map.put("status",0);
-           }else{
-               //他方先动手
-               map.put("status",1);
-           }
-        }else if("老虎".equals(myPet)){
-            if("老鼠".equals(hePet)){
-                map.put("status",0);
-            }else{
-                map.put("status",1);
-            }
-        }else if("大象".equals(myPet)){
-            if("老虎".equals(hePet)){
-                map.put("status",0);
-            }else{
-                map.put("status",1);
-            }
-        }
+
+
 
         map.put("userInfoQueryBoResult",userInfoQueryBoResult.getData());
         map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId.getData());
