@@ -67,7 +67,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
    /**
     *  物品金币
     */
-   private final String GOOD_NAME = "金币";
+   private String GOOD_NAME = "金币";
 
    @Override
    public void insertPlunder(PlunderVo vo) {

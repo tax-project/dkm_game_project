@@ -30,21 +30,6 @@ public class ProblemController {
    @Autowired
    private IProblemService problemService;
 
-   @PostMapping("/insertAll")
-   public ResultVo insertAllProblem (@RequestBody ProblemInsertVo vo) {
-
-      if (vo.getList().size() == 0) {
-         throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
-      }
-
-      problemService.insertAllProblem(vo.getList());
-
-      ResultVo resultVo = new ResultVo();
-      resultVo.setResult("ok");
-
-      return resultVo;
-   }
-
 
    @ApiOperation(value = "随机返回10条数据", notes = "随机返回10条数据")
    @ApiImplicitParam(name = "id", value = "红包id", required = true, dataType = "Long", paramType = "path")
