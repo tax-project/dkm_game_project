@@ -72,7 +72,7 @@ public class SeedsFallController {
     @PostMapping("/queryDroppedItems")
     @CrossOrigin
     @CheckToken
-    List<SeedsFallVo> queryDroppedItems(){
+    public List<SeedsFallVo> queryDroppedItems(){
         return iSeedFallService.queryDroppedItems();
     }
 

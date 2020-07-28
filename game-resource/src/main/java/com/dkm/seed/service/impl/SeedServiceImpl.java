@@ -143,7 +143,7 @@ public class SeedServiceImpl implements ISeedService {
 
             //种子种植金币
             double userGold = Math.pow(seeds.get(i).getSeedGrade(), 2) * 50 + 500;
-            Integer userGoldInteger = Integer.valueOf((int) userGold);
+            Integer userGoldInteger = (int) userGold;
             seeds.get(i).setSeedGold(userGoldInteger);
 
         }
@@ -389,6 +389,7 @@ public class SeedServiceImpl implements ISeedService {
                 if (null == list3 || list3.size() == 0) {
                     throw new ApplicationException(CodeType.SERVICE_ERROR);
                 }
+
 
                 List<Long> longList = new ArrayList<>();
                 for (LandSeed landSeed : list3) {

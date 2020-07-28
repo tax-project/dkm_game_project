@@ -183,7 +183,7 @@ public class SeedController {
     })
     @CrossOrigin
     @CheckToken
-    int updateSeedStatus(@RequestParam("id") List<Long> id){
+    public int updateSeedStatus(@RequestParam("id") List<Long> id){
         if(id==null){
             log.info("参数为空");
             throw new ApplicationException(CodeType.SERVICE_ERROR);

@@ -82,7 +82,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         Integer gold=0;
         double money=0;
 
-        List<SeedsFall> list=new ArrayList<>();
         SeedsFall seedsFall=null;
 
         for (LandSeed seed : landSeedList) {
@@ -151,6 +150,14 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Override
     public void redBagDroppedSeparately() {
 
+
+        //查询出种子首次产出的金钱
+        List<moneyVo> moneyVos = baseMapper.queryMoney();
+        if(moneyVos.size()==0){
+            log.info("查询种子产出金钱---->" + moneyVos);
+            return;
+        }
+
         //查询已经种植的种子
         LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
                 .eq(LandSeed::getLeStatus, 1);
@@ -163,13 +170,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
                 baseMapper.updateLeStatusTime(seed.getId());
             }
-        }
-
-        //查询出种子首次产出的金钱
-        List<moneyVo> moneyVos = baseMapper.queryMoney();
-        if(moneyVos.size()==0){
-            log.info("查询种子产出金钱---->" + moneyVos);
-            return;
         }
 
         //截取小数点后两位
