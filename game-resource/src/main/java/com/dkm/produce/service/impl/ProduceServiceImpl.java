@@ -22,6 +22,7 @@ import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
+import com.dkm.produce.entity.bo.ProduceBO;
 import com.dkm.produce.entity.vo.*;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
@@ -74,12 +75,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private IAttendantService attendantService;
 
     @Autowired
-    private RedisConfig redisConfig;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    private String put = "PUT::REDIS::";
 
     /**
      *  物品金币
@@ -282,16 +278,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Override
     public void getPut() {
+
+        System.out.println("进来了");
         UserLoginQuery user = localUser.getUser();
-
-        Object value = redisConfig.getString(put + user.getId());
-
-        if (value != null) {
-            //说明上线过了
-            return;
-        }
-
-        redisConfig.setString(put + user.getId(), "attPutInfo");
 
         int much = 12;
 
@@ -300,14 +289,29 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(user.getId());
 
+        System.out.println("->attendantUsers:" + attendantUsers);
+
         List<Produce> produceList = new ArrayList<>();
 
         List<UserProduce> userProduceList = new ArrayList<>();
 
+        List<ProduceBO> atuIdList = new ArrayList<>();
+
         for (AttendantUser attendantUser : attendantUsers) {
+            ProduceBO bo = new ProduceBO();
+            if (attendantUser.getAttMuch() == null) {
+                attendantUser.setAttMuch(0);
+            }
+
             LocalDateTime time = DateUtils.parseDateTime(attendantUser.getEndDate());
 
-            Integer until = (int)now.until(time, ChronoUnit.HOURS);
+            System.out.println("endTime:" + attendantUser.getEndDate());
+            int until = (int)now.until(time, ChronoUnit.HOURS);
+
+            System.out.println("until:" + until);
+            if (attendantUser.getAttMuch() == much) {
+                return;
+            }
 
             if (until <= 0) {
                 //查看数据库之前产出的次数
@@ -318,6 +322,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
+                bo.setMuch(much);
             }
 
             if (until > 0) {
@@ -328,9 +333,15 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
+                bo.setMuch(much - until);
             }
+
+            bo.setAttId(attendantUser.getAtuId());
+            atuIdList.add(bo);
         }
 
+
+        System.out.println("produceList---->" + produceList);
 
         //批量增加到数据库
         Integer integer = baseMapper.allInsertProduce(produceList);
@@ -343,6 +354,10 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //批量增加用户产量
         userProduceService.allInsertUserProduce(userProduceList);
+
+        System.out.println("userProduceList---->" + userProduceList);
+
+        attendantUserService.updateProduce(atuIdList);
 
     }
 
