@@ -91,7 +91,7 @@ public class AttendantServiceImpl implements IAttendantService {
     @Autowired
     private RedisConfig redisConfig;
 
-    private final String put = "PUT::REDIS::";
+    private String put = "PUT::REDIS::";
 
     @Autowired
     private IProduceService produceService;
@@ -117,6 +117,8 @@ public class AttendantServiceImpl implements IAttendantService {
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
 
         List<AttendantPutVo> outputList = produceService.queryOutput(query.getId());
+
+        System.out.println("--->" + outputList);
 
         for (AttUserAllInfoVo infoVo : list1) {
             list.add(infoVo);
