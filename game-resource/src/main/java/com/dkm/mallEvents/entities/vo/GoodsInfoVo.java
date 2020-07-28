@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class GoodsInfoVo {
+    private Integer id;
     private String name;
     private String imageUrl;
+    private Integer size;
 }

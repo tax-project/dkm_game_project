@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ICancerService {
     List<SingleTopUpVo> getSingleTopUp(Long id);
+
+    Boolean getSingleTopUpInfoCheck(Long userId, Integer id);
 }
