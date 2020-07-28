@@ -22,7 +22,7 @@ eureka:
       defaultZone: http://localhost:10000/eureka
 
 file:
-  url: http://120.25.196.49:8304/game-resource/img
+  url: http://192.168.10.133:8304/game-resource/img
 feign:
   hystrix:
     enabled: true

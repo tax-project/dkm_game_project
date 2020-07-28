@@ -46,7 +46,6 @@ public class EventMqListener {
 
    @RabbitHandler
    public void rabbitHandle (String msg, com.rabbitmq.client.Channel mqChannel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) {
-
       log.info("接受到事件或种子种植消息-->" + msg);
       MsgInfo msgInfo = null;
       try {

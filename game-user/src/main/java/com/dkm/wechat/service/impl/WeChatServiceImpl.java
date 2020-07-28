@@ -239,6 +239,9 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
     public UserInfoQueryBo queryUser(Long id) {
         UserInfoBo bo = baseMapper.queryUser(id);
         UserInfoQueryBo result = new UserInfoQueryBo();
+        if (bo == null) {
+            return null;
+        }
         BeanUtils.copyProperties(bo,result);
         if (bo.getUserInfoEnvelopeTime() != null) {
             result.setUserInfoEnvelopeQueryTime(DateUtils.formatDate(bo.getUserInfoEnvelopeTime()));
