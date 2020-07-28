@@ -6,9 +6,12 @@ import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.service.ICancerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -32,6 +35,18 @@ public class CancerController {
     @GetMapping(value = "/getSingleTopUpInfo", produces = "application/json")
     public List<SingleTopUpVo> getSingleTopUp() {
         return cancerService.getSingleTopUp(localUser.getUser().getId());
+    }
+
+    @ApiOperation("领取单笔充值满30领取豪华礼包")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "path", name = "id", required = true, dataType = "Long", value = "领取充值奖励的id")
+    })
+    @GetMapping(value = "/getSingleTopUpInfo/{id}/check", produces = "application/json")
+    public Boolean getSingleTopUpInfoCheck(@PathVariable Integer id) {
+        return cancerService.getSingleTopUpInfoCheck(localUser.getUser().getId(),id);
     }
 
 
