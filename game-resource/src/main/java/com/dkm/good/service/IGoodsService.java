@@ -39,4 +39,10 @@ public interface IGoodsService {
     */
    List<GoodQueryVo> getGoodList (Long userId);
 
+   /**
+    * 随机取一个
+    * @return
+    */
+   Goods queryOne ();
+
 }

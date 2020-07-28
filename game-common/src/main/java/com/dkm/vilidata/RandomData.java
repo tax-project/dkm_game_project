@@ -39,7 +39,7 @@ public class RandomData {
       return set;
    }
 
-   public Set<Integer> getSet (Integer size, Integer count) {
+   private Set<Integer> getSet (Integer size, Integer count) {
       Set<Integer> set = new HashSet<Integer>();
       for (int i = 0; i < count; i++) {
          int random = (int) (Math.random()*size);

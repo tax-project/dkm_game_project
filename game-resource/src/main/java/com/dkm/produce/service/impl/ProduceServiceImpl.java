@@ -7,6 +7,7 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.dao.AttendantUserMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.ProducePutBO;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -279,7 +280,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     @Override
     public void getPut() {
 
-        System.out.println("进来了");
         UserLoginQuery user = localUser.getUser();
 
         int much = 12;
@@ -288,8 +288,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         LocalDateTime now = LocalDateTime.now();
 
         List<AttendantUser> attendantUsers = attendantUserService.queryListByUserId(user.getId());
-
-        System.out.println("->attendantUsers:" + attendantUsers);
 
         List<Produce> produceList = new ArrayList<>();
 
@@ -305,10 +303,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
             LocalDateTime time = DateUtils.parseDateTime(attendantUser.getEndDate());
 
-            System.out.println("endTime:" + attendantUser.getEndDate());
             int until = (int)now.until(time, ChronoUnit.HOURS);
 
-            System.out.println("until:" + until);
             if (attendantUser.getAttMuch() == much) {
                 return;
             }
@@ -316,9 +312,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             if (until <= 0) {
                 //查看数据库之前产出的次数
                 for (int i = 0; i < much - attendantUser.getAttMuch(); i++) {
-                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
-                    Produce produce = (Produce) put.get("produce");
-                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    ProducePutBO put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = put.getProduce();
+                    UserProduce userProduce = put.getUserProduce();
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
@@ -327,9 +323,9 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
             if (until > 0) {
                 for (int i = 0; i < much - attendantUser.getAttMuch() - until; i++) {
-                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
-                    Produce produce = (Produce) put.get("produce");
-                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    ProducePutBO putBO = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = putBO.getProduce();
+                    UserProduce userProduce = putBO.getUserProduce();
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
@@ -340,22 +336,21 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             atuIdList.add(bo);
         }
 
-
-        System.out.println("produceList---->" + produceList);
-
         //批量增加到数据库
-        Integer integer = baseMapper.allInsertProduce(produceList);
+        if (produceList.size() > 0) {
+            Integer integer = baseMapper.allInsertProduce(produceList);
 
-        if (integer <= 0) {
-            log.info("上线时批量增加产量出错");
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "添加出错");
+            if (integer <= 0) {
+                log.info("上线时批量增加产量出错");
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "添加出错");
+            }
         }
 
 
         //批量增加用户产量
-        userProduceService.allInsertUserProduce(userProduceList);
-
-        System.out.println("userProduceList---->" + userProduceList);
+        if (userProduceList.size() > 0) {
+            userProduceService.allInsertUserProduce(userProduceList);
+        }
 
         attendantUserService.updateProduce(atuIdList);
 
@@ -363,9 +358,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
 
 
-    public Map<String, Object> put(Long userId, Long attendantId, Long attUserId) {
-        Goods goods = goodsService.queryRandomGoods();
-
+    public ProducePutBO put(Long userId, Long attendantId, Long attUserId) {
+        Goods goods = goodsService.queryOne();
 
         Produce produce = new Produce();
         Long produceId = idGenerator.getNumberId();
@@ -403,12 +397,11 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         userProduce.setUserId(userId);
         userProduce.setProduceId(produceId);
 
-        Map<String, Object> map = new HashMap<>(2);
+        ProducePutBO producePutBO = new ProducePutBO();
+        producePutBO.setProduce(produce);
+        producePutBO.setUserProduce(userProduce);
 
-        map.put("produce",produce);
-        map.put("userProduce", userProduce);
-
-        return map;
+        return producePutBO;
     }
 
 

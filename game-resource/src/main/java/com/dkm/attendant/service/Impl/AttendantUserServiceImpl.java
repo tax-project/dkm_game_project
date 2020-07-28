@@ -138,7 +138,10 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
             attendantUser.setAttMuch(bo.getMuch());
             attendantUser.setAtuId(bo.getAttId());
 
-            int updateById = baseMapper.updateById(attendantUser);
+            LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
+                  .eq(AttendantUser::getAtuId, bo.getAttId());
+
+            int updateById = baseMapper.update(attendantUser, wrapper);
 
             if (updateById <= 0) {
                 throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");

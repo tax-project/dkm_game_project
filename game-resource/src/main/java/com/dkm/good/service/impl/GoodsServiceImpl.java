@@ -81,4 +81,21 @@ public class GoodsServiceImpl extends ServiceImpl<GoodMapper, Goods> implements 
    public List<GoodQueryVo> getGoodList(Long userId) {
       return baseMapper.getGoodList(userId);
    }
+
+   @Override
+   public Goods queryOne() {
+
+      LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<Goods>()
+            .ne(Goods::getGoodType, 1);
+
+      List<Goods> goods = baseMapper.selectList(wrapper);
+
+      Set<Integer> list = randomData.getList(goods.size(), 1);
+
+      for (Integer integer : list) {
+         return goods.get(integer);
+      }
+
+      return null;
+   }
 }
