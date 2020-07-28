@@ -325,13 +325,7 @@ public class SeedServiceImpl implements ISeedService {
                     .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
 
             List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
-<<<<<<< HEAD
-            System.out.println("测试List1=>"+list1.size()+"=>数据->"+list1.toString());
 
-=======
-
-            System.out.println("-->"+list1);
->>>>>>> 292b66090537d3901f5b9019ea3923e4a0588c76
             int PlantingTimes = 0;
 
             //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
@@ -392,13 +386,9 @@ public class SeedServiceImpl implements ISeedService {
 
                 List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
 
-<<<<<<< HEAD
-=======
-                System.out.println("--->" + list3.size());
                 if (null == list3 || list3.size() == 0) {
                     throw new ApplicationException(CodeType.SERVICE_ERROR);
                 }
->>>>>>> 292b66090537d3901f5b9019ea3923e4a0588c76
 
                 List<Long> longList = new ArrayList<>();
                 for (LandSeed landSeed : list3) {
