@@ -20,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @PROJECT_NAME: dkm_game
@@ -177,7 +179,6 @@ public class AttendantController {
     @CrossOrigin
     @CheckToken
     public Map<String, Object> gather(@RequestParam("atuId") Long atuId, @RequestParam("attUserId") Long attUserId){
-
         if(atuId==null || attUserId == null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数为空");
         }
