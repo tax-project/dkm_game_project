@@ -33,7 +33,7 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
 
     Integer insertList(@Param("list") List<BackPackEntity> backPackEntities);
 
-    @Select("SELECT backpack_id,number FROM tb_user_backpack WHERE user_id = #{userId} and good_id = 6")
+    @Select("SELECT backpack_id,ifnull(number,0) as number FROM tb_user_backpack WHERE user_id = #{userId} and good_id = 6")
     GoldStarVo getStars(@Param("userId") Long userId);
 
     @Select("SELECT g.id as food_id,IFNULL(ub.number,0) as food_number,g.url,g.name FROM " +

@@ -2,6 +2,8 @@ package com.dkm.plunder.entity.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author qf
  * @date 2020/5/19
@@ -18,7 +20,7 @@ public class PlunderVo {
    /**
     * 物品id
     */
-   private Long goodsId;
+   private List<Long> goodsIdList;
 
    /**
     * 被抢人的等级

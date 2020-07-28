@@ -64,6 +64,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+
+
     @Override
     public void seedDrop() {
         //查询已经种植的种子
@@ -74,7 +76,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         if(landSeedList.size()==0){
             log.info("查询种子未种植...");
-           return;
+            return;
         }
 
         Integer gold=0;
@@ -90,7 +92,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 baseMapper.updateLeStatusTime(seed.getId());
             }
 
-            if(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))<System.currentTimeMillis()/1000){
+            if(System.currentTimeMillis()/1000 < seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
                 seedsFall=new SeedsFall();
                 seedsFall.setId(seed.getId());
                 seedsFall.setSeedId(seed.getSeedId());
@@ -149,6 +151,20 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Override
     public void redBagDroppedSeparately() {
 
+        //查询已经种植的种子
+        LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
+                .eq(LandSeed::getLeStatus, 1);
+
+        List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
+
+        for (LandSeed seed : landSeedList) {
+
+            //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
+            if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
+                baseMapper.updateLeStatusTime(seed.getId());
+            }
+        }
+
         //查询出种子首次产出的金钱
         List<moneyVo> moneyVos = baseMapper.queryMoney();
         if(moneyVos.size()==0){
@@ -189,5 +205,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         List<SeedsFallVo> seedsFallVos = baseMapper.queryDroppedItems(localUser.getUser().getId());
         return seedsFallVos;
     }
+
+
 
 }
