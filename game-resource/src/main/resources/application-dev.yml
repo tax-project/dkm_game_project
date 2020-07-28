@@ -33,7 +33,7 @@ eureka:
       defaultZone: http://127.0.0.1:10000/eureka
 
 file:
-  url: http://127.0.0.1:8000/game/resource/img
+  url: http://124.232.163.75:8000/game/resource/img
 feign:
   hystrix:
     enabled: true
@@ -55,9 +55,10 @@ pay:
   #支付设备密钥
   authPassword: 518eff0233a24401b20a66720d3f20f4
   #地址
-  url: http://192.168.10.133:8000/game/resource
+  url: http://124.232.163.75:8000/game/resource
   # 支付模块地址
-  payUrl: http://192.168.10.133:20001/pay
+  payUrl: http://124.232.163.75:20001/pay
+
 
 
 

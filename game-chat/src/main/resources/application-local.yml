@@ -29,7 +29,6 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.10.133:10000/eureka
-
 file:
   # 前端地址   跳转搜索群聊的页面
   qrCodeUrl: http://www.baidu.com

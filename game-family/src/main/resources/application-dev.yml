@@ -41,6 +41,4 @@ hystrix:
   metrics:
     enabled: true
     polling-interval-ms: 4000
-family:
-  url: http://127.0.0.1:8002
 

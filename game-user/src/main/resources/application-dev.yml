@@ -23,12 +23,17 @@ spring:
         max-wait: 1000
         max-active: 20
         min-idle: 1
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10000/eureka
 feign:
   hystrix:
     enabled: true
   httpclient:
     connection-timeout: 10000
-
 hystrix:
   metrics:
     enabled: true

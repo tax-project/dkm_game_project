@@ -5,13 +5,11 @@ mybatis-plus:
   mapper-locations: classpath:com/dkm/*/dao/mapper/*.xml
 spring:
   profiles:
-    active: local
+    active: dev
   application:
     name: file
   jmx:
     enabled: false
-
-
 app:
   workerId: 9
   dataCenterId: 1

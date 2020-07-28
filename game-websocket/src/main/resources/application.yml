@@ -1,10 +1,8 @@
 server:
-  port: 8002
+  port: 8006
 
 spring:
   profiles:
     active: local
   application:
     name: websocket
-
-
