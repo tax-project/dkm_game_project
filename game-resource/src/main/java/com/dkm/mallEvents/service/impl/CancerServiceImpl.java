@@ -6,6 +6,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.mallEvents.dao.CancerDao;
 import com.dkm.mallEvents.entities.vo.GoodsInfoVo;
+import com.dkm.mallEvents.entities.vo.RechargeVo;
 import com.dkm.mallEvents.entities.vo.SingleHistoryUserVo;
 import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.service.ICancerService;
@@ -27,7 +28,8 @@ public class CancerServiceImpl implements ICancerService {
     public List<SingleTopUpVo> getSingleTopUp(Long userId) {
         List<SingleTopUpVo> singleTopUpVos = cancerDao.selectSingle();
         for (SingleTopUpVo singleTopUpVo : singleTopUpVos) {
-            singleTopUpVo.setStatus(cancerDao.findCheckedById(userId, singleTopUpVo.getId()) != null);
+            // 无法对接充值
+            singleTopUpVo.setStatus(cancerDao.findCheckedById(userId, singleTopUpVo.getId()) != null?2:1);
         }
         return singleTopUpVos;
     }
@@ -57,5 +59,10 @@ public class CancerServiceImpl implements ICancerService {
         }
         cancerDao.addUser(userId, id);
         return true;
+    }
+
+    @Override
+    public List<RechargeVo> getCumulativeRecharge(Long id) {
+        return null;
     }
 }
