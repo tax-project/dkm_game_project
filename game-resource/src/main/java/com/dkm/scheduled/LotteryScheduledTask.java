@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * @author fkl
  */
 @EnableScheduling
-//@Configuration
+@Configuration
 @Slf4j
 public class LotteryScheduledTask {
 

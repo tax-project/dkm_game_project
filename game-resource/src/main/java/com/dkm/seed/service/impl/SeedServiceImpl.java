@@ -264,7 +264,7 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
-
+        System.out.println(seedPlantVo.getSeedId()+"==="+seedPlantVo.getSeedGrade());
         //如果等于一就是种植种子
         if (seedPlantVo.getStatus() == 1) {
 
@@ -433,22 +433,33 @@ public class SeedServiceImpl implements ISeedService {
                     .eq(LandSeed::getLeStatus, 2);
             List<LandSeed> LandSeedList = landSeedMapper.selectList(queryWrapper1);
 
+            List<Long> list=new ArrayList<>();
+
             for (int i = 0; i < LandSeedList.size(); i++) {
                 if (System.currentTimeMillis() / 1000 >= LandSeedList.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
+                    System.out.println("进来");
+                    list.add(LandSeedList.get(i).getId());
 
                     //收取种子后 修改当前用户土地种子的状态
-                    LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+                   /* LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
                             .eq(LandSeed::getId, LandSeedList.get(i).getId());
                     LandSeed landSeed = new LandSeed();
                     landSeed.setLeStatus(3);
-                    landSeed.setNewSeedIs(0);
+                    landSeed.setNewSeedIs(0);*/
 
-                    //修改用户种子种植状态
-                    int update = landSeedMapper.update(landSeed, wrapper);
+
                 }
-
-
             }
+
+            System.out.println(list.size());
+            if(list.size()==0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"时间没到，不可收取");
+            }else{
+                //修改用户种子种植状态
+                int update = landSeedMapper.updateSeedStatus(list);
+            }
+
+
 
             //种植所获得的经验
             double experience = Math.pow(seedPlantVo.getSeedGrade(), 2 / 5.0) * 100 * userLandUnlocks.size();

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.seed.dao.LandSeedMapper">
+
+    <update id="updateSeedStatus" parameterType="java.util.List">
+        UPDATE tb_land_seed set le_status=3,new_seed_is=0 where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            id=#{i}
+        </foreach>
+    </update>
+
+
+</mapper>
