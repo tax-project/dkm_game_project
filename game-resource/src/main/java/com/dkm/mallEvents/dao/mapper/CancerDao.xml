@@ -53,4 +53,8 @@
         WHERE user_id = #{param1}
           AND tb_mall_single_id = #{param2}
     </select>
+    <select id="selectSomeWhere" resultType="com.dkm.mallEvents.entities.vo.Prizes2StatusVo">
+
+    </select>
+
 </mapper>

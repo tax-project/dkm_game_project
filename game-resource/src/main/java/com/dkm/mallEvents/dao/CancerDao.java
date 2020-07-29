@@ -1,9 +1,6 @@
 package com.dkm.mallEvents.dao;
 
-import com.dkm.mallEvents.entities.vo.GoodsInfoVo;
-import com.dkm.mallEvents.entities.vo.SingleHistoryUserVo;
-import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
-import com.dkm.mallEvents.entities.vo.SingleUserVo;
+import com.dkm.mallEvents.entities.vo.*;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,4 +19,6 @@ public interface CancerDao {
     SingleHistoryUserVo selectHistoryByUser(Long userId, Integer id);
 
     void addUser(Long userId, Integer id);
+
+    Prizes2StatusVo selectSomeWhere(Long userId, int i);
 }

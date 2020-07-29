@@ -1,6 +1,6 @@
 package com.dkm.mallEvents.service;
 
-import com.dkm.mallEvents.entities.vo.RechargeVo;
+import com.dkm.mallEvents.entities.data.RechargeVo;
 import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 
 import java.util.List;
@@ -10,5 +10,5 @@ public interface ICancerService {
 
     Boolean getSingleTopUpInfoCheck(Long userId, Integer id);
 
-    List<RechargeVo> getCumulativeRecharge(Long id);
+    RechargeVo getCumulativeRecharge(Long id);
 }

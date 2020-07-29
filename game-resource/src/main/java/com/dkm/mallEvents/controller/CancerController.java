@@ -2,14 +2,13 @@ package com.dkm.mallEvents.controller;
 
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
-import com.dkm.mallEvents.entities.vo.RechargeVo;
+import com.dkm.mallEvents.entities.data.RechargeVo;
 import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.service.ICancerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +54,7 @@ public class CancerController {
     @CheckToken
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @GetMapping(value = "/cumulativeRecharge", produces = "application/json")
-    public List<RechargeVo> getCumulativeRecharge() {
+    public RechargeVo getCumulativeRecharge() {
         return cancerService.getCumulativeRecharge(localUser.getUser().getId());
     }
 

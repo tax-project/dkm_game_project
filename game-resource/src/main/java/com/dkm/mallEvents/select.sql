@@ -5,10 +5,24 @@ FROM tb_mall_single a,
 WHERE a.id = b.tb_mall_single_id
   AND c.id = b.goods_id;
 
-SELECT a.id id, b.id goods_id, b.name name ,b.url  image_url ,a.size size
+SELECT a.id id, b.id goods_id, b.name name, b.url image_url, a.size size
 From tb_mall_single_item a
          join tb_goods b on a.goods_id = b.id
 where tb_mall_single_id = 1;
 
 
-SELECT  user_id ,tb_mall_single_id item_id FROM tb_mall_single_user WHERE user_id = '' AND tb_mall_single_id = '';
+SELECT user_id, tb_mall_single_id item_id
+FROM tb_mall_single_user
+WHERE user_id = ''
+  AND tb_mall_single_id = '';
+
+
+
+SELECT a.id id, b.goods_id item_id, tg.url url, tg.name, b.size size
+FROM tb_mall_cumulative_recharge_or_consumption a
+         JOIN tb_mall_cumulative_recharge_or_consumption_item b ON
+    a.id = b.cumulative_recharge_or_consumption_id
+         JOIN tb_goods tg on b.goods_id = tg.id
+WHERE type = 1 AND a.constraints > 100;
+
+
