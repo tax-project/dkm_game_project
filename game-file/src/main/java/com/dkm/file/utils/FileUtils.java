@@ -81,8 +81,9 @@ public class FileUtils {
 
    public Path name2Path(String fileName) {
 //      String fileStorePath = "E:\\img/game-img";
+//      return Paths.get(fileStorePath, fileName.substring(0, 8), fileName);
       String fileStorePath = "/root/img/game-img";
-      return Paths.get(fileStorePath, fileName.substring(0, 8), fileName);
+      return Paths.get(fileStorePath, fileName.substring(0, 10), fileName);
    }
 
    public Map<String,Object> resultMap(String state, String url, long size, String title, String original, String type){
