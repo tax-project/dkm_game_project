@@ -2,6 +2,7 @@ package com.dkm.mallEvents.controller;
 
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
+import com.dkm.mallEvents.entities.vo.RechargeVo;
 import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.service.ICancerService;
 import io.swagger.annotations.Api;
@@ -46,7 +47,16 @@ public class CancerController {
     })
     @GetMapping(value = "/getSingleTopUpInfo/{id}/check", produces = "application/json")
     public Boolean getSingleTopUpInfoCheck(@PathVariable Integer id) {
-        return cancerService.getSingleTopUpInfoCheck(localUser.getUser().getId(),id);
+        return cancerService.getSingleTopUpInfoCheck(localUser.getUser().getId(), id);
+    }
+
+    @ApiOperation("获取累计充值")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    @GetMapping(value = "/cumulativeRecharge", produces = "application/json")
+    public List<RechargeVo> getCumulativeRecharge() {
+        return cancerService.getCumulativeRecharge(localUser.getUser().getId());
     }
 
 
