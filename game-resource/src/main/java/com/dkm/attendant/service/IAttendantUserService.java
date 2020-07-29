@@ -2,6 +2,7 @@ package com.dkm.attendant.service;
 
 import com.dkm.attendant.entity.AttendantUser;
 import com.dkm.attendant.entity.bo.AttUserInfoBo;
+import com.dkm.produce.entity.bo.ProduceBO;
 
 import java.util.List;
 
@@ -62,4 +63,16 @@ public interface IAttendantUserService {
      * @return 返回其主人的信息
      */
     AttUserInfoBo queryAttUserInfo (Long userId);
+
+    /**
+     *  修改次数
+     * @param list id集合
+    */
+    void updateStatus (List<ProduceBO> list);
+
+    /**
+     *  修改产出次数
+     * @param list 参数集合
+     */
+    void updateProduce (List<ProduceBO> list);
 }

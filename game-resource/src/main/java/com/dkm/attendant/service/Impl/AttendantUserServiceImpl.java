@@ -11,6 +11,7 @@ import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
+import com.dkm.produce.entity.bo.ProduceBO;
 import com.dkm.utils.IdGenerator;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
@@ -117,5 +118,34 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
         result.setStatus(1);
 
         return result;
+    }
+
+    @Override
+    public void updateStatus(List<ProduceBO> list) {
+        Integer integer = baseMapper.updateStatus(list);
+
+        if (integer <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+        }
+    }
+
+    @Override
+    public void updateProduce(List<ProduceBO> list) {
+
+        for (ProduceBO bo : list) {
+            AttendantUser attendantUser = new AttendantUser();
+
+            attendantUser.setAttMuch(bo.getMuch());
+            attendantUser.setAtuId(bo.getAttId());
+
+            LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
+                  .eq(AttendantUser::getAtuId, bo.getAttId());
+
+            int updateById = baseMapper.update(attendantUser, wrapper);
+
+            if (updateById <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+            }
+        }
     }
 }

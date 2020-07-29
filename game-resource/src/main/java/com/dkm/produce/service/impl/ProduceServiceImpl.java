@@ -7,6 +7,7 @@ import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.dao.AttendantUserMapper;
 import com.dkm.attendant.entity.AttenDant;
 import com.dkm.attendant.entity.AttendantUser;
+import com.dkm.attendant.entity.bo.ProducePutBO;
 import com.dkm.attendant.entity.vo.AttUserAllInfoVo;
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.attendant.service.IAttendantUserService;
@@ -22,6 +23,7 @@ import com.dkm.plunder.entity.UserProduce;
 import com.dkm.plunder.service.IUserProduceService;
 import com.dkm.produce.dao.ProduceMapper;
 import com.dkm.produce.entity.Produce;
+import com.dkm.produce.entity.bo.ProduceBO;
 import com.dkm.produce.entity.vo.*;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
@@ -74,12 +76,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
     private IAttendantService attendantService;
 
     @Autowired
-    private RedisConfig redisConfig;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    private String put = "PUT::REDIS::";
 
     /**
      *  物品金币
@@ -282,16 +279,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
     @Override
     public void getPut() {
+
         UserLoginQuery user = localUser.getUser();
-
-        Object value = redisConfig.getString(put + user.getId());
-
-        if (value != null) {
-            //说明上线过了
-            return;
-        }
-
-        redisConfig.setString(put + user.getId(), "attPutInfo");
 
         int much = 12;
 
@@ -304,53 +293,73 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         List<UserProduce> userProduceList = new ArrayList<>();
 
+        List<ProduceBO> atuIdList = new ArrayList<>();
+
         for (AttendantUser attendantUser : attendantUsers) {
+            ProduceBO bo = new ProduceBO();
+            if (attendantUser.getAttMuch() == null) {
+                attendantUser.setAttMuch(0);
+            }
+
             LocalDateTime time = DateUtils.parseDateTime(attendantUser.getEndDate());
 
-            Integer until = (int)now.until(time, ChronoUnit.HOURS);
+            int until = (int)now.until(time, ChronoUnit.HOURS);
+
+            if (attendantUser.getAttMuch() == much) {
+                return;
+            }
 
             if (until <= 0) {
                 //查看数据库之前产出的次数
                 for (int i = 0; i < much - attendantUser.getAttMuch(); i++) {
-                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
-                    Produce produce = (Produce) put.get("produce");
-                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    ProducePutBO put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = put.getProduce();
+                    UserProduce userProduce = put.getUserProduce();
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
+                bo.setMuch(much);
             }
 
             if (until > 0) {
                 for (int i = 0; i < much - attendantUser.getAttMuch() - until; i++) {
-                    Map<String, Object> put = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
-                    Produce produce = (Produce) put.get("produce");
-                    UserProduce userProduce = (UserProduce) put.get("userProduce");
+                    ProducePutBO putBO = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
+                    Produce produce = putBO.getProduce();
+                    UserProduce userProduce = putBO.getUserProduce();
                     produceList.add(produce);
                     userProduceList.add(userProduce);
                 }
+                bo.setMuch(much - until);
+            }
+
+            bo.setAttId(attendantUser.getAtuId());
+            atuIdList.add(bo);
+        }
+
+        //批量增加到数据库
+        if (produceList.size() > 0) {
+            Integer integer = baseMapper.allInsertProduce(produceList);
+
+            if (integer <= 0) {
+                log.info("上线时批量增加产量出错");
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "添加出错");
             }
         }
 
 
-        //批量增加到数据库
-        Integer integer = baseMapper.allInsertProduce(produceList);
-
-        if (integer <= 0) {
-            log.info("上线时批量增加产量出错");
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "添加出错");
+        //批量增加用户产量
+        if (userProduceList.size() > 0) {
+            userProduceService.allInsertUserProduce(userProduceList);
         }
 
-
-        //批量增加用户产量
-        userProduceService.allInsertUserProduce(userProduceList);
+        attendantUserService.updateProduce(atuIdList);
 
     }
 
 
 
-    public Map<String, Object> put(Long userId, Long attendantId, Long attUserId) {
-        Goods goods = goodsService.queryRandomGoods();
-
+    public ProducePutBO put(Long userId, Long attendantId, Long attUserId) {
+        Goods goods = goodsService.queryOne();
 
         Produce produce = new Produce();
         Long produceId = idGenerator.getNumberId();
@@ -388,12 +397,11 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         userProduce.setUserId(userId);
         userProduce.setProduceId(produceId);
 
-        Map<String, Object> map = new HashMap<>(2);
+        ProducePutBO producePutBO = new ProducePutBO();
+        producePutBO.setProduce(produce);
+        producePutBO.setUserProduce(userProduce);
 
-        map.put("produce",produce);
-        map.put("userProduce", userProduce);
-
-        return map;
+        return producePutBO;
     }
 
 
