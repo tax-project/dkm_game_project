@@ -346,7 +346,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             }
         }
 
-
         //批量增加用户产量
         if (userProduceList.size() > 0) {
             userProduceService.allInsertUserProduce(userProduceList);
