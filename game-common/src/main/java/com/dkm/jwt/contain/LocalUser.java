@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author qf
@@ -35,7 +34,6 @@ public class LocalUser {
      * @return
      */
     public UserLoginQuery getUser () {
-        UserLoginQuery result = (UserLoginQuery) map.get("user");
-        return result;
+        return (UserLoginQuery) map.get("user");
     }
 }
