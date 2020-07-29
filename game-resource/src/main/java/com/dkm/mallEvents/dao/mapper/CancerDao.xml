@@ -11,14 +11,20 @@
         <collection property="goods" ofType="com.dkm.mallEvents.entities.vo.GoodsInfoVo" column="item_id">
             <id column="item_id" property="id"/>
             <result column="name" property="name"/>
+            <result column="goods_id" property="goodsId"/>
             <result column="size" property="size"/>
             <result column="image_url" property="imageUrl"/>
         </collection>
     </resultMap>
+    <insert id="addUser">
+        INSERT INTO tb_mall_single_user (user_id, tb_mall_single_id)
+        VALUES (#{param1}, #{param2})
+    </insert>
 
     <select id="selectSingle" resultMap="selectItem">
         SELECT a.id      id,
                b.id   as item_id,
+               c.id   as goods_id,
                a.day  as day,
                b.size as size,
                c.name as name,
@@ -36,6 +42,15 @@
           AND user_id = #{userId}
     </select>
     <select id="selectById" resultType="com.dkm.mallEvents.entities.vo.GoodsInfoVo">
-        SELECT
+        SELECT a.id id, b.id goods_id, b.name name, b.url image_url, a.size size
+        From tb_mall_single_item a
+                 join tb_goods b on a.goods_id = b.id
+        where tb_mall_single_id = #{id}
+    </select>
+    <select id="selectHistoryByUser" resultType="com.dkm.mallEvents.entities.vo.SingleHistoryUserVo">
+        SELECT user_id, tb_mall_single_id item_id
+        FROM tb_mall_single_user
+        WHERE user_id = #{param1}
+          AND tb_mall_single_id = #{param2}
     </select>
 </mapper>

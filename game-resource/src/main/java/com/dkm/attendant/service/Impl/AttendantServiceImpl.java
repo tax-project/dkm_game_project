@@ -211,6 +211,10 @@ public class AttendantServiceImpl implements IAttendantService {
                     data.remove(i);
                 }
 
+                if(data.get(i).getUserId()==query.getId()){
+                    data.remove(i);
+                }
+
             }
         }
 

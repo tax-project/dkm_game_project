@@ -113,6 +113,9 @@ public class SeedController {
     @CrossOrigin
     @CheckToken
     public void plant(@RequestBody SeedPlantVo seedPlantVo) {
+        if(seedPlantVo.getSeedId()==null || seedPlantVo.getSeedGrade()==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
          iSeedService.queryAlreadyPlantSeed(seedPlantVo);
     }
 

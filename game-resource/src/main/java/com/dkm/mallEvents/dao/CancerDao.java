@@ -1,6 +1,7 @@
 package com.dkm.mallEvents.dao;
 
 import com.dkm.mallEvents.entities.vo.GoodsInfoVo;
+import com.dkm.mallEvents.entities.vo.SingleHistoryUserVo;
 import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.entities.vo.SingleUserVo;
 
@@ -17,4 +18,8 @@ public interface CancerDao {
     SingleUserVo findCheckedById(@Param("userId") Long userId, @Param("id") Integer id);
 
     List<GoodsInfoVo> selectById(Integer id);
+
+    SingleHistoryUserVo selectHistoryByUser(Long userId, Integer id);
+
+    void addUser(Long userId, Integer id);
 }

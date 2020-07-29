@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @vesion 1.0
  **/
 @Slf4j
-//@Component
+@Component
 public class SeedScheduledTask {
 
 
