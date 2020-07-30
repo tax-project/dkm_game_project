@@ -4,37 +4,35 @@ import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
-import com.dkm.mallEvents.dao.CancerDao;
 import com.dkm.mallEvents.dao.RewardDao;
-import com.dkm.mallEvents.entities.vo.GoodsInfoVo;
+import com.dkm.mallEvents.entities.data.CancerGiftBoxInfoVo;
+import com.dkm.mallEvents.entities.data.GoodsVo;
+import com.dkm.mallEvents.entities.data.LuckyGiftVo;
 import com.dkm.mallEvents.entities.data.RechargeVo;
-import com.dkm.mallEvents.entities.vo.SingleHistoryUserVo;
-import com.dkm.mallEvents.entities.vo.SingleTopUpVo;
 import com.dkm.mallEvents.service.ICancerService;
+import com.dkm.utils.DateUtils;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.time.LocalDateTime;
 
+/**
+ * 注意，由于接口未对接，不存在历史记录的问题
+ */
 @Service
 public class CancerServiceImpl implements ICancerService {
 
     @Resource
     private IBackpackService backpackService;
 
-    @Resource
-    private CancerDao cancerDao;
+
     @Resource
     private RewardDao rewardDao;
 
     @Override
-    public List<SingleTopUpVo> getSingleTopUp(Long userId) {
-        List<SingleTopUpVo> singleTopUpVos = cancerDao.selectSingle();
-        for (SingleTopUpVo singleTopUpVo : singleTopUpVos) {
-            // 无法对接充值
-            singleTopUpVo.setStatus(cancerDao.findCheckedById(userId, singleTopUpVo.getId()) != null ? 2 : 1);
-        }
-        return singleTopUpVos;
+    public RechargeVo getSingleTopUp(Long userId) {
+        return getInfo(userId, 0);
     }
 
     /**
@@ -42,32 +40,126 @@ public class CancerServiceImpl implements ICancerService {
      */
     @Override
     public Boolean getSingleTopUpInfoCheck(Long userId, Integer id) {
-
-        List<GoodsInfoVo> goods = cancerDao.selectById(id);
-        if (goods == null || goods.size() == 0) {
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "未找到此数据");
-        }
-        SingleHistoryUserVo historyUserVo = cancerDao.selectHistoryByUser(userId, id);
-        if (historyUserVo != null) {
-            throw new ApplicationException(CodeType.RESOURCES_EXISTING, "你已经领取过啦.");
-        }
-        for (GoodsInfoVo good : goods) {
-            AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
-            addGoodsInfo.setUserId(userId);
-            addGoodsInfo.setGoodId(good.getGoodsId());
-            addGoodsInfo.setNumber(good.getSize());
-            backpackService.addBackpackGoods(addGoodsInfo);
-        }
-        cancerDao.addUser(userId, id);
-        return true;
+        return receive(userId, id);
     }
 
 
-    /**
-     * 搜索累计充值
-     */
     @Override
     public RechargeVo getCumulativeRecharge(Long userId) {
-        return rewardDao.selectInfoByTypeAndUserId(1, userId);
+        return getInfo(userId, 1);
+    }
+
+    @Override
+    public Boolean receiveTopUpReward(Long userId, Integer itemId) {
+        return receive(userId, itemId);
+    }
+
+    @Override
+    public RechargeVo getConsumerRecharge(Long id) {
+        return getInfo(id, 2);
+    }
+
+    @Override
+    public Boolean receiveConsumerReward(Long id, Integer itemId) {
+        return receive(id, itemId);
+    }
+
+    @Override
+    public Boolean consumptionKingReward(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
+    public RechargeVo consumptionKing(Long id) {
+        return getInfo(id, 3);
+    }
+
+    @Override
+    public RechargeVo consumptionPurple(Long id) {
+        return getInfo(id, 4);
+    }
+
+    @Override
+    public Boolean consumptionKingPurple(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
+    public RechargeVo consumptionBlue(Long id) {
+        return getInfo(id, 5);
+    }
+
+    @Override
+    public Boolean consumptionKingBlue(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
+    public RechargeVo consumptionPurpleOffer(Long id) {
+        return getInfo(id, 6);
+    }
+
+    @Override
+    public Boolean consumptionKingPurpleOffer(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
+    public Boolean consumptionKingOrange(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
+    public RechargeVo consumptionOrange(Long id) {
+        return getInfo(id, 7);
+    }
+
+    @Override
+    public LuckyGiftVo getLuckyGiftInfo() {
+        val luckyGiftInfo = rewardDao.getLuckyGiftInfo();
+        val localDateTime = DateUtils.parseDateTime(luckyGiftInfo.getNextRefreshDate());
+        if (localDateTime.isBefore(LocalDateTime.now())) {
+            val s = DateUtils.formatDateTime(localDateTime.plusDays(1));
+            luckyGiftInfo.setNextRefreshDate(s);
+            rewardDao.saveNextRefreshDate(s);
+        }
+        luckyGiftInfo.setLastLuckyItem(luckyGiftInfo.getLuckyItems().get(0));
+        return luckyGiftInfo;
+    }
+
+    @Override
+    public CancerGiftBoxInfoVo getCancerGiftBoxInfo() {
+        return null;
+    }
+
+    /**
+     * 搜索累计充值
+     * <p>
+     * 注意啦，这个没有判断是否充值完成的，因为暂时不存在充值模块
+     */
+    private RechargeVo getInfo(Long userId, int type) {
+        val rechargeItemVo = rewardDao.selectInfoByTypeAndUserId(type, userId);
+        val rechargeVo = new RechargeVo();
+        rechargeVo.setPrizes(rechargeItemVo);
+        return rechargeVo;
+    }
+
+    private Boolean receive(Long userId, Integer itemId) {
+        val goodsList = rewardDao.selectItemByItemIdAndType(itemId);
+        if (goodsList == null || goodsList.size() == 0) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "未找到此数据");
+        }
+        if (rewardDao.selectHistorySizeByItemIdAndUserId(itemId, userId) != 0) {
+            throw new ApplicationException(CodeType.RESOURCES_EXISTING, "你已经领取过啦.");
+        }
+        for (GoodsVo goodsVo : goodsList) {
+            AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
+            addGoodsInfo.setUserId(userId);
+            addGoodsInfo.setGoodId(goodsVo.getId());
+            addGoodsInfo.setNumber(goodsVo.getSize());
+            backpackService.addBackpackGoods(addGoodsInfo);
+        }
+        rewardDao.addHistory(userId, itemId);
+        return true;
     }
 }

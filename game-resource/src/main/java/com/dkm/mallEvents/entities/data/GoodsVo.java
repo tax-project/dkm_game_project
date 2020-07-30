@@ -26,4 +26,9 @@ public class GoodsVo {
      * item image URL
      */
     private String url;
+
+    /**
+     * items Price * size
+     */
+    private Integer totalPrice;
 }
