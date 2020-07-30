@@ -5,6 +5,8 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author 刘梦祺
  * @PROJECT_NAME: game_project
@@ -13,4 +15,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface LandSeedMapper extends BaseMapper<LandSeed> {
+
+    /**
+     * 批量修改
+     * @param list
+     * @return
+     */
+    int updateSeedStatus(List<Long> list);
 }
