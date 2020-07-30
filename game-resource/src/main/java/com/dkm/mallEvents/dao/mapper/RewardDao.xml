@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkm.mallEvents.dao.RewardDao">
+
+    <resultMap id="selectInfoByTypeAndUserIdResult" type="com.dkm.mallEvents.entities.data.RechargeItemVo">
+        <id column="id" property="itemId"/>
+        <result column="status" property="status"/>
+        <result column="content" property="content"/>
+        <collection property="items" ofType="com.dkm.mallEvents.entities.data.GoodsVo" column="item_id">
+            <result column="name" property="name"/>
+            <result column="goods_id" property="id"/>
+            <result column="size" property="size"/>
+            <result column="url" property="url"/>
+            <result column="money" property="totalPrice"/>
+        </collection>
+    </resultMap>
+    <insert id="addHistory">
+        INSERT INTO tb_mall_reward_history (user_id, mall_reward_id)
+        VALUES (#{param1}, #{param2})
+    </insert>
+    <update id="saveNextRefreshDate">
+        update tb_game_options SET option_value = #{s} WHERE option_key = 'GIFT_NEXT_REFRESH_DATE'
+    </update>
+    <select id="selectInfoByTypeAndUserId" resultMap="selectInfoByTypeAndUserIdResult">
+        SELECT a.id                        id,
+               a.constraints               content,
+               b.size                      size,
+               if(isnull(c.user_id), 0, 2) status,
+               d.name                      name,
+               d.id                        goods_id,
+               d.url                       url,
+               d.good_money * size         money
+        FROM tb_mall_reward AS a
+                 join tb_mall_reward_goods as b on a.id = b.mall_reward_id
+                 LEFT JOIN tb_mall_reward_history as c ON a.id = c.mall_reward_id AND user_id = #{userId}
+                 JOIN tb_goods d on b.goods_id = d.id
+        WHERE a.type = #{type};
+
+    </select>
+    <select id="selectItemSizeByItemIdAndType" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM tb_mall_reward
+        WHERE id = #{param1}
+          AND type = #{param2}
+    </select>
+    <select id="selectHistorySizeByItemIdAndUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tb_mall_reward_history
+        WHERE user_id = #{userId}
+          AND mall_reward_id = #{itemId}
+    </select>
+    <select id="selectItemByItemIdAndType" resultType="com.dkm.mallEvents.entities.data.GoodsVo">
+        SELECT goods_id id, size sizs
+        from tb_mall_reward_goods
+        where mall_reward_id = #{itemId}
+    </select>
+
+    <resultMap id="getLuckyGiftInfoResult" type="com.dkm.mallEvents.entities.data.LuckyGiftVo">
+        <result column="next_date" property="nextRefreshDate"/>
+        <collection property="luckyItems" ofType="com.dkm.mallEvents.entities.data.GoodsVo" column="next_date">
+            <result column="name" property="name"/>
+            <result column="url" property="url"/>
+            <result column="id" property="id"/>
+        </collection>
+    </resultMap>
+
+    <select id="getLuckyGiftInfo" resultMap="getLuckyGiftInfoResult">
+        select a.id                                                                                   id,
+               b.gi_name                                                                              name,
+               b.gi_url                                                                               url,
+               (select option_value from tb_game_options WHERE option_key = 'GIFT_NEXT_REFRESH_DATE') next_date
+        from tb_mall_lucky_gift a
+                 JOIN tb_gift b on a.gift_id = b.gi_id
+    </select>
+</mapper>

@@ -56,7 +56,8 @@ public class LandServiceImpl implements ILandService {
      */
     @Override
     public List<UserLandUnlock> queryUserByIdLand() {
-        List<UserLandUnlock> userLandUnlocks = landMapper.queryUserByIdLand(localUser.getUser().getId());
+        Long id = localUser.getUser().getId();
+        List<UserLandUnlock> userLandUnlocks = landMapper.queryUserByIdLand(id);
         if(userLandUnlocks.size()==0){
             List<UserLandUnlock> list=new ArrayList<>();
             for (int i = 1; i <=10; i++) {
@@ -67,14 +68,14 @@ public class LandServiceImpl implements ILandService {
                 }else{
                     userLandUnlock.setLaStatus(0);
                 }
-                userLandUnlock.setUserId(localUser.getUser().getId());
+                userLandUnlock.setUserId(id);
                 list.add(userLandUnlock);
             }
             landMapper.addLand(list);
+
+            return list;
         }
-        //根据用户id查询解锁的土地
-        List<UserLandUnlock> userLandUnlocka = landMapper.queryUserByIdLand(localUser.getUser().getId());
-        return userLandUnlocka;
+        return userLandUnlocks;
     }
 
     @Override

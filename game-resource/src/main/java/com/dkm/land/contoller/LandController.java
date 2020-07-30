@@ -37,10 +37,7 @@ public class LandController {
         message.setMsg("成功");
         return  message;
     }
-    /**
-     *查询所有土地
-     * @return
-     */
+
     @ApiOperation(value = "查询所有土地", notes = "如果查询成功返回list集合，失败返回为null")
     @GetMapping("/queryUserByIdLand")
     @CrossOrigin
@@ -50,9 +47,6 @@ public class LandController {
     }
 
 
-    /**
-     * 根据用户id和土地编号解锁土地
-     */
     @ApiOperation(value = "根据用户id和土地编号解锁土地", notes = "根据用户id和土地编号解锁土地")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "laNo", value = "土地编号")
     @GetMapping("/updateLandStatus")
