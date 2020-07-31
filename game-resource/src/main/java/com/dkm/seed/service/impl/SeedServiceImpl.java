@@ -554,7 +554,6 @@ public class SeedServiceImpl implements ISeedService {
                     seedPlantVo.setUserGold(userGoldInteger);
                 }
 
-
                 seedPlantVo.setUserInfoNowExperience(experienceInteger);
 
                 //不等于空 说明掉落了红包
