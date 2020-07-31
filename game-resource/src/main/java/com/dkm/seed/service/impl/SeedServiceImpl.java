@@ -25,6 +25,7 @@ import com.dkm.seed.entity.SeedUnlock;
 import com.dkm.seed.entity.bo.SendCollectBO;
 import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
+import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
@@ -71,7 +73,7 @@ public class SeedServiceImpl implements ISeedService {
     private LandSeedMapper landSeedMapper;
 
     @Autowired
-    private SeedsFallMapper seedsFallMapper;
+    private IDropStatusService dropStatusService;
 
     @Autowired
     private SeedUnlockMapper seedUnlockMapper;
@@ -316,6 +318,10 @@ public class SeedServiceImpl implements ISeedService {
         //当前时间后的一分钟
         LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
 
+        LocalDateTime now = LocalDateTime.now();
+
+        long until = now.until(time2, ChronoUnit.MINUTES);
+
         if (null == seedList || seedList.size() == 0) {
             //新种子种植
             for (int i = 0; i < sendPlantBO.getLandNumber(); i++) {
@@ -339,6 +345,7 @@ public class SeedServiceImpl implements ISeedService {
                 }
                 //状态 1为种植
                 landSeed.setLeStatus(1);
+                landSeed.setTimeNumber(until);
                 list.add(landSeed);
             }
             //增加要种植种子的信息和用户信息
@@ -457,6 +464,8 @@ public class SeedServiceImpl implements ISeedService {
         //先算出该用户是否升级
         Long experience = resultExperience + data.getUserInfoNowExperience();
 
+        //删除种子状态表信息
+        dropStatusService.deleteDrop(user.getId());
         //先判断是否解锁土地
         //算出解锁土地
         if (data.getUserInfoGrade() % 3 == 0) {

@@ -53,6 +53,11 @@ public class LandSeed extends Model<LandSeed>{
    */
   private Integer newSeedIs;
 
+  /**
+   * 多少分钟
+   */
+  private Long timeNumber;
+
 
 
 

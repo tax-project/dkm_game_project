@@ -4,11 +4,13 @@ import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.seed.entity.SeedsFall;
+import com.dkm.seed.entity.bo.SeedDropBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.service.ISeedFallService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,52 +33,33 @@ public class SeedsFallController {
     private ISeedFallService iSeedFallService;
 
 
-    /**
-     * 种子掉落
-     * 金币红包掉落
-     */
- /*   @ApiOperation(value = "种子掉落（金币红包掉落）", notes = "种子掉落（金币红包掉落）")
-    @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级")
-    @PostMapping("/seedDrop")
+    @ApiOperation(value = "前端调掉落接口", notes = "前端调掉落接口")
+    @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级")
+    @GetMapping("/seedDrop")
     @CrossOrigin
     @CheckToken
-    public List<GoldOrMoneyVo> seedDrop(@RequestParam(value = "seedGrade") Integer seedGrade){
-        if (seedGrade == null) {
+    public SeedDropBO seedDrop(@RequestParam(value = "seedGrade") Integer userInfoGrade){
+        if (userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.seedDrop();
-    }*/
+        return iSeedFallService.seedDrop(userInfoGrade);
+    }
 
 
-
-    /**
-     * 单独掉落红包
-     */
-    /*@ApiOperation(value = "单独掉落红包", notes = "单独掉落红包")
-    @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "money", value = "种子首次产出的红包金额")
+    @ApiOperation(value = "上线就调用的接口", notes = "上线就调用的接口")
+    @ApiImplicitParams({
+          @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
+          @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
+    })
     @GetMapping("/redBagDroppedSeparately")
     @CrossOrigin
     @CheckToken
-    void redBagDroppedSeparately(@RequestParam(value = "money") Double money){
-        if (money == null) {
+    public List<SeedDropBO> redBagDroppedSeparately(@RequestParam("seedId") Long seedId,
+                                                    @RequestParam("userInfoGrade") Integer userInfoGrade){
+        if (seedId == null || userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.redBagDroppedSeparately(money);
+        return iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
     }
-*/
-
-    /**
-     * 查询已掉落的数据
-     */
-    @ApiOperation(value = "查询已掉落的数据", notes = "查询已掉落的数据")
-    @PostMapping("/queryDroppedItems")
-    @CrossOrigin
-    @CheckToken
-    public List<SeedsFallVo> queryDroppedItems(){
-        return iSeedFallService.queryDroppedItems();
-    }
-
-
-
 
 }

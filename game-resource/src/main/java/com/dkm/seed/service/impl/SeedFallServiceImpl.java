@@ -13,15 +13,20 @@ import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.seed.dao.LandSeedMapper;
+import com.dkm.seed.dao.SeedMapper;
 import com.dkm.seed.dao.SeedsFallMapper;
+import com.dkm.seed.entity.DropStatus;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
+import com.dkm.seed.entity.bo.SeedDropBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.entity.vo.moneyVo;
+import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedFallService;
 import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.DateUtils;
+import com.dkm.utils.IdGenerator;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -32,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,159 +59,134 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private LocalUser localUser;
 
     @Autowired
-    private UserFeignClient userFeignClient;
+    private RandomUtils randomUtils;
+
+    @Autowired
+    private IDropStatusService dropStatusService;
 
     @Autowired
     private LandSeedMapper landSeedMapper;
 
     @Autowired
-    private RandomUtils randomUtils;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-
+    private IdGenerator idGenerator;
 
     @Override
-    public void seedDrop() {
-        //查询已经种植的种子
-        LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
-                .eq(LandSeed::getLeStatus, 1);
+    public SeedDropBO seedDrop(Integer userInfoGrade) {
 
-        List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
+        UserLoginQuery user = localUser.getUser();
 
-        if(landSeedList.size()==0){
-            log.info("查询种子未种植...");
-            return;
+        DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
+
+        if (dropStatus == null) {
+            //增加
+            dropStatus.setId(idGenerator.getNumberId());
+            dropStatus.setEndTime(LocalDateTime.now());
+            dropStatus.setMuchNumber(1);
+            dropStatus.setUseId(user.getId());
+
+            dropStatusService.dropStatusUpdate(dropStatus);
         }
 
-        Integer gold=0;
-        double money=0;
+        //修改
+        DropStatus data = new DropStatus();
+        data.setUseId(user.getId());
+        data.setMuchNumber(dropStatus.getMuchNumber() + 1);
+        data.setEndTime(LocalDateTime.now());
+        data.setId(dropStatus.getId());
+        dropStatusService.dropStatusUpdate(data);
 
-        SeedsFall seedsFall=null;
+        //随机掉落
+        SeedDropBO result = new SeedDropBO();
+        //掉落红包
+        boolean red = randomUtils.isProduceGoldRed(userInfoGrade);
 
-        for (LandSeed seed : landSeedList) {
-
-            //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
-            if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
-                baseMapper.updateLeStatusTime(seed.getId());
-            }
-
-            if(System.currentTimeMillis()/1000 < seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-                seedsFall=new SeedsFall();
-                seedsFall.setId(seed.getId());
-                seedsFall.setSeedId(seed.getSeedId());
-
-                Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(seed.getUserId());
-                if(userInfoQueryBoResult.getCode()!=0){
-                    throw new ApplicationException(CodeType.SERVICE_ERROR,"feign异常");
-                }
-
-                //true掉落金币   false 没有金币掉落
-                boolean dropCoins = randomUtils.probabilityDroppingGold(seed.getSeedId());
-                if(dropCoins){
-                    gold = randomUtils.NumberCoinsDropped(seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8")));
-
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(gold));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
-
-                    log.info("发送掉落通知...金币");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-
-                }
-                //true 掉落红包   false 没有红包掉落
-                boolean produceGoldRed =randomUtils.isProduceGoldRed(userInfoQueryBoResult.getData().getUserInfoGrade());
-                if(produceGoldRed){
-                    //掉落的红包数量
-                    money =randomUtils.NumberRedPacketsDropped();
-
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(money));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
-
-                    log.info("发送掉落通知.红包");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-                }
-                //掉落花
-                boolean b = randomUtils.fallingFlowers();
-                if(b){
-                    MsgInfo msgInfo = new MsgInfo();
-                    msgInfo.setMsg(String.valueOf(1));
-                    msgInfo.setType(13);
-                    msgInfo.setMsgType(1);
-                    msgInfo.setToId(seed.getUserId());
-
-                    log.info("发送掉落通知...花");
-                    rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-                }
-            }
+        if (red) {
+            double redPacketsDropped = randomUtils.numberRedPacketsDropped();
+            result.setRedIsFail(1);
+            result.setRedNumber(redPacketsDropped);
+        } else {
+            //不掉落红包
+            result.setRedIsFail(0);
         }
+
+        //掉落金币
+        boolean droppingGold = randomUtils.probabilityDroppingGold(userInfoGrade);
+
+        if (droppingGold) {
+            //掉落金币成功
+            Integer dropped = randomUtils.numberCoinsDropped();
+            result.setGoldIsFail(1);
+            result.setGoldNumber(dropped);
+        } else {
+            //不掉落金币
+            result.setGoldIsFail(0);
+        }
+
+        //掉落花
+        Boolean aBoolean = randomUtils.fallingRandom();
+
+        if (aBoolean) {
+            //掉落花成功
+            result.setFallingIsFail(1);
+            result.setFallingNumber(1);
+        } else {
+            //掉落花失败
+            result.setFallingIsFail(0);
+        }
+
+        return result;
     }
 
     @Override
-    public void redBagDroppedSeparately() {
+    public List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade) {
 
+        UserLoginQuery user = localUser.getUser();
 
-        //查询出种子首次产出的金钱
-        List<moneyVo> moneyVos = baseMapper.queryMoney();
-        if(moneyVos.size()==0){
-            log.info("查询种子产出金钱---->" + moneyVos);
-            return;
+        //先查询有没有种植
+        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+              .eq(LandSeed::getUserId, user.getId())
+              .eq(LandSeed::getSeedId, seedId);
+
+        List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
+
+        //查询种植的土地块数
+
+        //默认不是新种子
+        int newSeed = 0;
+
+        //查询之前掉落的次数
+        DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
+
+        List<SeedDropBO> list = new ArrayList<>();
+
+        for (LandSeed landSeed : landSeeds) {
+            if (landSeed.getLeStatus() == 0 || landSeed.getLeStatus() == 1) {
+                //种植的种子
+                if (landSeed.getNewSeedIs() == 1) {
+                    //新种子
+                    newSeed = 31 - dropStatus.getMuchNumber();
+
+                } else {
+                    //不是新种子
+                    //次数
+                    Long timeNumber = landSeed.getTimeNumber();
+                    Integer number = timeNumber.intValue();
+                    newSeed = number - dropStatus.getMuchNumber();
+                }
+            }
+
+            //根据次数算出要掉落的次数
+            //根据次数循环返回给前端掉落的结果
+            //循环得到前端返回的数据
+            for (int i = 0; i < newSeed; i++) {
+                SeedDropBO seedDropBO = seedDrop(userInfoGrade);
+                list.add(seedDropBO);
+            }
+
         }
 
-        //查询已经种植的种子
-        LambdaQueryWrapper<LandSeed> queryWrapper  = new LambdaQueryWrapper<LandSeed>()
-                .eq(LandSeed::getLeStatus, 1);
-
-        List<LandSeed> landSeedList = landSeedMapper.selectList(queryWrapper);
-
-        for (LandSeed seed : landSeedList) {
-
-            //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
-            if(System.currentTimeMillis()/1000>=seed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
-                baseMapper.updateLeStatusTime(seed.getId());
-            }
-        }
-
-        //截取小数点后两位
-        //钱除以他掉落的一个次数 就是每次掉落的钱
-        for (moneyVo moneyVo : moneyVos) {
-            //如果当前时间大于等于种子成熟时间  将种子状态修改为2 待收取
-            if(System.currentTimeMillis()/1000 >= moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-                baseMapper.updateLeStatusTime(moneyVo.getId());
-            }
-
-            if(System.currentTimeMillis()/1000<moneyVo.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
-                BigDecimal b1 = new BigDecimal(moneyVo.getSeedProdred()/30);
-                double f1 = b1.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-
-                MsgInfo msgInfo = new MsgInfo();
-                msgInfo.setMsg(String.valueOf(f1));
-                msgInfo.setType(13);
-                msgInfo.setMsgType(1);
-                msgInfo.setToId(moneyVo.getUserId());
-
-                log.info("发送掉落通知...单独掉落");
-                rabbitTemplate.convertAndSend("game_event_notice", JSON.toJSONString(msgInfo));
-            }
-        }
+        return list;
     }
-
-    /**
-     * 查询已掉落的数据
-     * @return
-     */
-    @Override
-    public List<SeedsFallVo> queryDroppedItems() {
-        List<SeedsFallVo> seedsFallVos = baseMapper.queryDroppedItems(localUser.getUser().getId());
-        return seedsFallVos;
-    }
-
 
 
 }

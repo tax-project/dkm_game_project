@@ -25,29 +25,27 @@ public class RandomUtils {
 
         //生产1-100的随机数
         int random = new Random().nextInt(100) + 1;
-        if(random<=pow){
+        if(random <= pow){
             return true;
         }
         return false;
     }
 
-
     /**
      * 红包掉落的数量
      * @return
      */
-    public double NumberRedPacketsDropped(){
+    public double numberRedPacketsDropped(){
         int random = new Random().nextInt(100) + 1;
-        if(random<=10){
+        if(random <= 11 && random > 1){
             return 0.01;
         }
 
-        if(random==1){
+        if(random == 1){
             return 0.1;
         }
         return 0.0;
     }
-
 
     /**
      * 掉落金币概率 是否有金币掉落
@@ -59,46 +57,39 @@ public class RandomUtils {
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
         //生产1-100的随机数
         int random = new Random().nextInt(100) + 1;
-        if(random<=pow){
+        if(random <= pow){
             return true;
         }
         return false;
     }
 
-
-
     /**
      * 金币掉落的数量
      *
      */
-    public Integer NumberCoinsDropped(Long time){
-/*        double start = time / gold / 2 * 0.5/100;
-
-        int start1 = (int) start;
-        double end=time / gold / 2 * 0.7/100;
-
-        int end1 = (int) end;*/
+    public Integer numberCoinsDropped(){
         //金币
         int random = new Random().nextInt(3);
         if(random<500){
             random = new Random().nextInt(500);
             return random;
         }
-            return 0;
+        return 0;
     }
-    /**
-     * 花朵掉落
-     *
-     */
-    public boolean fallingFlowers(){
 
+    /**
+     * 花朵掉落概率
+     * @return
+     */
+    public Boolean fallingRandom () {
         Random random=new Random();
         int i = random.nextInt(100) + 1;
-        if(i<=10){
+
+        if (i <= 3) {
             return true;
         }
+
         return false;
     }
-
 
 }
