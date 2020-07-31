@@ -1,5 +1,6 @@
 package com.dkm.seed.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -22,12 +23,13 @@ public class DropStatus extends Model<DropStatus> {
    /**
     *  id
     */
+   @TableId
    private Long id;
 
    /**
     * 用户id
     */
-   private Long useId;
+   private Long userId;
 
    /**
     * 结束时间

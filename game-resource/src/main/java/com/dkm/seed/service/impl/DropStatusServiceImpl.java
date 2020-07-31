@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dkm.seed.dao.DropStatusMapper;
 import com.dkm.seed.entity.DropStatus;
 import com.dkm.seed.service.IDropStatusService;
+import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class)
 public class DropStatusServiceImpl extends ServiceImpl<DropStatusMapper, DropStatus> implements IDropStatusService {
 
+   @Autowired
+   private IdGenerator idGenerator;
 
    @Override
    public void dropStatusUpdate(DropStatus dropStatus) {
@@ -26,6 +30,7 @@ public class DropStatusServiceImpl extends ServiceImpl<DropStatusMapper, DropSta
 
       if (dropStatus.getId() == null) {
          //增加
+         dropStatus.setId(idGenerator.getNumberId());
          int insert = baseMapper.insert(dropStatus);
 
          if (insert <= 0) {
@@ -44,14 +49,14 @@ public class DropStatusServiceImpl extends ServiceImpl<DropStatusMapper, DropSta
    @Override
    public DropStatus queryDropStatus(Long userId) {
       LambdaQueryWrapper<DropStatus> wrapper = new LambdaQueryWrapper<DropStatus>()
-            .eq(DropStatus::getUseId, userId);
+            .eq(DropStatus::getUserId, userId);
       return baseMapper.selectOne(wrapper);
    }
 
    @Override
    public void deleteDrop(Long userId) {
       LambdaQueryWrapper<DropStatus> wrapper = new LambdaQueryWrapper<DropStatus>()
-            .eq(DropStatus::getUseId, userId);
+            .eq(DropStatus::getUserId, userId);
 
       int delete = baseMapper.delete(wrapper);
       if (delete <= 0) {

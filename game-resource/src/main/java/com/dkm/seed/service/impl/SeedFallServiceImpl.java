@@ -77,23 +77,50 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
 
-        if (dropStatus == null) {
-            //增加
-            dropStatus.setId(idGenerator.getNumberId());
-            dropStatus.setEndTime(LocalDateTime.now());
-            dropStatus.setMuchNumber(1);
-            dropStatus.setUseId(user.getId());
+        LambdaQueryWrapper<LandSeed> wrapper=new LambdaQueryWrapper<LandSeed>()
+                    .eq(LandSeed::getUserId,user.getId())
+                    .eq(LandSeed::getLeStatus,1);
+        List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
 
-            dropStatusService.dropStatusUpdate(dropStatus);
+        //如果landSeeds等于null 说明没有种植 直接返回空
+        if(landSeeds.size()==0){
+            return null;
         }
 
-        //修改
+        List<Long> list=new ArrayList<>();
+        //landSeeds不等于null，修改状态为2
+        for (LandSeed landSeed : landSeeds) {
+            if(System.currentTimeMillis()/1000 >= landSeed.getPlantTime().toEpochSecond(ZoneOffset.of("+8"))){
+                //修改种子状态为2
+                list.add(landSeed.getId());
+            }
+        }
+
+        if(list.size()!=0){
+            int i = landSeedMapper.updateSeedStatus(list);
+            if(i<=0){
+                log.info("批量修改错误");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
+        }
+
+
         DropStatus data = new DropStatus();
-        data.setUseId(user.getId());
-        data.setMuchNumber(dropStatus.getMuchNumber() + 1);
-        data.setEndTime(LocalDateTime.now());
-        data.setId(dropStatus.getId());
-        dropStatusService.dropStatusUpdate(data);
+        if (dropStatus == null) {
+            //增加
+            data.setEndTime(LocalDateTime.now());
+            data.setMuchNumber(1);
+            data.setUserId(user.getId());
+
+            dropStatusService.dropStatusUpdate(data);
+        } else {
+            //修改
+            data.setUserId(user.getId());
+            data.setMuchNumber(dropStatus.getMuchNumber() + 1);
+            data.setEndTime(LocalDateTime.now());
+            data.setId(dropStatus.getId());
+            dropStatusService.dropStatusUpdate(data);
+        }
 
         //随机掉落
         SeedDropBO result = new SeedDropBO();
