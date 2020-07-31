@@ -19,7 +19,7 @@ public class Seed {
     /**
      * 种子id
      */
-    private Integer seedId;
+    private Long seedId;
     /**
      * 种子名称
      */

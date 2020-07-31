@@ -99,12 +99,6 @@ public interface IAttendantService {
     Map<String,Object> queryUserIdMaster(Long userId);
 
 
-    /**
-     * 查询所有跟班
-     * @return
-     */
-    //List<AttenDant> listAttenDant ();
-
    /**
     *  修改产出的次数
     * @param attUserId 用户跟班id

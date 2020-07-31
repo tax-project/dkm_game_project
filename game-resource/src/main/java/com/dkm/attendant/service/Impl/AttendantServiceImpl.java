@@ -368,8 +368,6 @@ public class AttendantServiceImpl implements IAttendantService {
             /**
              * 得到他方最终的战斗力
              */
-
-
             double v = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
             double v2 = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
@@ -380,8 +378,6 @@ public class AttendantServiceImpl implements IAttendantService {
              */
             heDefense =userAllEquipment.getTalent()+(userAllEquipment.getTalent() * userAllEquipment.getTalentAdd().doubleValue());
         }
-
-
 
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
@@ -459,8 +455,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 }
             }
         }
-
-
 
         map.put("userInfoQueryBoResult",userInfoQueryBoResult.getData());
         map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId.getData());
@@ -545,10 +539,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     return vo;
                 }
             }
-
-
         }
-
         //对面先动手
         while (true) {
             Integer my = allMyHealth - otherForce;
@@ -576,11 +567,6 @@ public class AttendantServiceImpl implements IAttendantService {
         }
 
     }
-
-
-
-
-
 
     @Override
     public AttUserVo addGraspFollowing(Long caughtPeopleId, Integer status, Long attendantId) {
@@ -711,20 +697,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //
         return vo;
 
-
     }
-
-   /* public void insertEvent(Long caughtPeopleId){
-        UserEventContent event=new UserEventContent();
-        event.setId(idGenerator.getNumberId());
-        event.setHeUserId(caughtPeopleId);
-        event.setUserId(localUser.getUser().getId());
-        event.setEvMsgExternal("从别人手中抓你成功1次");
-        LocalDateTime now = LocalDateTime.now();
-        event.setEvTime(now);
-        event.setEvMsgIn("成为你的新主人");
-        int insert = eventMapper.insert(event);
-    }*/
 
 
     /**
@@ -747,6 +720,7 @@ public class AttendantServiceImpl implements IAttendantService {
         //得到6小时之前的时间
         LocalDateTime time = localDateTime.minusHours(6);
 
+        //抓到跟班以后 6小时后才能收取
         long until = now.until(time, ChronoUnit.SECONDS);
 
         if (until >= 0) {
@@ -785,7 +759,7 @@ public class AttendantServiceImpl implements IAttendantService {
         String expTime = DateUtils.formatDateTime(dateTime);
 
         //修改产出表的状态
-        if (null != idList && idList.size() > 0) {
+        if (idList.size() > 0) {
             Integer integer = attendantMapper.updateProduceStatus(idList);
 
             if (integer <= 0) {
@@ -798,7 +772,7 @@ public class AttendantServiceImpl implements IAttendantService {
         attendantUserService.updateAttTime(expTime, attUserId);
 
 
-        Map<String, Object> map = new HashMap<>(16);
+        Map<String, Object> map = new HashMap<>(2);
         map.put("expTime",expTime);
 
         //得到产出的物品返回

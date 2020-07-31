@@ -3,6 +3,7 @@ package com.dkm.userInfo.controller;
 import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.entity.vo.*;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.islogin.CheckToken;
@@ -106,5 +107,11 @@ public class UserInfoController {
    @PostMapping("/query/user/section")
    public UserSectionInfoBO queryUserSection(@RequestParam("userId") Long userId){
       return userInfoService.queryUserSection(userId);
+   }
+
+
+   @PostMapping("/addSeedCollect")
+   public void addSeedCollect(@RequestBody SeedCollectVo seedCollectVo){
+      userInfoService.addSeedCollect(seedCollectVo);
    }
 }

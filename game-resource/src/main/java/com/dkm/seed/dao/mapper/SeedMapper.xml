@@ -97,9 +97,10 @@
 
 
     <insert id="addPlant" parameterType="com.dkm.seed.entity.LandSeed">
-        insert into tb_land_seed(id,user_id,seed_id,la_no,plant_time,le_status,new_seed_is)
+        insert into tb_land_seed(id,user_id,seed_id,la_no,plant_time,le_status,new_seed_is,time_number)
         <foreach collection="list" item="lists" index="index" separator="union all">
-            select #{lists.id},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime},#{lists.leStatus},#{lists.newSeedIs}
+            select #{lists.id},#{lists.userId},#{lists.seedId},#{lists.laNo},#{lists.plantTime},
+            #{lists.leStatus},#{lists.newSeedIs},#{lists.timeNumber}
         </foreach>
     </insert>
 
@@ -128,10 +129,13 @@
     </update>
 
     <update id="updateTimeAndStatus">
-        update tb_land_seed set le_status=1,plant_time = #{time}  where
-        <foreach collection="list" index="index" item="item" separator="or">
-            id = #{item}
-        </foreach>
+        update tb_land_seed
+        <set>
+            le_status=1,plant_time = #{time}
+        </set>
+        <where>
+            user_id = #{userId} and seed_id = #{seedId} and le_status = 3
+        </where>
     </update>
 
 </mapper>

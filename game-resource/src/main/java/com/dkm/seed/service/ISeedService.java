@@ -5,6 +5,8 @@ import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
+import com.dkm.seed.entity.bo.SendCollectBO;
+import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,11 +31,13 @@ public interface ISeedService {
      * @return
      */
     Message unlockPlant(SeedVo seedVo);
+
+
     /**
-     * 种植
-     *
+     *  种植
+     * @param sendPlantBO 种植参数
      */
-    void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo);
+    void queryAlreadyPlantSeed(SendPlantBO sendPlantBO);
 
     /**
      * 根据种子查询种子
@@ -63,8 +67,11 @@ public interface ISeedService {
      */
     int updateSeedStatus(List<Long> id);
 
-
-
+    /**
+     *  收取
+     * @param sendCollectBO 种子收取参数
+     */
+    void collectSeed (SendCollectBO sendCollectBO);
 
 
 

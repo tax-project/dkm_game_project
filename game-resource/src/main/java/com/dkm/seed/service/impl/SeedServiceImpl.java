@@ -6,6 +6,7 @@ import com.dkm.attendant.entity.vo.User;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.jwt.contain.LocalUser;
@@ -21,7 +22,10 @@ import com.dkm.seed.dao.SeedUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.SeedUnlock;
+import com.dkm.seed.entity.bo.SendCollectBO;
+import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
+import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
@@ -68,7 +73,7 @@ public class SeedServiceImpl implements ISeedService {
     private LandSeedMapper landSeedMapper;
 
     @Autowired
-    private SeedsFallMapper seedsFallMapper;
+    private IDropStatusService dropStatusService;
 
     @Autowired
     private SeedUnlockMapper seedUnlockMapper;
@@ -256,321 +261,105 @@ public class SeedServiceImpl implements ISeedService {
         return message;
     }
 
-
-    /**
-     * 种植种子
-     * 收取种子
-     *
-     */
     @Override
-    public void queryAlreadyPlantSeed(SeedPlantVo seedPlantVo) {
-        System.out.println(seedPlantVo.getSeedId()+"==="+seedPlantVo.getSeedGrade());
-        //如果等于一就是种植种子
-        if (seedPlantVo.getStatus() == 1) {
+    public void queryAlreadyPlantSeed(SendPlantBO sendPlantBO) {
 
-            Map<String, Object> map = new HashMap<>();
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
 
-            List<LandSeed> list = new ArrayList<>();
+        //算出种植种子需要多少钱
+        Integer gold = sendPlantBO.getSeedGold() * sendPlantBO.getLandNumber();
 
-            //得到用户token信息
-            UserLoginQuery user = localUser.getUser();
-
-            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
-            if(userInfoQueryBoResult.getCode()!=0){
-                log.info("用户模块崩了");
-                throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了");
-            }
-
-            //根据用户查询解锁的土地
-            List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
-
-            //种植时减去用户金币
-            IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
-
-            //算出种植种子需要多少钱
-            Integer gold = seedPlantVo.getSeedGold() * userLandUnlocks.size();
-            increaseUserInfoBO.setUserId(user.getId());
-            increaseUserInfoBO.setUserInfoGold(gold);
-
-            if (userInfoQueryBoResult.getData().getUserInfoGold() < gold) {
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
-            }
-
-            //减少金币
-            Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
-            if(result.getCode()!=0){
-                throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了 别找我");
-            }
-
-            //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
-            double ripeTime = Math.pow(seedPlantVo.getSeedGrade(), 3 / 2.0) * 20 + 60;
-            //将秒数转换成整数类型
-            Integer integer = Integer.valueOf((int) ripeTime);
-            //得到时间戳转换成时间格式，最后得到种子成熟的时间
-            LocalDateTime time2 = LocalDateTime.ofEpochSecond(System.currentTimeMillis() / 1000 + integer, 0, ZoneOffset.ofHours(8));
-
-            //当前时间后的一分钟
-            LocalDateTime localDateTime = LocalDateTime.now().minusMinutes(-1);
-
-            //查询已种植的种子
-            LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
-                    .eq(LandSeed::getUserId, user.getId())
-                    .eq(LandSeed::getLeStatus, 1);
-
-            List<LandSeed> listLand = landSeedMapper.selectList(queryWrapper1);
-
-
-            LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
-                    .eq(LandSeed::getUserId, user.getId())
-                    .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
-
-            List<LandSeed> list1 = landSeedMapper.selectList(queryWrapper);
-
-            int PlantingTimes = 0;
-
-            //已解锁土地数量减去已种植的种子数量  得到最终种植的次数
-            PlantingTimes = userLandUnlocks.size() - listLand.size();
-
-
-            //如果查询出来长度等于0说明是新种植 添加到数据库 ，第一个种子持续1分钟产出红包
-            if (list1.size() == 0) {
-
-                for (int i = 0; i < PlantingTimes; i++) {
-
-                    LandSeed landSeed = new LandSeed();
-                    //生成主键id
-                    landSeed.setId(idGenerator.getNumberId());
-                    //土地编号
-                    landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-                    //种子id
-                    landSeed.setSeedId(seedPlantVo.getSeedId());
-                    //根据token得到用户id
-                    landSeed.setUserId(user.getId());
-
-                    if (i == 0) {
-                        //结束时间
-                        landSeed.setPlantTime(localDateTime);
-                        //是否新种子
-                        landSeed.setNewSeedIs(1);
-                    } else {
-                        //结束时间
-                        landSeed.setPlantTime(time2);
-                    }
-
-                    //状态 1为种植
-                    landSeed.setLeStatus(1);
-
-
-                    list.add(landSeed);
-
-                }
-
-                //增加要种植种子的信息和用户信息
-                int i = seedMapper.addPlant(list);
-                if (i <= 0) {
-                    throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-                }
-
-                //如果不是新种子
-            } else {
-
-                /**
-                 * 添加后在进行查询一次
-                 *
-                 * 查询已经收取种子的数量  作为种植的次数
-                 */
-                LambdaQueryWrapper<LandSeed> queryWrapper3 = new LambdaQueryWrapper<LandSeed>()
-                        .eq(LandSeed::getUserId, user.getId())
-                        .eq(LandSeed::getLeStatus, 3)
-                        .eq(LandSeed::getSeedId, seedPlantVo.getSeedId());
-
-                List<LandSeed> list3 = landSeedMapper.selectList(queryWrapper3);
-
-                if (null == list3 || list3.size() == 0) {
-                    throw new ApplicationException(CodeType.SERVICE_ERROR);
-                }
-
-
-                List<Long> longList = new ArrayList<>();
-                for (LandSeed landSeed : list3) {
-                    longList.add(landSeed.getId());
-                }
-                Integer status = seedMapper.updateTimeAndStatus(time2, longList);
-
-                if (status <= 0) {
-                    throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
-                }
-
-            }
-
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+        if(userInfoQueryBoResult.getCode()!=0){
+            log.info("user feign err");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
-        //等于2代表收取
-        if (seedPlantVo.getStatus() == 2) {
-            updateUser(seedPlantVo);
+
+        if (userInfoQueryBoResult.getData().getUserInfoGold() < gold) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
         }
-    }
+
+        //是否第一次种植
+        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+              .eq(LandSeed::getUserId, user.getId())
+              .eq(LandSeed::getSeedId, sendPlantBO.getSeedId());
+
+        List<LandSeed> seedList = landSeedMapper.selectList(wrapper);
+
+        //根据用户查询解锁的土地
+        List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(user.getId());
+
+        //种植时减去用户金币
+        IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
+
+        increaseUserInfoBO.setUserId(user.getId());
+        increaseUserInfoBO.setUserInfoGold(gold);
 
 
-    public void updateUser(SeedPlantVo seedPlantVo) {
+        //减少金币
+        Result result = userFeignClient.cutUserInfo(increaseUserInfoBO);
+        if(result.getCode()!=0){
+            log.info("user feign err");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
+        }
 
-            //得到用户token信息
-            UserLoginQuery user = localUser.getUser();
-
-            Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
-            if(userInfoQueryBoResult.getCode()!=0){
-                log.info("用户模块崩了");
-                throw new ApplicationException(CodeType.SERVICE_ERROR);
-            }
-
-            //根据用户查询解锁的土地
-            List<UserLandUnlock> userLandUnlocks = landMapper.queryUnlockLand(localUser.getUser().getId());
-
-            GoldRedVo goldRedVo = null;
-
-            //查询待收取的的种子 判断这个种子的成熟时间是否小于等于当前时间，如果小于等于当前时间则可以收取
-            LambdaQueryWrapper<LandSeed> queryWrapper1 = new LambdaQueryWrapper<LandSeed>()
-                    .eq(LandSeed::getUserId, user.getId())
-                    .eq(LandSeed::getLeStatus, 2);
-            List<LandSeed> LandSeedList = landSeedMapper.selectList(queryWrapper1);
-
-            List<Long> list=new ArrayList<>();
-
-            for (int i = 0; i < LandSeedList.size(); i++) {
-                if (System.currentTimeMillis() / 1000 >= LandSeedList.get(i).getPlantTime().toEpochSecond(ZoneOffset.of("+8"))) {
-                    System.out.println("进来");
-                    list.add(LandSeedList.get(i).getId());
-
-                    //收取种子后 修改当前用户土地种子的状态
-                   /* LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
-                            .eq(LandSeed::getId, LandSeedList.get(i).getId());
-                    LandSeed landSeed = new LandSeed();
-                    landSeed.setLeStatus(3);
-                    landSeed.setNewSeedIs(0);*/
+        //种植种子
+        List<LandSeed> list = new ArrayList<>();
 
 
-                }
-            }
+        //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
+        double ripeTime = Math.pow(sendPlantBO.getSeedGrade(), 3 / 2.0) * 20 + 60;
+        //将秒数转换成整数类型
+        int integer = (int) ripeTime;
+        //得到时间戳转换成时间格式，最后得到种子成熟的时间
+        LocalDateTime time2 = LocalDateTime.ofEpochSecond(System.currentTimeMillis() / 1000 + integer, 0, ZoneOffset.ofHours(8));
 
-            System.out.println(list.size());
-            if(list.size()==0){
-                throw new ApplicationException(CodeType.SERVICE_ERROR,"时间没到，不可收取");
-            }else{
-                //修改用户种子种植状态
-                int update = landSeedMapper.updateSeedStatus(list);
-            }
+        //当前时间后的一分钟
+        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(1);
 
+        LocalDateTime now = LocalDateTime.now();
 
+        long until = now.until(time2, ChronoUnit.MINUTES);
 
-            //种植所获得的经验
-            double experience = Math.pow(seedPlantVo.getSeedGrade(), 2 / 5.0) * 100 * userLandUnlocks.size();
-            Integer experienceInteger = Integer.valueOf((int) experience);
-
-
-            //种植一次所获得的金币
-            double userGold = Math.pow(seedPlantVo.getSeedGrade(), 2.0) * 50 + 5000 * userLandUnlocks.size();
-            Integer userGoldInteger = Integer.valueOf((int) userGold);
-
-            System.out.println("种植一次所获得的金币="+userGold);
-
-            //判断当前经验是否等级下一级的等级 如果等于等级加一
-            if (seedPlantVo.getUserInfoNowExperience() + experienceInteger >= seedPlantVo.getUserInfoNextExperience()) {
-
-                seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNextExperience() + experienceInteger);
-                //当前经验减去总经验
-                seedPlantVo.setUserInfoNowExperience(seedPlantVo.getUserInfoNowExperience() - seedPlantVo.getUserInfoNextExperience());
-
-                //算出下一级的总经验
-                double v = (((userInfoQueryBoResult.getData().getUserInfoGrade() - 1) +
-                        ((userInfoQueryBoResult.getData().getUserInfoGrade() - 1) *
-                                (userInfoQueryBoResult.getData().getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
-
-                Integer nextExperience = Integer.valueOf((int) v);
-                seedPlantVo.setUserInfoNextExperience(nextExperience);
-
-                //查询掉落的金币红包
-                goldRedVo = seedsFallMapper.queryGoldAndRed(localUser.getUser().getId());
-
-                //不等于空 说明掉落了红包
-                if (goldRedVo != null && goldRedVo.getRedEnvelopes() != null) {
-                    seedPlantVo.setRedPacketDropped(goldRedVo.getRedEnvelopes());
-                }
-
-                if (goldRedVo != null && goldRedVo.getGoldCoin() != null) {
-                    seedPlantVo.setUserGold(userGoldInteger + goldRedVo.getGoldCoin());
+        if (null == seedList || seedList.size() == 0) {
+            //新种子种植
+            for (int i = 0; i < sendPlantBO.getLandNumber(); i++) {
+                LandSeed landSeed = new LandSeed();
+                //生成主键id
+                landSeed.setId(idGenerator.getNumberId());
+                //土地编号
+                landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+                //种子id
+                landSeed.setSeedId(sendPlantBO.getSeedId());
+                //根据token得到用户id
+                landSeed.setUserId(user.getId());
+                if (i == 0) {
+                    //结束时间
+                    landSeed.setPlantTime(localDateTime);
+                    //是否新种子
+                    landSeed.setNewSeedIs(1);
                 } else {
-                    seedPlantVo.setUserGold(userGoldInteger);
-
+                    //结束时间
+                    landSeed.setPlantTime(time2);
                 }
-
-                //随便传值 sql语句只是加了1
-                seedPlantVo.setSeedGrade(1);
-                seedPlantVo.setUserId(user.getId());
-
-                //修改用户信息
-                int i = seedMapper.updateUser(seedPlantVo);
-
-                //每三级解锁一块土地
-                if (userInfoQueryBoResult.getData().getUserInfoGrade() % 3 == 0) {
-                    //查询用户没有解锁的土地 状态等于0解锁第一块土地
-                    List<UserLandUnlock> userLandUnlocks1 = landMapper.queryNotUnlocked(user.getId());
-
-                    //应该拥有土地
-                    int i2 = userInfoQueryBoResult.getData().getUserInfoGrade() / 3 + 1;
-
-                    //现在拥有土地
-                    int size = userLandUnlocks.size();
-
-                    //需要解锁
-                    if (i2 > size && i2 <= 9) {
-                        //需要解锁的土地数
-                        if (userLandUnlocks1.get(0).getLaStatus() == 0) {
-                            int i1 = landMapper.updateStatus(user.getId(), userLandUnlocks1.get(0).getLaNo());
-                            if (i1 <= 0) {
-                                throw new ApplicationException(CodeType.SERVICE_ERROR, "等级等于" + userInfoQueryBoResult.getData().getUserInfoGrade() + "！解锁失败");
-                            }
-
-                            //如果土地的长度大于种子已经种植的次数 ，在添加一条数据
-                            LandSeed landSeed = new LandSeed();
-                            landSeed.setId(idGenerator.getNumberId());
-                            landSeed.setPlantTime(LocalDateTime.now());
-                            landSeed.setUserId(localUser.getUser().getId());
-                            landSeed.setSeedId(seedPlantVo.getSeedId());
-                            landSeed.setLeStatus(3);
-                            landSeed.setLaNo(userLandUnlocks.size());
-                            landSeed.setNewSeedIs(null);
-                            int insert = landMapper.insert(landSeed);
-                            if (insert <= 0) {
-                                throw new ApplicationException(CodeType.SERVICE_ERROR, "添加失败");
-                            }
-
-                        }
-                    }
-                }
-            } else {
-                //加上掉落的金币
-                if (goldRedVo != null && goldRedVo.getGoldCoin() == null) {
-                    seedPlantVo.setUserGold(userGoldInteger + goldRedVo.getGoldCoin());
-                } else {
-                    seedPlantVo.setUserGold(userGoldInteger);
-                }
-
-                seedPlantVo.setUserInfoNowExperience(experienceInteger);
-
-                //不等于空 说明掉落了红包
-                if (goldRedVo != null && goldRedVo.getRedEnvelopes() != 0.0) {
-                    seedPlantVo.setRedPacketDropped(goldRedVo.getRedEnvelopes());
-                }
-
-                seedPlantVo.setUserId(user.getId());
-
-                //修改用户信息
-                int i = seedMapper.updateUsers(seedPlantVo);
-                if (i <= 0) {
-                    log.info("收取时，修改用户信息失败");
-                    throw new ApplicationException(CodeType.SERVICE_ERROR);
-                }
-
+                //状态 1为种植
+                landSeed.setLeStatus(1);
+                landSeed.setTimeNumber(until);
+                list.add(landSeed);
             }
+            //增加要种植种子的信息和用户信息
+            int i = seedMapper.addPlant(list);
+            if (i <= 0) {
+                throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+            }
+
+            return;
+        }
+
+        //旧种子种植
+        Integer status = seedMapper.updateTimeAndStatus(time2, user.getId(), sendPlantBO.getSeedId());
+
 
     }
 
@@ -586,8 +375,8 @@ public class SeedServiceImpl implements ISeedService {
         UserLoginQuery user = localUser.getUser();
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){
-            log.info("用户模块崩了");
-            throw new ApplicationException(CodeType.SERVICE_ERROR,"用户模块崩了 别找我");
+            log.info("user feign err");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
         return userInfoQueryBoResult;
     }
@@ -618,6 +407,135 @@ public class SeedServiceImpl implements ISeedService {
     @Override
     public int updateSeedStatus(List<Long> id) {
         return seedMapper.updateSeedStatus(id);
+    }
+
+
+    /**
+     *  收取
+     * @param sendCollectBO 种子收取参数
+     */
+    @Override
+    public void collectSeed(SendCollectBO sendCollectBO) {
+        //得到用户token信息
+        UserLoginQuery user = localUser.getUser();
+
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+        if(userInfoQueryBoResult.getCode()!=0){
+            log.info("user feign err");
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
+        }
+
+        UserInfoQueryBo data = userInfoQueryBoResult.getData();
+        if (sendCollectBO.getStatus() == 0) {
+            //正常收取
+            Integer gold = sendCollectBO.getUserGold() + data.getUserInfoGold();
+            Double envelopes = sendCollectBO.getUserInfoPacketBalance() + data.getUserInfoPacketBalance();
+
+            SeedCollectVo vo = new SeedCollectVo();
+            vo.setUserGold(gold);
+            vo.setUserInfoPacketBalance(envelopes);
+            vo.setUserId(user.getId());
+            vo.setStatus(0);
+            Result result = userFeignClient.addSeedCollect(vo);
+
+            if (result.getCode() != 0) {
+                log.info("user feign err");
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+            }
+
+            return;
+        }
+
+        //收取种子(经验和金币)
+        int number = 0;
+        List<UserLandUnlock> unlockList = landMapper.queryNotUnlocked(user.getId());
+        if (data.getUserInfoIsVip() == 1) {
+            //是VIP
+            number = 10 - unlockList.size();
+        } else {
+            number = 9 - unlockList.size();
+        }
+        //种植所获得的经验
+        double seedExperience = Math.pow(sendCollectBO.getSeedGrade(), 2 / 5.0) * 100 * number;
+        Long resultExperience = (long) seedExperience;
+        //先算出该用户是否升级
+        Long experience = resultExperience + data.getUserInfoNowExperience();
+
+        //删除种子状态表信息
+        dropStatusService.deleteDrop(user.getId());
+        //先判断是否解锁土地
+        //算出解锁土地
+        if (data.getUserInfoGrade() % 3 == 0) {
+            //解锁一块土地  最多9块
+
+            if (unlockList.size() > 10) {
+                return;
+            }
+
+            //判断已经解锁几块土地
+            if (unlockList.size() == 10) {
+                //判断是不是VIP
+                if (data.getUserInfoIsVip() == 1) {
+                    //是VIP
+                    //继续解锁
+                    int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+
+                    if (updateStatus <= 0) {
+                        log.info("解锁土地失败");
+                        throw new ApplicationException(CodeType.SERVICE_ERROR);
+                    }
+                }
+            }
+
+
+            //解锁土地
+            int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+
+            if (updateStatus <= 0) {
+                log.info("解锁土地失败");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
+
+        }
+
+        if (experience < data.getUserInfoNextExperience()) {
+            //小于下一级升级需要的经验
+            //不升级
+            SeedCollectVo vo = new SeedCollectVo();
+            vo.setStatus(1);
+            vo.setUserInfoNowExperience(resultExperience);
+            Result result = userFeignClient.addSeedCollect(vo);
+
+            if (result.getCode() != 0) {
+                log.info("user feign err");
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+            }
+
+            return;
+        }
+
+        //升级
+        //先算出下一级升级所需要的经验
+        Long nowExperience = data.getUserInfoNextExperience() - experience;
+
+        //算出下一级的总经验
+        Double nextExperience = (((data.getUserInfoGrade() - 1) +
+              ((data.getUserInfoGrade() - 1) *
+                    (data.getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
+
+        SeedCollectVo vo = new SeedCollectVo();
+        vo.setStatus(2);
+        vo.setUserInfoNowExperience(nowExperience);
+        vo.setUserInfoNextExperience(nextExperience.longValue());
+        vo.setUserId(user.getId());
+
+        Result result = userFeignClient.addSeedCollect(vo);
+
+        if (result.getCode() != 0) {
+            log.info("user feign err");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+        }
+
     }
 
 }

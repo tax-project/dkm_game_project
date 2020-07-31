@@ -3,6 +3,7 @@ package com.dkm.feign.fallback;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.*;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.entity.vo.*;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.feign.entity.ReputationRankingBO;
@@ -38,6 +39,11 @@ public class UserFeignClientFallback implements UserFeignClient {
 
    @Override
    public Result<List<UserNameVo>> queryUserName(List<Long> userIds) {
+      return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
+   }
+
+   @Override
+   public Result addSeedCollect(SeedCollectVo seedCollectVo) {
       return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
    }
 

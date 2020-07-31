@@ -6,6 +6,7 @@ import com.dkm.constanct.CodeType;
 import com.dkm.entity.bo.UserInfoQueryBo;
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
@@ -192,5 +193,59 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public UserSectionInfoBO queryUserSection(Long userId) {
       return baseMapper.queryUserSection(userId);
+   }
+
+   @Override
+   public void addSeedCollect(SeedCollectVo seedCollectVo) {
+
+      LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<UserInfo>()
+            .eq(UserInfo::getUserId, seedCollectVo.getUserId());
+
+      if (seedCollectVo.getStatus() == 0) {
+         //收取红包和金币
+         UserInfo userInfo = new UserInfo();
+
+         userInfo.setUserInfoGold (seedCollectVo.getUserGold());
+         userInfo.setUserInfoPacketBalance (seedCollectVo.getUserInfoPacketBalance());
+
+         int update = baseMapper.update(userInfo, wrapper);
+
+         if (update <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+         }
+
+         return;
+      }
+
+      //收取经验和种子
+      if (seedCollectVo.getStatus() == 1) {
+         //收取经验和种子
+         //不升级
+         UserInfo userInfo = new UserInfo();
+         userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
+
+         int update = baseMapper.update(userInfo, wrapper);
+
+         if (update <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+         }
+
+         return;
+      }
+
+
+      //收取经验和种子
+      //升级了
+      UserInfo userInfo = new UserInfo();
+      userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
+      userInfo.setUserInfoNextExperience (seedCollectVo.getUserInfoNextExperience());
+
+      int update = baseMapper.update(userInfo, wrapper);
+
+      if (update <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+      }
+
+
    }
 }

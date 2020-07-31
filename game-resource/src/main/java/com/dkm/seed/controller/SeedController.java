@@ -8,6 +8,8 @@ import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.land.entity.vo.Message;
 import com.dkm.seed.entity.Seed;
+import com.dkm.seed.entity.bo.SendCollectBO;
+import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.ISeedService;
 import com.dkm.seed.vilidata.TimeLimit;
@@ -44,11 +46,6 @@ public class SeedController {
     private LocalUser localUser;
 
 
-    /**
-     * 根据用户id得到种子信息
-     *
-     * @return
-     */
     @ApiOperation(value = "根据用户id得到种子信息", notes = "根据用户id得到种子")
     @GetMapping("/queryUserIdSeed")
     @CrossOrigin
@@ -65,14 +62,6 @@ public class SeedController {
     }
 
 
-
-
-
-
-
-    /**
-     * 解锁植物碎片
-     */
     @ApiOperation(value = "解锁植物碎片", notes = "解锁植物碎片")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "unlockMoney", value = "购买碎片金额"),
@@ -92,44 +81,43 @@ public class SeedController {
         return iSeedService.unlockPlant(seedVo);
     }
 
-
-    /**
-     * 种植种子
-     * 收取种子
-     */
     @ApiOperation(value = "种植种子", notes = "种植种子")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "1为种植，3为收取"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGold", value = "种子种植金币"),
-            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "种子土地id"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoPacketBalance", value = "用户红包可用余额"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNowExperience", value = "种子当前经验"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoNextExperience", value = "用户下一等级所需经验值"),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
+          @ApiImplicitParam(name = "seedId", value = "种子id", required = true, dataType = "Long", paramType = "path"),
+          @ApiImplicitParam(name = "seedGrade", value = "种子等级", required = true, dataType = "Integer", paramType = "path"),
+          @ApiImplicitParam(name = "seedGold", value = "种子种植金币", required = true, dataType = "int", paramType = "path"),
+          @ApiImplicitParam(name = "landNumber", value = "种植的个数", required = true, dataType = "int", paramType = "path")
     })
     @PostMapping("/plant")
     @CrossOrigin
     @CheckToken
-    public void plant(@RequestBody SeedPlantVo seedPlantVo) {
-        if(seedPlantVo.getSeedId()==null || seedPlantVo.getSeedGrade()==null){
+    public void plant(@RequestBody SendPlantBO sendPlantBO) {
+        if(sendPlantBO.getSeedId()==null || sendPlantBO.getSeedGrade()==null
+              || sendPlantBO.getSeedGold() == null || sendPlantBO.getLandNumber() == null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }
-         iSeedService.queryAlreadyPlantSeed(seedPlantVo);
+         iSeedService.queryAlreadyPlantSeed(sendPlantBO);
     }
 
 
-    @PostMapping("/plants")
+    @ApiOperation(value = "收取", notes = "收取")
+    @ApiImplicitParams({
+          @ApiImplicitParam(name = "userGold", value = "收取的总金币", required = false, dataType = "Long", paramType = "path"),
+          @ApiImplicitParam(name = "seedGrade", value = "等级", required = true, dataType = "Integer", paramType = "path"),
+          @ApiImplicitParam(name = "userInfoPacketBalance", value = "收取的红包", required = false, dataType = "int", paramType = "path"),
+          @ApiImplicitParam(name = "status", value = "0--正常收取 1--收取种子", required = true, dataType = "int", paramType = "path")
+    })
+    @PostMapping("/collectSeed")
     @CrossOrigin
-    public void plants(@RequestBody SeedPlantVo seedPlantVo) {
-        iSeedService.queryAlreadyPlantSeed(seedPlantVo);
+    @CheckToken
+    public void collectSeed(@RequestBody SendCollectBO sendCollectBO) {
+        if(sendCollectBO.getStatus() == null || sendCollectBO.getSeedGrade()==null){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
+        }
+        iSeedService.collectSeed(sendCollectBO);
     }
 
 
-    /**
-     * 查询已经种植的种子
-     */
     @ApiOperation(value = "查询已经种植的种子", notes = "查询已经种植的种子")
     @GetMapping("/queryAlreadyPlantSd")
     @CrossOrigin
@@ -139,18 +127,12 @@ public class SeedController {
     }
 
 
-    /**
-     * 根据用户id查询已解锁的种子
-     */
     @ApiOperation(value = "根据用户id查询已解锁的种子", notes = "根据用户id查询已解锁的种子")
     @GetMapping("/queryAreUnlocked/{userId}")
     public List<SeedUnlockVo> queryAreUnlocked(@PathVariable("userId") Long userId){
         return iSeedService.queryAreUnlocked(userId);
     }
 
-    /**
-     * 根据用户id查询用户所有信息
-     */
     @ApiOperation(value = "根据用户id查询用户所有信息", notes = "根据用户id查询用户所有信息")
     @GetMapping("/queryUserAll")
     @CrossOrigin
@@ -159,9 +141,6 @@ public class SeedController {
        return iSeedService.queryUserAll();
     }
 
-    /**
-     * 根据种植id查询种植信息
-     */
     @ApiOperation(value = "根据种植id查询种植信息", notes = "根据种植id查询种植信息")
     @GetMapping("/querySeedById")
     @ApiImplicitParams({
@@ -176,9 +155,6 @@ public class SeedController {
            return iSeedService.querySeedById(seedId);
     }
 
-    /**
-     * 批量修改种子状态
-     */
     @ApiOperation(value = "批量修改种子状态", notes = "批量修改种子状态")
     @GetMapping("/updateSeedStatus")
     @ApiImplicitParams({

@@ -2,6 +2,7 @@ package com.dkm.userInfo.service;
 
 import com.dkm.entity.bo.UserInfoSkillBo;
 import com.dkm.entity.bo.UserPlunderBo;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.entity.vo.AttendantWithUserVo;
 import com.dkm.entity.vo.IdVo;
 import com.dkm.entity.vo.OpponentVo;
@@ -105,7 +106,18 @@ public interface IUserInfoService {
     */
    List<UserInfoAttVo> queryUserInfoAtt (List<Long> list);
 
+   /**
+    *  未知~
+    * @param userId 用户id
+    * @return
+    */
    UserSectionInfoBO queryUserSection(Long userId);
+
+   /**
+    *  收取金币和红包增加到用户信息
+    * @param seedCollectVo 参数信息
+    */
+   void addSeedCollect (SeedCollectVo seedCollectVo);
 
 
 }

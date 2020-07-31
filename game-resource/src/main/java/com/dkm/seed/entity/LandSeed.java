@@ -31,7 +31,7 @@ public class LandSeed extends Model<LandSeed>{
   /**
    * 种子id
    */
-  private Integer seedId;
+  private Long seedId;
 
   /**
    * 土地编号
@@ -52,6 +52,11 @@ public class LandSeed extends Model<LandSeed>{
    * 是否新种子 （1新种子 0不是）
    */
   private Integer newSeedIs;
+
+  /**
+   * 多少分钟
+   */
+  private Long timeNumber;
 
 
 

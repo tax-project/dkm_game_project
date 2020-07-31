@@ -62,20 +62,29 @@ public class BackpackServiceImpl implements IBackpackService {
     @Override
     public void addBackpackGoods(AddGoodsInfo addGoodsInfo) {
         GoodsEntity goodsEntity = goodsMapper.selectById(addGoodsInfo.getGoodId());
-        if(goodsEntity==null||goodsEntity.getGoodType()==1){throw new ApplicationException(CodeType.PARAMETER_ERROR,"找不到该物品");}
-        BackPackEntity backPackEntity = backpackMapper.selectOne(new LambdaQueryWrapper<BackPackEntity>()
-                .eq(BackPackEntity::getUserId, addGoodsInfo.getUserId()).eq(BackPackEntity::getGoodId, addGoodsInfo.getGoodId()));
+        if(goodsEntity==null||goodsEntity.getGoodType()==1){
+            throw new ApplicationException(CodeType.PARAMETER_ERROR,"找不到该物品");}
+        BackPackEntity backPackEntity = backpackMapper.
+              selectOne(new LambdaQueryWrapper<BackPackEntity>()
+                            .eq(BackPackEntity::getUserId, addGoodsInfo.getUserId())
+                            .eq(BackPackEntity::getGoodId, addGoodsInfo.getGoodId()));
         int success = 0;
         if(backPackEntity!=null){
             int i = backPackEntity.getNumber() + addGoodsInfo.getNumber();
-            if(i<0){throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");}
-            if(i==0){ success= backpackMapper.deleteById(backPackEntity.getBackpackId()); }
+            if(i<0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
+            }
+            if(i==0){
+                success= backpackMapper.deleteById(backPackEntity.getBackpackId());
+            }
             else {
                 backPackEntity.setNumber(i);
                 success = backpackMapper.updateById(backPackEntity);
             }
         }else {
-            if(addGoodsInfo.getNumber()<0){ throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");}
+            if(addGoodsInfo.getNumber()<0){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
+            }
             else {
                 if(backpackMapper.getBackpackNumber(addGoodsInfo.getUserId())>=30){
                     throw new ApplicationException(CodeType.SERVICE_ERROR,"背包空间不足");
@@ -88,7 +97,9 @@ public class BackpackServiceImpl implements IBackpackService {
                 success = backpackMapper.insert(addBackpack);
             }
         }
-        if(success<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"更新背包失败");}
+        if(success<=0){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"更新背包失败");
+        }
     }
 
     @Override
