@@ -2,6 +2,7 @@ package com.dkm.feign;
 
 import com.dkm.data.Result;
 import com.dkm.entity.bo.*;
+import com.dkm.entity.user.SeedCollectVo;
 import com.dkm.entity.vo.*;
 import com.dkm.feign.entity.ReputationRankingBO;
 import com.dkm.feign.entity.UserNameVo;
@@ -123,6 +124,14 @@ public interface UserFeignClient {
      */
     @PostMapping("/v1/we/chat/query/list/user/part")
     Result<List<UserNameVo>> queryUserName(@RequestBody List<Long> userIds);
+
+    /**
+     *  收取红包和金币
+     * @param seedCollectVo 参数
+     * @return 返回结果
+     */
+    @PostMapping("/v1/userInfo/addSeedCollect")
+    Result addSeedCollect(@RequestBody SeedCollectVo seedCollectVo);
 
 }
 

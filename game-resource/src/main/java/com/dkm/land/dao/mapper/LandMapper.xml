@@ -23,11 +23,16 @@
     </select>
 
     <select id="queryNotUnlocked" resultType="com.dkm.land.entity.vo.UserLandUnlock" parameterType="java.lang.Long">
-        select b.la_name,b.la_no,a.la_status from tb_user_land_unlock a,tb_land b where a.la_no=b.la_no and a.user_id=#{userId} and a.la_status=0
+        select b.la_name,b.la_no,a.la_status
+        from tb_user_land_unlock a,tb_land b
+        where a.la_no=b.la_no
+        and a.user_id=#{userId}
+        and a.la_status=0
     </select>
 
     <select id="queryUnlockLand" resultType="com.dkm.land.entity.vo.UserLandUnlock" parameterType="java.lang.Long">
-        select b.la_name,b.la_no from tb_user_land_unlock a,tb_land b where a.la_no=b.la_no and a.user_id=#{userId} and a.la_status=1
+        select b.la_name,b.la_no from tb_user_land_unlock a,tb_land b
+        where a.la_no=b.la_no and a.user_id=#{userId} and a.la_status=1
     </select>
 
     <update id="updateStatus">

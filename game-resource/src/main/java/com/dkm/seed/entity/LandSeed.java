@@ -31,7 +31,7 @@ public class LandSeed extends Model<LandSeed>{
   /**
    * 种子id
    */
-  private Integer seedId;
+  private Long seedId;
 
   /**
    * 土地编号

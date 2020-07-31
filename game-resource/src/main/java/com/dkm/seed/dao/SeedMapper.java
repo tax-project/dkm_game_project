@@ -108,10 +108,13 @@ public interface SeedMapper extends BaseMapper<Seed> {
     /**
      *  批量修改状态和时间
      * @param time 时间
-     * @param list id集合
-     * @return 修改结果
+     * @param userId 用户Id
+     * @param seedId 种子id
+     * @return 返回结果
      */
-    Integer updateTimeAndStatus (@Param("time") LocalDateTime time, @Param("list") List<Long> list);
+    Integer updateTimeAndStatus (@Param("time") LocalDateTime time,
+                                 @Param("userId") Long userId,
+                                 @Param("seedId") Long seedId);
 
 
 
