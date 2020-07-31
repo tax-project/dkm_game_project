@@ -48,8 +48,12 @@ public interface LandMapper extends IBaseMapper<LandSeed> {
      * @return
      */
     List<UserLandUnlock> queryNotUnlocked(Long userId);
+
     /**
-     * 修改用户土地状态
+     *  updateStatus
+     * @param userId
+     * @param laNo
+     * @return
      */
     int updateStatus(@Param("userId") Long userId, @Param("laNo") Integer laNo);
 

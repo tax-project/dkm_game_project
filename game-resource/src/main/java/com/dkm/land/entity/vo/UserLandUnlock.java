@@ -10,7 +10,11 @@ import lombok.Data;
  */
 @Data
 public class UserLandUnlock {
-    private long userId ;
+
+    /**
+     *  用户id
+     */
+    private Long userId ;
     /**
      * 状态
      */

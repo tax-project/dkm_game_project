@@ -1,6 +1,7 @@
 package com.dkm.seed.service;
 
 import com.dkm.seed.entity.SeedsFall;
+import com.dkm.seed.entity.bo.SeedDropBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 
@@ -13,24 +14,21 @@ import java.util.List;
  * @DATE: 2020/6/8 15:18
  */
 public interface ISeedFallService {
-    /**
-     * 种子掉落(金币  红包)
-     */
-    void seedDrop();
-
-    /**
-     * 单独掉落红包
-     */
-    void redBagDroppedSeparately();
 
 
     /**
-     * 查询已经掉落的金币红包和花
+     *   前端调掉落接口
+     *
+     * @return 掉落的东西
      */
-    List<SeedsFallVo> queryDroppedItems();
+    SeedDropBO seedDrop(Integer userInfoGrade);
 
-
-
-
+    /**
+     *  上线就调用的接口
+     * @param seedId 种子id
+     * @param userInfoGrade 等级
+     * @return 返回所有掉落的信息
+     */
+    List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade);
 
 }
