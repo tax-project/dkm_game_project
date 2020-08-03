@@ -9,7 +9,7 @@ import javax.annotation.Resource
 
 @Api(tags = ["技能相关"])
 @RestController
-@RequestMapping("/admin/config/skill")
+@RequestMapping("/config/skill")
 class SkillController {
     @Resource
     private lateinit var skinService: ISkillService

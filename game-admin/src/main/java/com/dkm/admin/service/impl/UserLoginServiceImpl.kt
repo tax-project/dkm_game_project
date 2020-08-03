@@ -7,6 +7,7 @@ import com.dkm.admin.mapper.bo.AdminUserTokenEntity
 import com.dkm.admin.mapper.vo.UserLoginResultVo
 import com.dkm.admin.mapper.vo.UserLoginVo
 import com.dkm.admin.service.IAdminUserLoginService
+import com.dkm.jwt.Interceptor.AuthenticationInterceptor
 import com.dkm.utils.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

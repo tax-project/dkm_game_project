@@ -16,7 +16,7 @@ import javax.annotation.Resource
  */
 @Api(tags = ["物品相关"])
 @RestController
-@RequestMapping("/admin/config/goods")
+@RequestMapping("/config/goods")
 class GoodsController {
     @Resource
     private lateinit var iGoodService: IGoodService

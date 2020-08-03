@@ -50,6 +50,31 @@ public class CancerController {
         return cancerService.getSingleTopUpInfoCheck(localUser.getUser().getId(), id);
     }
 
+
+
+    @ApiOperation("充值送蓝卷")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    @GetMapping(value = "/rechargeTheBlueRoll", produces = "application/json")
+    public RechargeVo getRechargeTheBlueRoll() {
+        return cancerService.getRechargeTheBlueRoll(localUser.getUser().getId());
+    }
+
+
+    @ApiOperation("充值送蓝卷领取接口")
+    @CrossOrigin
+    @CheckToken
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "path", name = "id", required = true, dataType = "Long", value = "领取充值奖励的id")
+    })
+    @GetMapping(value = "/rechargeTheBlueRoll/{id}/check", produces = "application/json")
+    public Boolean rechargeTheBlueRollCheck(@PathVariable Integer id) {
+        return cancerService.rechargeTheBlueRollCheck(localUser.getUser().getId(), id);
+    }
+
+
     @ApiOperation("累计充值/消费大返利的累计充值查询")
     @CrossOrigin
     @CheckToken
