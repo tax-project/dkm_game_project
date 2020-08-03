@@ -35,7 +35,7 @@ public class SeedsFallController {
 
     @ApiOperation(value = "前端调掉落接口", notes = "前端调掉落接口")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级")
-    @GetMapping("/seedDrop")
+    @GetMapping("/seedD                                     rop")
     @CrossOrigin
     @CheckToken
     public SeedDropBO seedDrop(@RequestParam(value = "userInfoGrade") Integer userInfoGrade){
@@ -59,7 +59,9 @@ public class SeedsFallController {
         if (seedId == null || userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
+        List<SeedDropBO> seedDropBOS = iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
+        System.out.println("-->"+seedDropBOS);
+        return seedDropBOS;
     }
 
 }
