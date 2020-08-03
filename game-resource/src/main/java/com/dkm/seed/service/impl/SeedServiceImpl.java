@@ -341,6 +341,8 @@ public class SeedServiceImpl implements ISeedService {
                 } else {
                     //结束时间
                     landSeed.setPlantTime(time2);
+                    //是否新种子
+                    landSeed.setNewSeedIs(0);
                 }
                 //状态 1为种植
                 landSeed.setLeStatus(1);
