@@ -1,6 +1,7 @@
 package com.dkm.box.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Data;
  * @create: 2020-08-03 09:36
  **/
 @Data
+@TableName("tb_auto_sell")
 public class AutoSellEntity {
     @TableId
     private Long userId;
