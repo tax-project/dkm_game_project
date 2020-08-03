@@ -23,7 +23,8 @@ class GoodsController {
 
 
     @CheckAdminPermission
-    @ApiOperation("获取所有物品")
+    @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    @ApiOperation("获取所有物品列表",notes = "通过此接口来查询所有的基础物品表")
     @GetMapping("/getAllGoods", produces = ["application/json"])
     fun getAllGoods() = iGoodService.getAllGoods()
 
