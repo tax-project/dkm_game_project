@@ -1,7 +1,9 @@
 package com.dkm.box.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.dkm.backpack.entity.vo.OpenEquipmentVo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
+import com.dkm.box.service.impl.IAutoSellEqService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
@@ -15,7 +17,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @program: game_project
@@ -32,6 +37,9 @@ public class BoxController {
 
     @Resource
     private LocalUser localUser;
+
+    @Resource
+    private IAutoSellEqService autoSellEqService;
 
     @ApiOperation(value = "获取用户宝箱列表")
 
@@ -54,5 +62,27 @@ public class BoxController {
     public List<OpenEquipmentVo> openBoxes(@RequestParam("boxId") Long  boxId){
         if(boxId==null){throw new ApplicationException(CodeType.SERVICE_ERROR,"参数异常"); }
         return  userBoxService.openBox(localUser.getUser().getId(),boxId);
+    }
+    @ApiOperation(value = "设置用户自动出售装备信息")
+    @GetMapping(value = "/autoSellEq")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "path", name = "autoSell", required = true, dataType = "List", value = "自动出售装备的等级")
+    })
+    @CrossOrigin
+    @CheckToken
+    public void autoSellEq(@RequestParam("autoSell") List<Long>  autoSell){
+        if(autoSell==null||autoSell.size()==0){throw new ApplicationException(CodeType.SERVICE_ERROR,"参数异常"); }
+        autoSellEqService.setAutoSell(localUser.getUser().getId(), JSON.toJSONString(autoSell));
+    }
+    @ApiOperation(value = "获取用户自动出售装备信息")
+    @GetMapping(value = "/getAutoSellEq")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
+    })
+    @CrossOrigin
+    @CheckToken
+    public List<Integer> getAutoSellEq(){
+       return autoSellEqService.getAutoSellInfo(localUser.getUser().getId());
     }
 }

@@ -10,6 +10,8 @@ import com.dkm.backpack.entity.GoodsEntity;
 import com.dkm.backpack.entity.vo.OpenEquipmentVo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IBackpackService;
+import com.dkm.box.dao.AutoSellMapper;
+import com.dkm.box.entity.AutoSellEntity;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.box.dao.UserBoxMapper;
@@ -54,6 +56,9 @@ public class UserBoxServiceImpl implements IUserBoxService {
     @Resource
     private EquipmentMapper equipmentMapper;
 
+    @Resource
+    private AutoSellMapper autoSellMapper;
+
     @Override
     public List<BoxInfoVo> getBoxInfo(Long userId) {
         //获取用户宝箱
@@ -92,6 +97,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
         if (backpackNumber<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"背包空间不足");}
         Random random = new Random();
         List<GoodsEntity> goodsEntities = goodsMapper.selectList(new LambdaQueryWrapper<GoodsEntity>().eq(GoodsEntity::getGoodType, 1));
+        AutoSellEntity autoSellEntity = autoSellMapper.selectById(userId);
         Integer userGrade = userBoxMapper.getUserGrade(userId);
         List<OpenEquipmentVo> result = new ArrayList<>();
         if(boxId==0){
@@ -116,17 +122,24 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 backPackEntity.setGoodId(goodsEntity.getId());
                 backPackEntity.setNumber(1);
                 backPackEntity.setUserId(userId);
-                backPackEntities.add(backPackEntity);
-                equipmentEntities.add(setEquipmentEntity(goodsEntity,backPackEntity,userGrade,boxLevel,random));
+                EquipmentEntity equipmentEntity = setEquipmentEntity(goodsEntity, backPackEntity, userGrade, boxLevel, random);
+                boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getGrade() / 5 + 1 + "");
+                if(sell){
+                    backPackEntities.add(backPackEntity);
+                    equipmentEntities.add(equipmentEntity);
+                }
                 OpenEquipmentVo openEquipmentVo = new OpenEquipmentVo();
                 openEquipmentVo.setBackpackId(backPackEntity.getBackpackId());
                 openEquipmentVo.setUrl(goodsEntity.getUrl());
+                openEquipmentVo.setIsAutoSell(sell?0:1);
                 result.add(openEquipmentVo);
             }
             Integer integer = backpackMapper.insertList(backPackEntities);
             Integer integer1 = equipmentMapper.insertList(equipmentEntities);
             Integer integer2 = userBoxMapper.updateBoxTime(userBoxEntities);
-            if(!integer.equals(integer1)||!integer2.equals(integer)){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+            if(integer!=backPackEntities.size()||integer1!=equipmentEntities.size()||integer2!=userBoxEntities.size()){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");
+            }
         }else {
             UserBoxEntity userBoxEntity = userBoxMapper.selectOne(new LambdaQueryWrapper<UserBoxEntity>()
                     .eq(UserBoxEntity::getUserId,userId).eq(UserBoxEntity::getBoxId, boxId).le(UserBoxEntity::getOpenTime,now));
@@ -138,14 +151,20 @@ public class UserBoxServiceImpl implements IUserBoxService {
             backPackEntity.setGoodId(goodsEntity.getId());
             backPackEntity.setNumber(1);
             backPackEntity.setUserId(userId);
+            EquipmentEntity equipmentEntity = setEquipmentEntity(goodsEntity, backPackEntity, userGrade, userBoxEntity.getBoxLevel(), random);
+            boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getGrade() / 5 + 1 + "");
             OpenEquipmentVo openEquipmentVo = new OpenEquipmentVo();
             openEquipmentVo.setBackpackId(backPackEntity.getBackpackId());
             openEquipmentVo.setUrl(goodsEntity.getUrl());
+            openEquipmentVo.setIsAutoSell(sell?0:1);
             result.add(openEquipmentVo);
-            int insert = backpackMapper.insert(backPackEntity);
-            int insert1 = equipmentMapper.insert(setEquipmentEntity(goodsEntity, backPackEntity, userGrade, userBoxEntity.getBoxLevel(), random));
+            if(sell){
+                int insert = backpackMapper.insert(backPackEntity);
+                int insert1 = equipmentMapper.insert(equipmentEntity);
+                if(insert<0||insert1<0){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+            }
             int i = userBoxMapper.updateById(userBoxEntity);
-            if( insert!=insert1||insert1!=i){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
+            if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");}
         }
         return result;
     }

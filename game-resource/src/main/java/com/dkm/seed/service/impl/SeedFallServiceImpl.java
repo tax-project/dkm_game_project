@@ -67,9 +67,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Autowired
     private LandSeedMapper landSeedMapper;
 
-    @Autowired
-    private IdGenerator idGenerator;
-
     @Override
     public SeedDropBO seedDrop(Integer userInfoGrade) {
 
