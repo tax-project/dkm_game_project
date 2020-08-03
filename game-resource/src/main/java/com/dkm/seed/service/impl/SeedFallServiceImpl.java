@@ -169,6 +169,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         UserLoginQuery user = localUser.getUser();
 
+        System.out.println("-->id="+seedId);
+
         //先查询有没有种植
         LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
               .eq(LandSeed::getUserId, user.getId())
@@ -206,6 +208,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             //根据次数循环返回给前端掉落的结果
             //循环得到前端返回的数据
             for (int i = 0; i < newSeed; i++) {
+                System.out.println("-->>");
                 SeedDropBO seedDropBO = seedDrop(userInfoGrade);
                 list.add(seedDropBO);
             }
