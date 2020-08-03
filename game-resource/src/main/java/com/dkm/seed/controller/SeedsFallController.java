@@ -35,7 +35,7 @@ public class SeedsFallController {
 
     @ApiOperation(value = "前端调掉落接口", notes = "前端调掉落接口")
     @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级")
-    @GetMapping("/seedD                                     rop")
+    @GetMapping("/seedDrop")
     @CrossOrigin
     @CheckToken
     public SeedDropBO seedDrop(@RequestParam(value = "userInfoGrade") Integer userInfoGrade){
