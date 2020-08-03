@@ -91,6 +91,17 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 //修改种子状态为2
                 list.add(landSeed.getId());
             }
+
+            if (dropStatus != null) {
+                Long timeNumber = landSeed.getTimeNumber();
+                Integer number = timeNumber.intValue();
+                int newSeed = number - dropStatus.getMuchNumber();
+
+                if (newSeed <= 0) {
+                    return null;
+                }
+            }
+
         }
 
         if(list.size()!=0){
@@ -206,12 +217,15 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 }
             }
 
+            if (newSeed <= 0) {
+                return null;
+            }
+
             //根据次数算出要掉落的次数
             //根据次数循环返回给前端掉落的结果
             //循环得到前端返回的数据
             System.out.println("==="+newSeed);
             for (int i = 0; i < newSeed; i++) {
-                System.out.println("-->>");
                 SeedDropBO seedDropBO = seedDrop(userInfoGrade);
                 list.add(seedDropBO);
             }

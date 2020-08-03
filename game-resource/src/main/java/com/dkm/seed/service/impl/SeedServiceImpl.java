@@ -420,6 +420,10 @@ public class SeedServiceImpl implements ISeedService {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
 
+        if (sendCollectBO.getUserInfoPacketBalance() >= 2) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "红包金额有误嘛?");
+        }
+
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){
             log.info("user feign err");

@@ -13,5 +13,8 @@ import lombok.Data;
 public class AutoSellEntity {
     @TableId
     private Long userId;
+    /**
+     * 出售等级 为数组字符串
+     */
     private String autoSellOrder;
 }
