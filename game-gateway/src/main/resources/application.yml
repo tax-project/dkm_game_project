@@ -46,7 +46,3 @@ zuul:
 
 service:
   ip: 192.168.10.133
-
-ribbon:
-  ReadTimeout: 10000
-  SocketTimeout: 20000
