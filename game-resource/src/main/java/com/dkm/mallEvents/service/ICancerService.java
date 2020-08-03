@@ -42,4 +42,7 @@ public interface ICancerService {
 
     CancerGiftBoxInfoVo getCancerGiftBoxInfo();
 
+    RechargeVo getRechargeTheBlueRoll(Long id);
+
+    Boolean rechargeTheBlueRollCheck(Long id, Integer id1);
 }

@@ -15,7 +15,7 @@ import javax.annotation.Resource
  * @author fkl
  */
 @Api(tags = ["用户登录"])
-@RequestMapping("/admin")
+@RequestMapping("/")
 @RestController
 class AdminUserController {
     @Resource
