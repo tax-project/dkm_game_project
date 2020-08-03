@@ -115,6 +115,16 @@ public class CancerServiceImpl implements ICancerService {
     }
 
     @Override
+    public RechargeVo getRechargeTheBlueRoll(Long id) {
+        return getInfo(id, 10);
+    }
+
+    @Override
+    public Boolean rechargeTheBlueRollCheck(Long id, Integer id1) {
+        return receive(id, id1);
+    }
+
+    @Override
     public LuckyGiftVo getLuckyGiftInfo() {
         val luckyGiftInfo = rewardDao.getLuckyGiftInfo();
         val localDateTime = DateUtils.parseDateTime(luckyGiftInfo.getNextRefreshDate());

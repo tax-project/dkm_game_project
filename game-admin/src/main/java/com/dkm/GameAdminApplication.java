@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
  * @author qf
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.dkm","springfox.documentation.swagger.web"})
 @EnableEurekaClient
 @EnableSwagger2
 @EnableTransactionManagement
@@ -21,19 +21,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @MapperScan("com.dkm.*.dao")
 public class GameAdminApplication extends SpringBootServletInitializer {
 
-   public static void main(String[] args) {
-      SpringApplication.run(GameAdminApplication.class, args);
-   }
+    public static void main(String[] args) {
+        SpringApplication.run(GameAdminApplication.class, args);
+    }
 
 
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
-   @Override
-   protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-      return builder.sources(GameAdminApplication.class);
-   }
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(GameAdminApplication.class);
+    }
 
 }

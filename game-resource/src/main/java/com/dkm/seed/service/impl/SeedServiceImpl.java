@@ -341,6 +341,8 @@ public class SeedServiceImpl implements ISeedService {
                 } else {
                     //结束时间
                     landSeed.setPlantTime(time2);
+                    //是否新种子
+                    landSeed.setNewSeedIs(0);
                 }
                 //状态 1为种植
                 landSeed.setLeStatus(1);
@@ -417,6 +419,10 @@ public class SeedServiceImpl implements ISeedService {
     public void collectSeed(SendCollectBO sendCollectBO) {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
+
+        if (sendCollectBO.getUserInfoPacketBalance() >= 2) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "红包金额有误嘛?");
+        }
 
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){
