@@ -213,7 +213,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
                 System.out.println("==="+newSeed);
                 if (newSeed <= 0) {
-                    return null;
+                    continue;
                 }
 
                 //根据次数算出要掉落的次数
