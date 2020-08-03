@@ -1,6 +1,8 @@
 server:
   port: 8010
   max-http-header-size: 102400
+  servlet:
+    context-path: /
 mybatis-plus:
   mapper-locations: classpath:com/dkm/*/dao/mapper/*.xml
 spring:
@@ -14,3 +16,7 @@ spring:
 app:
   workerId: 11
   dataCenterId: 1
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui3.html

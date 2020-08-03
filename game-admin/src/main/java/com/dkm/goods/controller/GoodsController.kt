@@ -1,6 +1,7 @@
 package com.dkm.goods.controller
 
 
+import com.dkm.config.annon.CheckAdminPermission
 import com.dkm.goods.mapper.vo.GoodsVo
 import com.dkm.goods.service.IGoodService
 import io.swagger.annotations.Api
@@ -20,18 +21,23 @@ class GoodsController {
     @Resource
     private lateinit var iGoodService: IGoodService
 
+
+    @CheckAdminPermission
     @ApiOperation("获取所有物品")
     @GetMapping("/getAllGoods", produces = ["application/json"])
     fun getAllGoods() = iGoodService.getAllGoods()
 
+    @CheckAdminPermission
     @ApiOperation("添加一个物品")
     @PostMapping("/add", consumes = ["application/json"], produces = ["application/json"])
     fun addGoods(@RequestBody goods: GoodsVo) = iGoodService.addGoodsItem(goods)
 
+    @CheckAdminPermission
     @ApiOperation("更新一个物品")
     @PostMapping("/{id}/update", consumes = ["application/json"], produces = ["application/json"])
     fun updateGoods(@ApiParam("物品ID，仅针对现有的物品")@PathVariable id: Long, @RequestBody goods: GoodsVo ) = iGoodService.updateItemById(id,goods)
 
+    @CheckAdminPermission
     @ApiOperation("删除一个物品")
     @GetMapping("/{id}/delete", consumes = ["application/json"], produces = ["application/json"])
     fun deleteGoodsById(@ApiParam("物品ID，仅针对现有的物品") @PathVariable id: String) = iGoodService.deleteItemById(id)
