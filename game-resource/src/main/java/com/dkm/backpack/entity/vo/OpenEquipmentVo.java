@@ -12,4 +12,5 @@ import lombok.Data;
 public class OpenEquipmentVo {
     private Long backpackId;
     private String url;
+    private Integer isAutoSell;
 }
