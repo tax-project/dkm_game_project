@@ -26,11 +26,6 @@ public class GameAdminApplication extends SpringBootServletInitializer {
    }
 
 
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameAdminApplication.class);
