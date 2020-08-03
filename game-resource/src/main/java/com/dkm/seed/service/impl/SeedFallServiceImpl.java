@@ -193,9 +193,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
         List<SeedDropBO> list = new ArrayList<>();
 
-        System.out.println("landSeeds:" + landSeeds);
         for (LandSeed landSeed : landSeeds) {
-            System.out.println(landSeed.getLeStatus());
             if (landSeed.getLeStatus() == 1) {
                 //种植的种子
                 if (landSeed.getNewSeedIs() == 1) {
@@ -206,12 +204,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     //次数
                     Long timeNumber = landSeed.getTimeNumber();
                     Integer number = timeNumber.intValue();
-                    System.out.println("number------>" +number);
                     newSeed = number - dropStatus.getMuchNumber();
-                    System.out.println("--->newSeed:" + newSeed);
                 }
 
-                System.out.println("==="+newSeed);
                 if (newSeed <= 0) {
                     continue;
                 }
@@ -221,11 +216,12 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 //循环得到前端返回的数据
                 for (int i = 0; i < newSeed; i++) {
                     SeedDropBO seedDropBO = seedDrop(userInfoGrade);
-                    list.add(seedDropBO);
+                    if (seedDropBO != null) {
+                        list.add(seedDropBO);
+                    }
                 }
             }
         }
-        System.out.println("result-->" + list);
         return list;
     }
 
