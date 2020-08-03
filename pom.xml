@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>game-common</module>
+        <module>game-admin</module>
         <module>game-eureka</module>
         <module>game-gateway</module>
         <module>game-websocket</module>

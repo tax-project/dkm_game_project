@@ -1,6 +1,5 @@
 package com.dkm.mallEvents.entities.data;
 
-import com.dkm.good.entity.Goods;
 import lombok.Data;
 
 import java.util.List;
