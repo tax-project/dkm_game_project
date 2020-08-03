@@ -17,7 +17,6 @@ import com.dkm.land.entity.vo.Message;
 import com.dkm.land.entity.vo.UserLandUnlock;
 import com.dkm.seed.dao.LandSeedMapper;
 import com.dkm.seed.dao.SeedMapper;
-import com.dkm.seed.dao.SeedsFallMapper;
 import com.dkm.seed.dao.SeedUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
@@ -360,9 +359,6 @@ public class SeedServiceImpl implements ISeedService {
         //旧种子种植
         Integer status = seedMapper.updateTimeAndStatus(time2, user.getId(), sendPlantBO.getSeedId());
 
-        if (status <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "更新失败");
-        }
 
     }
 

@@ -38,7 +38,7 @@ public class SeedsFallController {
     @GetMapping("/seedDrop")
     @CrossOrigin
     @CheckToken
-    public SeedDropBO seedDrop(@RequestParam(value = "seedGrade") Integer userInfoGrade){
+    public SeedDropBO seedDrop(@RequestParam(value = "userInfoGrade") Integer userInfoGrade){
         if (userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
