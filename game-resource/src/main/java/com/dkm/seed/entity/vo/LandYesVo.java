@@ -16,7 +16,7 @@ public class LandYesVo {
     /**
      * 主键
      */
-    private Long id;
+    private Long SeedId;
 
     /**
      * 种子名称
