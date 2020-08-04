@@ -77,6 +77,9 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private SeedUnlockMapper seedUnlockMapper;
 
+    @Autowired
+    private ISeedService seedService;
+
 
     /**
      * 根据用户id得到种子信息和是否解锁
@@ -159,7 +162,7 @@ public class SeedServiceImpl implements ISeedService {
      * 根据种子id得到种子
      */
     @Override
-    public SeedDetailsVo querySeedById(Integer seeId) {
+    public SeedDetailsVo querySeedById(Long seeId) {
 
         UserLoginQuery user = localUser.getUser();
 
@@ -419,10 +422,6 @@ public class SeedServiceImpl implements ISeedService {
     public void collectSeed(SendCollectBO sendCollectBO) {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
-
-        if (sendCollectBO.getUserInfoPacketBalance() >= 2) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "红包金额有误嘛?");
-        }
 
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){

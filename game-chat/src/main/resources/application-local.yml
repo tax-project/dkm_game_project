@@ -5,7 +5,7 @@ spring:
     password: dkm123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
-    host: 192.168.10.133
+    host: 192.168.10.222
     username: guest
     password: guest
     port: 5672
@@ -16,7 +16,7 @@ spring:
       simple:
         acknowledge-mode: manual
   redis:
-    host: 192.168.10.133
+    host: 192.168.10.222
     timeout: 2000
     jedis:
       pool:
@@ -28,7 +28,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://192.168.10.133:10000/eureka
+      defaultZone: http://192.168.10.222:10000/eureka
 file:
   # 前端地址   跳转搜索群聊的页面
   qrCodeUrl: http://www.baidu.com

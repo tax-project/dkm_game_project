@@ -122,7 +122,7 @@ public class SeedController {
     @GetMapping("/queryAlreadyPlantSd")
     @CrossOrigin
     @CheckToken
-    public  List<LandYesVo> queryAlreadyPlantSd(){
+    public List<LandYesVo> queryAlreadyPlantSd(){
         return iSeedService.queryAlreadyPlantSd();
     }
 
@@ -148,7 +148,7 @@ public class SeedController {
     })
     @CrossOrigin
     @CheckToken
-    public SeedDetailsVo querySeedById(@RequestParam(value = "seedId") Integer seedId){
+    public SeedDetailsVo querySeedById(@RequestParam("seedId") Long seedId){
         if(seedId==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"参数不能为空");
         }

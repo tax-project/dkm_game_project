@@ -4,7 +4,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
   redis:
-    host: 192.168.10.133
+    host: 192.168.10.222
     timeout: 2000
     jedis:
       pool:
@@ -18,10 +18,10 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://192.168.10.133:10000/eureka
+      defaultZone: http://192.168.10.222:10000/eureka
 
 file:
-  url: http://192.168.10.133:7000/game-file/img
+  url: http://192.168.10.222:7000/game-file/img
 
 hystrix:
   metrics:

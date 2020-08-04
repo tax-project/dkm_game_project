@@ -15,4 +15,4 @@ app:
   workerId: 9
   dataCenterId: 1
 urls:
-  family: http://124.232.163.75:8000/game/family
+  family: http://192.168.10.222:8000/game/family
