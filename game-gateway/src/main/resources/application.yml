@@ -7,7 +7,6 @@ spring:
     active: local
   jmx:
     enabled: false
-
 zuul:
   routes:
     api-user:
