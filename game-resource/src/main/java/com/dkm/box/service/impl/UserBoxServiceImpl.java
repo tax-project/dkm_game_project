@@ -134,10 +134,16 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 openEquipmentVo.setIsAutoSell(sell?0:1);
                 result.add(openEquipmentVo);
             }
-            Integer integer = backpackMapper.insertList(backPackEntities);
-            Integer integer1 = equipmentMapper.insertList(equipmentEntities);
+            if(backPackEntities!=null||backPackEntities.size()!=0
+                ||equipmentEntities==null||equipmentEntities.size()!=0){
+                Integer integer = backpackMapper.insertList(backPackEntities);
+                Integer integer1 = equipmentMapper.insertList(equipmentEntities);
+                if(integer!=backPackEntities.size()||integer1!=equipmentEntities.size()){
+                    throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");
+                }
+            }
             Integer integer2 = userBoxMapper.updateBoxTime(userBoxEntities);
-            if(integer!=backPackEntities.size()||integer1!=equipmentEntities.size()||integer2!=userBoxEntities.size()){
+            if(integer2!=userBoxEntities.size()){
                 throw new ApplicationException(CodeType.SERVICE_ERROR,"开箱失败");
             }
         }else {
