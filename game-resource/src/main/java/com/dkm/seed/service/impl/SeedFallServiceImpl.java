@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ctc.wstx.util.DataUtil;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
@@ -19,6 +20,7 @@ import com.dkm.seed.entity.DropStatus;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.bo.SeedDropBO;
+import com.dkm.seed.entity.bo.SeedFallBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
 import com.dkm.seed.entity.vo.SeedDetailsVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
@@ -71,6 +73,11 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
     @Autowired
     private ISeedService seedService;
+
+    @Autowired
+    private RedisConfig redisConfig;
+
+    private String seedRedis = "REDIS::SEED::";
 
     @Override
     public SeedDropBO seedDrop(Integer userInfoGrade) {
@@ -158,8 +165,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落红包
         boolean red = randomUtils.isProduceGoldRed(userInfoGrade);
+        double redPacketsDropped = 0.00;
         if (red) {
-            double redPacketsDropped = randomUtils.numberRedPacketsDropped();
+            redPacketsDropped = randomUtils.numberRedPacketsDropped();
             result.setRedIsFail(1);
             result.setRedNumber(redPacketsDropped);
         } else {
@@ -169,9 +177,10 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落金币
         boolean droppingGold = randomUtils.probabilityDroppingGold(userInfoGrade);
+        Integer dropped = 0;
         if (droppingGold) {
             //掉落金币成功
-            Integer dropped = randomUtils.numberCoinsDropped();
+            dropped = randomUtils.numberCoinsDropped();
             result.setGoldIsFail(1);
             result.setGoldNumber(dropped);
         } else {
@@ -188,6 +197,25 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         } else {
             //掉落花失败
             result.setFallingIsFail(0);
+        }
+
+        Object string = redisConfig.getString(seedRedis + user.getId());
+
+        SeedFallBO bo = new SeedFallBO();
+
+        if (string == null) {
+            //第一次添加
+            bo.setRedPacketsDropped(redPacketsDropped);
+            bo.setDropped(dropped);
+            bo.setFallingNumber(1);
+            redisConfig.setString(seedRedis + user.getId(), bo);
+        } else {
+            //不是第一次添加
+            SeedFallBO seedFallBO = (SeedFallBO) string;
+            bo.setRedPacketsDropped(seedFallBO.getRedPacketsDropped() + redPacketsDropped);
+            bo.setDropped(seedFallBO.getDropped() + dropped);
+            bo.setFallingNumber(seedFallBO.getFallingNumber() + 1);
+            redisConfig.setString(seedRedis + user.getId(), bo);
         }
 
         return result;

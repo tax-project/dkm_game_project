@@ -17,17 +17,19 @@ public class SendCollectBO {
    private Integer seedGrade;
 
    /**
-    * 收取的总金币
-    */
-   private Integer userGold;
-   /**
-    * 收取的红包
-    */
-   private Double userInfoPacketBalance;
-
-   /**
     *  0--正常收取
     *  1--收取种子
     */
    private Integer status;
+
+   /**
+    * 0--我自己收
+    * 1--别人抢
+    */
+   private Integer seedMeOrOther;
+
+   /**
+    *  抢谁的金币-->那个人的用户id
+    */
+   private Long userId;
 }

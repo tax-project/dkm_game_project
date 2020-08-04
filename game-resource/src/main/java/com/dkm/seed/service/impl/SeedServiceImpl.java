@@ -3,6 +3,7 @@ package com.dkm.seed.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
 import com.dkm.attendant.entity.vo.User;
+import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.entity.bo.UserInfoQueryBo;
@@ -21,6 +22,7 @@ import com.dkm.seed.dao.SeedUnlockMapper;
 import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.Seed;
 import com.dkm.seed.entity.SeedUnlock;
+import com.dkm.seed.entity.bo.SeedFallBO;
 import com.dkm.seed.entity.bo.SendCollectBO;
 import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
@@ -77,8 +79,10 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private SeedUnlockMapper seedUnlockMapper;
 
-    @Autowired
-    private ISeedService seedService;
+   @Autowired
+   private RedisConfig redisConfig;
+
+   private String seedRedis = "REDIS::SEED::";
 
 
     /**
@@ -423,122 +427,155 @@ public class SeedServiceImpl implements ISeedService {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
 
-        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+       Result<UserInfoQueryBo> userInfoQueryBoResult;
+        if (sendCollectBO.getSeedMeOrOther() == 1) {
+           //别人抢
+           userInfoQueryBoResult = userFeignClient.queryUser(sendCollectBO.getUserId());
+        } else {
+           userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+        }
+
         if(userInfoQueryBoResult.getCode()!=0){
             log.info("user feign err");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
-        if (sendCollectBO.getStatus() == 0) {
+        if (sendCollectBO.getStatus() == 0 && sendCollectBO.getSeedMeOrOther() == 0) {
             //正常收取
-            Integer gold = sendCollectBO.getUserGold() + data.getUserInfoGold();
-            Double envelopes = sendCollectBO.getUserInfoPacketBalance() + data.getUserInfoPacketBalance();
+           SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
+           Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
+           Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
 
-            SeedCollectVo vo = new SeedCollectVo();
-            vo.setUserGold(gold);
-            vo.setUserInfoPacketBalance(envelopes);
-            vo.setUserId(user.getId());
-            vo.setStatus(0);
-            Result result = userFeignClient.addSeedCollect(vo);
+           SeedCollectVo vo = new SeedCollectVo();
+           vo.setUserGold(gold);
+           vo.setUserInfoPacketBalance(envelopes);
+           vo.setUserId(user.getId());
+           vo.setStatus(0);
+           Result result = userFeignClient.addSeedCollect(vo);
 
-            if (result.getCode() != 0) {
-                log.info("user feign err");
-                throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
-            }
-
-            return;
+           if (result.getCode() != 0) {
+              log.info("user feign err");
+              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+           }
+           return;
         }
 
-        //收取种子(经验和金币)
-        int number = 0;
-        List<UserLandUnlock> unlockList = landMapper.queryNotUnlocked(user.getId());
-        if (data.getUserInfoIsVip() == 1) {
-            //是VIP
-            number = 10 - unlockList.size();
-        } else {
-            number = 9 - unlockList.size();
-        }
-        //种植所获得的经验
-        double seedExperience = Math.pow(sendCollectBO.getSeedGrade(), 2 / 5.0) * 100 * number;
-        Long resultExperience = (long) seedExperience;
-        //先算出该用户是否升级
-        Long experience = resultExperience + data.getUserInfoNowExperience();
+       //收取种子(经验和金币)
+       int number = 0;
 
-        //删除种子状态表信息
-        dropStatusService.deleteDrop(user.getId());
-        //先判断是否解锁土地
-        //算出解锁土地
-        if (data.getUserInfoGrade() % 3 == 0) {
-            //解锁一块土地  最多9块
+       List<UserLandUnlock> unlockList = landMapper.queryNotUnlocked(user.getId());
+       if (data.getUserInfoIsVip() == 1) {
+          //是VIP
+          number = 10 - unlockList.size();
+       } else {
+          number = 9 - unlockList.size();
+       }
 
-            if (unlockList.size() > 10) {
-                return;
-            }
+       //别人抢还是自己收
+       if (sendCollectBO.getSeedMeOrOther() == 1) {
+          //别人抢
+          SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
 
-            //判断已经解锁几块土地
-            if (unlockList.size() == 10) {
-                //判断是不是VIP
-                if (data.getUserInfoIsVip() == 1) {
-                    //是VIP
-                    //继续解锁
-                    int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+          if (seedFallBO == null) {
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "用户id参数传的有误");
+          }
 
-                    if (updateStatus <= 0) {
-                        log.info("解锁土地失败");
-                        throw new ApplicationException(CodeType.SERVICE_ERROR);
-                    }
+          SeedCollectVo vo = new SeedCollectVo();
+          int gold = (int) (seedFallBO.getDropped() * 0.1);
+          double envelopes = 0.01;
+
+          vo.setUserGold(gold + data.getUserInfoGold());
+          vo.setUserInfoPacketBalance(envelopes + data.getUserInfoPacketBalance());
+          vo.setUserId(sendCollectBO.getUserId());
+          vo.setStatus(0);
+          Result result = userFeignClient.addSeedCollect(vo);
+
+          if (result.getCode() != 0) {
+             log.info("user feign err");
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+          }
+          return;
+       }
+
+       //种植所获得的经验
+       double seedExperience = Math.pow(sendCollectBO.getSeedGrade(), 2 / 5.0) * 100 * number;
+       Long resultExperience = (long) seedExperience;
+       //先算出该用户是否升级
+       Long experience = resultExperience + data.getUserInfoNowExperience();
+
+       //删除种子状态表信息
+       dropStatusService.deleteDrop(user.getId());
+       //先判断是否解锁土地
+       //算出解锁土地
+       if (data.getUserInfoGrade() % 3 == 0) {
+          //解锁一块土地  最多9块
+
+          if (unlockList.size() > 10) {
+             return;
+          }
+
+          //判断已经解锁几块土地
+          if (unlockList.size() == 10) {
+             //判断是不是VIP
+             if (data.getUserInfoIsVip() == 1) {
+                //是VIP
+                //继续解锁
+                int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+
+                if (updateStatus <= 0) {
+                   log.info("解锁土地失败");
+                   throw new ApplicationException(CodeType.SERVICE_ERROR);
                 }
-            }
+             }
+          }
 
+          //解锁土地
+          int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
-            //解锁土地
-            int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+          if (updateStatus <= 0) {
+             log.info("解锁土地失败");
+             throw new ApplicationException(CodeType.SERVICE_ERROR);
+          }
 
-            if (updateStatus <= 0) {
-                log.info("解锁土地失败");
-                throw new ApplicationException(CodeType.SERVICE_ERROR);
-            }
+       }
 
-        }
+       if (experience < data.getUserInfoNextExperience()) {
+          //小于下一级升级需要的经验
+          //不升级
+          SeedCollectVo vo = new SeedCollectVo();
+          vo.setStatus(1);
+          vo.setUserInfoNowExperience(resultExperience);
+          Result result = userFeignClient.addSeedCollect(vo);
 
-        if (experience < data.getUserInfoNextExperience()) {
-            //小于下一级升级需要的经验
-            //不升级
-            SeedCollectVo vo = new SeedCollectVo();
-            vo.setStatus(1);
-            vo.setUserInfoNowExperience(resultExperience);
-            Result result = userFeignClient.addSeedCollect(vo);
+          if (result.getCode() != 0) {
+             log.info("user feign err");
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+          }
+          return;
+       }
 
-            if (result.getCode() != 0) {
-                log.info("user feign err");
-                throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
-            }
+       //升级
+       //先算出下一级升级所需要的经验
+       Long nowExperience = data.getUserInfoNextExperience() - experience;
 
-            return;
-        }
+       //算出下一级的总经验
+       Double nextExperience = (((data.getUserInfoGrade() - 1) +
+             ((data.getUserInfoGrade() - 1) *
+                   (data.getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
 
-        //升级
-        //先算出下一级升级所需要的经验
-        Long nowExperience = data.getUserInfoNextExperience() - experience;
+       SeedCollectVo vo = new SeedCollectVo();
+       vo.setStatus(2);
+       vo.setUserInfoNowExperience(nowExperience);
+       vo.setUserInfoNextExperience(nextExperience.longValue());
+       vo.setUserId(user.getId());
 
-        //算出下一级的总经验
-        Double nextExperience = (((data.getUserInfoGrade() - 1) +
-              ((data.getUserInfoGrade() - 1) *
-                    (data.getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
+       Result result = userFeignClient.addSeedCollect(vo);
 
-        SeedCollectVo vo = new SeedCollectVo();
-        vo.setStatus(2);
-        vo.setUserInfoNowExperience(nowExperience);
-        vo.setUserInfoNextExperience(nextExperience.longValue());
-        vo.setUserId(user.getId());
-
-        Result result = userFeignClient.addSeedCollect(vo);
-
-        if (result.getCode() != 0) {
-            log.info("user feign err");
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
-        }
+       if (result.getCode() != 0) {
+          log.info("user feign err");
+          throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
+       }
 
     }
 
