@@ -102,10 +102,10 @@ public class SeedController {
 
     @ApiOperation(value = "收取", notes = "收取")
     @ApiImplicitParams({
-          @ApiImplicitParam(name = "userGold", value = "收取的总金币", required = false, dataType = "Long", paramType = "path"),
           @ApiImplicitParam(name = "seedGrade", value = "等级", required = true, dataType = "Integer", paramType = "path"),
-          @ApiImplicitParam(name = "userInfoPacketBalance", value = "收取的红包", required = false, dataType = "int", paramType = "path"),
-          @ApiImplicitParam(name = "status", value = "0--正常收取 1--收取种子", required = true, dataType = "int", paramType = "path")
+          @ApiImplicitParam(name = "status", value = "0--正常收取 1--收取种子", required = true, dataType = "int", paramType = "path"),
+          @ApiImplicitParam(name = "seedMeOrOther", value = "(0-我自己收 1--别人抢)", required = false, dataType = "Integer", paramType = "path"),
+          @ApiImplicitParam(name = "userId", value = "抢谁的金币-->那个人的用户id", required = false, dataType = "Long", paramType = "path"),
     })
     @PostMapping("/collectSeed")
     @CrossOrigin
@@ -169,8 +169,5 @@ public class SeedController {
         }
         return iSeedService.updateSeedStatus(id);
     }
-
-
-
 
 }
