@@ -122,7 +122,7 @@ public class SeedController {
     @GetMapping("/queryAlreadyPlantSd")
     @CrossOrigin
     @CheckToken
-    public  List<LandYesVo> queryAlreadyPlantSd(){
+    public List<LandYesVo> queryAlreadyPlantSd(){
         return iSeedService.queryAlreadyPlantSd();
     }
 

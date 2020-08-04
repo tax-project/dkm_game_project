@@ -103,7 +103,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       userInfo1.setUserInfoAllEnvelopeMuch(userInfo.getUserInfoAllEnvelopeMuch() + much);
       userInfo1.setUserInfoDiamonds(userInfo.getUserInfoDiamonds() - userInfoDiamonds);
 
-      baseMapper.update(userInfo1, wrapper);
+      int update = baseMapper.update(userInfo1, wrapper);
+
+      if (update <= 0) {
+         throw new ApplicationException(CodeType.SERVICE_ERROR);
+      }
    }
 
    @Override
@@ -117,7 +121,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
    @Override
    public void cutUserInfo(IncreaseUserInfoBO increaseUserInfoBO) {
       Integer integer = baseMapper.cutUserInfo(increaseUserInfoBO);
-      System.out.println(integer);
       if (integer<=0){
          throw new ApplicationException(CodeType.SERVICE_ERROR, "减少失败");
       }
@@ -153,12 +156,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Override
    public List<ReputationRankingBO> reputationRanking() {
-
-      List<ReputationRankingBO> reputationRankingBoS = baseMapper.reputationRanking();
-      if (reputationRankingBoS==null){
-         throw new ApplicationException(CodeType.SERVICE_ERROR, "数据库查询失败");
-      }
-      return reputationRankingBoS;
+      return baseMapper.reputationRanking();
    }
 
    @Override
