@@ -193,6 +193,10 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
         List<SeedDropBO> list = new ArrayList<>();
 
+        if (dropStatus == null) {
+            return null;
+        }
+
         for (LandSeed landSeed : landSeeds) {
             if (landSeed.getLeStatus() == 1) {
                 //种植的种子
