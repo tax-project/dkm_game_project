@@ -178,60 +178,56 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         UserLoginQuery user = localUser.getUser();
 
-        System.out.println(user.getId());
-        System.out.println("-->id="+seedId);
-
         //先查询有没有种植
         LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
               .eq(LandSeed::getUserId, user.getId())
               .eq(LandSeed::getSeedId, seedId);
 
         List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
-        System.out.println(landSeeds.size());
         //查询种植的土地块数
-
+        if (landSeeds == null || landSeeds.isEmpty()) {
+            return null;
+        }
         //默认不是新种子
         int newSeed = 0;
 
         //查询之前掉落的次数
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
-        System.out.println("-->"+dropStatus.getMuchNumber());
         List<SeedDropBO> list = new ArrayList<>();
 
+        if (dropStatus == null) {
+            return null;
+        }
+
         for (LandSeed landSeed : landSeeds) {
-            System.out.println(123);
-            System.out.println(landSeed.getNewSeedIs());
-            if (landSeed.getLeStatus() == 0 || landSeed.getLeStatus() == 1) {
+            if (landSeed.getLeStatus() == 1) {
                 //种植的种子
                 if (landSeed.getNewSeedIs() == 1) {
                     //新种子
                     newSeed = 31 - dropStatus.getMuchNumber();
-                    System.out.println("进来1");
                 } else {
                     //不是新种子
                     //次数
                     Long timeNumber = landSeed.getTimeNumber();
                     Integer number = timeNumber.intValue();
                     newSeed = number - dropStatus.getMuchNumber();
-                    System.out.println("进来0");
+                }
+
+                if (newSeed <= 0) {
+                    continue;
+                }
+
+                //根据次数算出要掉落的次数
+                //根据次数循环返回给前端掉落的结果
+                //循环得到前端返回的数据
+                for (int i = 0; i < newSeed; i++) {
+                    SeedDropBO seedDropBO = seedDrop(userInfoGrade);
+                    if (seedDropBO != null) {
+                        list.add(seedDropBO);
+                    }
                 }
             }
-
-            if (newSeed <= 0) {
-                return null;
-            }
-
-            //根据次数算出要掉落的次数
-            //根据次数循环返回给前端掉落的结果
-            //循环得到前端返回的数据
-            System.out.println("==="+newSeed);
-            for (int i = 0; i < newSeed; i++) {
-                SeedDropBO seedDropBO = seedDrop(userInfoGrade);
-                list.add(seedDropBO);
-            }
-
         }
-
         return list;
     }
 
