@@ -1,12 +1,11 @@
 package com.dkm.config
 
-import com.dkm.admin.mapper.vo.UserLoginVo
+import com.dkm.admin.entities.vo.UserLoginVo
 import com.dkm.constanct.CodeType
 import com.dkm.exception.ApplicationException
-import com.dkm.feign.SimpleUserFeignClient
+import com.dkm.feign.AnotherUserFeignClient
 import feign.Feign
 import feign.RequestTemplate
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,7 +16,7 @@ class NoAuthFeignConfiguration {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Resource
-    private lateinit var userFeignClient: SimpleUserFeignClient
+    private lateinit var userFeignClient: AnotherUserFeignClient
     private val token by lazy {
         val login = userFeignClient.login(UserLoginVo("admin", "admin"))
         val userLoginStatusVo = login.data
