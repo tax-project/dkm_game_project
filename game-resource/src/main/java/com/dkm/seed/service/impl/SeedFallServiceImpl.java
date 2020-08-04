@@ -185,7 +185,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
         //查询种植的土地块数
-
+        if (landSeeds == null || landSeeds.isEmpty()) {
+            return null;
+        }
         //默认不是新种子
         int newSeed = 0;
 
