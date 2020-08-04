@@ -77,6 +77,9 @@ public class SeedServiceImpl implements ISeedService {
     @Autowired
     private SeedUnlockMapper seedUnlockMapper;
 
+    @Autowired
+    private ISeedService seedService;
+
 
     /**
      * 根据用户id得到种子信息和是否解锁
@@ -159,7 +162,7 @@ public class SeedServiceImpl implements ISeedService {
      * 根据种子id得到种子
      */
     @Override
-    public SeedDetailsVo querySeedById(Integer seeId) {
+    public SeedDetailsVo querySeedById(Long seeId) {
 
         UserLoginQuery user = localUser.getUser();
 
@@ -341,6 +344,8 @@ public class SeedServiceImpl implements ISeedService {
                 } else {
                     //结束时间
                     landSeed.setPlantTime(time2);
+                    //是否新种子
+                    landSeed.setNewSeedIs(0);
                 }
                 //状态 1为种植
                 landSeed.setLeStatus(1);

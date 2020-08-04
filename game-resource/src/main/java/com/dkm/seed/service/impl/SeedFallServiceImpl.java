@@ -20,10 +20,12 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.bo.SeedDropBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
+import com.dkm.seed.entity.vo.SeedDetailsVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.entity.vo.moneyVo;
 import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedFallService;
+import com.dkm.seed.service.ISeedService;
 import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -68,7 +70,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private LandSeedMapper landSeedMapper;
 
     @Autowired
-    private IdGenerator idGenerator;
+    private ISeedService seedService;
 
     @Override
     public SeedDropBO seedDrop(Integer userInfoGrade) {
@@ -76,16 +78,18 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         UserLoginQuery user = localUser.getUser();
 
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
-
+        System.out.println(user.getId());
         LambdaQueryWrapper<LandSeed> wrapper=new LambdaQueryWrapper<LandSeed>()
                     .eq(LandSeed::getUserId,user.getId())
                     .eq(LandSeed::getLeStatus,1);
         List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
-
         //如果landSeeds等于null 说明没有种植 直接返回空
         if(landSeeds.size()==0){
             return null;
         }
+
+        //随机掉落
+        SeedDropBO result = new SeedDropBO();
 
         List<Long> list=new ArrayList<>();
         //landSeeds不等于null，修改状态为2
@@ -94,8 +98,39 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 //修改种子状态为2
                 list.add(landSeed.getId());
             }
-        }
 
+            if (dropStatus != null) {
+                Long timeNumber = landSeed.getTimeNumber();
+                Integer number = timeNumber.intValue();
+                int newSeed = number - dropStatus.getMuchNumber();
+
+                if (newSeed <= 0) {
+                    return null;
+                }
+            }
+
+            //如果是新种子  掉落红包直接返回
+            if (landSeed.getNewSeedIs() == 1) {
+                //新种子
+                SeedDetailsVo vo = seedService.querySeedById(landSeed.getSeedId());
+
+                Integer seedProdred = vo.getSeedProdred();
+
+                result.setRedIsFail(1);
+                result.setRedNumber(seedProdred.doubleValue());
+
+                //修改新种子状态
+                LandSeed seed = new LandSeed();
+                seed.setId(landSeed.getId());
+                seed.setNewSeedIs(0);
+                int i = landSeedMapper.updateById(seed);
+
+                if (i <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+                }
+                return result;
+            }
+        }
         if(list.size()!=0){
             int i = landSeedMapper.updateSeedStatus(list);
             if(i<=0){
@@ -103,7 +138,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 throw new ApplicationException(CodeType.SERVICE_ERROR);
             }
         }
-
 
         DropStatus data = new DropStatus();
         if (dropStatus == null) {
@@ -122,11 +156,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             dropStatusService.dropStatusUpdate(data);
         }
 
-        //随机掉落
-        SeedDropBO result = new SeedDropBO();
         //掉落红包
         boolean red = randomUtils.isProduceGoldRed(userInfoGrade);
-
         if (red) {
             double redPacketsDropped = randomUtils.numberRedPacketsDropped();
             result.setRedIsFail(1);
@@ -138,7 +169,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落金币
         boolean droppingGold = randomUtils.probabilityDroppingGold(userInfoGrade);
-
         if (droppingGold) {
             //掉落金币成功
             Integer dropped = randomUtils.numberCoinsDropped();
@@ -151,7 +181,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落花
         Boolean aBoolean = randomUtils.fallingRandom();
-
         if (aBoolean) {
             //掉落花成功
             result.setFallingIsFail(1);
@@ -175,24 +204,27 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
               .eq(LandSeed::getSeedId, seedId);
 
         List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
-
         //查询种植的土地块数
-
+        if (landSeeds == null || landSeeds.isEmpty()) {
+            return null;
+        }
         //默认不是新种子
         int newSeed = 0;
 
         //查询之前掉落的次数
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
-
         List<SeedDropBO> list = new ArrayList<>();
 
+        if (dropStatus == null) {
+            return null;
+        }
+
         for (LandSeed landSeed : landSeeds) {
-            if (landSeed.getLeStatus() == 0 || landSeed.getLeStatus() == 1) {
+            if (landSeed.getLeStatus() == 1) {
                 //种植的种子
                 if (landSeed.getNewSeedIs() == 1) {
                     //新种子
                     newSeed = 31 - dropStatus.getMuchNumber();
-
                 } else {
                     //不是新种子
                     //次数
@@ -200,18 +232,22 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     Integer number = timeNumber.intValue();
                     newSeed = number - dropStatus.getMuchNumber();
                 }
-            }
 
-            //根据次数算出要掉落的次数
-            //根据次数循环返回给前端掉落的结果
-            //循环得到前端返回的数据
-            for (int i = 0; i < newSeed; i++) {
-                SeedDropBO seedDropBO = seedDrop(userInfoGrade);
-                list.add(seedDropBO);
-            }
+                if (newSeed <= 0) {
+                    continue;
+                }
 
+                //根据次数算出要掉落的次数
+                //根据次数循环返回给前端掉落的结果
+                //循环得到前端返回的数据
+                for (int i = 0; i < newSeed; i++) {
+                    SeedDropBO seedDropBO = seedDrop(userInfoGrade);
+                    if (seedDropBO != null) {
+                        list.add(seedDropBO);
+                    }
+                }
+            }
         }
-
         return list;
     }
 
