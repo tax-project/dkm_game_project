@@ -59,9 +59,7 @@ public class SeedsFallController {
         if (seedId == null || userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        List<SeedDropBO> seedDropBOS = iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
-        System.out.println("-->"+seedDropBOS);
-        return seedDropBOS;
+        return iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
     }
 
 }

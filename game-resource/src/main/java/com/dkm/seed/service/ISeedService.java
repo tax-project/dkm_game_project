@@ -43,7 +43,7 @@ public interface ISeedService {
      * 根据种子查询种子
      *
      */
-    SeedDetailsVo querySeedById(Integer seeId);
+    SeedDetailsVo querySeedById(Long seeId);
 
     /**
      * 根据用户id查询已解锁的种子

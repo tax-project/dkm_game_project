@@ -18,7 +18,8 @@
     </select>
 
     <select id="querySeedById" resultType="com.dkm.seed.entity.vo.SeedDetailsVo">
-        select a.seed_name,a.seed_id,a.seed_img,a.seed_gold,a.seed_grade,a.seed_prodred,a.seed_prodgold,b.seed_present_unlock,b.seed_all_unlock,b.seed_status from  tb_seed a,tb_plant_unlock b
+        select a.seed_name,a.seed_id,a.seed_img,a.seed_gold,a.seed_grade,a.seed_prodred,
+               a.seed_prodgold,b.seed_present_unlock,b.seed_all_unlock,b.seed_status from tb_seed a,tb_plant_unlock b
         where a.seed_id=b.seed_id and a.seed_id=#{seedId} and b.user_id=#{userId}
     </select>
 

@@ -20,10 +20,12 @@ import com.dkm.seed.entity.LandSeed;
 import com.dkm.seed.entity.SeedsFall;
 import com.dkm.seed.entity.bo.SeedDropBO;
 import com.dkm.seed.entity.vo.GoldOrMoneyVo;
+import com.dkm.seed.entity.vo.SeedDetailsVo;
 import com.dkm.seed.entity.vo.SeedsFallVo;
 import com.dkm.seed.entity.vo.moneyVo;
 import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedFallService;
+import com.dkm.seed.service.ISeedService;
 import com.dkm.seed.vilidata.RandomUtils;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
@@ -67,6 +69,9 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     @Autowired
     private LandSeedMapper landSeedMapper;
 
+    @Autowired
+    private ISeedService seedService;
+
     @Override
     public SeedDropBO seedDrop(Integer userInfoGrade) {
 
@@ -78,11 +83,13 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                     .eq(LandSeed::getUserId,user.getId())
                     .eq(LandSeed::getLeStatus,1);
         List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
-        System.out.println(landSeeds);
         //如果landSeeds等于null 说明没有种植 直接返回空
         if(landSeeds.size()==0){
             return null;
         }
+
+        //随机掉落
+        SeedDropBO result = new SeedDropBO();
 
         List<Long> list=new ArrayList<>();
         //landSeeds不等于null，修改状态为2
@@ -102,8 +109,28 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 }
             }
 
-        }
+            //如果是新种子  掉落红包直接返回
+            if (landSeed.getNewSeedIs() == 1) {
+                //新种子
+                SeedDetailsVo vo = seedService.querySeedById(landSeed.getSeedId());
 
+                Integer seedProdred = vo.getSeedProdred();
+
+                result.setRedIsFail(1);
+                result.setRedNumber(seedProdred.doubleValue());
+
+                //修改新种子状态
+                LandSeed seed = new LandSeed();
+                seed.setId(landSeed.getId());
+                seed.setNewSeedIs(0);
+                int i = landSeedMapper.updateById(seed);
+
+                if (i <= 0) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+                }
+                return result;
+            }
+        }
         if(list.size()!=0){
             int i = landSeedMapper.updateSeedStatus(list);
             if(i<=0){
@@ -111,7 +138,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 throw new ApplicationException(CodeType.SERVICE_ERROR);
             }
         }
-
 
         DropStatus data = new DropStatus();
         if (dropStatus == null) {
@@ -130,11 +156,8 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             dropStatusService.dropStatusUpdate(data);
         }
 
-        //随机掉落
-        SeedDropBO result = new SeedDropBO();
         //掉落红包
         boolean red = randomUtils.isProduceGoldRed(userInfoGrade);
-        System.out.println(red);
         if (red) {
             double redPacketsDropped = randomUtils.numberRedPacketsDropped();
             result.setRedIsFail(1);
@@ -146,7 +169,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落金币
         boolean droppingGold = randomUtils.probabilityDroppingGold(userInfoGrade);
-        System.out.println(droppingGold);
         if (droppingGold) {
             //掉落金币成功
             Integer dropped = randomUtils.numberCoinsDropped();
@@ -159,7 +181,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
 
         //掉落花
         Boolean aBoolean = randomUtils.fallingRandom();
-        System.out.println(aBoolean);
         if (aBoolean) {
             //掉落花成功
             result.setFallingIsFail(1);
@@ -169,7 +190,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
             result.setFallingIsFail(0);
         }
 
-        System.out.println(result);
         return result;
     }
 
