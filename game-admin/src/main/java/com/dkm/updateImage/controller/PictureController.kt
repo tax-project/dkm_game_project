@@ -1,11 +1,10 @@
 package com.dkm.updateImage.controller
 
 import com.dkm.config.annon.CheckAdminPermission
-import com.dkm.updateImage.service.IPictureService
+import com.dkm.updateImage.services.IPictureService
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
-import org.springframework.data.repository.query.Param
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestPart

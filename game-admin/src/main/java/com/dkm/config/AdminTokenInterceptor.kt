@@ -1,11 +1,9 @@
 package com.dkm.config
 
-import com.dkm.admin.service.IAdminUserLoginService
+import com.dkm.admin.services.IAdminUserLoginService
 import com.dkm.config.annon.CheckAdminPermission
 import com.dkm.constanct.CodeType
 import com.dkm.exception.ApplicationException
-import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import javax.annotation.Resource

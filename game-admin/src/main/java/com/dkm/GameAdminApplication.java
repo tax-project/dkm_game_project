@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableTransactionManagement
 @EnableFeignClients
-@MapperScan("com.dkm.*.dao")
+@MapperScan("com.dkm.*.mappers")
 public class GameAdminApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
