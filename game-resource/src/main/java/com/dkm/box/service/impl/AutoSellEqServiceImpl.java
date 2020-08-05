@@ -52,7 +52,7 @@ public class AutoSellEqServiceImpl implements IAutoSellEqService {
         if(autoSell!=null&&autoSell.size()!=0){
             List<Long> ids = new ArrayList<>();
             autoSell.forEach(a->{
-                if(sellInfo.contains(a.getGrade()/5+1+"")){
+                if(sellInfo.contains(a.getNeedGrade()/5+1+"")){
                     ids.add(a.getBackpackId());
                 }
             });

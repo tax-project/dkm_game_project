@@ -45,7 +45,7 @@ public interface EquipmentMapper extends IBaseMapper<EquipmentEntity> {
              "LEFT JOIN tb_user_equipment ue on ub.backpack_id=ue.backpack_id WHERE ue.is_equip = 1")
      EquipmentEntity getAllAttributes(@Param("userId")Long userId);
 
-     @Select("SELECT backpack_id,grade FROM tb_user_equipment WHERE backpack_id in " +
+     @Select("SELECT backpack_id,need_grade FROM tb_user_equipment WHERE backpack_id in " +
              "(SELECT backpack_id FROM tb_user_backpack WHERE user_id = #{userId}) AND is_equip !=1")
      List<AutoSellEqIdInfo> getAutoSell(@Param("userId") Long userId);
 }
