@@ -487,7 +487,6 @@ public class SeedServiceImpl implements ISeedService {
 
           vo.setUserGold(gold + data.getUserInfoGold());
           vo.setUserInfoPacketBalance(envelopes + data.getUserInfoPacketBalance());
-          vo.setUserId(sendCollectBO.getUserId());
           vo.setStatus(0);
           Result result = userFeignClient.addSeedCollect(vo);
 
