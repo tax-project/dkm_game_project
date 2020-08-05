@@ -123,7 +123,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 backPackEntity.setNumber(1);
                 backPackEntity.setUserId(userId);
                 EquipmentEntity equipmentEntity = setEquipmentEntity(goodsEntity, backPackEntity, userGrade, boxLevel, random);
-                boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getGrade() / 5 + 1 + "");
+                boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getNeedGrade() / 5 + 1 + "");
                 if(sell){
                     backPackEntities.add(backPackEntity);
                     equipmentEntities.add(equipmentEntity);
@@ -158,7 +158,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
             backPackEntity.setNumber(1);
             backPackEntity.setUserId(userId);
             EquipmentEntity equipmentEntity = setEquipmentEntity(goodsEntity, backPackEntity, userGrade, userBoxEntity.getBoxLevel(), random);
-            boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getGrade() / 5 + 1 + "");
+            boolean sell = autoSellEntity != null && !autoSellEntity.getAutoSellOrder().contains(equipmentEntity.getNeedGrade() / 5 + 1 + "");
             OpenEquipmentVo openEquipmentVo = new OpenEquipmentVo();
             openEquipmentVo.setBackpackId(backPackEntity.getBackpackId());
             openEquipmentVo.setUrl(goodsEntity.getUrl());
