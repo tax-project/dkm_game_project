@@ -96,7 +96,6 @@ public class FileUtils {
       return result;
    }
 
-
    public boolean checkPathConflict(Path path) {
       return Files.exists(path);
    }

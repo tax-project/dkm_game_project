@@ -1,6 +1,8 @@
 package com.dkm.file.service.impl;
 
+import com.dkm.constanct.CodeType;
 import com.dkm.entity.vo.FileVo;
+import com.dkm.exception.ApplicationException;
 import com.dkm.file.service.IFileService;
 import com.dkm.file.utils.FileUtils;
 import com.dkm.utils.IdGenerator;
@@ -68,7 +70,7 @@ public class FileServiceImpl implements IFileService {
             vo.setFileUrl(url);
             return vo;
          } catch (Exception e) {
-            throw new IllegalArgumentException("文件上传失败");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "文件上传失败");
          }
       }
    }
