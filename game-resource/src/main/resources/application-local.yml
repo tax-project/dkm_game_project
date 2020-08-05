@@ -5,7 +5,7 @@ spring:
     password: dkm123456..
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 192.168.10.222
+    host: 192.168.10.254
     timeout: 2000
     jedis:
       pool:
@@ -17,7 +17,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
   rabbitmq:
-    host: 192.168.10.222
+    host: 192.168.10.254
     username: guest
     password: guest
     port: 5672
@@ -30,10 +30,10 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://192.168.10.222:10000/eureka
+      defaultZone: http://192.168.10.254:10000/eureka
 
 file:
-  url: http://192.168.10.222:8000/game/resource/img
+  url: http://192.168.10.254:8000/game/resource/img
 feign:
   hystrix:
     enabled: true

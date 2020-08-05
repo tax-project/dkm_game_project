@@ -17,10 +17,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://192.168.10.254:10000/eureka
-
 file:
-  url: http://192.168.10.245:8000/game/file/img
-
+  url: http://192.168.10.254:7000/game-file/img
 hystrix:
   metrics:
     enabled: true
