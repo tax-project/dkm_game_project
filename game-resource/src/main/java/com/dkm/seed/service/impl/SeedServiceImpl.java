@@ -455,7 +455,7 @@ public class SeedServiceImpl implements ISeedService {
            Result result = userFeignClient.addSeedCollect(vo);
 
            if (result.getCode() != 0) {
-              log.info("user feign err");
+              log.info("user feign err.,,,.");
               throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
            }
            return;
@@ -492,7 +492,7 @@ public class SeedServiceImpl implements ISeedService {
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
-             log.info("user feign err");
+             log.info("user feign err--");
              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
           }
           return;
@@ -515,28 +515,30 @@ public class SeedServiceImpl implements ISeedService {
              return;
           }
 
-          //判断已经解锁几块土地
-          if (unlockList.size() == 10) {
-             //判断是不是VIP
-             if (data.getUserInfoIsVip() == 1) {
-                //是VIP
-                //继续解锁
-                int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+           //判断是不是VIP
+           if (data.getUserInfoIsVip() == 1) {
+               //是VIP
+               //继续解锁
+               int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
-                if (updateStatus <= 0) {
-                   log.info("解锁土地失败");
+               if (updateStatus <= 0) {
+                   log.info("解锁土地失败......");
                    throw new ApplicationException(CodeType.SERVICE_ERROR);
+               }
+           } else {
+               //不是VIP
+                if (unlockList.size() <= 1) {
+                    throw new ApplicationException(CodeType.SERVICE_ERROR, "请充值才能解锁");
                 }
-             }
-          }
 
-          //解锁土地
-          int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+               //继续解锁
+               int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
-          if (updateStatus <= 0) {
-             log.info("解锁土地失败");
-             throw new ApplicationException(CodeType.SERVICE_ERROR);
-          }
+               if (updateStatus <= 0) {
+                   log.info("解锁土地失败---");
+                   throw new ApplicationException(CodeType.SERVICE_ERROR);
+               }
+           }
 
        }
 
@@ -549,7 +551,7 @@ public class SeedServiceImpl implements ISeedService {
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
-             log.info("user feign err");
+             log.info("seed user feign err........");
              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
           }
           return;
@@ -573,7 +575,7 @@ public class SeedServiceImpl implements ISeedService {
        Result result = userFeignClient.addSeedCollect(vo);
 
        if (result.getCode() != 0) {
-          log.info("user feign err");
+          log.info("user feign err...");
           throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
        }
 
