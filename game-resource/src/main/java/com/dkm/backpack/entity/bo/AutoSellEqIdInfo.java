@@ -19,5 +19,5 @@ public class AutoSellEqIdInfo {
     /**
      * 装备等级
      */
-    private Integer grade;
+    private Integer needGrade;
 }
