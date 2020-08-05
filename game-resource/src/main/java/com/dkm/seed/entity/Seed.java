@@ -1,5 +1,6 @@
 package com.dkm.seed.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class Seed {
     /**
      * 种子id
      */
+    @TableId
     private Long seedId;
     /**
      * 种子名称

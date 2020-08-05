@@ -406,7 +406,6 @@ public class SeedServiceImpl implements ISeedService {
                 landYesVos.get(i).setTime(l1);
             }
         }
-
         return landYesVos;
     }
 
@@ -428,6 +427,8 @@ public class SeedServiceImpl implements ISeedService {
        //得到用户token信息
        UserLoginQuery user = localUser.getUser();
 
+       int golds = 0;
+        double seedEnvelopes = 0.0;
        Result<UserInfoQueryBo> userInfoQueryBoResult;
         if (sendCollectBO.getSeedMeOrOther() == 1) {
            //别人抢
@@ -441,16 +442,23 @@ public class SeedServiceImpl implements ISeedService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
+        SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
+
+        if (seedFallBO != null) {
+            golds = seedFallBO.getDropped() + data.getUserInfoGold();
+            seedEnvelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
+        }
         if (sendCollectBO.getStatus() == 0 && sendCollectBO.getSeedMeOrOther() == 0) {
             //正常收取
-           SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
-           Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
-           Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
-
            SeedCollectVo vo = new SeedCollectVo();
-           vo.setUserGold(gold);
-           vo.setUserInfoPacketBalance(envelopes);
+            if (golds != 0) {
+                vo.setUserGold(golds);
+            }
+
+            if (seedEnvelopes != 0.0) {
+                vo.setUserInfoPacketBalance(seedEnvelopes);
+            }
            vo.setUserId(user.getId());
            vo.setStatus(0);
            Result result = userFeignClient.addSeedCollect(vo);
@@ -479,7 +487,7 @@ public class SeedServiceImpl implements ISeedService {
        //别人抢还是自己收
        if (sendCollectBO.getSeedMeOrOther() == 1) {
           //别人抢
-          SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
+          SeedFallBO bo = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
 
           Object string = redisConfig.getString(seedRedis + "much::" + sendCollectBO.getUserId());
 
@@ -496,12 +504,12 @@ public class SeedServiceImpl implements ISeedService {
              redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1+ much);
           }
 
-          if (seedFallBO == null) {
+          if (bo == null) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "用户id参数传的有误");
           }
 
           SeedCollectVo vo = new SeedCollectVo();
-          int gold = (int) (seedFallBO.getDropped() * 0.1);
+          int gold = (int) (bo.getDropped() * 0.1);
           double envelopes = 0.01;
 
           vo.setUserId(user.getId());
@@ -516,12 +524,12 @@ public class SeedServiceImpl implements ISeedService {
           }
 
           //重新装配redis
-          SeedFallBO bo = new SeedFallBO();
-          bo.setDropped(seedFallBO.getDropped() - gold);
-          bo.setRedPacketsDropped(seedFallBO.getRedPacketsDropped() - envelopes);
-          bo.setFallingNumber(seedFallBO.getFallingNumber());
+          SeedFallBO bo1 = new SeedFallBO();
+          bo1.setDropped(bo.getDropped() - gold);
+          bo1.setRedPacketsDropped(bo.getRedPacketsDropped() - envelopes);
+          bo1.setFallingNumber(bo.getFallingNumber());
 
-          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo);
+          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo1);
 
           return;
        }
@@ -564,10 +572,6 @@ public class SeedServiceImpl implements ISeedService {
        }
 
        //金币和红包
-       SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
-       Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
-       Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
-
        //判断当前时间大于等于成熟时间
        LocalDateTime now = LocalDateTime.now();
        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
@@ -595,8 +599,13 @@ public class SeedServiceImpl implements ISeedService {
           SeedCollectVo vo = new SeedCollectVo();
           vo.setStatus(1);
           vo.setUserId(user.getId());
-          vo.setUserGold(gold);
-          vo.setUserInfoPacketBalance(envelopes);
+          if (golds != 0) {
+              vo.setUserGold(golds);
+          }
+
+          if (seedEnvelopes != 0.0) {
+              vo.setUserInfoPacketBalance(seedEnvelopes);
+          }
           vo.setUserInfoNowExperience(resultExperience);
           Result result = userFeignClient.addSeedCollect(vo);
 
@@ -619,8 +628,13 @@ public class SeedServiceImpl implements ISeedService {
        SeedCollectVo vo = new SeedCollectVo();
        vo.setStatus(2);
        vo.setUserInfoNowExperience(nowExperience);
-       vo.setUserGold(gold);
-       vo.setUserInfoPacketBalance(envelopes);
+        if (golds != 0) {
+            vo.setUserGold(golds);
+        }
+
+        if (seedEnvelopes != 0.0) {
+            vo.setUserInfoPacketBalance(seedEnvelopes);
+        }
        vo.setUserInfoNextExperience(nextExperience.longValue());
        vo.setUserId(user.getId());
 
