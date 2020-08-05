@@ -85,7 +85,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         UserLoginQuery user = localUser.getUser();
 
         DropStatus dropStatus = dropStatusService.queryDropStatus(user.getId());
-        System.out.println(user.getId());
         LambdaQueryWrapper<LandSeed> wrapper=new LambdaQueryWrapper<LandSeed>()
                     .eq(LandSeed::getUserId,user.getId())
                     .eq(LandSeed::getLeStatus,1);
@@ -168,8 +167,13 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         double redPacketsDropped = 0.00;
         if (red) {
             redPacketsDropped = randomUtils.numberRedPacketsDropped();
-            result.setRedIsFail(1);
-            result.setRedNumber(redPacketsDropped);
+
+            if (redPacketsDropped == 0.0) {
+                result.setRedIsFail(0);
+            } else {
+                result.setRedIsFail(1);
+                result.setRedNumber(redPacketsDropped);
+            }
         } else {
             //不掉落红包
             result.setRedIsFail(0);
