@@ -7,8 +7,8 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://192.168.10.222:10000/eureka
+      defaultZone: http://192.168.10.254:10000/eureka
 
 spring:
   redis:
-    host: 192.168.10.222
+    host: 192.168.10.254
