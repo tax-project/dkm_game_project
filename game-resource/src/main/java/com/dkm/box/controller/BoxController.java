@@ -68,7 +68,7 @@ public class BoxController {
     @CrossOrigin
     @CheckToken
     public void autoSellEq(@RequestParam(value = "autoSell",required = false) List<Long> autoSell){
-        autoSellEqService.setAutoSell(localUser.getUser().getId(),autoSell==null?null: JSON.toJSONString(autoSell));
+        autoSellEqService.setAutoSell(localUser.getUser().getId(),autoSell==null?"[]": JSON.toJSONString(autoSell));
     }
     @ApiOperation(value = "获取用户自动出售装备信息")
     @GetMapping(value = "/getAutoSellEq")
