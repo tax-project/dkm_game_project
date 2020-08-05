@@ -508,41 +508,30 @@ public class SeedServiceImpl implements ISeedService {
        dropStatusService.deleteDrop(user.getId());
        //先判断是否解锁土地
        //算出解锁土地
-       if (data.getUserInfoGrade() % 3 == 0) {
-          //解锁一块土地  最多9块
+       //解锁一块土地  最多9块
+       //可以解锁
+       //判断是不是VIP
+       int seedNumber = data.getUserInfoGrade()/3;
+       if (unlockList.size() <= 10 && data.getUserInfoIsVip() == 1 && seedNumber > (10 - unlockList.size()) && data.getUserInfoGrade() % 3 == 0) {
+          //是VIP
+          //继续解锁
+          int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
-          if (unlockList.size() > 10) {
-             return;
+          if (updateStatus <= 0) {
+             log.info("解锁土地失败......");
+             throw new ApplicationException(CodeType.SERVICE_ERROR);
           }
+       } else {
+          //不是VIP
+          if (unlockList.size() > 1) {
+             //继续解锁
+             int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
-           //判断是不是VIP
-           if (data.getUserInfoIsVip() == 1) {
-               //是VIP
-               //继续解锁
-               int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
-
-               if (updateStatus <= 0) {
-                   log.info("解锁土地失败......");
-                   throw new ApplicationException(CodeType.SERVICE_ERROR);
-               }
-           } else {
-               //不是VIP
-                if (unlockList.size() == 1) {
-                    throw new ApplicationException(CodeType.SERVICE_ERROR, "请充值才能解锁");
-                }
-
-                if (unlockList.size() <= 0) {
-                   throw new ApplicationException(CodeType.SERVICE_ERROR, "您已全部解锁完");
-                }
-
-               //继续解锁
-               int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
-
-               if (updateStatus <= 0) {
-                   log.info("解锁土地失败---");
-                   throw new ApplicationException(CodeType.SERVICE_ERROR);
-               }
-           }
+             if (updateStatus <= 0) {
+                log.info("解锁土地失败---");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+             }
+          }
 
        }
 
