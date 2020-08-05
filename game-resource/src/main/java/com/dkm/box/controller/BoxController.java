@@ -2,8 +2,7 @@ package com.dkm.box.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.dkm.backpack.entity.vo.OpenEquipmentVo;
-import com.dkm.backpack.entity.vo.UserEquipmentVo;
-import com.dkm.box.service.impl.IAutoSellEqService;
+import com.dkm.box.service.IAutoSellEqService;
 import com.dkm.constanct.CodeType;
 import com.dkm.exception.ApplicationException;
 import com.dkm.jwt.contain.LocalUser;
@@ -17,10 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @program: game_project
@@ -71,8 +67,8 @@ public class BoxController {
     })
     @CrossOrigin
     @CheckToken
-    public void autoSellEq(@RequestParam("autoSell") List<Long> autoSell){
-        autoSellEqService.setAutoSell(localUser.getUser().getId(),autoSell==null?null: JSON.toJSONString(autoSell));
+    public void autoSellEq(@RequestParam(value = "autoSell",required = false) List<Long> autoSell){
+        autoSellEqService.setAutoSell(localUser.getUser().getId(),autoSell==null?"[]": JSON.toJSONString(autoSell));
     }
     @ApiOperation(value = "获取用户自动出售装备信息")
     @GetMapping(value = "/getAutoSellEq")

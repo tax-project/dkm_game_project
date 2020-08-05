@@ -1,4 +1,4 @@
-package com.dkm.box.service.impl;
+package com.dkm.box.service;
 
 import java.util.List;
 

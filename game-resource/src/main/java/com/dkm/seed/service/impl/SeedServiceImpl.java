@@ -28,6 +28,7 @@ import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedService;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class SeedServiceImpl implements ISeedService {
                     pow = Math.pow(Math.ceil(attenDants.get(seedUnlocks.size() + j).getSeedGrade() / 2.0), 2);
                 }
 
-                Integer powInteger = Integer.valueOf((int) pow);
+                Integer powInteger = (int) pow;
 
                 seedUnlock.setSeedAllUnlock(powInteger);
 
@@ -149,7 +150,7 @@ public class SeedServiceImpl implements ISeedService {
 
             //种植所获得的经验
             double experience = Math.pow(seeds.get(i).getSeedGrade(), 2 / 5.0) * 100;
-            Integer experienceInteger = Integer.valueOf((int) experience);
+            Integer experienceInteger = (int) experience;
             seeds.get(i).setSeedExperience(experienceInteger);
 
             //种子种植金币
@@ -278,7 +279,7 @@ public class SeedServiceImpl implements ISeedService {
 
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){
-            log.info("user feign err");
+            log.info("user feign err-");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
@@ -405,7 +406,6 @@ public class SeedServiceImpl implements ISeedService {
                 landYesVos.get(i).setTime(l1);
             }
         }
-
         return landYesVos;
     }
 
@@ -424,9 +424,11 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void collectSeed(SendCollectBO sendCollectBO) {
-        //得到用户token信息
-        UserLoginQuery user = localUser.getUser();
+       //得到用户token信息
+       UserLoginQuery user = localUser.getUser();
 
+       int golds = 0;
+        double seedEnvelopes = 0.0;
        Result<UserInfoQueryBo> userInfoQueryBoResult;
         if (sendCollectBO.getSeedMeOrOther() == 1) {
            //别人抢
@@ -440,24 +442,34 @@ public class SeedServiceImpl implements ISeedService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
+        SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
+
+        if (seedFallBO != null) {
+            golds = seedFallBO.getDropped() + data.getUserInfoGold();
+            seedEnvelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
+        }
         if (sendCollectBO.getStatus() == 0 && sendCollectBO.getSeedMeOrOther() == 0) {
             //正常收取
-           SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
-           Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
-           Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
-
            SeedCollectVo vo = new SeedCollectVo();
-           vo.setUserGold(gold);
-           vo.setUserInfoPacketBalance(envelopes);
+            if (golds != 0) {
+                vo.setUserGold(golds);
+            }
+
+            if (seedEnvelopes != 0.0) {
+                vo.setUserInfoPacketBalance(seedEnvelopes);
+            }
            vo.setUserId(user.getId());
            vo.setStatus(0);
            Result result = userFeignClient.addSeedCollect(vo);
 
            if (result.getCode() != 0) {
-              log.info("user feign err");
+              log.info("user feign err.,,,.");
               throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
            }
+
+           //清空redis
+           redisConfig.remove(seedRedis + user.getId());
            return;
         }
 
@@ -475,26 +487,50 @@ public class SeedServiceImpl implements ISeedService {
        //别人抢还是自己收
        if (sendCollectBO.getSeedMeOrOther() == 1) {
           //别人抢
-          SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
+          SeedFallBO bo = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
 
-          if (seedFallBO == null) {
+          Object string = redisConfig.getString(seedRedis + "much::" + sendCollectBO.getUserId());
+
+          if (string == null) {
+             //记录次数   3次以后不能再被抢
+             redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1);
+          } else {
+             int much = (int) string;
+
+             if (much > 3) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "该用户已经被抢超过3次不能再抢了");
+             }
+
+             redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1+ much);
+          }
+
+          if (bo == null) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "用户id参数传的有误");
           }
 
           SeedCollectVo vo = new SeedCollectVo();
-          int gold = (int) (seedFallBO.getDropped() * 0.1);
+          int gold = (int) (bo.getDropped() * 0.1);
           double envelopes = 0.01;
 
+          vo.setUserId(user.getId());
           vo.setUserGold(gold + data.getUserInfoGold());
           vo.setUserInfoPacketBalance(envelopes + data.getUserInfoPacketBalance());
-          vo.setUserId(sendCollectBO.getUserId());
           vo.setStatus(0);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
-             log.info("user feign err");
+             log.info("user feign err--");
              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
           }
+
+          //重新装配redis
+          SeedFallBO bo1 = new SeedFallBO();
+          bo1.setDropped(bo.getDropped() - gold);
+          bo1.setRedPacketsDropped(bo.getRedPacketsDropped() - envelopes);
+          bo1.setFallingNumber(bo.getFallingNumber());
+
+          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo1);
+
           return;
        }
 
@@ -508,36 +544,53 @@ public class SeedServiceImpl implements ISeedService {
        dropStatusService.deleteDrop(user.getId());
        //先判断是否解锁土地
        //算出解锁土地
-       if (data.getUserInfoGrade() % 3 == 0) {
-          //解锁一块土地  最多9块
-
-          if (unlockList.size() > 10) {
-             return;
-          }
-
-          //判断已经解锁几块土地
-          if (unlockList.size() == 10) {
-             //判断是不是VIP
-             if (data.getUserInfoIsVip() == 1) {
-                //是VIP
-                //继续解锁
-                int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
-
-                if (updateStatus <= 0) {
-                   log.info("解锁土地失败");
-                   throw new ApplicationException(CodeType.SERVICE_ERROR);
-                }
-             }
-          }
-
-          //解锁土地
+       //解锁一块土地  最多9块
+       //可以解锁
+       //判断是不是VIP
+       int seedNumber = data.getUserInfoGrade()/3;
+       if (unlockList.size() <= 10 && data.getUserInfoIsVip() == 1 && seedNumber > (10 - unlockList.size()) && data.getUserInfoGrade() % 3 == 0) {
+          //是VIP
+          //继续解锁
           int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
           if (updateStatus <= 0) {
-             log.info("解锁土地失败");
-             throw new ApplicationException(CodeType.SERVICE_ERROR);
+             log.info("解锁土地失败......");
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "解锁土地失败");
+          }
+       } else {
+          //不是VIP
+          if (unlockList.size() > 1) {
+             //继续解锁
+             int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
+
+             if (updateStatus <= 0) {
+                log.info("解锁土地失败---");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+             }
           }
 
+       }
+
+       //金币和红包
+       //判断当前时间大于等于成熟时间
+       LocalDateTime now = LocalDateTime.now();
+       LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+             .eq(LandSeed::getUserId, user.getId());
+       List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
+
+       for (LandSeed landSeed : landSeeds) {
+          long until = now.until(landSeed.getPlantTime(), ChronoUnit.SECONDS);
+
+          if (until > 0) {
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "种子还未成熟,成熟时间:" + DateUtils.formatDateTime(landSeed.getPlantTime()));
+          }
+       }
+
+       //修改种子状态为3
+       int updateStatus = landSeedMapper.updateStatus(user.getId());
+
+       if (updateStatus <= 0) {
+          throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
        }
 
        if (experience < data.getUserInfoNextExperience()) {
@@ -545,11 +598,19 @@ public class SeedServiceImpl implements ISeedService {
           //不升级
           SeedCollectVo vo = new SeedCollectVo();
           vo.setStatus(1);
+          vo.setUserId(user.getId());
+          if (golds != 0) {
+              vo.setUserGold(golds);
+          }
+
+          if (seedEnvelopes != 0.0) {
+              vo.setUserInfoPacketBalance(seedEnvelopes);
+          }
           vo.setUserInfoNowExperience(resultExperience);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
-             log.info("user feign err");
+             log.info("seed user feign err........");
              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
           }
           return;
@@ -567,13 +628,20 @@ public class SeedServiceImpl implements ISeedService {
        SeedCollectVo vo = new SeedCollectVo();
        vo.setStatus(2);
        vo.setUserInfoNowExperience(nowExperience);
+        if (golds != 0) {
+            vo.setUserGold(golds);
+        }
+
+        if (seedEnvelopes != 0.0) {
+            vo.setUserInfoPacketBalance(seedEnvelopes);
+        }
        vo.setUserInfoNextExperience(nextExperience.longValue());
        vo.setUserId(user.getId());
 
        Result result = userFeignClient.addSeedCollect(vo);
 
        if (result.getCode() != 0) {
-          log.info("user feign err");
+          log.info("user feign err...");
           throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
        }
 

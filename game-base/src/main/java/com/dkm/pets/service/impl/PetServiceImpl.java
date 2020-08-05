@@ -129,6 +129,7 @@ public class PetServiceImpl implements PetService {
                         role.add(eatFoodDto);
                     }
             }
+            petsDto.setCanFeed(true);
             petsDto.setEatFood(role);
         }
         map.put("petInfo", petInfo);
