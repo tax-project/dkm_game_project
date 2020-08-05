@@ -527,8 +527,12 @@ public class SeedServiceImpl implements ISeedService {
                }
            } else {
                //不是VIP
-                if (unlockList.size() <= 1) {
+                if (unlockList.size() == 1) {
                     throw new ApplicationException(CodeType.SERVICE_ERROR, "请充值才能解锁");
+                }
+
+                if (unlockList.size() <= 0) {
+                   throw new ApplicationException(CodeType.SERVICE_ERROR, "您已全部解锁完");
                 }
 
                //继续解锁
