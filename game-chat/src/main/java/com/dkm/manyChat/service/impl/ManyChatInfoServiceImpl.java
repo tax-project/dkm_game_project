@@ -8,7 +8,6 @@ import com.dkm.manyChat.dao.ManyChatInfoMapper;
 import com.dkm.manyChat.entity.ManyChatInfo;
 import com.dkm.manyChat.entity.vo.ManyChatInfoVo;
 import com.dkm.manyChat.service.IManyChatInfoService;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

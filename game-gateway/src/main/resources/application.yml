@@ -4,10 +4,9 @@ spring:
   application:
     name: game-gateway
   profiles:
-    active: local
+    active: dev
   jmx:
     enabled: false
-
 zuul:
   routes:
     api-user:
@@ -33,19 +32,23 @@ zuul:
       path: /*/*/chat/**
       serviceId: chat
       strip-prefix: false
-    api-back:
-      path: /*/*/back/**
-      serviceId: back
-      strip-prefix: false
+#    api-file:
+#      path: /*/*/file/**
+#      serviceId: file
+#      strip-prefix: false
+#    api-back:
+#      path: /*/*/back/**
+#      serviceId: back
+#      strip-prefix: false
     file-url:
       path: /file/**
-      url: http://${service.ip}:7000/game-file/
+      url: http://${service.ip}:7007
   host:
     connect-timeout-millis: 10000
     socket-timeout-millis: 20000
 
 service:
-  ip: 192.168.10.222
+  ip: 124.232.163.75
 
 ribbon:
   ReadTimeout: 10000
