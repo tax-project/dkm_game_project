@@ -22,4 +22,11 @@ public interface LandSeedMapper extends BaseMapper<LandSeed> {
      * @return
      */
     int updateSeedStatus(List<Long> list);
+
+    /**
+     *  把种子状态修改为3
+     * @param userId
+     * @return
+     */
+    int updateStatus (Long userId);
 }

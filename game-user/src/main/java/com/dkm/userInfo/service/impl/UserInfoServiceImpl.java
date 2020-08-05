@@ -199,51 +199,30 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<UserInfo>()
             .eq(UserInfo::getUserId, seedCollectVo.getUserId());
 
-      if (seedCollectVo.getStatus() == 0) {
-         //收取红包和金币
-         UserInfo userInfo = new UserInfo();
-
-         userInfo.setUserInfoGold (seedCollectVo.getUserGold());
-         userInfo.setUserInfoPacketBalance (seedCollectVo.getUserInfoPacketBalance());
-
-         int update = baseMapper.update(userInfo, wrapper);
-
-         if (update <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
-         }
-
-         return;
-      }
-
-      //收取经验和种子
-      if (seedCollectVo.getStatus() == 1) {
-         //收取经验和种子
-         //不升级
-         UserInfo userInfo = new UserInfo();
-         userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
-
-         int update = baseMapper.update(userInfo, wrapper);
-
-         if (update <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
-         }
-
-         return;
-      }
-
-
-      //收取经验和种子
-      //升级了
+      //收取红包和金币
       UserInfo userInfo = new UserInfo();
-      userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
-      userInfo.setUserInfoNextExperience (seedCollectVo.getUserInfoNextExperience());
+
+      if (seedCollectVo.getUserGold() != null) {
+         userInfo.setUserInfoGold (seedCollectVo.getUserGold());
+      }
+
+      if (seedCollectVo.getUserInfoPacketBalance() != null) {
+         userInfo.setUserInfoPacketBalance (seedCollectVo.getUserInfoPacketBalance());
+      }
+
+      if (seedCollectVo.getUserInfoNowExperience() != null) {
+         userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
+      }
+
+      if (seedCollectVo.getUserInfoNextExperience() != null) {
+         userInfo.setUserInfoNextExperience (seedCollectVo.getUserInfoNextExperience());
+      }
 
       int update = baseMapper.update(userInfo, wrapper);
 
       if (update <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
       }
-
 
    }
 }

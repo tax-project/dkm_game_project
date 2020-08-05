@@ -28,6 +28,7 @@ import com.dkm.seed.entity.bo.SendPlantBO;
 import com.dkm.seed.entity.vo.*;
 import com.dkm.seed.service.IDropStatusService;
 import com.dkm.seed.service.ISeedService;
+import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class SeedServiceImpl implements ISeedService {
                     pow = Math.pow(Math.ceil(attenDants.get(seedUnlocks.size() + j).getSeedGrade() / 2.0), 2);
                 }
 
-                Integer powInteger = Integer.valueOf((int) pow);
+                Integer powInteger = (int) pow;
 
                 seedUnlock.setSeedAllUnlock(powInteger);
 
@@ -149,7 +150,7 @@ public class SeedServiceImpl implements ISeedService {
 
             //种植所获得的经验
             double experience = Math.pow(seeds.get(i).getSeedGrade(), 2 / 5.0) * 100;
-            Integer experienceInteger = Integer.valueOf((int) experience);
+            Integer experienceInteger = (int) experience;
             seeds.get(i).setSeedExperience(experienceInteger);
 
             //种子种植金币
@@ -424,8 +425,8 @@ public class SeedServiceImpl implements ISeedService {
      */
     @Override
     public void collectSeed(SendCollectBO sendCollectBO) {
-        //得到用户token信息
-        UserLoginQuery user = localUser.getUser();
+       //得到用户token信息
+       UserLoginQuery user = localUser.getUser();
 
        Result<UserInfoQueryBo> userInfoQueryBoResult;
         if (sendCollectBO.getSeedMeOrOther() == 1) {
@@ -458,6 +459,9 @@ public class SeedServiceImpl implements ISeedService {
               log.info("user feign err.,,,.");
               throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
            }
+
+           //清空redis
+           redisConfig.remove(seedRedis + user.getId());
            return;
         }
 
@@ -477,6 +481,21 @@ public class SeedServiceImpl implements ISeedService {
           //别人抢
           SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
 
+          Object string = redisConfig.getString(seedRedis + "much::" + sendCollectBO.getUserId());
+
+          if (string == null) {
+             //记录次数   3次以后不能再被抢
+             redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1);
+          } else {
+             int much = (int) string;
+
+             if (much > 3) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "该用户已经被抢超过3次不能再抢了");
+             }
+
+             redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1+ much);
+          }
+
           if (seedFallBO == null) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "用户id参数传的有误");
           }
@@ -495,6 +514,15 @@ public class SeedServiceImpl implements ISeedService {
              log.info("user feign err--");
              throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙，请稍后再试");
           }
+
+          //重新装配redis
+          SeedFallBO bo = new SeedFallBO();
+          bo.setDropped(seedFallBO.getDropped() - gold);
+          bo.setRedPacketsDropped(seedFallBO.getRedPacketsDropped() - envelopes);
+          bo.setFallingNumber(seedFallBO.getFallingNumber());
+
+          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo);
+
           return;
        }
 
@@ -519,7 +547,7 @@ public class SeedServiceImpl implements ISeedService {
 
           if (updateStatus <= 0) {
              log.info("解锁土地失败......");
-             throw new ApplicationException(CodeType.SERVICE_ERROR);
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "解锁土地失败");
           }
        } else {
           //不是VIP
@@ -535,12 +563,40 @@ public class SeedServiceImpl implements ISeedService {
 
        }
 
+       //金币和红包
+       SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
+       Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
+       Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
+
+       //判断当前时间大于等于成熟时间
+       LocalDateTime now = LocalDateTime.now();
+       LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
+             .eq(LandSeed::getUserId, user.getId());
+       List<LandSeed> landSeeds = landSeedMapper.selectList(wrapper);
+
+       for (LandSeed landSeed : landSeeds) {
+          long until = now.until(landSeed.getPlantTime(), ChronoUnit.SECONDS);
+
+          if (until > 0) {
+             throw new ApplicationException(CodeType.SERVICE_ERROR, "种子还未成熟,成熟时间:" + DateUtils.formatDateTime(landSeed.getPlantTime()));
+          }
+       }
+
+       //修改种子状态为3
+       int updateStatus = landSeedMapper.updateStatus(user.getId());
+
+       if (updateStatus <= 0) {
+          throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
+       }
+
        if (experience < data.getUserInfoNextExperience()) {
           //小于下一级升级需要的经验
           //不升级
           SeedCollectVo vo = new SeedCollectVo();
           vo.setStatus(1);
           vo.setUserId(user.getId());
+          vo.setUserGold(gold);
+          vo.setUserInfoPacketBalance(envelopes);
           vo.setUserInfoNowExperience(resultExperience);
           Result result = userFeignClient.addSeedCollect(vo);
 
@@ -563,6 +619,8 @@ public class SeedServiceImpl implements ISeedService {
        SeedCollectVo vo = new SeedCollectVo();
        vo.setStatus(2);
        vo.setUserInfoNowExperience(nowExperience);
+       vo.setUserGold(gold);
+       vo.setUserInfoPacketBalance(envelopes);
        vo.setUserInfoNextExperience(nextExperience.longValue());
        vo.setUserId(user.getId());
 

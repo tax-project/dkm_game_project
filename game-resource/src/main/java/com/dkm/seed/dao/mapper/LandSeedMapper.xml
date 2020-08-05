@@ -11,4 +11,9 @@
     </update>
 
 
+    <update id="updateStatus" parameterType="Long">
+        update tb_land_seed set le_status=3
+        where user_id = #{userId}
+    </update>
+
 </mapper>
