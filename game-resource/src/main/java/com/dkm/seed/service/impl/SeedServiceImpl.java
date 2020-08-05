@@ -278,7 +278,7 @@ public class SeedServiceImpl implements ISeedService {
 
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
         if(userInfoQueryBoResult.getCode()!=0){
-            log.info("user feign err");
+            log.info("user feign err-");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
@@ -485,6 +485,7 @@ public class SeedServiceImpl implements ISeedService {
           int gold = (int) (seedFallBO.getDropped() * 0.1);
           double envelopes = 0.01;
 
+          vo.setUserId(user.getId());
           vo.setUserGold(gold + data.getUserInfoGold());
           vo.setUserInfoPacketBalance(envelopes + data.getUserInfoPacketBalance());
           vo.setStatus(0);
@@ -539,6 +540,7 @@ public class SeedServiceImpl implements ISeedService {
           //不升级
           SeedCollectVo vo = new SeedCollectVo();
           vo.setStatus(1);
+          vo.setUserId(user.getId());
           vo.setUserInfoNowExperience(resultExperience);
           Result result = userFeignClient.addSeedCollect(vo);
 
