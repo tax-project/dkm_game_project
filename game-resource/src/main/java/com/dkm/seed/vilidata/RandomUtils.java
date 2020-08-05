@@ -69,9 +69,9 @@ public class RandomUtils {
      */
     public Integer numberCoinsDropped(){
         //金币
-        int random = new Random().nextInt(3);
-        if(random<500){
-            random = new Random().nextInt(500);
+        int random = new Random().nextInt(10);
+        if(random<1000){
+            random = new Random().nextInt(1000);
             return random;
         }
         return 0;
