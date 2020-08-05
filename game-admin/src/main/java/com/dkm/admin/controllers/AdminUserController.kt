@@ -21,7 +21,7 @@ class AdminUserController {
     @Resource
     private lateinit var userLoginService: IAdminUserLoginService
 
-    @ApiOperation("登录",notes = "输入账号 + SHA1(密码) 来登录.")
+    @ApiOperation("登录",notes = "输入账号 + 密码 来登录.")
     @PostMapping(path = ["/login"], consumes = ["application/json"], produces = ["application/json"])
     fun login(@RequestBody loginVo: UserLoginVo): UserLoginResultVo = run {
         userLoginService.login(loginVo)

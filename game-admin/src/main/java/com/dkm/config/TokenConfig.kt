@@ -22,12 +22,6 @@ class TokenConfig : WebMvcConfigurationSupport() {
         registry.addResourceHandler("/webjars/**").addResourceLocations(
                 "classpath:/META-INF/resources/webjars/")
     }
-
     @Bean
     fun tokenInterceptor() = AdminTokenInterceptor()
-
-
-
-
-
 }
