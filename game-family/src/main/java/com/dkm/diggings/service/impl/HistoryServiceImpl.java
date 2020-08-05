@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 矿区历史记录以及处理
@@ -41,8 +42,6 @@ import java.util.*;
 public class HistoryServiceImpl implements IHistoryService {
     @Resource
     private DiggingsHistoryMapper historyMapper;
-    @Resource
-    private IOccupiedService occupiedService;
     @Resource
     private IFamilyStaticService staticService;
     @Resource
@@ -64,14 +63,15 @@ public class HistoryServiceImpl implements IHistoryService {
         if (personalVos == null) {
             personalVos = new ArrayList<>();
         }
-        return personalVos;
+        return personalVos.stream().sorted(Comparator.comparingInt(PersonalVo::getIntegral)).collect(Collectors.toList());
+
     }
 
     @Override
     public List<FamilyExperienceVo> getDiggingsExperienceSort(Long familyId) {
         val diggingsEntity = diggingsMapper.selectByFamilyId(familyId);
-        if (diggingsEntity == null){
-            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND,"未找到此家族所在的矿区");
+        if (diggingsEntity == null) {
+            throw new ApplicationException(CodeType.RESOURCES_NOT_FIND, "未找到此家族所在的矿区");
         }
         List<Long> families = new ArrayList<>();
         if (diggingsEntity.getFirstFamilyId() != 0) {

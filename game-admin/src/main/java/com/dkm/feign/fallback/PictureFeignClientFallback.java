@@ -22,9 +22,10 @@ public class PictureFeignClientFallback implements AnotherFileFeignClient {
     }
 
     @Override
-    public Result<FileVo> storeFile(MultipartFile file) {
+    public Result<FileVo> storeFile(String token, MultipartFile file) {
         return Result.fail(CodeType.FEIGN_CONNECT_ERROR);
     }
+
 
 
 }
