@@ -29,4 +29,8 @@ public class PetsDto extends PetUserEntity {
     * 所需喂食
     * */
     private List<EatFoodDto> eatFood;
+    /**
+     * 能不能喂食
+     * */
+    private boolean canFeed;
 }
