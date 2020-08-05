@@ -61,7 +61,6 @@ public class BackPackController {
         if(addGoodsInfo==null||addGoodsInfo.getGoodId()==null||addGoodsInfo.getNumber()==0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR);
         }
-        addGoodsInfo.setUserId(localUser.getUser().getId());
         backpackService.addBackpackGoods(addGoodsInfo);
     }
 

@@ -134,7 +134,6 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       //得到20条随机用户信息
       List<UserPlunderBo> list = result.getData();
-      log.info("query random user to 20:" + list);
 
       //如果没有用户返回，则直接返回Null
       if (null == list || list.size() == 0) {
