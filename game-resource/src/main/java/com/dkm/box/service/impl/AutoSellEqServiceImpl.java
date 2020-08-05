@@ -69,4 +69,5 @@ public class AutoSellEqServiceImpl implements IAutoSellEqService {
         AutoSellEntity autoSellEntity = autoSellMapper.selectOne(new LambdaQueryWrapper<AutoSellEntity>().eq(AutoSellEntity::getUserId, userId));
         return autoSellEntity==null?null:JSON.parseArray(autoSellEntity.getAutoSellOrder(), Integer.class);
     }
+
 }
