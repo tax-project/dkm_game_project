@@ -9,6 +9,7 @@
                b.good_money            goods_price,
                b.url                   goods_image_url,
                b.name                  goods_name,
+               b.good_content          content,
                (a.size * b.good_money) total_price
         FROM tb_shop_card a
                  JOIN tb_goods b ON a.goods_id = b.id

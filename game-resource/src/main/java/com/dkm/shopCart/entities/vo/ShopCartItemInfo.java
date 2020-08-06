@@ -35,4 +35,9 @@ public class ShopCartItemInfo {
      * 商品的总价格
      */
     private Integer totalPrice;
+
+    /**
+     * 商品的详情
+     */
+    private String content;
 }
