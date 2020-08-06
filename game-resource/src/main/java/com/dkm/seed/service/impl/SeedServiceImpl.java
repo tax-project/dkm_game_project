@@ -314,7 +314,6 @@ public class SeedServiceImpl implements ISeedService {
         //种植种子
         List<LandSeed> list = new ArrayList<>();
 
-
         //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
         double ripeTime = Math.pow(sendPlantBO.getSeedGrade(), 3 / 2.0) * 20 + 60;
         //将秒数转换成整数类型
@@ -329,46 +328,51 @@ public class SeedServiceImpl implements ISeedService {
 
         long until = now.until(time2, ChronoUnit.MINUTES);
 
-        if (null == seedList || seedList.size() == 0) {
-            //新种子种植
-            for (int i = 0; i < userLandUnlocks.size(); i++) {
-                LandSeed landSeed = new LandSeed();
-                //生成主键id
-                landSeed.setId(idGenerator.getNumberId());
-                //土地编号
-                landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-                //种子id
-                landSeed.setSeedId(sendPlantBO.getSeedId());
-                //根据token得到用户id
-                landSeed.setUserId(user.getId());
-                if (i == 0) {
-                    //结束时间
-                    landSeed.setPlantTime(localDateTime);
-                    //是否新种子
-                    landSeed.setNewSeedIs(1);
-                } else {
-                    //结束时间
-                    landSeed.setPlantTime(time2);
-                    //是否新种子
-                    landSeed.setNewSeedIs(0);
-                }
-                //状态 1为种植
-                landSeed.setLeStatus(1);
-                landSeed.setTimeNumber(until);
-                list.add(landSeed);
-            }
-            //增加要种植种子的信息和用户信息
-            int i = seedMapper.addPlant(list);
-            if (i <= 0) {
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
-            }
+        if (null != seedList && seedList.size() > 0) {
+            //旧种子种植
+            LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
+                    .eq(LandSeed::getUserId, user.getId())
+                    .eq(LandSeed::getSeedId, sendPlantBO.getSeedId());
 
-            return;
+            int delete = landSeedMapper.delete(queryWrapper);
+
+            System.out.println("delete:" + delete);
+            if (delete <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "操作有误");
+            }
         }
 
-        //旧种子种植
-        Integer status = seedMapper.updateTimeAndStatus(time2, user.getId(), sendPlantBO.getSeedId());
-
+        for (int i = 0; i < userLandUnlocks.size(); i++) {
+            LandSeed landSeed = new LandSeed();
+            //生成主键id
+            landSeed.setId(idGenerator.getNumberId());
+            //土地编号
+            landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+            //种子id
+            landSeed.setSeedId(sendPlantBO.getSeedId());
+            //根据token得到用户id
+            landSeed.setUserId(user.getId());
+            if (i == 0) {
+                //结束时间
+                landSeed.setPlantTime(localDateTime);
+                //是否新种子
+                landSeed.setNewSeedIs(1);
+            } else {
+                //结束时间
+                landSeed.setPlantTime(time2);
+                //是否新种子
+                landSeed.setNewSeedIs(0);
+            }
+            //状态 1为种植
+            landSeed.setLeStatus(1);
+            landSeed.setTimeNumber(until);
+            list.add(landSeed);
+        }
+        //增加要种植种子的信息和用户信息
+        int i = seedMapper.addPlant(list);
+        if (i <= 0) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+        }
 
     }
 
