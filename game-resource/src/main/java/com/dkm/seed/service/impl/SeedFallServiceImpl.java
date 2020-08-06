@@ -43,6 +43,7 @@ import java.math.BigDecimal;
 import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,6 +253,19 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         }
 
         for (LandSeed landSeed : landSeeds) {
+            //根据时间做判断
+            LocalDateTime now = LocalDateTime.now();
+
+            long until = now.until(landSeed.getPlantTime(), ChronoUnit.MINUTES);
+
+            Long much;
+            if (until <= 0) {
+                much = landSeed.getTimeNumber();
+            } else {
+                //还没到成熟时间
+               much = landSeed.getTimeNumber() - until;
+            }
+
             if (landSeed.getLeStatus() == 1) {
                 //种植的种子
                 if (landSeed.getNewSeedIs() == 1) {
@@ -260,8 +274,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 } else {
                     //不是新种子
                     //次数
-                    Long timeNumber = landSeed.getTimeNumber();
-                    Integer number = timeNumber.intValue();
+                    Integer number = much.intValue();
                     newSeed = number - dropStatus.getMuchNumber();
                 }
 
