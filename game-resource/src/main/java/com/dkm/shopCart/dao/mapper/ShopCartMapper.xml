@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dkm.shopCart.dao.ShopCartMapper">
+
+    <select id="selectShopCartListById" resultType="com.dkm.shopCart.entities.vo.ShopCartItemInfo">
+        SELECT a.size                  goods_size,
+               a.checked               checked,
+               b.good_money            goods_price,
+               b.url                   goods_image_url,
+               b.name                  goods_name,
+               (a.size * b.good_money) total_price
+        FROM tb_shop_card a
+                 JOIN tb_goods b ON a.goods_id = b.id
+                 JOIN tb_user c on a.user_id = c.user_id
+        WHERE c.user_id = #{userId}
+    </select>
+</mapper>
