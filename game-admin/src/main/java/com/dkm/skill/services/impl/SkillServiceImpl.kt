@@ -24,7 +24,7 @@ class SkillServiceImpl : ISkillService {
         val result = mutableListOf<SkillVo>()
         for (entity in list) {
             result.add(SkillVo(entity.id.toString(), entity.skName
-                    , entity.skImg, entity.skEffectOne, entity.skEffectTwo))
+                    , entity.skEffectOne, entity.skEffectTwo))
         }
         return result
     }
@@ -32,13 +32,13 @@ class SkillServiceImpl : ISkillService {
     override fun insert(skillVo: SkillVo): ResultVo {
         val newId = idGenerator.numberId
         skillMapper.insert(SkillEntity(newId, skillVo.skinName,
-                skillVo.skinImageUrl, skillVo.firstSkinEffect, skillVo.secondSkinEffect))
+                 skillVo.firstSkinEffect, skillVo.secondSkinEffect))
         return ResultVo(true, newId)
     }
 
     override fun update(id: Long, skillVo: SkillVo): ResultVo {
         val entity = SkillEntity(id, skillVo.skinName,
-                skillVo.skinImageUrl, skillVo.firstSkinEffect, skillVo.secondSkinEffect)
+                 skillVo.firstSkinEffect, skillVo.secondSkinEffect)
         val res = skillMapper.updateById(entity)
         if (res == 0) {
             return ResultVo(res != 0, "数据行不存在")

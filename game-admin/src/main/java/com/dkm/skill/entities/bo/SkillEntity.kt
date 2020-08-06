@@ -8,7 +8,6 @@ data class SkillEntity(
         @TableId
         var id: Long,
         var skName: String?,
-        var skImg: String?,
         var skEffectOne: String?,
         var skEffectTwo: String?
 )

@@ -2,6 +2,7 @@ package com.dkm.updateImage.controllers
 
 import com.dkm.config.annon.CheckAdminPermission
 import com.dkm.updateImage.services.IPictureService
+import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
@@ -15,6 +16,7 @@ import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
 
+@Api("上传文件相关")
 @RestController("/image/")
 class PictureController {
     @Resource
