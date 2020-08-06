@@ -44,7 +44,7 @@ public class RandomUtils {
         if(random == 1){
             return 0.1;
         }
-        return 0.0;
+        return 0.01;
     }
 
     /**

@@ -331,7 +331,7 @@ public class SeedServiceImpl implements ISeedService {
 
         if (null == seedList || seedList.size() == 0) {
             //新种子种植
-            for (int i = 0; i < sendPlantBO.getLandNumber(); i++) {
+            for (int i = 0; i < userLandUnlocks.size(); i++) {
                 LandSeed landSeed = new LandSeed();
                 //生成主键id
                 landSeed.setId(idGenerator.getNumberId());
@@ -447,6 +447,18 @@ public class SeedServiceImpl implements ISeedService {
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
 
         if (seedFallBO != null) {
+            if (seedFallBO.getDropped() == null) {
+                seedFallBO.setDropped(0);
+            }
+            if (seedFallBO.getRedPacketsDropped() == null) {
+                seedFallBO.setRedPacketsDropped(0.0);
+            }
+            if (data.getUserInfoGold() == null) {
+                data.setUserInfoGold(0);
+            }
+            if (data.getUserInfoPacketBalance() == null) {
+                data.setUserInfoPacketBalance(0.0);
+            }
             golds = seedFallBO.getDropped() + data.getUserInfoGold();
             seedEnvelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
         }
@@ -542,8 +554,11 @@ public class SeedServiceImpl implements ISeedService {
        Long experience = resultExperience + data.getUserInfoNowExperience();
 
        //删除种子状态表信息
-       dropStatusService.deleteDrop(user.getId());
-       //先判断是否解锁土地
+        Integer integer = dropStatusService.deleteDrop(user.getId());
+        if (integer <= 0) {
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "删除失败，请联系刘梦琪");
+        }
+        //先判断是否解锁土地
        //算出解锁土地
        //解锁一块土地  最多9块
        //可以解锁

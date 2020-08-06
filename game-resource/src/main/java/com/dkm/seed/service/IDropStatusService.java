@@ -25,6 +25,7 @@ public interface IDropStatusService {
    /**
     *  删除
     * @param userId 用户Id
+    * @return 返回删除结果
     */
-   void deleteDrop (Long userId);
+   Integer deleteDrop (Long userId);
 }
