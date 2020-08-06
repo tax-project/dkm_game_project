@@ -36,7 +36,7 @@ public class RandomUtils {
      * @return
      */
     public double numberRedPacketsDropped(){
-        int random = new Random().nextInt(100) + 1;
+        int random =(int) (Math.random() * 100 -1 +1) + 1;
         if(random <= 11 && random > 1){
             return 0.01;
         }
@@ -69,12 +69,7 @@ public class RandomUtils {
      */
     public Integer numberCoinsDropped(){
         //金币
-        int random = new Random().nextInt(10);
-        if(random<1000){
-            random = new Random().nextInt(1000);
-            return random;
-        }
-        return 0;
+        return  (int) (Math.random() * 1000 -10 +1) + 10;
     }
 
     /**
