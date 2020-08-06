@@ -560,7 +560,7 @@ public class SeedServiceImpl implements ISeedService {
        //删除种子状态表信息
         Integer integer = dropStatusService.deleteDrop(user.getId());
         if (integer <= 0) {
-            throw new ApplicationException(CodeType.SERVICE_ERROR, "删除失败，请联系刘梦琪");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "删除失败，请联系强福");
         }
         //先判断是否解锁土地
        //算出解锁土地
