@@ -9,19 +9,24 @@
         </foreach>
     </insert>
     <update id="updateAll">
-        <foreach collection="items" item="item" index="index" separator=";">
-            UPDATE tb_shop_card SET
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE tb_shop_card
             <set>
                 <if test="item.goodsId!=null and item.goodsId != 0">
                     goods_id =#{item.goodsId},
                 </if>
                 <if test="item.size!=null and item.size != 0">
-                    goods_id =#{item.size},
+                    size =#{item.size},
                 </if>
             </set>
             where id = #{item.itemId}
         </foreach>
     </update>
+    <delete id="deleteById">
+        DELETE
+        FROM tb_shop_card
+        WHERE id = #{id}
+    </delete>
 
     <select id="selectShopCartListById" resultType="com.dkm.shopCart.entities.vo.ShopCartItemInfo">
         SELECT a.size                  goods_size,

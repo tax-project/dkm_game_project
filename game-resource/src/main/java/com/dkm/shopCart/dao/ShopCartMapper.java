@@ -12,9 +12,9 @@ public interface ShopCartMapper {
 
     List<ShopCartItemInfo> selectShopCartListById(Long userId);
 
-    Integer addAll(@Param("userId") Long userId,@Param("list") List<ShopCartItemVo> list);
+    Integer addAll(@Param("userId") Long userId, @Param("list") List<ShopCartItemVo> list);
 
-    int updateAll(List<ShopCartItemVo> items);
+    int updateAll(@Param("list") List<ShopCartItemVo> list);
 
     Boolean deleteById(Long id);
 }
