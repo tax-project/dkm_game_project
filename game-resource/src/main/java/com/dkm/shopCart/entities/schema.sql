@@ -28,3 +28,18 @@ FROM tb_shop_card a
          JOIN tb_user c on a.user_id = c.user_id
 WHERE c.user_id = '712030540001349632';
 
+
+CREATE TABLE IF NOT EXISTS tb_shipping_address
+(
+    id           BIGINT(20) PRIMARY KEY NOT NULL,
+    user_id      BIGINT(20)             NOT NULL COMMENT 'user ID',
+    user_name    VARCHAR(255)           NOT NULL COMMENT '姓名',
+    user_phone   VARCHAR(255)           NOT NULL COMMENT '电话',
+    user_address VARCHAR(255)           NOT NULL COMMENT '地址',
+    user_zip     VARCHAR(255)           NOT NULL COMMENT '邮编',
+    FOREIGN KEY (user_id) REFERENCES tb_user (user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+) COMMENT '发货地址表'
+    COLLATE = 'utf8_bin'
+    ENGINE = InnoDB;

@@ -33,7 +33,6 @@ public class ShopCartController {
     @Resource
     private LocalUser localUser;
 
-
     @Resource
     private IShopCartService shopCartService;
 
@@ -66,6 +65,9 @@ public class ShopCartController {
         return shopCartService.addItems(localUser.getUser().getId(), items);
     }
 
+    /**
+     * 注意，更新购物车时未验证 userId，
+     */
     @ApiOperation("更新一条购物车信息")
     @CrossOrigin
     @ApiImplicitParams(
@@ -93,7 +95,7 @@ public class ShopCartController {
     @CrossOrigin
     @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token")
     @CheckToken
-    @PostMapping(value = "/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean deleteItem(@PathVariable Long id) {
         return shopCartService.delete(id);
     }
