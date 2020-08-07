@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class ShopCartItemInfo {
     /**
+     * id
+     */
+    private Long id;
+    /**
      * 购物车是否被选中
      */
     private Boolean checked = Boolean.FALSE;

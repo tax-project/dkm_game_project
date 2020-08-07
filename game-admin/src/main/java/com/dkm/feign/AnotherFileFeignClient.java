@@ -20,7 +20,7 @@ import java.util.Map;
  * @vesion 1.0
  **///
 @FeignClient(value = "file", fallback = PictureFeignClientFallback.class)
-public interface AnotherFileFeignClient {
+public interface  AnotherFileFeignClient {
 
 
     /**

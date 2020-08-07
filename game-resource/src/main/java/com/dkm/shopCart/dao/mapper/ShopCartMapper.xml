@@ -2,10 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dkm.shopCart.dao.ShopCartMapper">
+    <insert id="addAll">
+        INSERT INTO tb_shop_card (id, user_id, goods_id, size) values
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.itemId},#{userId},#{item.goodsId},#{item.size}
+        </foreach>
+    </insert>
+    <update id="updateAll">
+        <foreach collection="items" item="item" index="index" separator=";">
+            UPDATE tb_shop_card SET
+            <set>
+                <if test="item.goodsId!=null and item.goodsId != 0">
+                    goods_id =#{item.goodsId},
+                </if>
+                <if test="item.size!=null and item.size != 0">
+                    goods_id =#{item.size},
+                </if>
+            </set>
+            where id = #{item.itemId}
+        </foreach>
+    </update>
 
     <select id="selectShopCartListById" resultType="com.dkm.shopCart.entities.vo.ShopCartItemInfo">
         SELECT a.size                  goods_size,
                a.checked               checked,
+               a.id                    id,
                b.good_money            goods_price,
                b.url                   goods_image_url,
                b.name                  goods_name,
