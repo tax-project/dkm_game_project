@@ -19,6 +19,17 @@
                 user_phone = #{item.phone},
             </if>
         </set>
-        WHERE userId = #{userId} AND id = #{itemId}
+        WHERE user_id = #{userId} AND id = #{itemId}
+    </update>
+    <update id="setDefaultAddress">
+        UPDATE tb_shipping_address
+        SET default_address = 1
+        WHERE id = #{itemId}
+          AND user_id = #{userId}
+    </update>
+    <update id="clearDefaultAddress">
+        UPDATE tb_shipping_address
+        SET default_address = 0
+        WHERE  user_id = #{userId}
     </update>
 </mapper>

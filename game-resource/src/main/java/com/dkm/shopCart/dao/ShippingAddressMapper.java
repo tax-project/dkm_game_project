@@ -10,4 +10,8 @@ import org.springframework.stereotype.Component;
 public interface ShippingAddressMapper extends BaseMapper<ShippingAddressInfoVo> {
     Integer updateByIdAndUserId(@Param("item") ShippingAddressVo item,
                                 @Param("userId") Long userId, @Param("itemId") Long itemId);
+
+    void setDefaultAddress(@Param("userId") Long userId, @Param("itemId") Long itemId);
+
+    void clearDefaultAddress(Long userId);
 }

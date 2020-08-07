@@ -36,5 +36,7 @@ public class ShippingAddressInfoVo {
     @ApiModelProperty("邮编")
     @TableField("user_zip")
     private String zip;
-
+    @ApiModelProperty("是否为默认收货地址")
+    @TableField("default_address")
+    private Boolean isDefaultAddress;
 }

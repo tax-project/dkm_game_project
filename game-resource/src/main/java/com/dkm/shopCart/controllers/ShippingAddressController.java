@@ -61,6 +61,19 @@ public class ShippingAddressController {
         return addressService.updateAShippingAddressById(userId, itemId, shippingAddressVo);
     }
 
+    @ApiOperation("设置为默认地址")
+    @CrossOrigin
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "TOKEN", required = true, dataType = "String", value = "请求的Token"),
+            @ApiImplicitParam(paramType = "path", name = "id", required = true, dataType = "Long", value = "设置为默认地址的ID")
+
+    })
+    @CheckToken
+    @GetMapping(value = "/{id}/default", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Boolean setDefault( @PathVariable("id") Long itemId) {
+        Long userId = localUser.getUser().getId();
+        return addressService.setDefault(userId, itemId);
+    }
 
     @ApiOperation("删除收货地址信息")
     @CrossOrigin
@@ -70,7 +83,7 @@ public class ShippingAddressController {
 
     })
     @CheckToken
-    @GetMapping(value = "/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public Boolean delete( @PathVariable("id") Long itemId) {
         Long userId = localUser.getUser().getId();
         return addressService.delete(userId, itemId);

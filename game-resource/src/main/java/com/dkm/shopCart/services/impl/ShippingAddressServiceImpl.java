@@ -6,7 +6,7 @@ import com.dkm.shopCart.entities.vo.ShippingAddressInfoVo;
 import com.dkm.shopCart.entities.vo.ShippingAddressVo;
 import com.dkm.shopCart.services.IShippingAddressService;
 import com.dkm.utils.IdGenerator;
-import feign.Param;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,20 +29,41 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
 
     @Override
     public Boolean addAShippingAddress(Long userId, ShippingAddressVo item) {
+        val len = shippingAddressMapper.selectCount(new QueryWrapper<ShippingAddressInfoVo>().lambda().eq(ShippingAddressInfoVo::getUserId, userId));
+        val entity = item.cloneToEntityItem(idGenerator.getNumberId(), userId);
+        if (len == 0) {
+            entity.setIsDefaultAddress(true);
+        }
         return shippingAddressMapper
-                .insert(item.cloneToEntityItem(idGenerator.getNumberId(), userId))
+                .insert(entity)
                 != 0;
     }
 
     @Override
     public Boolean updateAShippingAddressById(Long userId, Long itemId, ShippingAddressVo item) {
-        return shippingAddressMapper.updateByIdAndUserId(item,userId,itemId)>0;
+        return shippingAddressMapper.updateByIdAndUserId(item, userId, itemId) > 0;
     }
 
     @Override
     public Boolean delete(Long userId, Long itemId) {
-        return shippingAddressMapper.delete(new QueryWrapper<ShippingAddressInfoVo>().lambda().eq(ShippingAddressInfoVo::getUserId, userId)
-                .eq(ShippingAddressInfoVo::getId, itemId)) != 0;
+        val deleted = shippingAddressMapper.selectById(itemId);
+
+        shippingAddressMapper.delete(new QueryWrapper<ShippingAddressInfoVo>().lambda().eq(ShippingAddressInfoVo::getUserId, userId)
+                .eq(ShippingAddressInfoVo::getId, itemId));
+        if (deleted.getIsDefaultAddress()) {
+            val allAddress = getAllAddress(userId);
+            if (allAddress.size() != 0) {
+                setDefault(userId, allAddress.get(0).getId());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean setDefault(Long userId, Long itemId) {
+        shippingAddressMapper.clearDefaultAddress(userId);
+        shippingAddressMapper.setDefaultAddress(userId, itemId);
+        return true;
     }
 }
 

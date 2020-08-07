@@ -13,4 +13,6 @@ public interface IShippingAddressService {
     Boolean updateAShippingAddressById(Long userId, Long itemId, ShippingAddressVo shippingAddressVo);
 
     Boolean delete(Long userId, Long itemId);
+
+    Boolean setDefault(Long userId, Long itemId);
 }

@@ -11,6 +11,6 @@ public class ShippingAddressVo {
 
 
     public ShippingAddressInfoVo cloneToEntityItem(long numberId, Long userId) {
-        return new ShippingAddressInfoVo(numberId, userId, name, phone, address, zip);
+        return new ShippingAddressInfoVo(numberId, userId, name, phone, address, zip,false);
     }
 }
