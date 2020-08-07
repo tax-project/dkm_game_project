@@ -127,13 +127,11 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 result.setRedNumber(seedProdred.doubleValue());
 
                 //如果是新种子，修改种子状态
-                if (landSeed.getNewSeedIs() == 1) {
-                    //修改成0
-                    LandSeed land = new LandSeed();
-                    land.setId(land.getId());
-                    land.setNewSeedIs(0);
-                    int updateById = landSeedMapper.updateById(land);
-                }
+                //修改成0
+                LandSeed land = new LandSeed();
+                land.setId(land.getId());
+                land.setNewSeedIs(0);
+                landSeedMapper.updateById(land);
 
                 return result;
             }
