@@ -19,16 +19,19 @@ public interface ISeedFallService {
     /**
      *   前端调掉落接口
      *
+     * @param userInfoGrade 用户等级
+     * @param seedGrade 种子等级
      * @return 掉落的东西
      */
-    SeedDropBO seedDrop(Integer userInfoGrade);
+    SeedDropBO seedDrop(Integer userInfoGrade, Integer seedGrade);
 
     /**
      *  上线就调用的接口
      * @param seedId 种子id
      * @param userInfoGrade 等级
+     * @param seedGrade 种子等级
      * @return 返回所有掉落的信息
      */
-    List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade);
+    List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade, Integer seedGrade);
 
 }

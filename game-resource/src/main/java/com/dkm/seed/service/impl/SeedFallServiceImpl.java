@@ -81,7 +81,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     private String seedRedis = "REDIS::SEED::";
 
     @Override
-    public SeedDropBO seedDrop(Integer userInfoGrade) {
+    public SeedDropBO seedDrop(Integer userInfoGrade, Integer seedGrade) {
 
         UserLoginQuery user = localUser.getUser();
 
@@ -126,15 +126,6 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 result.setRedIsFail(1);
                 result.setRedNumber(seedProdred.doubleValue());
 
-                //修改新种子状态
-                LandSeed seed = new LandSeed();
-                seed.setId(landSeed.getId());
-                seed.setNewSeedIs(0);
-                int i = landSeedMapper.updateById(seed);
-
-                if (i <= 0) {
-                    throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
-                }
                 return result;
             }
         }
@@ -181,7 +172,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
         }
 
         //掉落金币
-        boolean droppingGold = randomUtils.probabilityDroppingGold(userInfoGrade);
+        boolean droppingGold = randomUtils.probabilityDroppingGold(seedGrade);
         Integer dropped = 0;
         if (droppingGold) {
             //掉落金币成功
@@ -227,7 +218,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
     }
 
     @Override
-    public List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade) {
+    public List<SeedDropBO> redBagDroppedSeparately(Long seedId, Integer userInfoGrade, Integer seedGrade) {
 
         UserLoginQuery user = localUser.getUser();
 
@@ -286,7 +277,7 @@ public class SeedFallServiceImpl extends ServiceImpl<SeedsFallMapper, SeedsFall>
                 //根据次数循环返回给前端掉落的结果
                 //循环得到前端返回的数据
                 for (int i = 0; i < newSeed; i++) {
-                    SeedDropBO seedDropBO = seedDrop(userInfoGrade);
+                    SeedDropBO seedDropBO = seedDrop(userInfoGrade, seedGrade);
                     if (seedDropBO != null) {
                         list.add(seedDropBO);
                     }

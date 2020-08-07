@@ -34,15 +34,19 @@ public class SeedsFallController {
 
 
     @ApiOperation(value = "前端调掉落接口", notes = "前端调掉落接口")
-    @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级")
+    @ApiImplicitParams({
+          @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
+          @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
+    })
     @GetMapping("/seedDrop")
     @CrossOrigin
     @CheckToken
-    public SeedDropBO seedDrop(@RequestParam(value = "userInfoGrade") Integer userInfoGrade){
-        if (userInfoGrade == null) {
+    public SeedDropBO seedDrop(@RequestParam("userInfoGrade") Integer userInfoGrade,
+                               @RequestParam("seedGrade") Integer seedGrade){
+        if (userInfoGrade == null || seedGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.seedDrop(userInfoGrade);
+        return iSeedFallService.seedDrop(userInfoGrade, seedGrade);
     }
 
 
@@ -50,16 +54,18 @@ public class SeedsFallController {
     @ApiImplicitParams({
           @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedId", value = "种子id"),
           @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "userInfoGrade", value = "用户等级"),
+          @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "seedGrade", value = "种子等级"),
     })
     @GetMapping("/redBagDroppedSeparately")
     @CrossOrigin
     @CheckToken
     public List<SeedDropBO> redBagDroppedSeparately(@RequestParam("seedId") Long seedId,
-                                                    @RequestParam("userInfoGrade") Integer userInfoGrade){
+                                                    @RequestParam("userInfoGrade") Integer userInfoGrade,
+                                                    @RequestParam("seedGrade") Integer seedGrade){
         if (seedId == null || userInfoGrade == null) {
             throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
         }
-        return iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade);
+        return iSeedFallService.redBagDroppedSeparately(seedId, userInfoGrade, seedGrade);
     }
 
 }
