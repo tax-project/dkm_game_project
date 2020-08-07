@@ -336,7 +336,6 @@ public class SeedServiceImpl implements ISeedService {
 
             int delete = landSeedMapper.delete(queryWrapper);
 
-            System.out.println("delete:" + delete);
             if (delete <= 0) {
                 throw new ApplicationException(CodeType.SERVICE_ERROR, "操作有误");
             }
