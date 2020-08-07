@@ -562,6 +562,7 @@ public class SeedServiceImpl implements ISeedService {
         if (integer <= 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "删除失败，请联系强福");
         }
+
         //先判断是否解锁土地
        //算出解锁土地
        //解锁一块土地  最多9块
@@ -601,6 +602,19 @@ public class SeedServiceImpl implements ISeedService {
        for (LandSeed landSeed : landSeeds) {
           long until = now.until(landSeed.getPlantTime(), ChronoUnit.SECONDS);
 
+          //如果是新种子，修改种子状态
+          if (landSeed.getNewSeedIs() == 1) {
+             //修改成0
+             LandSeed land = new LandSeed();
+             land.setId(land.getId());
+             land.setNewSeedIs(0);
+             int updateById = landSeedMapper.updateById(land);
+
+             if (updateById <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "新种子修改失败");
+             }
+          }
+
           if (until > 0) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "种子还未成熟,成熟时间:" + DateUtils.formatDateTime(landSeed.getPlantTime()));
           }
@@ -613,6 +627,9 @@ public class SeedServiceImpl implements ISeedService {
           throw new ApplicationException(CodeType.SERVICE_ERROR, "修改失败");
        }
 
+       System.out.println("data-->" + data.getUserInfoNowExperience());
+       System.out.println("resultExperience-->" + resultExperience);
+       System.out.println("-->" + experience);
        if (experience < data.getUserInfoNextExperience()) {
           //小于下一级升级需要的经验
           //不升级
@@ -626,7 +643,7 @@ public class SeedServiceImpl implements ISeedService {
           if (seedEnvelopes != 0.0) {
               vo.setUserInfoPacketBalance(seedEnvelopes);
           }
-          vo.setUserInfoNowExperience(resultExperience);
+          vo.setUserInfoNowExperience(experience);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
