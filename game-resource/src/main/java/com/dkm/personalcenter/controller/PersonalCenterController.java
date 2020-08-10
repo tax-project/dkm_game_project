@@ -79,7 +79,7 @@ public class PersonalCenterController {
     private LocalUser localUser;
 
     @ApiOperation("获取用户体力信息")
-    @GetMapping("/PersonalCenterAll")
+    @GetMapping("/getUserPsInfo")
     @CheckToken
     @CrossOrigin
     public UserPsVo getUserPsInfo(){
@@ -99,7 +99,7 @@ public class PersonalCenterController {
         Map<String,Object> map=new HashMap<>(7);
 
         //初始化技能
-       /* iSkillService.initSkill(userId);*/
+        iSkillService.initSkill(userId);
 
         /**
          * 查询已经解锁种子
