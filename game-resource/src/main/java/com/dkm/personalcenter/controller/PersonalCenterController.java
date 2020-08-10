@@ -79,7 +79,7 @@ public class PersonalCenterController {
     private LocalUser localUser;
 
     @ApiOperation("获取用户体力信息")
-    @GetMapping("/PersonalCenterAll")
+    @GetMapping("/getUserPsInfo")
     @CheckToken
     @CrossOrigin
     public UserPsVo getUserPsInfo(){
