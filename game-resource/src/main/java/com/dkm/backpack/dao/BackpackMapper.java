@@ -42,7 +42,7 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
             "(SELECT * FROM tb_user_backpack WHERE user_id = #{userId})ub RIGHT JOIN (SELECT * FROM tb_goods WHERE good_type = 3 ) g on g.id = ub.good_id")
     List<FoodInfoVo> getFoods(@Param("userId") Long userId);
 
-    @Select("SELECT g.name,g.url,ub.backpack_id,IFNULL(ub.number,0) FROM (" +
+    @Select("SELECT g.name,g.url,ub.backpack_id,IFNULL(ub.number,0) as number FROM (" +
             "SELECT name,url,id FROM tb_goods WHERE name LIKE '%体力瓶'" +
             ") g LEFT JOIN " +
             "(SELECT  backpack_id,number,good_id FROM tb_user_backpack WHERE user_id = #{userId}) ub on ub.good_id=g.id")
