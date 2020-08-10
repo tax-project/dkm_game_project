@@ -1,6 +1,6 @@
 package com.dkm.updateImage.controllers
 
-import com.dkm.config.annon.CheckAdminPermission
+import com.dkm.config.annotations.CheckAdminPermission
 import com.dkm.updateImage.services.IPictureService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam

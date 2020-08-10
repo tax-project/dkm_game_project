@@ -5,5 +5,4 @@ import org.springframework.web.multipart.MultipartFile
 
 interface IPictureService {
     fun update(multipartFile: MultipartFile, token: String): ImageUpdateResultVo
-
 }

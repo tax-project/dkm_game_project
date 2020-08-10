@@ -1,6 +1,6 @@
 package com.dkm.skill.controllers
 
-import com.dkm.config.annon.CheckAdminPermission
+import com.dkm.config.annotations.CheckAdminPermission
 import com.dkm.skill.entities.vo.SkillVo
 import com.dkm.skill.services.ISkillService
 import io.swagger.annotations.Api
