@@ -1,6 +1,7 @@
 package com.dkm.personalcenter.controller;
 
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.backpack.service.IEquipmentService;
@@ -68,10 +69,6 @@ public class PersonalCenterController {
 
     @Resource
     private IBackpackService backpackService;
-
-    @Autowired
-    private ITbEquipmentKnapsackService tbEquipmentKnapsackService;
-
     @Autowired
     private TbBlackHouseService tbBlackHouseService;
 
@@ -79,7 +76,7 @@ public class PersonalCenterController {
     private LocalUser localUser;
 
     @ApiOperation("获取用户体力信息")
-    @GetMapping("/PersonalCenterAll")
+    @GetMapping("/getUserPsInfo")
     @CheckToken
     @CrossOrigin
     public UserPsVo getUserPsInfo(){
@@ -91,6 +88,14 @@ public class PersonalCenterController {
         userPsVo.setPsBottleBo(backpackService.getPsBottle(localUser.getUser().getId()));
         return userPsVo;
     }
+    @ApiOperation("使用体力瓶")
+    @GetMapping("/usePsBottle")
+    @ApiImplicitParam(value = "背包id",name = "backpackId",paramType = "path")
+    @CheckToken
+    @CrossOrigin
+    public void usePsBottle(@RequestParam("backpackId")Long backpackId){
+        backpackService.updateNumberByBackpackId(localUser.getUser().getId(),backpackId);
+    }
 
     @ApiOperation("用户信息页面接口")
     @ApiImplicitParam(value = "用户id",paramType = "path")
@@ -99,7 +104,7 @@ public class PersonalCenterController {
         Map<String,Object> map=new HashMap<>(7);
 
         //初始化技能
-       /* iSkillService.initSkill(userId);*/
+        iSkillService.initSkill(userId);
 
         /**
          * 查询已经解锁种子

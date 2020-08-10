@@ -53,4 +53,11 @@ public interface IBackpackService {
      * @return
      */
     List<PsBottleBo> getPsBottle(Long userId);
+
+    /**
+     * 根据backpackId设置信息
+     * @param userId
+     * @param backpackId
+     */
+    void updateNumberByBackpackId(Long userId,Long backpackId);
 }

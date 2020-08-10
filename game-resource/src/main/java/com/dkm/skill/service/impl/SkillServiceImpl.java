@@ -79,7 +79,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    private ITbEquipmentKnapsackService iTbEquipmentKnapsackService;
 
    @Override
-   public int initSkill(Long userId) {
+   public void initSkill(Long userId) {
 
       LambdaQueryWrapper<Skill> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -91,7 +91,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
        * 根据用户id查询所有技能
        * 如果没有则初始化
        */
-      int init=0;
+
       List<SkillUserSkillVo> skillUserSkillVos = baseMapper.queryAllSkillByUserId(userId);
       if(skillUserSkillVos.size()==0){
 
@@ -108,13 +108,20 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             list.add(userSkill);
          }
 
-         init = iUserSkillService.addUserSkill(list);
+         int init = iUserSkillService.addUserSkill(list);
+         if(init<=0){
+            log.info("初始化技能error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+         }
 
          //初始用户拥有的金星星
-         iStarsService.addUserVenusNum(userId);
+         int i = iStarsService.addUserVenusNum(userId);
+         if(i<=0){
+            log.info("初始化金星星error");
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
+         }
       }
 
-      return init;
    }
 
    @Override

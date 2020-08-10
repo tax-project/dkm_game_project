@@ -18,6 +18,7 @@ import com.dkm.friend.service.IFriendService;
 import com.dkm.jwt.contain.LocalUser;
 import com.dkm.jwt.entity.UserLoginQuery;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,9 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 
             friendRequest.setFromId(user.getId());
             friendRequest.setToId(vo.getToId());
-            friendRequest.setRequestRemark(vo.getRequestRemark());
+            if (StringUtils.isNotBlank(vo.getRequestRemark())) {
+               friendRequest.setRequestRemark(vo.getRequestRemark());
+            }
 
             friendRequest.setRequestTime(LocalDateTime.now());
             //申请中
@@ -95,20 +98,21 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
                throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
             }
          } else {
+            if (StringUtils.isNotBlank(vo.getRequestRemark())) {
+               if (!request.getRequestRemark().equals(vo.getRequestRemark())) {
 
-            if (!request.getRequestRemark().equals(vo.getRequestRemark())) {
+                  FriendRequest friendRequest = new FriendRequest();
+                  friendRequest.setId(request.getId());
 
-               FriendRequest friendRequest = new FriendRequest();
-               friendRequest.setId(request.getId());
+                  friendRequest.setRequestRemark(vo.getRequestRemark());
 
-               friendRequest.setRequestRemark(vo.getRequestRemark());
+                  friendRequest.setRequestTime(LocalDateTime.now());
 
-               friendRequest.setRequestTime(LocalDateTime.now());
+                  int updateById = baseMapper.updateById(friendRequest);
 
-               int updateById = baseMapper.updateById(friendRequest);
-
-               if (updateById <= 0) {
-                  throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
+                  if (updateById <= 0) {
+                     throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
+                  }
                }
             }
          }

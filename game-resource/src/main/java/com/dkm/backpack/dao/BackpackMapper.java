@@ -9,6 +9,7 @@ import com.dkm.personalcenter.entity.bo.PsBottleBo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -41,6 +42,15 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
             "(SELECT * FROM tb_user_backpack WHERE user_id = #{userId})ub RIGHT JOIN (SELECT * FROM tb_goods WHERE good_type = 3 ) g on g.id = ub.good_id")
     List<FoodInfoVo> getFoods(@Param("userId") Long userId);
 
-    @Select("")
+    @Select("SELECT g.name,g.url,ub.backpack_id,IFNULL(ub.number,0) as number FROM (" +
+            "SELECT name,url,id FROM tb_goods WHERE name LIKE '%体力瓶'" +
+            ") g LEFT JOIN " +
+            "(SELECT  backpack_id,number,good_id FROM tb_user_backpack WHERE user_id = #{userId}) ub on ub.good_id=g.id")
     List<PsBottleBo> getPsBottle(@Param("userId") Long userId);
+
+    @Update("UPDATE tb_user_info SET user_info_strength = CASE" +
+            "    WHEN user_info_strength+#{add}>=user_info_all_strength THEN user_info_all_strength" +
+            "    ELSE user_info_strength + #{add}" +
+            "END WHERE user_id = #{userId}")
+    int updateUserStrength(@Param("add")Integer add,@Param("userId")Long userId);
 }
