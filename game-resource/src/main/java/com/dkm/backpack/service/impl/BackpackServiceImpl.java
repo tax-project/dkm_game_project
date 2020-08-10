@@ -17,6 +17,7 @@ import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
+import com.dkm.personalcenter.entity.bo.PsBottleBo;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,5 +138,36 @@ public class BackpackServiceImpl implements IBackpackService {
     @Override
     public List<FoodInfoVo> getFood(Long userId) {
         return backpackMapper.getFoods(userId);
+    }
+
+    @Override
+    public List<PsBottleBo> getPsBottle(Long userId) {
+        return backpackMapper.getPsBottle(userId);
+    }
+
+    @Override
+    public void updateNumberByBackpackId(Long userId, Long backpackId) {
+        BackPackEntity backPackEntity = backpackMapper.selectById(backpackId);
+        if(backPackEntity==null|| !backPackEntity.getUserId().equals(userId)){
+            throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
+        }
+        int i = 0;
+        if(backPackEntity.getNumber()>1){
+            backPackEntity.setNumber(backPackEntity.getNumber()-1);
+            i = backpackMapper.updateById(backPackEntity);
+            if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
+        }else {
+            i = backpackMapper.deleteById(backpackId);
+        }
+        if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
+        int add = 0;
+        if(backpackId==707431394650138541L){
+            add = 100;
+        }else  if(backpackId==707441015150160242L){
+            add = 200;
+        }else  if(backpackId==722958015550165460L){
+            add = 50;
+        }
+        backpackMapper.updateUserStrength(add,userId);
     }
 }
