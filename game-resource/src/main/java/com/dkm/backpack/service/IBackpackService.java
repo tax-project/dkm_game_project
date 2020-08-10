@@ -5,6 +5,7 @@ import com.dkm.backpack.entity.bo.SellGoodsInfo;
 import com.dkm.backpack.entity.vo.FoodInfoVo;
 import com.dkm.backpack.entity.vo.GoldStarVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
+import com.dkm.personalcenter.entity.bo.PsBottleBo;
 
 import java.util.List;
 
@@ -46,4 +47,10 @@ public interface IBackpackService {
      */
     List<FoodInfoVo> getFood(Long userId);
 
+    /**
+     * 获取用户体力瓶信息
+     * @param userId
+     * @return
+     */
+    List<PsBottleBo> getPsBottle(Long userId);
 }

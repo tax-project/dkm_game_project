@@ -24,7 +24,7 @@ public class RandomUtils {
         int pow = (int) (Math.pow(userInfoGrade, -1 / 2.0) * 100);
 
         //生产1-100的随机数
-        int random = new Random().nextInt(100) + 1;
+        int random =(int) (Math.random() * 100 -1 +1) + 1;
         if(random <= pow){
             return true;
         }
@@ -36,15 +36,12 @@ public class RandomUtils {
      * @return
      */
     public double numberRedPacketsDropped(){
-        int random = new Random().nextInt(100) + 1;
-        if(random <= 11 && random > 1){
-            return 0.01;
-        }
+        int random =(int) (Math.random() * 100 -1 +1) + 1;
 
-        if(random == 1){
+        if(random == 10){
             return 0.1;
         }
-        return 0.0;
+        return 0.01;
     }
 
     /**
@@ -56,7 +53,7 @@ public class RandomUtils {
         //金币掉落概率
         int pow = (int) (Math.pow(seedGrade, -1 / 4.0) * 100);
         //生产1-100的随机数
-        int random = new Random().nextInt(100) + 1;
+        int random =(int) (Math.random() * 100 -1 +1) + 1;
         if(random <= pow){
             return true;
         }
@@ -69,12 +66,7 @@ public class RandomUtils {
      */
     public Integer numberCoinsDropped(){
         //金币
-        int random = new Random().nextInt(3);
-        if(random<500){
-            random = new Random().nextInt(500);
-            return random;
-        }
-        return 0;
+        return  (int) (Math.random() * 1000 -10 +1) + 10;
     }
 
     /**
@@ -82,10 +74,9 @@ public class RandomUtils {
      * @return
      */
     public Boolean fallingRandom () {
-        Random random=new Random();
-        int i = random.nextInt(100) + 1;
+        int random =(int) (Math.random() * 100 -1 +1) + 1;
 
-        if (i <= 3) {
+        if (random == 10 || random == 20 || random == 30) {
             return true;
         }
 

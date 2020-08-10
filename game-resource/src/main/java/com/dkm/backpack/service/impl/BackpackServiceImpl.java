@@ -17,6 +17,7 @@ import com.dkm.data.Result;
 import com.dkm.exception.ApplicationException;
 import com.dkm.feign.UserFeignClient;
 import com.dkm.knapsack.domain.bo.IncreaseUserInfoBO;
+import com.dkm.personalcenter.entity.bo.PsBottleBo;
 import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,5 +138,10 @@ public class BackpackServiceImpl implements IBackpackService {
     @Override
     public List<FoodInfoVo> getFood(Long userId) {
         return backpackMapper.getFoods(userId);
+    }
+
+    @Override
+    public List<PsBottleBo> getPsBottle(Long userId) {
+        return null;
     }
 }

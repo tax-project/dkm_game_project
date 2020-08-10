@@ -24,7 +24,11 @@ class AdminTokenInterceptor : HandlerInterceptorAdapter() {
         if (method.isAnnotationPresent(CheckAdminPermission::class.java)) {
             val token = request.getHeader("token") ?: request.getHeader("TOKEN")
             ?: throw ApplicationException(CodeType.TOKENNULL_ERROR)
-            return userLoginService.checkToken(token)
+            if (userLoginService.checkToken(token)) {
+                return true
+            }else{
+                throw ApplicationException(CodeType.LOGIN_ERROR,"不是管理员，没有权限！")
+            }
         }
         return true
     }

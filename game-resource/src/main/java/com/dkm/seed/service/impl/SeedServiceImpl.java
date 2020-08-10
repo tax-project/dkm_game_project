@@ -314,7 +314,6 @@ public class SeedServiceImpl implements ISeedService {
         //种植种子
         List<LandSeed> list = new ArrayList<>();
 
-
         //计算种子成熟时间 得到秒数。等级的3次方除以2.0*20+60
         double ripeTime = Math.pow(sendPlantBO.getSeedGrade(), 3 / 2.0) * 20 + 60;
         //将秒数转换成整数类型
@@ -329,46 +328,74 @@ public class SeedServiceImpl implements ISeedService {
 
         long until = now.until(time2, ChronoUnit.MINUTES);
 
-        if (null == seedList || seedList.size() == 0) {
-            //新种子种植
-            for (int i = 0; i < sendPlantBO.getLandNumber(); i++) {
-                LandSeed landSeed = new LandSeed();
-                //生成主键id
-                landSeed.setId(idGenerator.getNumberId());
-                //土地编号
-                landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
-                //种子id
-                landSeed.setSeedId(sendPlantBO.getSeedId());
-                //根据token得到用户id
-                landSeed.setUserId(user.getId());
-                if (i == 0) {
-                    //结束时间
-                    landSeed.setPlantTime(localDateTime);
-                    //是否新种子
-                    landSeed.setNewSeedIs(1);
-                } else {
-                    //结束时间
-                    landSeed.setPlantTime(time2);
-                    //是否新种子
-                    landSeed.setNewSeedIs(0);
-                }
-                //状态 1为种植
-                landSeed.setLeStatus(1);
-                landSeed.setTimeNumber(until);
-                list.add(landSeed);
-            }
-            //增加要种植种子的信息和用户信息
-            int i = seedMapper.addPlant(list);
-            if (i <= 0) {
-                throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+        if (null != seedList && seedList.size() > 0) {
+            //旧种子种植
+            LambdaQueryWrapper<LandSeed> queryWrapper = new LambdaQueryWrapper<LandSeed>()
+                    .eq(LandSeed::getUserId, user.getId())
+                    .eq(LandSeed::getSeedId, sendPlantBO.getSeedId());
+
+            int delete = landSeedMapper.delete(queryWrapper);
+
+            if (delete <= 0) {
+                throw new ApplicationException(CodeType.SERVICE_ERROR, "操作有误");
             }
 
-            return;
+           for (UserLandUnlock landUnlock : userLandUnlocks) {
+              LandSeed landSeed = new LandSeed();
+              //生成主键id
+              landSeed.setId(idGenerator.getNumberId());
+              //土地编号
+              landSeed.setLaNo(landUnlock.getLaNo());
+              //种子id
+              landSeed.setSeedId(sendPlantBO.getSeedId());
+              //根据token得到用户id
+              landSeed.setUserId(user.getId());
+              //状态 1为种植
+              landSeed.setNewSeedIs(0);
+              landSeed.setPlantTime(time2);
+              landSeed.setLeStatus(1);
+              landSeed.setTimeNumber(until);
+              list.add(landSeed);
+           }
+           //增加要种植种子的信息和用户信息
+           int i = seedMapper.addPlant(list);
+           if (i <= 0) {
+              throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+           }
+           return;
         }
 
-        //旧种子种植
-        Integer status = seedMapper.updateTimeAndStatus(time2, user.getId(), sendPlantBO.getSeedId());
-
+        for (int i = 0; i < userLandUnlocks.size(); i++) {
+            LandSeed landSeed = new LandSeed();
+            //生成主键id
+            landSeed.setId(idGenerator.getNumberId());
+            //土地编号
+            landSeed.setLaNo(userLandUnlocks.get(i).getLaNo());
+            //种子id
+            landSeed.setSeedId(sendPlantBO.getSeedId());
+            //根据token得到用户id
+            landSeed.setUserId(user.getId());
+            if (i == 0) {
+                //结束时间
+                landSeed.setPlantTime(localDateTime);
+                //是否新种子
+                landSeed.setNewSeedIs(1);
+            } else {
+                //结束时间
+                landSeed.setPlantTime(time2);
+                //是否新种子
+                landSeed.setNewSeedIs(0);
+            }
+            //状态 1为种植
+            landSeed.setLeStatus(1);
+            landSeed.setTimeNumber(until);
+            list.add(landSeed);
+        }
+        //增加要种植种子的信息和用户信息
+        int i = seedMapper.addPlant(list);
+        if (i <= 0) {
+            throw new ApplicationException(CodeType.PARAMETER_ERROR, "种植异常");
+        }
 
     }
 
@@ -428,6 +455,8 @@ public class SeedServiceImpl implements ISeedService {
        //得到用户token信息
        UserLoginQuery user = localUser.getUser();
 
+       int golds = 0;
+        double seedEnvelopes = 0.0;
        Result<UserInfoQueryBo> userInfoQueryBoResult;
         if (sendCollectBO.getSeedMeOrOther() == 1) {
            //别人抢
@@ -441,16 +470,33 @@ public class SeedServiceImpl implements ISeedService {
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
 
+        SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
+
+        if (seedFallBO != null) {
+            if (seedFallBO.getDropped() == null) {
+                seedFallBO.setDropped(0);
+            }
+            if (seedFallBO.getRedPacketsDropped() == null) {
+                seedFallBO.setRedPacketsDropped(0.0);
+            }
+            if (data.getUserInfoGold() == null) {
+                data.setUserInfoGold(0);
+            }
+            if (data.getUserInfoPacketBalance() == null) {
+                data.setUserInfoPacketBalance(0.0);
+            }
+            golds = seedFallBO.getDropped() + data.getUserInfoGold();
+            seedEnvelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
+        }
         if (sendCollectBO.getStatus() == 0 && sendCollectBO.getSeedMeOrOther() == 0) {
             //正常收取
-           SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
-           Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
-           Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
-
            SeedCollectVo vo = new SeedCollectVo();
-           vo.setUserGold(gold);
-           vo.setUserInfoPacketBalance(envelopes);
+            if (golds != 0) {
+                vo.setUserGold(golds);
+            }
+
+           vo.setUserInfoPacketBalance(seedEnvelopes);
            vo.setUserId(user.getId());
            vo.setStatus(0);
            Result result = userFeignClient.addSeedCollect(vo);
@@ -479,7 +525,7 @@ public class SeedServiceImpl implements ISeedService {
        //别人抢还是自己收
        if (sendCollectBO.getSeedMeOrOther() == 1) {
           //别人抢
-          SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
+          SeedFallBO bo = (SeedFallBO)redisConfig.getString(seedRedis + sendCollectBO.getUserId());
 
           Object string = redisConfig.getString(seedRedis + "much::" + sendCollectBO.getUserId());
 
@@ -496,12 +542,12 @@ public class SeedServiceImpl implements ISeedService {
              redisConfig.setString(seedRedis + "much::" + sendCollectBO.getUserId(), 1+ much);
           }
 
-          if (seedFallBO == null) {
+          if (bo == null) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "用户id参数传的有误");
           }
 
           SeedCollectVo vo = new SeedCollectVo();
-          int gold = (int) (seedFallBO.getDropped() * 0.1);
+          int gold = (int) (bo.getDropped() * 0.1);
           double envelopes = 0.01;
 
           vo.setUserId(user.getId());
@@ -516,12 +562,12 @@ public class SeedServiceImpl implements ISeedService {
           }
 
           //重新装配redis
-          SeedFallBO bo = new SeedFallBO();
-          bo.setDropped(seedFallBO.getDropped() - gold);
-          bo.setRedPacketsDropped(seedFallBO.getRedPacketsDropped() - envelopes);
-          bo.setFallingNumber(seedFallBO.getFallingNumber());
+          SeedFallBO bo1 = new SeedFallBO();
+          bo1.setDropped(bo.getDropped() - gold);
+          bo1.setRedPacketsDropped(bo.getRedPacketsDropped() - envelopes);
+          bo1.setFallingNumber(bo.getFallingNumber());
 
-          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo);
+          redisConfig.setString(seedRedis + sendCollectBO.getUserId(), bo1);
 
           return;
        }
@@ -534,7 +580,8 @@ public class SeedServiceImpl implements ISeedService {
 
        //删除种子状态表信息
        dropStatusService.deleteDrop(user.getId());
-       //先判断是否解锁土地
+
+        //先判断是否解锁土地
        //算出解锁土地
        //解锁一块土地  最多9块
        //可以解锁
@@ -564,10 +611,6 @@ public class SeedServiceImpl implements ISeedService {
        }
 
        //金币和红包
-       SeedFallBO seedFallBO = (SeedFallBO)redisConfig.getString(seedRedis + user.getId());
-       Integer gold = seedFallBO.getDropped() + data.getUserInfoGold();
-       Double envelopes = seedFallBO.getRedPacketsDropped() + data.getUserInfoPacketBalance();
-
        //判断当前时间大于等于成熟时间
        LocalDateTime now = LocalDateTime.now();
        LambdaQueryWrapper<LandSeed> wrapper = new LambdaQueryWrapper<LandSeed>()
@@ -576,6 +619,16 @@ public class SeedServiceImpl implements ISeedService {
 
        for (LandSeed landSeed : landSeeds) {
           long until = now.until(landSeed.getPlantTime(), ChronoUnit.SECONDS);
+
+          //如果是新种子，修改种子状态
+          if (landSeed.getNewSeedIs() == 1) {
+             //修改成0
+             LandSeed land = new LandSeed();
+             land.setId(land.getId());
+             land.setNewSeedIs(0);
+             landSeedMapper.updateById(land);
+
+          }
 
           if (until > 0) {
              throw new ApplicationException(CodeType.SERVICE_ERROR, "种子还未成熟,成熟时间:" + DateUtils.formatDateTime(landSeed.getPlantTime()));
@@ -595,9 +648,12 @@ public class SeedServiceImpl implements ISeedService {
           SeedCollectVo vo = new SeedCollectVo();
           vo.setStatus(1);
           vo.setUserId(user.getId());
-          vo.setUserGold(gold);
-          vo.setUserInfoPacketBalance(envelopes);
-          vo.setUserInfoNowExperience(resultExperience);
+          if (golds != 0) {
+              vo.setUserGold(golds);
+          }
+
+          vo.setUserInfoPacketBalance(seedEnvelopes);
+          vo.setUserInfoNowExperience(experience);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
@@ -619,8 +675,11 @@ public class SeedServiceImpl implements ISeedService {
        SeedCollectVo vo = new SeedCollectVo();
        vo.setStatus(2);
        vo.setUserInfoNowExperience(nowExperience);
-       vo.setUserGold(gold);
-       vo.setUserInfoPacketBalance(envelopes);
+        if (golds != 0) {
+            vo.setUserGold(golds);
+        }
+
+       vo.setUserInfoPacketBalance(seedEnvelopes);
        vo.setUserInfoNextExperience(nextExperience.longValue());
        vo.setUserId(user.getId());
 

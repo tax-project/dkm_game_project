@@ -21,6 +21,6 @@ interface AnotherUserFeignClient {
      * @param userLoginVo UserLoginVo login info
      * @return Result<UserLoginStatusVo> user info result
      */
-    @PostMapping("/v1/we/chat/loginUser" ,produces = ["application/json"])
+    @PostMapping("/v1/we/chat/loginUser")
     fun login(@RequestBody userLoginVo: UserLoginVo): Result<UserLoginStatusVo>
 }

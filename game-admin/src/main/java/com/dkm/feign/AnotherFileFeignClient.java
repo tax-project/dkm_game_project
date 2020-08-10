@@ -6,16 +6,21 @@ import com.dkm.feign.fallback.PictureFeignClientFallback;
 import feign.Headers;
 import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author qf
  * @date 2020/6/11
  * @vesion 1.0
- **/
+ **///
 @FeignClient(value = "file", fallback = PictureFeignClientFallback.class)
-public interface AnotherFileFeignClient {
+public interface  AnotherFileFeignClient {
 
 
     /**
@@ -27,6 +32,8 @@ public interface AnotherFileFeignClient {
     @GetMapping("/v1/file/getQrCode")
     Result<FileVo> getQrCode(@RequestParam("content") String content);
 
-    @PostMapping("/v1/file/storeFile")
-    Result<FileVo> storeFile(@RequestPart("file") MultipartFile file);
+    @RequestMapping(method = RequestMethod.POST, value = "/v1/file/storeFile",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE},
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    Result<FileVo> storeFile(@RequestHeader("TOKEN") String token, @RequestPart("file") MultipartFile file);
 }

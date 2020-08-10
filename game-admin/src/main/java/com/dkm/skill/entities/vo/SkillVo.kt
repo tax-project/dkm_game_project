@@ -10,8 +10,6 @@ data class SkillVo(
         var id:String?,
         @ApiModelProperty("技能名称")
         var skinName: String?,
-        @ApiModelProperty("图片地址")
-        var skinImageUrl: String?,
         @ApiModelProperty("第一个技能效果")
         var firstSkinEffect: String?,
         @ApiModelProperty("第二个技能效果")

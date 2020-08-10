@@ -23,7 +23,6 @@ public class DropStatus extends Model<DropStatus> {
    /**
     *  id
     */
-   @TableId
    private Long id;
 
    /**

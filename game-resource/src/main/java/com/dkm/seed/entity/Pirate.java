@@ -1,5 +1,6 @@
 package com.dkm.seed.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Pirate extends Model<Pirate> {
     /**
      * 被盗主键
      */
+    @TableId
     private Long pirateId;
 
     /**

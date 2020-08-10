@@ -54,13 +54,10 @@ public class DropStatusServiceImpl extends ServiceImpl<DropStatusMapper, DropSta
    }
 
    @Override
-   public void deleteDrop(Long userId) {
+   public Integer deleteDrop(Long userId) {
       LambdaQueryWrapper<DropStatus> wrapper = new LambdaQueryWrapper<DropStatus>()
             .eq(DropStatus::getUserId, userId);
 
-      int delete = baseMapper.delete(wrapper);
-      if (delete <= 0) {
-         log.info("删除失败");
-      }
+      return baseMapper.delete(wrapper);
    }
 }
