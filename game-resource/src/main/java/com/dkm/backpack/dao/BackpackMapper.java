@@ -9,6 +9,7 @@ import com.dkm.personalcenter.entity.bo.PsBottleBo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -46,4 +47,10 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
             ") g LEFT JOIN " +
             "(SELECT  backpack_id,number,good_id FROM tb_user_backpack WHERE user_id = #{userId}) ub on ub.good_id=g.id")
     List<PsBottleBo> getPsBottle(@Param("userId") Long userId);
+
+    @Update("UPDATE tb_user_info SET user_info_strength = CASE" +
+            "    WHEN user_info_strength+#{add}>=user_info_all_strength THEN user_info_all_strength" +
+            "    ELSE user_info_strength + #{add}" +
+            "END WHERE user_id = #{userId}")
+    int updateUserStrength(@Param("add")Integer add,@Param("userId")Long userId);
 }

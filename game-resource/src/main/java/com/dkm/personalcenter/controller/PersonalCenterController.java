@@ -1,6 +1,7 @@
 package com.dkm.personalcenter.controller;
 
 import com.dkm.attendant.service.IAttendantService;
+import com.dkm.backpack.entity.bo.AddGoodsInfo;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
 import com.dkm.backpack.service.IBackpackService;
 import com.dkm.backpack.service.IEquipmentService;
@@ -68,10 +69,6 @@ public class PersonalCenterController {
 
     @Resource
     private IBackpackService backpackService;
-
-    @Autowired
-    private ITbEquipmentKnapsackService tbEquipmentKnapsackService;
-
     @Autowired
     private TbBlackHouseService tbBlackHouseService;
 
@@ -90,6 +87,14 @@ public class PersonalCenterController {
         userPsVo.setPsAll(userInfoQueryBoResult.getData().getUserInfoAllStrength());
         userPsVo.setPsBottleBo(backpackService.getPsBottle(localUser.getUser().getId()));
         return userPsVo;
+    }
+    @ApiOperation("使用体力瓶")
+    @GetMapping("/usePsBottle")
+    @ApiImplicitParam(value = "背包id",name = "backpackId",paramType = "path")
+    @CheckToken
+    @CrossOrigin
+    public void usePsBottle(@RequestParam("backpackId")Long backpackId){
+        backpackService.updateNumberByBackpackId(localUser.getUser().getId(),backpackId);
     }
 
     @ApiOperation("用户信息页面接口")
