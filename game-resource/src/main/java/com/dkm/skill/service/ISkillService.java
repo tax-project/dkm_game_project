@@ -46,6 +46,6 @@ public interface ISkillService {
      * 初始化技能
      * @return
      */
-    int initSkill(Long userId);
+    void initSkill(Long userId);
 
 }

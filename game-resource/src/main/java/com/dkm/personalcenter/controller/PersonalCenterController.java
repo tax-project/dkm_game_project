@@ -104,7 +104,7 @@ public class PersonalCenterController {
         Map<String,Object> map=new HashMap<>(7);
 
         //初始化技能
-       /* iSkillService.initSkill(userId);*/
+        iSkillService.initSkill(userId);
 
         /**
          * 查询已经解锁种子
