@@ -17,6 +17,8 @@ public class PsBottleBo {
     private Long backpackId;
     @ApiModelProperty("体力瓶名称")
     private String name;
+    @ApiModelProperty("图片")
+    private String url;
     @ApiModelProperty("数量")
     private Integer number;
 }
