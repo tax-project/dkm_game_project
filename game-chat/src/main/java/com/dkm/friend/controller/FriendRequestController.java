@@ -35,14 +35,14 @@ public class FriendRequestController {
    @ApiOperation(value = "添加好友", notes = "添加好友")
    @ApiImplicitParams({
          @ApiImplicitParam(name = "toId", value = "被加人ID", required = true, dataType = "Long", paramType = "path"),
-         @ApiImplicitParam(name = "requestRemark", value = "请求加好友时候的备注", required = true, dataType = "String", paramType = "path")
+         @ApiImplicitParam(name = "requestRemark", value = "请求加好友时候的备注", required = false, dataType = "String", paramType = "path")
    })
    @PostMapping("/friendRequest")
    @CrossOrigin
    @CheckToken
    public ResultVo friendRequest (@RequestBody FriendRequestVo vo) {
 
-      if (vo.getToId() == null || StringUtils.isBlank(vo.getRequestRemark())) {
+      if (vo.getToId() == null) {
          throw new ApplicationException(CodeType.PARAMETER_ERROR, "参数不能为空");
       }
 
