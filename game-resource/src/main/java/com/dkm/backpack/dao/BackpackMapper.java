@@ -5,6 +5,7 @@ import com.dkm.backpack.entity.BackPackEntity;
 import com.dkm.backpack.entity.vo.FoodInfoVo;
 import com.dkm.backpack.entity.vo.GoldStarVo;
 import com.dkm.backpack.entity.vo.UserBackpackGoodsVo;
+import com.dkm.personalcenter.entity.bo.PsBottleBo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -39,4 +40,7 @@ public interface BackpackMapper extends IBaseMapper<BackPackEntity> {
     @Select("SELECT g.id as food_id,IFNULL(ub.number,0) as food_number,g.url,g.name FROM " +
             "(SELECT * FROM tb_user_backpack WHERE user_id = #{userId})ub RIGHT JOIN (SELECT * FROM tb_goods WHERE good_type = 3 ) g on g.id = ub.good_id")
     List<FoodInfoVo> getFoods(@Param("userId") Long userId);
+
+    @Select("")
+    List<PsBottleBo> getPsBottle(@Param("userId") Long userId);
 }

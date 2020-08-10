@@ -135,7 +135,7 @@ public class UserBoxServiceImpl implements IUserBoxService {
                 result.add(openEquipmentVo);
             }
             if(backPackEntities!=null&&backPackEntities.size()!=0
-                &&equipmentEntities==null&&equipmentEntities.size()!=0){
+                &&equipmentEntities!=null&&equipmentEntities.size()!=0){
                 Integer integer = backpackMapper.insertList(backPackEntities);
                 Integer integer1 = equipmentMapper.insertList(equipmentEntities);
                 if(integer!=backPackEntities.size()||integer1!=equipmentEntities.size()){

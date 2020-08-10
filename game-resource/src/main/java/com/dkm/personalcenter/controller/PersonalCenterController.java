@@ -2,15 +2,25 @@ package com.dkm.personalcenter.controller;
 
 import com.dkm.attendant.service.IAttendantService;
 import com.dkm.backpack.entity.vo.UserEquipmentVo;
+import com.dkm.backpack.service.IBackpackService;
 import com.dkm.backpack.service.IEquipmentService;
 import com.dkm.blackHouse.domain.vo.TbBlackHouseVo;
 import com.dkm.blackHouse.service.TbBlackHouseService;
+import com.dkm.constanct.CodeType;
+import com.dkm.data.Result;
 import com.dkm.entity.bo.SkillBo;
+import com.dkm.entity.bo.UserInfoQueryBo;
+import com.dkm.exception.ApplicationException;
+import com.dkm.feign.UserFeignClient;
+import com.dkm.jwt.contain.LocalUser;
+import com.dkm.jwt.islogin.CheckToken;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVo;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoCenter;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoFour;
 import com.dkm.knapsack.domain.vo.TbEquipmentKnapsackVoTwo;
 import com.dkm.knapsack.service.ITbEquipmentKnapsackService;
+import com.dkm.personalcenter.entity.bo.PsBottleBo;
+import com.dkm.personalcenter.entity.vo.UserPsVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.seed.entity.vo.SeedUnlockVo;
 import com.dkm.seed.service.ISeedService;
@@ -18,12 +28,12 @@ import com.dkm.skill.entity.UserSkill;
 import com.dkm.skill.entity.vo.SkillUserSkillVo;
 import com.dkm.skill.entity.vo.SkillVo;
 import com.dkm.skill.service.ISkillService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -37,6 +47,7 @@ import java.util.Map;
  * @DESCRIPTION:
  * @DATE: 2020/6/5 20:33
  */
+@Api("用户信息")
 @RestController
 @RequestMapping("/center")
 public class PersonalCenterController {
@@ -49,9 +60,14 @@ public class PersonalCenterController {
     private IProduceService iProduceService;
     @Autowired
     private IAttendantService iAttendantService;
+    @Resource
+    private UserFeignClient userFeignClient;
 
     @Resource
     private IEquipmentService equipmentService;
+
+    @Resource
+    private IBackpackService backpackService;
 
     @Autowired
     private ITbEquipmentKnapsackService tbEquipmentKnapsackService;
@@ -59,6 +75,25 @@ public class PersonalCenterController {
     @Autowired
     private TbBlackHouseService tbBlackHouseService;
 
+    @Resource
+    private LocalUser localUser;
+
+    @ApiOperation("获取用户体力信息")
+    @GetMapping("/PersonalCenterAll")
+    @CheckToken
+    @CrossOrigin
+    public UserPsVo getUserPsInfo(){
+        Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
+        if(userInfoQueryBoResult.getCode()!=0){throw  new ApplicationException(CodeType.DATABASE_ERROR); }
+        UserPsVo userPsVo = new UserPsVo();
+        userPsVo.setPs(userInfoQueryBoResult.getData().getUserInfoStrength());
+        userPsVo.setPsAll(userInfoQueryBoResult.getData().getUserInfoAllStrength());
+        userPsVo.setPsBottleBo(backpackService.getPsBottle(localUser.getUser().getId()));
+        return userPsVo;
+    }
+
+    @ApiOperation("用户信息页面接口")
+    @ApiImplicitParam(value = "用户id",paramType = "path")
     @GetMapping("/PersonalCenterAll")
     public Map<String,Object> personalCenterAll(@RequestParam("userId") Long userId){
         Map<String,Object> map=new HashMap<>(7);
@@ -105,4 +140,6 @@ public class PersonalCenterController {
         map.put("queryAidUser",stringObjectMap);
         return map;
     }
+
+
 }
