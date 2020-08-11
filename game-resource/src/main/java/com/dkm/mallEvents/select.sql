@@ -28,7 +28,7 @@ from tb_mall_lucky_gift a
          JOIN tb_gift b on a.gift_id = b.gi_id;
 
 
-SELECT @dev := 10;
+SELECT @dev := 26;
 INSERT INTO `dkm_game`.`tb_mall_reward_goods` (`goods_id`, `size`, `mall_reward_id`)
 VALUES ('3', '100', @dev);
 INSERT INTO `dkm_game`.`tb_mall_reward_goods` (`goods_id`, `size`, `mall_reward_id`)
