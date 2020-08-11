@@ -116,7 +116,7 @@ public class CancerServiceImpl implements ICancerService {
 
     @Override
     public RechargeVo getRechargeTheBlueRoll(Long id) {
-        return getInfo(id, "消耗有礼-蓝卷");
+        return getInfo(id, "充值送蓝卷");
     }
 
     @Override
