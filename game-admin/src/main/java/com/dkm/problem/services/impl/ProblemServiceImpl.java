@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -30,11 +28,11 @@ public class ProblemServiceImpl implements IProblemService {
     @Resource
     private IdGenerator idGenerator;
 
+    @Override
     @NotNull
     public List<ProblemVo> getAllProblems() {
         val result = new ArrayList<ProblemVo>();
         List<ProblemEntity> var14 = problemMapper.selectAll();
-        Intrinsics.checkExpressionValueIsNotNull(var14, "problemMapper.selectAll()");
         for (ProblemEntity it : var14) {
             result.add(new ProblemVo(String.valueOf(it.getId()), it.getProblemSubject(), it.getProblemAnswerA(), it.getProblemAnswerB(), it.getProblemAnswerC(), it.getProblemAnswerD(), it.getProblemAnswer()));
         }
@@ -42,6 +40,7 @@ public class ProblemServiceImpl implements IProblemService {
         return result;
     }
 
+    @Override
     @NotNull
     public ResultVo insert(@NotNull ProblemVo problemVo) {
         long newId = idGenerator.getNumberId();
@@ -49,6 +48,7 @@ public class ProblemServiceImpl implements IProblemService {
         return new ResultVo(true, newId);
     }
 
+    @Override
     @NotNull
     public ResultVo update(long id, @NotNull ProblemVo problemVo) {
         ProblemEntity entity = new ProblemEntity(id, problemVo.getProblemSubject(), problemVo.getProblemAnswerA(), problemVo.getProblemAnswerB(), problemVo.getProblemAnswerC(), problemVo.getProblemAnswerD(), problemVo.getProblemAnswer());
@@ -56,6 +56,7 @@ public class ProblemServiceImpl implements IProblemService {
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getId());
     }
 
+    @Override
     @NotNull
     public ResultVo delete(long id) {
 

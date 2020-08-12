@@ -3,8 +3,6 @@ package com.dkm.seed.entities.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

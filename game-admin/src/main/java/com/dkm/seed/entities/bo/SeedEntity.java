@@ -3,8 +3,6 @@ package com.dkm.seed.entities.bo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
