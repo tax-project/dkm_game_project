@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 /**
  * @author jie
  */
@@ -28,5 +29,4 @@ public class FriendRequestController {
     public FriendInfoBO friendRequest(@RequestBody FriendRequestVO friendRequestVO){
         return weChatService.friendRequest(friendRequestVO.getId());
     }
-
 }
