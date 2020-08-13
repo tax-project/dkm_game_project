@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -31,6 +29,7 @@ public class GoodServiceImpl implements IGoodService {
     @Resource
     private IdGenerator idGenerator;
 
+    @Override
     @NotNull
     public List<GoodsVo> getAllGoods() {
         val result = new ArrayList<GoodsVo>();
@@ -41,6 +40,7 @@ public class GoodServiceImpl implements IGoodService {
         return result;
     }
 
+    @Override
     @NotNull
     public ResultVo addGoodsItem(@NotNull GoodsVo goods) {
         long id = idGenerator.getNumberId();
@@ -48,6 +48,7 @@ public class GoodServiceImpl implements IGoodService {
         return new ResultVo(true, id);
     }
 
+    @Override
     @NotNull
     public ResultVo updateItemById(long id, @NotNull GoodsVo goods) {
 
@@ -84,6 +85,7 @@ public class GoodServiceImpl implements IGoodService {
         }
     }
 
+    @Override
     @NotNull
     public ResultVo deleteItemById(@NotNull String id) {
 

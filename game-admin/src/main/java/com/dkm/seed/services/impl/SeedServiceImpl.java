@@ -13,8 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
+
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,7 @@ public class SeedServiceImpl implements ISeedService {
     @Resource
     private IdGenerator idGenerator;
 
+    @Override
     @NotNull
     public List<SeedVo> getAll() {
         val list = seedMapper.selectAll();
@@ -41,6 +41,7 @@ public class SeedServiceImpl implements ISeedService {
         return result;
     }
 
+    @Override
     @NotNull
     public ResultVo insert(@NotNull SeedVo seedVo) {
         long newId = idGenerator.getNumberId();
@@ -48,6 +49,7 @@ public class SeedServiceImpl implements ISeedService {
         return new ResultVo(true, newId);
     }
 
+    @Override
     @NotNull
     public ResultVo update(long id, @NotNull SeedVo seedVo) {
         SeedEntity entity = new SeedEntity(id, seedVo.getName(), seedVo.getLevel(), seedVo.getFirstGold(), seedVo.getFirstPrize(), seedVo.getXp(), seedVo.getGold(), seedVo.getImageUrl());
@@ -55,6 +57,7 @@ public class SeedServiceImpl implements ISeedService {
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getSeedId());
     }
 
+    @Override
     @NotNull
     public ResultVo delete(long id) {
         int result = seedMapper.deleteById(id);
