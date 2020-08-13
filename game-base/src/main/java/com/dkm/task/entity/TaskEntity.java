@@ -1,6 +1,8 @@
 package com.dkm.task.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class TaskEntity {
     /**
      * 任务id
      */
+    @TableId
     private Long taskId;
     /**
      * 任务id
@@ -48,6 +51,7 @@ public class TaskEntity {
     /**
      * 挑战奖励物品id、数量
      */
+    @JsonIgnore
     private String goodList;
 
 }

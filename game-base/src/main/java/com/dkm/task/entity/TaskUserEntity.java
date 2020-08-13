@@ -1,6 +1,11 @@
 package com.dkm.task.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @program: game_project
@@ -9,10 +14,12 @@ import lombok.Data;
  * @create: 2020-08-13 09:35
  **/
 @Data
+@TableName("tb_task_user")
 public class TaskUserEntity {
     /**
      * id
      */
+    @TableId
     private Long  tuId;
 
     /**
@@ -31,4 +38,9 @@ public class TaskUserEntity {
      * 1为已完成任务
      */
     private Integer complete;
+
+    /**
+     * 记录时间
+     */
+    private LocalDate time;
 }

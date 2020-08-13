@@ -1,9 +1,11 @@
 package com.dkm.task.entity.vo;
 
 import com.dkm.task.entity.TaskEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -24,6 +26,9 @@ public class TaskUserDetailVo extends TaskEntity {
      * 1为完成
      */
     private Integer complete;
+
+    @JsonIgnore
+    private LocalDate time;
 
     /**
      * 物品奖励

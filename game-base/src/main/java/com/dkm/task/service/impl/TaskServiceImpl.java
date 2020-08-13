@@ -16,9 +16,13 @@ import com.dkm.task.entity.vo.TaskUserDetailVo;
 import com.dkm.task.service.TaskService;
 import com.dkm.turntable.dao.GoodsDao;
 import com.dkm.turntable.entity.GoodsEntity;
+import com.dkm.utils.IdGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
  * @create: 2020-06-08 15:00
  **/
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class TaskServiceImpl implements TaskService {
 
     @Resource
@@ -41,19 +46,27 @@ public class TaskServiceImpl implements TaskService {
     private ResourceFeignClient resourceFeignClient;
     @Resource
     private GoodsDao goodsDao;
+    @Resource
+    private IdGenerator idGenerator;
 
     @Override
     public List<TaskUserDetailVo> selectUserTask(Long userId, Integer type) {
+        LocalDate today = LocalDate.now();
         List<TaskUserDetailVo> taskUserDetailVos = taskMapper.selectUserTask(type, userId);
         Map<Long, String> collect = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>().ne(GoodsEntity::getGoodType, 1))
                 .stream().collect(Collectors.toMap(GoodsEntity::getId, GoodsEntity::getUrl));
         GoodListImg goodImg = new GoodListImg();
         taskUserDetailVos.forEach(taskUserDetailVo -> {
+            if(taskUserDetailVo.getTime()!=null&&!today.isEqual(taskUserDetailVo.getTime())&&taskUserDetailVo.getTaskType()==1){
+                taskUserDetailVo.setComplete(0);
+                taskUserDetailVo.setTuProcess(0);
+            }
             List<GoodList> goodLists = JSON.parseArray(taskUserDetailVo.getGoodList(), GoodList.class);
             List<GoodListImg> goodListImg = new ArrayList<>();
             goodLists.forEach(goodList -> {
                 goodImg.setUrl(collect.get(goodList.getGoodId()));
                 goodImg.setNumber(goodList.getNumber());
+                goodListImg.add(goodImg);
             });
             taskUserDetailVo.setGoodListImg(goodListImg);
         });
@@ -107,6 +120,45 @@ public class TaskServiceImpl implements TaskService {
                 addGoodsInfo.setNumber(a.getNumber());
                 resourceFeignClient.addBackpackGoods(addGoodsInfo);
             });
+        }
+        taskUserEntity.setComplete(1);
+        if(taskUserMapper.updateById(taskUserEntity)<=0){
+            throw  new ApplicationException(CodeType.SERVICE_ERROR);
+        };
+    }
+
+    @Override
+    public void setTaskProcess(Long userId, Long taskId) {
+        //获取任务信息
+        TaskEntity taskEntity = taskMapper.selectById(taskId);
+        if(taskEntity!=null){
+            LocalDate today = LocalDate.now();
+            TaskUserEntity taskUserEntity = taskUserMapper.selectOne(new LambdaQueryWrapper<TaskUserEntity>()
+                    .eq(TaskUserEntity::getTaskId, taskId)
+                    .eq(TaskUserEntity::getUserId, userId));
+            if(taskUserEntity!=null){
+                if(taskUserEntity.getComplete()!=1&&taskEntity.getTaskType()!=1){
+                    taskUserEntity.setTuProcess(taskUserEntity.getTuProcess()+1);
+                }else if(taskEntity.getTaskType()==1){
+                    if(today.isAfter(taskUserEntity.getTime())){
+                        taskUserEntity.setTuProcess(1);
+                        taskUserEntity.setTime(today);
+                    }else if(today.isEqual(taskUserEntity.getTime())&&taskUserEntity.getComplete()!=1){
+                        taskUserEntity.setTuProcess(taskUserEntity.getTuProcess()+1);
+                    }
+                }
+                taskUserMapper.updateById(taskUserEntity);
+            }else {
+                TaskUserEntity taskUserEntity1 = new TaskUserEntity();
+                taskUserEntity1.setTime(today);
+                taskUserEntity1.setTuProcess(1);
+                taskUserEntity1.setTaskId(taskId);
+                taskUserEntity1.setUserId(userId);
+                taskUserEntity1.setTuId(idGenerator.getNumberId());
+                taskUserEntity1.setComplete(0);
+                taskUserMapper.insert(taskUserEntity1);
+            }
+
         }
     }
 }
