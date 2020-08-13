@@ -143,6 +143,7 @@ public class TaskServiceImpl implements TaskService {
                     if(today.isAfter(taskUserEntity.getTime())){
                         taskUserEntity.setTuProcess(1);
                         taskUserEntity.setTime(today);
+                        taskUserEntity.setComplete(0);
                     }else if(today.isEqual(taskUserEntity.getTime())&&taskUserEntity.getComplete()!=1){
                         taskUserEntity.setTuProcess(taskUserEntity.getTuProcess()+1);
                     }
