@@ -2,6 +2,7 @@ package com.dkm.seed.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dkm.attendant.dao.AttendantMapper;
+import com.dkm.attendant.entity.vo.AttendantUserVo;
 import com.dkm.attendant.entity.vo.User;
 import com.dkm.config.RedisConfig;
 import com.dkm.constanct.CodeType;
@@ -38,7 +39,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.dkm.seed.vilidata.TimeLimit.TackBackLimit;
 
@@ -406,15 +410,26 @@ public class SeedServiceImpl implements ISeedService {
     }
 
     @Override
-    public Result<UserInfoQueryBo> queryUserAll() {
+    public Map<String,Object> queryUserAll() {
         //得到用户token信息
         UserLoginQuery user = localUser.getUser();
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
+
         if(userInfoQueryBoResult.getCode()!=0){
             log.info("user feign err");
             throw new ApplicationException(CodeType.SERVICE_ERROR,"网络忙，请稍后再试");
         }
-        return userInfoQueryBoResult;
+
+        Map<String,Object> map=new HashMap<>(16);
+
+        AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(user.getId());
+        if(attendantUserVo==null){
+            map.put("status","0");
+        }else{
+            map.put("status",attendantUserVo);
+        }
+        map.put("userInfoQueryBoResult",userInfoQueryBoResult);
+        return map;
     }
 
     @Override

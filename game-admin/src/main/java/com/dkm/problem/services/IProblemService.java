@@ -3,7 +3,6 @@ package com.dkm.problem.services;
 import com.dkm.problem.entities.vo.ProblemVo;
 import com.dkm.utils.bean.ResultVo;
 import java.util.List;
-import kotlin.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 public interface IProblemService {

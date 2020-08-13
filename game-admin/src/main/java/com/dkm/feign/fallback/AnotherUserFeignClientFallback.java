@@ -5,8 +5,6 @@ import com.dkm.constanct.CodeType;
 import com.dkm.data.Result;
 import com.dkm.feign.AnotherUserFeignClient;
 import com.dkm.feign.entity.UserLoginStatusVo;
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 

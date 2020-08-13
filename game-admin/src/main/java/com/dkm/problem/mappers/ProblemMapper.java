@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
 
 import com.dkm.problem.entities.bo.ProblemEntity;
-import kotlin.Metadata;
 import org.apache.ibatis.annotations.Select;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Repository;

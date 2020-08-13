@@ -13,8 +13,6 @@ import io.swagger.annotations.ApiParam;
 import java.util.List;
 import javax.annotation.Resource;
 
-import kotlin.Metadata;
-import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
