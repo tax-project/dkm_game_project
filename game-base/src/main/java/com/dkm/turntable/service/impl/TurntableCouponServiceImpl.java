@@ -45,7 +45,7 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
             turntableCouponEntity.setCouponTime(now);
             turntableCouponEntity.setUserId(userId);
             turntableCouponDao.insert(turntableCouponEntity);
-        }else if(turntableCouponEntity.getCouponBlue()<20){
+        }else if(turntableCouponEntity.getCouponGreen()<20){
             //计算获得多少张绿券 20分钟一张
             long nowSecond = now.toEpochSecond(ZoneOffset.of("+8"));
             long lastTime = turntableCouponEntity.getCouponTime().toEpochSecond(ZoneOffset.of("+8"));
