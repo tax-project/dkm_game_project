@@ -50,16 +50,19 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
             long nowSecond = now.toEpochSecond(ZoneOffset.of("+8"));
             long lastTime = turntableCouponEntity.getCouponTime().toEpochSecond(ZoneOffset.of("+8"));
             long l = nowSecond - lastTime;
-            int count = (int) l / (60 * 20);
-            int green = turntableCouponEntity.getCouponGreen() + count;
-            //最多20张
-            turntableCouponEntity.setCouponGreen(Math.min(green, 20));
-            //更新时间
-            turntableCouponEntity.setCouponTime(now);
-            if(green<20){
-                map.put("time",l%(60 * 20));
+            int green = turntableCouponEntity.getCouponGreen();
+            if(l>1200){
+                int count = (int) l / (60 * 20);
+                green+= count;
+                //最多20张
+                turntableCouponEntity.setCouponGreen(Math.min(green, 20));
+                //更新时间
+                turntableCouponEntity.setCouponTime(now.minusSeconds(l%1200));
+                turntableCouponDao.updateById(turntableCouponEntity);
             }
-            turntableCouponDao.updateById(turntableCouponEntity);
+            if(green<20){
+                map.put("time",1200-(l>1200?l%1200:l));
+            }
         }
         map.put("coupon",turntableCouponEntity);
         return map;
