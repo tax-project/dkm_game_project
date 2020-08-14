@@ -731,7 +731,7 @@ public class SeedServiceImpl implements ISeedService {
 
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
 
-        //算出还需要多少经验升到下一级
+        //算出当前经验到下一级的经验的一个差值
         experienceDifference=data.getUserInfoNextExperience()-data.getUserInfoNowExperience();
 
 

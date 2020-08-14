@@ -451,8 +451,13 @@ public class AttendantServiceImpl implements IAttendantService {
                 }
         }
 
+        UserInfoQueryBo data = userInfoQueryBoResult.getData();
+
         //跟班战斗
         if(status==1){
+            if(data.getUserInfoStrength()<14){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"体力不足");
+            }
             Result result = userFeignClient.updateStrength(query.getId(), 14);
             if(result.getCode()!=0){
                 log.info("user error");
@@ -462,6 +467,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //夺宝战斗
         if(status==2){
+            if(data.getUserInfoStrength()<10){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"体力不足");
+            }
             Result result = userFeignClient.updateStrength(query.getId(), 10);
             if(result.getCode()!=0){
                 log.info("user error");
@@ -471,6 +479,9 @@ public class AttendantServiceImpl implements IAttendantService {
 
         //关进小黑屋
         if(status==3){
+            if(data.getUserInfoStrength()<20){
+                throw new ApplicationException(CodeType.SERVICE_ERROR,"体力不足");
+            }
             Result result = userFeignClient.updateStrength(query.getId(), 20);
             if(result.getCode()!=0){
                 log.info("user error");
