@@ -227,7 +227,7 @@ public class SeedServiceImpl implements ISeedService {
         }
 
         //限制一天只能解锁15次
-        if (TackBackLimit(user.getId(), 15)) {
+        if (TackBackLimit(user.getId(), 9999)) {
             //解锁种子
             return unlockSeed(seedVo);
         } else {
