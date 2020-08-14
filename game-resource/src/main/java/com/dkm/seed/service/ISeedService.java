@@ -73,6 +73,11 @@ public interface ISeedService {
      */
     void collectSeed (SendCollectBO sendCollectBO);
 
+    /**
+     * 查看自己个人经验信息
+     */
+    Map<String,Object> personalExperience();
+
 
 
 }

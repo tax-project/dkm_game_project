@@ -267,7 +267,7 @@ public class AttendantServiceImpl implements IAttendantService {
     }
 
     @Override
-    public Map<String, Object> petBattle(Long caughtPeopleId) {
+    public Map<String, Object> petBattle(Long caughtPeopleId,Integer status) {
 
         //我方随机上场的宠物
         String myPet=null;
@@ -449,6 +449,33 @@ public class AttendantServiceImpl implements IAttendantService {
                 }else{
                     map.put("status",1);
                 }
+        }
+
+        //跟班战斗
+        if(status==1){
+            Result result = userFeignClient.updateStrength(query.getId(), 14);
+            if(result.getCode()!=0){
+                log.info("user error");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
+        }
+
+        //夺宝战斗
+        if(status==2){
+            Result result = userFeignClient.updateStrength(query.getId(), 10);
+            if(result.getCode()!=0){
+                log.info("user error");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
+        }
+
+        //关进小黑屋
+        if(status==3){
+            Result result = userFeignClient.updateStrength(query.getId(), 20);
+            if(result.getCode()!=0){
+                log.info("user error");
+                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            }
         }
 
         map.put("userInfoQueryBoResult",userInfoQueryBoResult.getData());

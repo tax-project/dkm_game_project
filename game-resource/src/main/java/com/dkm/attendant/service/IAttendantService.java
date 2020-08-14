@@ -55,10 +55,11 @@ public interface IAttendantService {
     */
     void dismissal(Long caughtPeopleId, Long aId);
 
+
     /**
      * 宠物战斗，查询用户信息
      */
-    Map<String,Object> petBattle(Long caughtPeopleId);
+    Map<String,Object> petBattle(Long caughtPeopleId,Integer status);
 
 
    /**
