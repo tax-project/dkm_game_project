@@ -40,4 +40,9 @@ public class SeedCollectVo {
     * 2-- 升级
     */
    private Integer status;
+
+   /**
+    * 等级
+    */
+   private Integer grade;
 }

@@ -688,6 +688,7 @@ public class SeedServiceImpl implements ISeedService {
                    (data.getUserInfoGrade() - 2) * 2) / 2.0) * 100) + 600;
 
        SeedCollectVo vo = new SeedCollectVo();
+       Integer grade = data.getUserInfoGrade() + 1;
        vo.setStatus(2);
        vo.setUserInfoNowExperience(nowExperience);
         if (golds != 0) {
@@ -695,6 +696,7 @@ public class SeedServiceImpl implements ISeedService {
         }
 
        vo.setUserInfoPacketBalance(seedEnvelopes);
+       vo.setGrade(grade);
        vo.setUserInfoNextExperience(nextExperience.longValue());
        vo.setUserId(user.getId());
 
