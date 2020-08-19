@@ -161,28 +161,31 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       //转成map
       //用stream将两个集合进行合并
-
       Set<Long> set = new HashSet<>();
       for (GoodQueryVo vo : goodsList) {
          set.add(vo.getUserId());
       }
 
-      List<PlunderUserGoodVo> resultList = plunderBoList.stream().map(userPlunderBo -> {
+      Map<Long, List<GoodQueryVo>> map1 = new HashMap<>();
+      List<GoodQueryVo> list1 = new ArrayList<>();
+      for (Long userId : set) {
+         for (GoodQueryVo queryVo : goodsList) {
+            if (userId.equals(queryVo.getUserId())) {
+               list1.add(queryVo);
+            }
+         }
+         map1.put(userId, list1);
+      }
+
+      List<PlunderUserGoodVo> resultList = new ArrayList<>();
+      for (UserPlunderBo userPlunderBo : plunderBoList) {
          PlunderUserGoodVo vo = new PlunderUserGoodVo();
          BeanUtils.copyProperties(userPlunderBo, vo);
 
-         List<GoodQueryVo> list1 = new ArrayList<>();
-         for (Long userId : set) {
-            for (GoodQueryVo queryVo : goodsList) {
-               if (userId.equals(queryVo.getUserId())) {
-                  list1.add(queryVo);
-               }
-            }
-            vo.setGoodList(list1);
-         }
+         vo.setGoodList(map1.get(userPlunderBo.getUserId()));
 
-         return vo;
-      }).collect(Collectors.toList());
+         resultList.add(vo);
+      }
 
       List<PlunderUserGoodVo> goodVoList = new ArrayList<>();
       for (PlunderUserGoodVo vo : resultList) {

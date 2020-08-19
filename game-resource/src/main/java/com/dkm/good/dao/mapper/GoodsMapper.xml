@@ -13,6 +13,7 @@
            <foreach collection="list" item="item" index="index" separator="or">
                  a.user_id = #{item}
            </foreach>
+           and b.status = 0
        </where>
     </select>
 

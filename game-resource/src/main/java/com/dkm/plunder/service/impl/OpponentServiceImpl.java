@@ -120,22 +120,25 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
             set.add(vo.getUserId());
         }
 
-        List<OpponentResultVo> result = userInfo.stream().map(opponentInfo -> {
+        Map<Long, List<GoodQueryVo>> map = new HashMap<>();
+        List<GoodQueryVo> list1 = new ArrayList<>();
+        for (Long userId : set) {
+            for (GoodQueryVo queryVo : voList) {
+                if (userId.equals(queryVo.getUserId()) && !userId.equals(user.getId())) {
+                    list1.add(queryVo);
+                }
+            }
+            map.put(userId, list1);
+        }
+
+        List<OpponentResultVo> result = new ArrayList<>();
+        for (com.dkm.entity.vo.OpponentVo opponentInfo : userInfo) {
             OpponentResultVo vo = new OpponentResultVo();
             BeanUtils.copyProperties(opponentInfo, vo);
 
-            List<GoodQueryVo> list1 = new ArrayList<>();
-            for (Long userId : set) {
-                for (GoodQueryVo queryVo : voList) {
-                    if (userId.equals(queryVo.getUserId())) {
-                        list1.add(queryVo);
-                    }
-                }
-                vo.setGoodList(list1);
-            }
-
-            return vo;
-        }).collect(Collectors.toList());
+            vo.setGoodList(map.get(opponentInfo.getUserId()));
+            result.add(vo);
+        }
 
         Map<String,Object> resultMap = new HashMap<>(3);
 
