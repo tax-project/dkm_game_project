@@ -294,7 +294,7 @@ public class SeedServiceImpl implements ISeedService {
         }
 
         if (userInfoQueryBoResult.getData().getUserInfoGold() < gold) {
-            throw new ApplicationException(CodeType.PARAMETER_ERROR, "金币不足");
+            throw new ApplicationException(CodeType.SERVICE_ERROR, "金币不足");
         }
 
         //是否第一次种植

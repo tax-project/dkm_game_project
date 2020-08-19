@@ -43,6 +43,14 @@ public interface PetsMapper extends BaseMapper<PetUserEntity> {
     Integer updateUserRenown(@Param("userId") Long userId,@Param("renown") Integer renown);
 
     /**
+     * 获取用户等级
+     * @param userId
+     * @return
+     */
+    @Select("SELECT user_info_grade FROM tb_user_info WHERE user_id = #{userId}")
+    Integer getUserGrade(@Param("userId") Long userId);
+
+    /**
      * 批量插入宠物数据
      * @param list
      * @return
