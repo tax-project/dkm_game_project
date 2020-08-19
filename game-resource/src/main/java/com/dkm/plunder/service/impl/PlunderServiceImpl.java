@@ -31,10 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -164,20 +161,26 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       //转成map
       //用stream将两个集合进行合并
-      Map<Long, List<GoodQueryVo>> goodMap = plunderBoList.stream()
-            .collect(Collectors.toMap(UserPlunderBo::getUserId, userPlunderBo ->
-         new ArrayList<>()
-      ));
 
+      Set<Long> set = new HashSet<>();
       for (GoodQueryVo vo : goodsList) {
-         List<GoodQueryVo> goodQueryVos = goodMap.get(vo.getUserId());
-         goodQueryVos.add(vo);
+         set.add(vo.getUserId());
       }
 
       List<PlunderUserGoodVo> resultList = plunderBoList.stream().map(userPlunderBo -> {
          PlunderUserGoodVo vo = new PlunderUserGoodVo();
          BeanUtils.copyProperties(userPlunderBo, vo);
-         vo.setGoodList(goodMap.get(userPlunderBo.getUserId()));
+
+         List<GoodQueryVo> list1 = new ArrayList<>();
+         for (Long userId : set) {
+            for (GoodQueryVo queryVo : goodsList) {
+               if (userId.equals(queryVo.getUserId())) {
+                  list1.add(queryVo);
+               }
+            }
+            vo.setGoodList(list1);
+         }
+
          return vo;
       }).collect(Collectors.toList());
 

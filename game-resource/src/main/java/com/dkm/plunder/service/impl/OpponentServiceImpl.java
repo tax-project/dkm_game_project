@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -118,19 +115,24 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
         //根据用户id查询物品
         List<GoodQueryVo> voList = goodsService.queryGoodsList(idList);
 
-        Map<Long, List<GoodQueryVo>> map = userInfo.stream().
-              collect(Collectors.toMap(com.dkm.entity.vo.OpponentVo::getUserId, goodQueryVo
-              -> new ArrayList<>()));
-
+        Set<Long> set = new HashSet<>();
         for (GoodQueryVo vo : voList) {
-            List<GoodQueryVo> arrayList = map.get(vo.getUserId());
-            arrayList.add(vo);
+            set.add(vo.getUserId());
         }
 
         List<OpponentResultVo> result = userInfo.stream().map(opponentInfo -> {
             OpponentResultVo vo = new OpponentResultVo();
             BeanUtils.copyProperties(opponentInfo, vo);
-            vo.setGoodList(map.get(opponentInfo.getUserId()));
+
+            List<GoodQueryVo> list1 = new ArrayList<>();
+            for (Long userId : set) {
+                for (GoodQueryVo queryVo : voList) {
+                    if (userId.equals(queryVo.getUserId())) {
+                        list1.add(queryVo);
+                    }
+                }
+                vo.setGoodList(list1);
+            }
 
             return vo;
         }).collect(Collectors.toList());
