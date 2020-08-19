@@ -180,8 +180,10 @@ public class PetServiceImpl implements PetService {
      */
     @Override
     public void petLevelUp(FeedPetInfoVo petInfoVo) {
+        Integer userGrade = petsMapper.getUserGrade(petInfoVo.getUserId());
         //修改宠物喂食进度>> 提升等级
         PetUserEntity petUserEntity = petsMapper.selectById(petInfoVo.getPId());
+        if(petUserEntity.getPGrade()>=userGrade){throw new ApplicationException(CodeType.SERVICE_ERROR,"宠物等级不能高于用户等级");}
         petUserEntity.setPNowFood(0);
         petUserEntity.setPGrade(petUserEntity.getPGrade() + 1);
         AddGoodsInfo addGoodsInfo = new AddGoodsInfo();
