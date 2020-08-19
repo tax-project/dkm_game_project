@@ -224,9 +224,9 @@ public class PetServiceImpl implements PetService {
     @Override
     public String isHunger(Long userId) {
         String string = (String) redisConfig.getString("pet" + userId);
-        if (StringUtils.isNotEmpty(string) && DateUtils.parseDateTime(string).minusSeconds(-10).isBefore(LocalDateTime.now())) {
+        if (StringUtils.isNotEmpty(string) && DateUtils.parseDateTime(string).minusSeconds(-3600).isBefore(LocalDateTime.now())) {
             return "宠物已经饿的不行了！";
-        } else throw new ApplicationException(CodeType.SERVICE_ERROR, "不需要喂食！");
+        } else {throw new ApplicationException(CodeType.SERVICE_ERROR, "不需要喂食！");}
     }
 
 }
