@@ -533,7 +533,7 @@ public class SeedServiceImpl implements ISeedService {
         }
 
        //收取种子(经验和金币)
-       int number = 0;
+       int number;
 
        List<UserLandUnlock> unlockList = landMapper.queryNotUnlocked(user.getId());
        if (data.getUserInfoIsVip() == 1) {
@@ -598,6 +598,7 @@ public class SeedServiceImpl implements ISeedService {
        Long resultExperience = (long) seedExperience;
        //先算出该用户是否升级
        Long experience = resultExperience + data.getUserInfoNowExperience();
+       log.info("number:{},seedExperience:{},experience:{}:------",number,seedExperience,experience);
 
        //删除种子状态表信息
        dropStatusService.deleteDrop(user.getId());
