@@ -676,6 +676,7 @@ public class SeedServiceImpl implements ISeedService {
 
           vo.setUserInfoPacketBalance(seedEnvelopes);
           vo.setUserInfoNowExperience(experience);
+          log.info("-->: user feign data info {}, experience:{}", data, vo);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
