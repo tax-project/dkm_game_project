@@ -686,7 +686,7 @@ public class SeedServiceImpl implements ISeedService {
 
        //升级
        //先算出下一级升级所需要的经验
-       Long nowExperience = data.getUserInfoNextExperience() - experience;
+       Long nowExperience = experience - data.getUserInfoNextExperience();
 
        //算出下一级的总经验
        Double nextExperience = (((data.getUserInfoGrade() - 1) +
