@@ -619,7 +619,8 @@ public class SeedServiceImpl implements ISeedService {
           }
        } else {
           //不是VIP
-          if (unlockList.size() > 1) {
+          //seedNumber>已经解锁的
+          if (unlockList.size() > 1 && seedNumber > unlockList.size()) {
              //继续解锁
              int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
