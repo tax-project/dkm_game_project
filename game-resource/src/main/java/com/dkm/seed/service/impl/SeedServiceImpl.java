@@ -598,7 +598,7 @@ public class SeedServiceImpl implements ISeedService {
        Long resultExperience = (long) seedExperience;
        //先算出该用户是否升级
        Long experience = resultExperience + data.getUserInfoNowExperience();
-       log.info("number:{},seedExperience:{},experience:{}:------",number,seedExperience,experience);
+       log.info("grade:{},number:{},seedExperience:{},experience:{}:------",sendCollectBO.getSeedGrade(),number,seedExperience,experience);
 
        //删除种子状态表信息
        dropStatusService.deleteDrop(user.getId());
