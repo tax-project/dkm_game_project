@@ -533,15 +533,9 @@ public class SeedServiceImpl implements ISeedService {
         }
 
        //收取种子(经验和金币)
-       int number = 0;
+       int number;
 
        List<UserLandUnlock> unlockList = landMapper.queryNotUnlocked(user.getId());
-       if (data.getUserInfoIsVip() == 1) {
-          //是VIP
-          number = 10 - unlockList.size();
-       } else {
-          number = 9 - unlockList.size();
-       }
 
        //别人抢还是自己收
        if (sendCollectBO.getSeedMeOrOther() == 1) {
@@ -593,6 +587,7 @@ public class SeedServiceImpl implements ISeedService {
           return;
        }
 
+       number = 10 - unlockList.size();
        //种植所获得的经验
        double seedExperience = Math.pow(sendCollectBO.getSeedGrade(), 2 / 5.0) * 100 * number;
        Long resultExperience = (long) seedExperience;
@@ -619,7 +614,8 @@ public class SeedServiceImpl implements ISeedService {
           }
        } else {
           //不是VIP
-          if (unlockList.size() > 1) {
+          //seedNumber>已经解锁的
+          if (unlockList.size() > 1 && seedNumber > unlockList.size()) {
              //继续解锁
              int updateStatus = landMapper.updateStatus(user.getId(), unlockList.get(0).getLaNo());
 
@@ -686,7 +682,7 @@ public class SeedServiceImpl implements ISeedService {
 
        //升级
        //先算出下一级升级所需要的经验
-       Long nowExperience = data.getUserInfoNextExperience() - experience;
+       Long nowExperience = experience - data.getUserInfoNextExperience();
 
        //算出下一级的总经验
        Double nextExperience = (((data.getUserInfoGrade() - 1) +

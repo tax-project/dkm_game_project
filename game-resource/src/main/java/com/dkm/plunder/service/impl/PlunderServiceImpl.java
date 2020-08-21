@@ -31,10 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -103,7 +100,6 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
       }
 
 
-
       //修改体力值
       //减少自己的体力  自己抢别人
       userFeignClient.updateStrength(user.getId(),vo.getGrade());
@@ -166,8 +162,8 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
       //用stream将两个集合进行合并
       Map<Long, List<GoodQueryVo>> goodMap = plunderBoList.stream()
             .collect(Collectors.toMap(UserPlunderBo::getUserId, userPlunderBo ->
-         new ArrayList<>()
-      ));
+                  new ArrayList<>()
+            ));
 
       for (GoodQueryVo vo : goodsList) {
          List<GoodQueryVo> goodQueryVos = goodMap.get(vo.getUserId());

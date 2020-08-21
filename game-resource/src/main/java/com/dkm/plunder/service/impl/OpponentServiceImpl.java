@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -120,7 +117,7 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         Map<Long, List<GoodQueryVo>> map = userInfo.stream().
               collect(Collectors.toMap(com.dkm.entity.vo.OpponentVo::getUserId, goodQueryVo
-              -> new ArrayList<>()));
+                    -> new ArrayList<>()));
 
         for (GoodQueryVo vo : voList) {
             List<GoodQueryVo> arrayList = map.get(vo.getUserId());
