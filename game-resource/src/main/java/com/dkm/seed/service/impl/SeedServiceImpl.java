@@ -587,18 +587,12 @@ public class SeedServiceImpl implements ISeedService {
           return;
        }
 
-       if (data.getUserInfoIsVip() == 0) {
-          //不是VIP
-          number = 9 - unlockList.size();
-       } else {
-          number = 10 - unlockList.size();
-       }
+       number = 10 - unlockList.size();
        //种植所获得的经验
        double seedExperience = Math.pow(sendCollectBO.getSeedGrade(), 2 / 5.0) * 100 * number;
        Long resultExperience = (long) seedExperience;
        //先算出该用户是否升级
        Long experience = resultExperience + data.getUserInfoNowExperience();
-       log.info("----grade:{},number:{},seedExperience:{},experience:{},size:{}",sendCollectBO.getSeedGrade(),number,seedExperience,experience,unlockList.size());
 
        //删除种子状态表信息
        dropStatusService.deleteDrop(user.getId());
@@ -677,7 +671,6 @@ public class SeedServiceImpl implements ISeedService {
 
           vo.setUserInfoPacketBalance(seedEnvelopes);
           vo.setUserInfoNowExperience(experience);
-          log.info("-->: user feign data info {}, experience:{}", data, vo);
           Result result = userFeignClient.addSeedCollect(vo);
 
           if (result.getCode() != 0) {
