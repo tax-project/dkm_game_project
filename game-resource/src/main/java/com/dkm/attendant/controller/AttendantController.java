@@ -122,7 +122,7 @@ public class AttendantController {
     @CrossOrigin
     @CheckToken
     public Map<String,Object> petBattle(@RequestParam("caughtPeopleId") Long caughtPeopleId,@RequestParam("status") Integer status){
-        if(caughtPeopleId==null){
+        if(caughtPeopleId==null || status==null){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"被抓人Id不能为空");
         }
         return iAttendantService.petBattle(caughtPeopleId,status);
