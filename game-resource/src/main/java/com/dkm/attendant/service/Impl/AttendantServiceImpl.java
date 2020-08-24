@@ -241,6 +241,7 @@ public class AttendantServiceImpl implements IAttendantService {
         for (AttenDant attenDant : list) {
             AttendantBo bo = new AttendantBo();
             BeanUtils.copyProperties(attenDant,bo);
+            bo.setAId(attenDant.getId());
             //系统
             bo.setSysStatus(0);
             boList.add(bo);

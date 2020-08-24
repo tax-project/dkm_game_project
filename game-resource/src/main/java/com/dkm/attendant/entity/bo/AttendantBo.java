@@ -13,7 +13,7 @@ public class AttendantBo {
    /**
     *跟班主键
     */
-   private long id;
+   private long aId;
    /**
     *跟班图片
     */
