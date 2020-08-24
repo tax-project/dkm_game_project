@@ -38,6 +38,7 @@ import com.dkm.produce.entity.vo.AttendantPutVo;
 import com.dkm.produce.service.IProduceService;
 import com.dkm.utils.DateUtils;
 import com.dkm.utils.IdGenerator;
+import com.dkm.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,7 +203,6 @@ public class AttendantServiceImpl implements IAttendantService {
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
 
         List<AttendantWithUserVo> data = result.getData();
-        System.out.println(data.size());
         if(attendantUserVo!=null){
 
             for (int i = 0; i < data.size(); i++) {
@@ -238,12 +238,22 @@ public class AttendantServiceImpl implements IAttendantService {
         List<AttenDant> list = attendantMapper.selectList(null);
 
         List<AttendantBo> boList = new ArrayList<>();
+        //查询所有的跟班用户的系统跟班信息 根据用户id  被抓人id=0
+        List<AttendantUser> sysAttInfo = attendantUserService.queryAllSysAttInfo(query.getId(), 0L);
+
         for (AttenDant attenDant : list) {
             AttendantBo bo = new AttendantBo();
             BeanUtils.copyProperties(attenDant,bo);
             bo.setAId(attenDant.getId());
             //系统
             bo.setSysStatus(0);
+            for (AttendantUser attendantUser : sysAttInfo) {
+                if (attendantUser.getAttendantId().equals(attenDant.getId())) {
+                    bo.setStatus(1);
+                } else {
+                    bo.setStatus(0);
+                }
+            }
             boList.add(bo);
         }
 

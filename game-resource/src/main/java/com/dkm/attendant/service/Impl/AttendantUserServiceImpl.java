@@ -148,4 +148,11 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
             }
         }
     }
+
+    @Override
+    public List<AttendantUser> queryAllSysAttInfo(Long userId, Long caUserId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<AttendantUser>()
+                                    .eq(AttendantUser::getUserId, userId)
+                                    .eq(AttendantUser::getCaughtPeopleId, caUserId));
+    }
 }

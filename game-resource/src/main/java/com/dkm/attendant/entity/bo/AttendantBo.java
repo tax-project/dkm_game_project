@@ -28,4 +28,10 @@ public class AttendantBo {
     * 1--用户
     */
    private Integer sysStatus;
+
+   /**
+    * 0--未抓
+    * 1--已抓
+    */
+   private Integer status;
 }

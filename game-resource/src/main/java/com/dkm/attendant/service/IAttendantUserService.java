@@ -75,4 +75,12 @@ public interface IAttendantUserService {
      * @param list 参数集合
      */
     void updateProduce (List<ProduceBO> list);
+
+    /**
+     *  查询所有系统跟班信息
+     * @param userId 用户id
+     * @param caUserId 被抓人id
+     * @return 返回结果
+     */
+    List<AttendantUser> queryAllSysAttInfo (Long userId, Long caUserId);
 }
