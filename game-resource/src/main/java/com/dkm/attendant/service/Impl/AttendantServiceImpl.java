@@ -250,6 +250,7 @@ public class AttendantServiceImpl implements IAttendantService {
             for (AttendantUser attendantUser : sysAttInfo) {
                 if (attendantUser.getAttendantId().equals(attenDant.getId())) {
                     bo.setStatus(1);
+                    break;
                 } else {
                     bo.setStatus(0);
                 }
