@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @ApiModel("占领矿山结果")
 @Data
-public class OccupyResultVo {
+public class  OccupyResultVo {
     @ApiModelProperty("是否占领成功")
     private Boolean status;
     @ApiModelProperty("占领矿山的信息")
