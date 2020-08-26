@@ -23,12 +23,7 @@ public class CreateToken {
       query.setId(bo.getUserId());
       query.setWxOpenId(bo.getWeChatOpenId());
       query.setWxNickName(bo.getWeChatNickName());
-      //24小时过期时间
-      String jwt = jwtUtil.createJWT(1000 * 60 * 60 * 24L, query);
-
-      //更新redis
-
-      return jwt;
+      return jwtUtil.createJwt(query);
    }
 
 
