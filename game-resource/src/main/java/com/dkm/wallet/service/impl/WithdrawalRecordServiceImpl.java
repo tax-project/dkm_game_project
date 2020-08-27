@@ -57,9 +57,6 @@ public class WithdrawalRecordServiceImpl extends ServiceImpl<WithdrawalRecordMap
             map.put("aDouble",aDouble);
         }
 
-
-
-
         return map;
     }
 
