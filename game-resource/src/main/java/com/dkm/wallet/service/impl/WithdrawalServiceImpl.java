@@ -185,9 +185,6 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
             withdrawalRecord.setWithdrawalDescribe("提现成功，你可以到微信或者支付宝账单中查询");
 
 
-
-
-
             if(userInfoQueryBoResult.getData().getUserInfoNowExperience()>=userInfoQueryBoResult.getData().getUserInfoNextExperience()
            && userInfoQueryBoResult.getData().getUserInfoPacketBalance()>=withdrawal.getWithdrawalAmount().doubleValue()){
 
