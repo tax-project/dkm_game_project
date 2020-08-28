@@ -64,6 +64,7 @@ public class FileServiceImpl implements IFileService {
             Files.createDirectories(path.getParent());
             //复制文件到指定文件夹下面
             String newPath = path.toString() + extraName;
+            System.out.println(newPath);
             File toFile = fileUtils.multipartFileToFile(file,newPath);
             FileVo vo = new FileVo();
             String url = fileUrl + "/" + fileName.substring(0, 8) + "/"  + fileName + extraName;
