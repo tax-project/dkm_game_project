@@ -45,7 +45,7 @@ public class JwtUtils {
         }
 
         //创建payload的私有声明（根据特定的业务需要添加，如果要拿这个做验证，一般是需要和jwt的接收方提前沟通好验证方式的）
-        Map<String, Object> claims = new HashMap<String, Object>();
+        Map<String, Object> claims = new HashMap<>(4);
         claims.put("id", user.getId());
         claims.put("wxOpenId", user.getWxOpenId());
         claims.put("wxNickName",user.getWxNickName());
@@ -61,7 +61,7 @@ public class JwtUtils {
     }
 
 
-    private static JwtBuilder getJwtBuilder (Map<String, Object> claims, Date now, String subject, SignatureAlgorithm signatureAlgorithm, String key) {
+    private JwtBuilder getJwtBuilder (Map<String, Object> claims, Date now, String subject, SignatureAlgorithm signatureAlgorithm, String key) {
         return Jwts.builder()
               //如果有私有声明，一定要先设置这个自己创建的私有的声明，这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
               .setClaims(claims)
