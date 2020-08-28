@@ -19,7 +19,7 @@ public class UserLandUnlock {
     /**
      * 状态
      */
-    private Integer laStatus ;
+    private Integer laStatus;
     /**
      * 土地名字
      */
