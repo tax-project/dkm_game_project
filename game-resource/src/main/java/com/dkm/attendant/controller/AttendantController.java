@@ -55,6 +55,7 @@ public class AttendantController {
     public Map<String, Object>  queryThreeAtt() {
         return iAttendantService.queryThreeAtt();
     }
+
     /**
      * 获取用户声望和金币
      * @return
