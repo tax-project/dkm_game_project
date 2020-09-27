@@ -92,13 +92,11 @@ public enum CodeType {
         this.code = code;
     }
 
-        public String getMsg(){
+    public String getMsg(){
         return msg;
     }
 
-    public void setMsg(String msg){
-        this.msg = msg;
-    }
+    public void setMsg(String msg){ this.msg = msg; }
 
     public int getHttpStatus(){
         return httpStatus;
