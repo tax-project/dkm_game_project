@@ -179,13 +179,13 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         user1.setUserAge(localDate);
 
         //生成属于自己的二维码
-        Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?userId=" + id);
+//        Result<FileVo> qrCode = fileFeignClient.getQrCode(qrCodeUrl + "?userId=" + id);
+//
+//        if (qrCode.getCode() != 0) {
+//            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "文件feign出错");
+//        }
 
-        if (qrCode.getCode() != 0) {
-            throw new ApplicationException(CodeType.FEIGN_CONNECT_ERROR, "文件feign出错");
-        }
-
-        user1.setQrCode(qrCode.getData().getFileUrl());
+//        user1.setQrCode(qrCode.getData().getFileUrl());
 
         int insert = baseMapper.insert(user1);
 

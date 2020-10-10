@@ -113,41 +113,31 @@ public class AttendantServiceImpl implements IAttendantService {
         UserLoginQuery query = localUser.getUser();
         //查询到所有系统跟班
         List<AttUserAllInfoVo> list = attendantMapper.queryThreeAtt(query.getId(), 0);
-
         //查询到所有用户跟班
         List<AttUserAllInfoVo> list1 = attendantMapper.queryThreeAtt(query.getId(), 1);
-
         List<AttendantPutVo> outputList = produceService.queryOutput(query.getId());
-
-
         for (AttUserAllInfoVo infoVo : list1) {
             list.add(infoVo);
         }
-
         List<Long> longList = new ArrayList<>();
         for (AttUserAllInfoVo infoVo : list1) {
             //添加进所有用户id
             longList.add(infoVo.getCaughtPeopleId());
         }
-
         //查询所有用户信息
         UserAttAllVo vo = new UserAttAllVo();
         vo.setList(longList);
         Result<List<UserInfoAttVo>> listResult = userFeignClient.queryUserInfoAtt(vo);
-
         if (listResult.getCode() != 0) {
             log.info("查询用户feign错误");
             throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
-
         List<UserInfoAttVo> data = listResult.getData();
-
         Map<String, Object> map = new HashMap<>(2);
         if (null != data && data.size() > 0) {
             Map<Long, UserInfoAttVo> userInfoAttVoMap = data.stream().
                   collect(Collectors.toMap(UserInfoAttVo::getUserId,
                         userInfoAttVo -> userInfoAttVo));
-
             List<AttUserAllInfoVo> collect = list.stream().map(attUserAllInfoVo -> {
                 if (userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()) != null) {
                     attUserAllInfoVo.setAtImg(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeardUrl());
@@ -158,17 +148,12 @@ public class AttendantServiceImpl implements IAttendantService {
 
             map.put("att",collect);
         }
-
         if (null == data || data.size() == 0) {
             map.put("att",list);
         }
-
         map.put("put", outputList);
-
         return map;
     }
-
-
 
     /**
      * 获取用户声望和金币
@@ -195,37 +180,27 @@ public class AttendantServiceImpl implements IAttendantService {
     public Map<String, Object> queryRandomUser() {
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-
         //随机返回9条数据
         Result<List<AttendantWithUserVo>> result = userFeignClient.listAttUser(query.getId());
-
         //查看自己是否有主人
         AttendantUserVo attendantUserVo = attendantMapper.queryAidUser(query.getId());
-
         List<AttendantWithUserVo> data = result.getData();
         if(attendantUserVo!=null){
-
             for (int i = 0; i < data.size(); i++) {
                 //如果被抓的跟班中有自己的主人就从集合中删除
                 if(data.get(i).getUserId()==attendantUserVo.getUserId()){
                     data.remove(i);
                 }
-
                 if(data.get(i).getUserId()==query.getId()){
                     data.remove(i);
                 }
-
             }
         }
-
         if (result.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "Feign有误");
         }
-
         //得到用户信息集合
         List<AttendantWithUserVo> userList = result.getData();
-
-        //流化
         List<AttUserResultBo> attUserResultBoList = userList.stream().map(attendantWithUserVo -> {
             AttUserResultBo bo = new AttUserResultBo();
             BeanUtils.copyProperties(attendantWithUserVo, bo);
@@ -233,14 +208,11 @@ public class AttendantServiceImpl implements IAttendantService {
             bo.setSysStatus(1);
             return bo;
         }).collect(Collectors.toList());
-
         //得到系统跟班列表
         List<AttenDant> list = attendantMapper.selectList(null);
-
         List<AttendantBo> boList = new ArrayList<>();
         //查询所有的跟班用户的系统跟班信息 根据用户id  被抓人id=0
         List<AttendantUser> sysAttInfo = attendantUserService.queryAllSysAttInfo(query.getId(), 0L);
-
         for (AttenDant attenDant : list) {
             AttendantBo bo = new AttendantBo();
             BeanUtils.copyProperties(attenDant,bo);
@@ -257,11 +229,9 @@ public class AttendantServiceImpl implements IAttendantService {
             }
             boList.add(bo);
         }
-
         Map<String, Object> map = new HashMap<>(2);
         map.put("sys",boList);
         map.put("userInfo",attUserResultBoList);
-
         return map;
     }
     /**
@@ -269,84 +239,57 @@ public class AttendantServiceImpl implements IAttendantService {
      */
     @Override
     public void dismissal(Long caughtPeopleId, Long aId) {
-
         UserLoginQuery user = localUser.getUser();
         //解雇
         attendantMapper.dismissal(caughtPeopleId, aId);
-
         //删除对应的跟班产出物品
         produceService.deletePut (user.getId(),aId);
     }
 
     @Override
     public Map<String, Object> petBattle(Long caughtPeopleId,Integer status) {
-
         //我方随机上场的宠物
         String myPet=null;
-
         //他方随机上场的宠物
         String hePet=null;
-
-
-        /**
-         * 我方数据
-         */
-
         //得到最终我方的战力
         double myRipetime=0;
-
         //我方防御力
         double ourDefenses=0;
-
         //得到最终我方血量
         double ourHealth=0;
-
-        /**
-         * 他方数据
-         */
         //得到最终他方的防御力
         double heDefense = 0;
-
-
         //得到最终他方的战力
         double heRipetime1=0;
-
         //他方最终得到的血量
         double heEquipBonus=0;
-
         Map<String,Object> map=new HashMap<>();
-
         //得到用户登录的token信息
         UserLoginQuery query = localUser.getUser();
-
         //自己的信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(query.getId());
         if(userInfoQueryBoResult.getCode()!=0){
             log.info("my user error");
             throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
-
         //对手用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResultCaughtPeopleId = userFeignClient.queryUser(caughtPeopleId);
         if(userInfoQueryBoResultCaughtPeopleId.getCode()!=0){
             log.info("he user error");
             throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
-
         //增加对手信息
         Opponent opponent=new Opponent();
         opponent.setId(idGenerator.getNumberId());
         opponent.setUserId(userInfoQueryBoResult.getData().getUserId());
         opponent.setOpponentId(userInfoQueryBoResultCaughtPeopleId.getData().getUserId());
-
         int insert = iOpponentService.addOpponent(opponent);
         if(insert<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"添加对手信息异常");
         }
-
         //他方宠物信息
         Result<List<PetsDto>> petInfo1 = baseFeignClient.getPetInfo(caughtPeopleId);
-
         //随机获取他方宠物
         if(petInfo1.getCode()!=0){
             log.info("query pet error");
@@ -354,15 +297,11 @@ public class AttendantServiceImpl implements IAttendantService {
         }
         PetsDto hePetsDto = petInfo1.getData().get(new Random().nextInt(petInfo1.getData().size()));
         hePet=hePetsDto.getPetName();
-
-
         //得到他方装备信息
         EquipmentEntity userAllEquipment = iEquipmentService.getUserAllEquipment(caughtPeopleId);
-
         //得到我方装备信息
         EquipmentEntity userAllEquipment1 = iEquipmentService.getUserAllEquipment(query.getId());
         //如果没有装备
-
         if(ObjectUtils.isEmpty(userAllEquipment)){
             //血量
             heEquipBonus=500;
@@ -371,12 +310,10 @@ public class AttendantServiceImpl implements IAttendantService {
             //得到他方的战力
             heRipetime1=100;
         }else {
-
             /**
              * 得到他方最终的血量
              */
             heEquipBonus = userAllEquipment.getBlood()+(userAllEquipment.getBlood() * userAllEquipment.getBloodAdd().doubleValue());
-
             /**
              * 得到他方最终的战斗力
              */
@@ -384,13 +321,11 @@ public class AttendantServiceImpl implements IAttendantService {
             double v2 = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
             heRipetime1 = Math.pow(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown(), 1 / 2.0) +
                     (Math.max(userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v2 - userInfoQueryBoResult.getData().getUserInfoRenown() * v,0));
-
             /**
              * 得到他方最终的防御力
              */
             heDefense =userAllEquipment.getTalent()+(userAllEquipment.getTalent() * userAllEquipment.getTalentAdd().doubleValue());
         }
-
         //我方宠物信息
         Result<List<PetsDto>> petInfo = baseFeignClient.getPetInfo(query.getId());
         if(petInfo.getCode()!=0){
@@ -409,19 +344,15 @@ public class AttendantServiceImpl implements IAttendantService {
             //得到我方战力
             myRipetime=100;
         }else{
-
             /**
              * 得到我方最终血量
              */
             ourHealth= userAllEquipment1.getBlood()+(userAllEquipment1.getBlood() * userAllEquipment1.getBloodAdd().doubleValue());
-
             /**
              * 得到我方最终战斗力
              */
             double v = userAllEquipment == null ||userAllEquipment.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0  ? 1 : userAllEquipment.getTalentAdd().doubleValue();
-
             double v2 = userAllEquipment1 == null || userAllEquipment1.getTalentAdd().compareTo(BigDecimal.valueOf(0))<=0 ? 1 : userAllEquipment1.getTalentAdd().doubleValue();
-
             myRipetime= Math.pow(userInfoQueryBoResult.getData().getUserInfoRenown(), 1 / 2.0) +
                     (Math.max(userInfoQueryBoResult.getData().getUserInfoRenown() * v2 - userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown() * v,0));
             /**
@@ -429,8 +360,6 @@ public class AttendantServiceImpl implements IAttendantService {
              */
             ourDefenses=userAllEquipment1.getTalent()+(userAllEquipment1.getTalent() * userAllEquipment1.getTalentAdd().doubleValue());
         }
-
-
             //如果双方宠物相同 声望高的先动手
             if(myPet.equals(hePet)){
                 if(userInfoQueryBoResult.getData().getUserInfoRenown()>userInfoQueryBoResultCaughtPeopleId.getData().getUserInfoRenown()){
@@ -462,9 +391,7 @@ public class AttendantServiceImpl implements IAttendantService {
                     map.put("status",1);
                 }
         }
-
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
-
         //跟班战斗
         if(status==1){
             if(data.getUserInfoStrength()<14){
@@ -476,7 +403,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 throw new ApplicationException(CodeType.SERVICE_ERROR);
             }
         }
-
         //夺宝战斗
         if(status==2){
             if(data.getUserInfoStrength()<10){
@@ -488,7 +414,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 throw new ApplicationException(CodeType.SERVICE_ERROR);
             }
         }
-
         //关进小黑屋
         if(status==3){
             if(data.getUserInfoStrength()<20){
@@ -500,7 +425,6 @@ public class AttendantServiceImpl implements IAttendantService {
                 throw new ApplicationException(CodeType.SERVICE_ERROR);
             }
         }
-
         map.put("userInfoQueryBoResult",userInfoQueryBoResult.getData());
         map.put("userInfoQueryBoResultCaughtPeopleId",userInfoQueryBoResultCaughtPeopleId.getData());
         //随机生成我方宠物信息
@@ -522,42 +446,25 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public Map<String, Object> combatResults(AttendantVo vo) {
-
         Map<String, Object> map = new HashMap<>(7);
-
         ResultAttendeantVo result = getResult(vo.getMyHealth(),vo.getOtherHealth(),vo.getMyCapabilities(), vo.getOtherForce(), vo.getStatus());
-
         map.put("myMuch", result.getMyMuch());
         map.put("otherMuch",result.getOtherMuch());
-
         map.put("otherForce",vo.getOtherForce());
-
         map.put("myCapabilities",vo.getMyCapabilities());
-        /**
-         *
-         */
         map.put("myHealth", vo.getMyHealth());
-
-        /**
-         *
-         */
         map.put("otherHealth", vo.getOtherHealth());
-
         //0--我方赢了
         //1--对面赢了
         map.put("result",result);
-
         return map;
     }
 
 
     public ResultAttendeantVo getResult (Integer allMyHealth, Integer allOtherHealth, Integer myCapabilities, Integer otherForce, Integer status) {
-
         ResultAttendeantVo vo = new ResultAttendeantVo();
-
         Integer myMuch = 0;
         Integer otherMuch = 0;
-
         if (status == 0) {
             //我先动手
             while (true) {
@@ -615,21 +522,15 @@ public class AttendantServiceImpl implements IAttendantService {
 
     @Override
     public AttUserVo addGraspFollowing(Long caughtPeopleId, Integer status, Long attendantId) {
-
         UserLoginQuery user = localUser.getUser();
-
         //查询该用户信息
         Result<UserInfoQueryBo> result = userFeignClient.queryUser(user.getId());
-
         if (result.getCode() != 0) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "用户feign错误");
         }
-
         AttUserVo vo = new AttUserVo();
-
         //根据用户Id查询所有跟班信息
         List<AttendantUser> list = attendantUserService.queryListByUserId(user.getId());
-
         //得到用户信息
         UserInfoQueryBo bo = result.getData();
         int number = 0;

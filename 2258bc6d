@@ -1,0 +1,27 @@
+[33m890dadb5[m[33m ([m[1;36mHEAD -> [m[1;32mslaver[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{0}: checkout: moving from master to slaver
+[33m890dadb5[m[33m ([m[1;36mHEAD -> [m[1;32mslaver[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m HEAD@{1}: pull origin master: Merge made by the 'recursive' strategy.
+[33maa85d5ac[m HEAD@{2}: commit: '优化JWT拦截器的配置'
+[33m951bc16e[m HEAD@{3}: commit: 'qf'
+[33m5cb6acd8[m HEAD@{4}: pull: Merge made by the 'recursive' strategy.
+[33m28f3d59e[m HEAD@{5}: commit: 'qf'
+[33m2258bc6d[m HEAD@{6}: commit: 'qf'
+[33m81a07fa7[m HEAD@{7}: pull: Merge made by the 'recursive' strategy.
+[33m36cf5bc6[m HEAD@{8}: commit: 'qf'
+[33mdabbae59[m HEAD@{9}: commit: 'qf'
+[33maa5835cb[m HEAD@{10}: commit: 'qf'
+[33m8c042530[m HEAD@{11}: pull: Merge made by the 'recursive' strategy.
+[33m296f1f21[m HEAD@{12}: commit: 'qf'
+[33m79da624a[m HEAD@{13}: commit: 'qf'
+[33mf3a4dc1d[m HEAD@{14}: commit: 'qf'
+[33m98e2412f[m HEAD@{15}: commit: 'qf'
+[33m6aa088f4[m HEAD@{16}: commit: 'qrf'
+[33m14da01df[m HEAD@{17}: commit: 'qf'
+[33mc878f4d1[m HEAD@{18}: commit: 'qf'
+[33ma130e021[m HEAD@{19}: commit: 'qf'
+[33md2d79be7[m HEAD@{20}: commit: 'qf'
+[33m05a03ee7[m HEAD@{21}: commit: 'qf'
+[33mc09bfee3[m HEAD@{22}: pull: Merge made by the 'recursive' strategy.
+[33m8847956e[m HEAD@{23}: commit: 'qf'
+[33m482a69b9[m HEAD@{24}: pull: Fast-forward
+[33m95d3fee7[m HEAD@{25}: commit: 'qf'
+[33m6da21cb4[m HEAD@{26}: clone: from https://github.com/tax-project/dkm_game_project.git
