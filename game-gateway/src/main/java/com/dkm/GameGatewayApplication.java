@@ -20,12 +20,6 @@ public class GameGatewayApplication extends GatewayAspect {
       SpringApplication.run(GameGatewayApplication.class, args);
    }
 
-
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameGatewayApplication.class);

@@ -26,12 +26,6 @@ public class GameUserApplication extends SpringBootServletInitializer {
       SpringApplication.run(GameUserApplication.class, args);
    }
 
-
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameUserApplication.class);

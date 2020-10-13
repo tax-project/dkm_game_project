@@ -25,7 +25,7 @@ public class HeartWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo> {
    private GroupUtils groupUtils;
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) {
       if (msgInfo.getType() == 2) {
          //当前是一个心跳信息
          Channel channel = groupUtils.getChannel(msgInfo.getCid());

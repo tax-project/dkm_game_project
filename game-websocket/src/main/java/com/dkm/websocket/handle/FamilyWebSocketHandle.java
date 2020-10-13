@@ -27,7 +27,7 @@ public class FamilyWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo> 
    private RabbitTemplate rabbitTemplate;
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) {
          if (msgInfo.getType() == 5) {
             //该消息是家族的信息
             rabbitTemplate.convertAndSend("game_family_info_queue", JSON.toJSONString(msgInfo));

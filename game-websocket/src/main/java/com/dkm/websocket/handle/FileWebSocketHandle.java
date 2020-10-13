@@ -22,7 +22,7 @@ public class FileWebSocketHandle extends SimpleChannelInboundHandler<BinaryWebSo
 
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, BinaryWebSocketFrame binaryWebSocketFrame) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, BinaryWebSocketFrame binaryWebSocketFrame) {
       log.info("服务器接收到二进制消息,消息长度:[{}]", binaryWebSocketFrame.content().capacity());
 
 

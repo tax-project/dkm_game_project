@@ -29,7 +29,7 @@ public class ConnectWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo>
     * @throws Exception
     */
    @Override
-   public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+   public void channelRegistered(ChannelHandlerContext ctx) {
       log.info("有一个新的连接上线");
    }
 
@@ -40,14 +40,14 @@ public class ConnectWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo>
     * @throws Exception
     */
    @Override
-   public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+   public void channelUnregistered(ChannelHandlerContext ctx) {
       log.info("有一个连接下线");
       groupUtils.removeByChannel(ctx.channel());
    }
 
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) {
 
       if (msgInfo.getType() == 1) {
          //连接请求

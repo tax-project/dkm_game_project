@@ -29,12 +29,6 @@ public class GameFamilyApplication extends SpringBootServletInitializer {
       SpringApplication.run(GameFamilyApplication.class, args);
    }
 
-
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameFamilyApplication.class);

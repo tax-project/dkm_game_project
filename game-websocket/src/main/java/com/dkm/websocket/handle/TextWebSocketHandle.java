@@ -22,7 +22,7 @@ public class TextWebSocketHandle extends SimpleChannelInboundHandler<TextWebSock
 
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame textWebSocketFrame) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame textWebSocketFrame) {
 
       String text = textWebSocketFrame.text();
 

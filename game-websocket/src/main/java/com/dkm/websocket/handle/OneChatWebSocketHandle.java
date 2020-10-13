@@ -24,7 +24,7 @@ public class OneChatWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo>
    private RabbitTemplate rabbitTemplate;
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo)  {
       if (msgInfo.getType() == 3) {
          //此消息是一个单聊消息
          rabbitTemplate.convertAndSend("game_msg_chat_queue", JSON.toJSONString(msgInfo));

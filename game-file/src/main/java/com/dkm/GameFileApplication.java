@@ -20,12 +20,6 @@ public class GameFileApplication extends SpringBootServletInitializer {
       SpringApplication.run(GameFileApplication.class, args);
    }
 
-
-   /**
-    * 打包
-    * @param builder
-    * @return
-    */
    @Override
    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
       return builder.sources(GameFileApplication.class);

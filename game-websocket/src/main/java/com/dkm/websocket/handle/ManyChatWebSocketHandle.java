@@ -24,12 +24,12 @@ public class ManyChatWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo
    private RabbitTemplate rabbitTemplate;
 
    @Override
-   public void channelActive(ChannelHandlerContext ctx) throws Exception {
+   public void channelActive(ChannelHandlerContext ctx) {
       ctx.fireChannelActive();
    }
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) {
       if (msgInfo.getType() == 4) {
          //该消息是一条群聊消息
          rabbitTemplate.convertAndSend("game_msg_chat_queue",JSON.toJSONString(msgInfo));

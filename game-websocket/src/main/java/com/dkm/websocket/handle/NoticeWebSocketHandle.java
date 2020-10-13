@@ -29,7 +29,7 @@ public class NoticeWebSocketHandle extends SimpleChannelInboundHandler<MsgInfo> 
 
 
    @Override
-   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) throws Exception {
+   protected void channelRead0(ChannelHandlerContext ctx, MsgInfo msgInfo) {
 
       if (msgInfo.getType() >= startType && msgInfo.getType() <= endType) {
          log.info("收到即使通知:" + msgInfo);
