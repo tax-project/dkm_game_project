@@ -30,6 +30,7 @@ public class UserLoginServiceImpl implements IAdminUserLoginService {
     @Override
     public UserLoginResultVo login(UserLoginVo loginVo) {
         val result = new UserLoginResultVo();
+        //调用用户服务登录
         val login = anotherUserFeignClient.login(loginVo);
         log.debug(JSONObject.toJSONString(login));
         if (login.getCode() == 1006) {
@@ -47,7 +48,9 @@ public class UserLoginServiceImpl implements IAdminUserLoginService {
     public boolean checkToken(String token) {
         try {
             val id = JWT.decode(token).getClaim("id").asLong();
-            val list = adminUserMapper.selectList(new QueryWrapper<AdminUserEntity>().eq("user_id", id));
+            //根据用户id查询用户信息
+            val list = adminUserMapper.selectList(new QueryWrapper<AdminUserEntity>()
+                  .eq("user_id", id));
             return !(list == null || list.isEmpty());
         } catch (Exception e) {
             throw new ApplicationException(CodeType.TOKENNULL_ERROR, "token无效！");

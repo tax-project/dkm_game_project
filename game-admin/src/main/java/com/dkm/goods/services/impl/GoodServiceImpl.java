@@ -33,8 +33,10 @@ public class GoodServiceImpl implements IGoodService {
     @NotNull
     public List<GoodsVo> getAllGoods() {
         val result = new ArrayList<GoodsVo>();
+        //查尊所有物品
         val var14 = this.goodsMapper.selectAllGoods();
         for (GoodsEntity it : var14) {
+            //将查询的物品加进集合中进行返回
             result.add(new GoodsVo(String.valueOf(it.getId()), it.getName(), it.getUrl(), it.getGoodType(), it.getGoodContent(), it.getGoodMoney(), it.getTabUrl()));
         }
         return result;
@@ -44,6 +46,7 @@ public class GoodServiceImpl implements IGoodService {
     @NotNull
     public ResultVo addGoodsItem(@NotNull GoodsVo goods) {
         long id = idGenerator.getNumberId();
+        //添加物品
         goodsMapper.insert(new GoodsEntity(id, goods.getName(), goods.getUrl(), goods.getGoodType(), goods.getGoodContent(), goods.getGoodMoney(), goods.getTabUrl()));
         return new ResultVo(true, id);
     }
@@ -52,9 +55,11 @@ public class GoodServiceImpl implements IGoodService {
     @NotNull
     public ResultVo updateItemById(long id, @NotNull GoodsVo goods) {
 
-
+        //根据id查询物品
         GoodsEntity var5 = goodsMapper.selectById(id);
         if (var5 != null) {
+            //根据前端传来的参数进行修改
+            //如不修改  则传null
             if (goods.getName() != null) {
                 var5.setName(goods.getName());
             }
@@ -78,6 +83,7 @@ public class GoodServiceImpl implements IGoodService {
             if (goods.getTabUrl() != null) {
                 var5.setTabUrl(goods.getTabUrl());
             }
+            //根据id修改
             goodsMapper.updateById(var5);
             return new ResultVo(true, var5.getId());
         } else {
@@ -91,6 +97,7 @@ public class GoodServiceImpl implements IGoodService {
 
         GoodsEntity var3 = goodsMapper.selectById(id);
         if (var3 != null) {
+            //根据id删除物品
             goodsMapper.deleteById(var3.getId());
             return new ResultVo(true, var3.getId());
         } else {

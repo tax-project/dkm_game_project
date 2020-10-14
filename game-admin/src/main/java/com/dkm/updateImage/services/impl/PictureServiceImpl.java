@@ -22,11 +22,14 @@ public class PictureServiceImpl implements IPictureService {
    private AnotherFileFeignClient anotherFileFeignClient;
 
    @NotNull
+   @Override
    public ImageUpdateResultVo update(@NotNull MultipartFile multipartFile, @NotNull String token) {
       logger.info(multipartFile.getName());
       logger.info(String.valueOf(multipartFile.getSize()));
       logger.info(multipartFile.getOriginalFilename());
 
+      //通过调用文件服务
+      //生成自己名片的二维码并上传服务器
       Result<FileVo> var7 = anotherFileFeignClient.storeFile(token, multipartFile);
       FileVo var8 = var7.getData();
       if (var8 != null) {

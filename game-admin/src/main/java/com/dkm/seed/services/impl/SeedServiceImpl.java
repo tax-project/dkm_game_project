@@ -33,9 +33,11 @@ public class SeedServiceImpl implements ISeedService {
     @Override
     @NotNull
     public List<SeedVo> getAll() {
+        //查询所有种子
         val list = seedMapper.selectAll();
         val result = new ArrayList<SeedVo>();
         for (SeedEntity entity : list) {
+            //将查询的种子加进集合中
             result.add(new SeedVo(String.valueOf(entity.getSeedId()), entity.getSeedName(), entity.getSeedGrade(), entity.getSeedProdgold(), entity.getSeedProdred(), entity.getSeedExperience(), entity.getSeedGold(), entity.getSeedImg()));
         }
         return result;
@@ -45,6 +47,7 @@ public class SeedServiceImpl implements ISeedService {
     @NotNull
     public ResultVo insert(@NotNull SeedVo seedVo) {
         long newId = idGenerator.getNumberId();
+        //添加种子
         seedMapper.insert(new SeedEntity(newId, seedVo.getName(), seedVo.getLevel(), seedVo.getFirstGold(), seedVo.getFirstPrize(), seedVo.getXp(), seedVo.getGold(), seedVo.getImageUrl()));
         return new ResultVo(true, newId);
     }
@@ -53,6 +56,7 @@ public class SeedServiceImpl implements ISeedService {
     @NotNull
     public ResultVo update(long id, @NotNull SeedVo seedVo) {
         SeedEntity entity = new SeedEntity(id, seedVo.getName(), seedVo.getLevel(), seedVo.getFirstGold(), seedVo.getFirstPrize(), seedVo.getXp(), seedVo.getGold(), seedVo.getImageUrl());
+        //根据id修改种子
         int res = seedMapper.updateById(entity);
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getSeedId());
     }
@@ -60,6 +64,7 @@ public class SeedServiceImpl implements ISeedService {
     @Override
     @NotNull
     public ResultVo delete(long id) {
+        //根据id删除种子
         int result = seedMapper.deleteById(id);
         return result == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, id);
     }

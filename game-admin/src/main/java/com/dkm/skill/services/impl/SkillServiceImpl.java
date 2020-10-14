@@ -28,9 +28,11 @@ public class SkillServiceImpl implements ISkillService {
 
     @NotNull
     public List<SkillVo> getAll() {
+        //查询所有数据
         val var5 = skillMapper.selectAll();
         val result = new ArrayList<SkillVo>();
         for (SkillEntity entity : var5) {
+            //将数据添加到集合中
             result.add(new SkillVo(String.valueOf(entity.getId()), entity.getSkName(), entity.getSkEffectOne(), entity.getSkEffectTwo()));
         }
         return result;
@@ -39,6 +41,7 @@ public class SkillServiceImpl implements ISkillService {
     @NotNull
     public ResultVo insert(@NotNull SkillVo skillVo) {
         long newId = idGenerator.getNumberId();
+        //添加数据
         skillMapper.insert(new SkillEntity(newId, skillVo.getSkinName(), skillVo.getFirstSkinEffect(), skillVo.getSecondSkinEffect()));
         return new ResultVo(true, newId);
     }
@@ -46,12 +49,14 @@ public class SkillServiceImpl implements ISkillService {
     @NotNull
     public ResultVo update(long id, @NotNull SkillVo skillVo) {
         SkillEntity entity = new SkillEntity(id, skillVo.getSkinName(), skillVo.getFirstSkinEffect(), skillVo.getSecondSkinEffect());
+        //修改数据
         int res = skillMapper.updateById(entity);
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getId());
     }
 
     @NotNull
     public ResultVo delete(long id) {
+        //删除数据
         int result = skillMapper.deleteById(id);
         return result == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, id);
     }
