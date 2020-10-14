@@ -50,7 +50,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
     @Override
     public int openHousekeeper(Long userId, BigDecimal money) {
         //查出管家表记录
-        HousekeeperEntity selectOne = housekeeperMapper.selectOne(new LambdaQueryWrapper<HousekeeperEntity>().eq(HousekeeperEntity::getUserId,userId));
+        HousekeeperEntity selectOne = housekeeperMapper.selectOne(new LambdaQueryWrapper<HousekeeperEntity>()
+              .eq(HousekeeperEntity::getUserId,userId));
         LocalDateTime now = LocalDateTime.now();
         if(selectOne!=null){
             //有开通记录-更新下单时间
@@ -58,7 +59,8 @@ public class HousekeeperServiceImpl implements HousekeeperService {
             selectOne.setIsEffective(1);
             selectOne.setHousekeeperMoney(money);
             //更新过期时间
-            selectOne.setExpireTime(selectOne.getExpireTime().isBefore(now)?now.minusDays(-30):selectOne.getExpireTime().minusDays(-30));
+            selectOne.setExpireTime(selectOne.getExpireTime()
+                  .isBefore(now)?now.minusDays(-30):selectOne.getExpireTime().minusDays(-30));
             return  housekeeperMapper.updateById(selectOne);
         }else {
             //新开管家
@@ -117,7 +119,9 @@ public class HousekeeperServiceImpl implements HousekeeperService {
      */
     @Override
     public Map<String,String> updateTime(Long userId) {
-        HousekeeperEntity selectOne = housekeeperMapper.selectOne(new LambdaQueryWrapper<HousekeeperEntity>().eq(HousekeeperEntity::getUserId, userId));
+        //根据用户Id查询该条信息
+        HousekeeperEntity selectOne = housekeeperMapper.selectOne(new LambdaQueryWrapper<HousekeeperEntity>()
+              .eq(HousekeeperEntity::getUserId, userId));
         if(selectOne==null||selectOne.getIsEffective()==0){throw new ApplicationException(CodeType.SERVICE_ERROR,"管家未开通或已过期");}
         LocalDateTime now = LocalDateTime.now();
         //设置开工8小时后的时间
