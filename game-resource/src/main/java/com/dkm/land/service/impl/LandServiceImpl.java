@@ -57,6 +57,7 @@ public class LandServiceImpl implements ILandService {
     @Override
     public List<UserLandUnlock> queryUserByIdLand() {
         Long id = localUser.getUser().getId();
+        //根据用户id查询用户的土地
         List<UserLandUnlock> userLandUnlocks = landMapper.queryUserByIdLand(id);
         if(userLandUnlocks.size()==0){
             List<UserLandUnlock> list=new ArrayList<>();
@@ -69,8 +70,10 @@ public class LandServiceImpl implements ILandService {
                     userLandUnlock.setLaStatus(0);
                 }
                 userLandUnlock.setUserId(id);
+                //将数据添加进集合中
                 list.add(userLandUnlock);
             }
+            //批量添加土地
             landMapper.addLand(list);
 
             return list;
@@ -80,6 +83,7 @@ public class LandServiceImpl implements ILandService {
 
     @Override
     public void updateLandStatus(Integer laNo) {
+        //修改土地
         int i = landMapper.updateStatus(localUser.getUser().getId(),laNo);
         if(i<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"解锁土地异常");

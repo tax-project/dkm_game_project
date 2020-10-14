@@ -48,13 +48,13 @@ public class IntegralServiceImpl implements IIntegralService {
             userIntegral.setIMyIntegral(0);
             integralMapper.insert(userIntegral);
         }
-        Integer queryInteger = integralMapper.queryUserIdIntegral(localUser.getUser().getId());
-        return queryInteger;
+        //返回查询的积分
+        return integralMapper.queryUserIdIntegral(localUser.getUser().getId());
     }
 
     @Override
     public int updateUserIntegral(Integer iMyIntegral) {
-        System.out.println(localUser.getUser().getId());
+        //修改用户积分
         int i = integralMapper.updateUserIntegral(iMyIntegral, localUser.getUser().getId());
         if(i<=0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"修改用户积分异常");
@@ -64,6 +64,7 @@ public class IntegralServiceImpl implements IIntegralService {
 
     @Override
     public int updateUserByIntegral(Long userId) {
+        //修改用户积分
         int i = integralMapper.updateUserByIntegral(userId);
         if(i<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"修改用户积分异常");
@@ -77,6 +78,7 @@ public class IntegralServiceImpl implements IIntegralService {
         stars.setSCurrentlyHasNum(sCurrentlyHasNum);
         stars.setUserId(localUser.getUser().getId());
         stars.setSStar(sStar);
+        //修改用户星星数量
         int i = integralMapper.updateUserStarsNumber(stars);
         if(i<=0){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"修改用户星星数量异常");

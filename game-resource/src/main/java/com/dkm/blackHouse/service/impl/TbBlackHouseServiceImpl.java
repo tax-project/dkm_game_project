@@ -148,6 +148,7 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         QueryWrapper<TbBlackHouse> queryWrapper=new QueryWrapper();
         queryWrapper.eq("to_id",localUser.getUser().getId());
         queryWrapper.eq("is_black",0);
+        //查询自己的
         return tbBlackHouseMapper.selectList(queryWrapper);
     }
 
@@ -156,6 +157,8 @@ public class TbBlackHouseServiceImpl implements TbBlackHouseService {
         QueryWrapper<TbBlackHouse> queryWrapper=new QueryWrapper();
         queryWrapper.eq("from_id",userId);
         queryWrapper.eq("is_black",0);
+        //查询黑屋信息
+        //根据用户id
         return tbBlackHouseMapper.selectList(queryWrapper);
     }
 

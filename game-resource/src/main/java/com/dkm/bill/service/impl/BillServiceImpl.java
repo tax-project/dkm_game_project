@@ -42,23 +42,26 @@ public class BillServiceImpl extends ServiceImpl<BillMapper, Bill> implements IB
     @Override
     public Map<String,Object> queryAllBill(BillVo vo) {
         Map<String,Object> map=new HashMap<>();
-
+        //查询用户服务的用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(localUser.getUser().getId());
         if(vo.getBType()==1){
+            //金币
             map.put("gold",userInfoQueryBoResult.getData().getUserInfoGold());
         }
 
         if(vo.getBType()==2){
+            //钻石
             map.put("Diamonds",userInfoQueryBoResult.getData().getUserInfoDiamonds());
         }
 
         if(vo.getBType()==3){
+            //财富卷
             map.put("FortuneVolume",1);
         }
 
         //根据状态id查询
         List<Bill> bills = baseMapper.queryAllBill(vo.getBType(), vo.getBIncomeExpenditure(), localUser.getUser().getId());
-
+        //对集合循环
         bills.forEach(a->a.setTime(DateUtils.formatDateTime(a.getBTime())));
 
         map.put("bills",bills);

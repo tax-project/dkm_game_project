@@ -61,9 +61,9 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
     @Override
     public Map<String,Object> queryAllWithdrawalData() {
         Map<String,Object> map=new HashMap<>();
-
+        //用户信息
         UserLoginQuery user = localUser.getUser();
-
+        //根据用户id查询用户信息
         Result<UserInfoQueryBo> userInfoQueryBoResult = userFeignClient.queryUser(user.getId());
 
         Double money=0.1;
@@ -72,7 +72,7 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
 
         LambdaQueryWrapper<Withdrawal> queryWrapper = new LambdaQueryWrapper<Withdrawal>()
                 .eq(Withdrawal::getUserId, user.getId());
-
+        //查询我的所有提现记录
         List<Withdrawal> withdrawals = baseMapper.selectList(queryWrapper);
         //如果等于0 初始化数据
         if(withdrawals.size()==0){
@@ -147,10 +147,7 @@ public class WithdrawalServiceImpl extends ServiceImpl<WithdrawalMapper, Withdra
 
             baseMapper.insertWithdrawalData(list);
         }
-
-        LambdaQueryWrapper<Withdrawal> queryWrapper1 = new LambdaQueryWrapper<Withdrawal>()
-                .eq(Withdrawal::getUserId, user.getId());
-
+        //查询所有提现信息
         List<Withdrawal> withdrawals1 = baseMapper.selectList(queryWrapper);
 
 

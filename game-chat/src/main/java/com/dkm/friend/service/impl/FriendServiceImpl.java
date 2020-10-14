@@ -56,9 +56,6 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
    @Autowired
    private IFriendNotOnlineService friendNotOnlineService;
 
-   @Autowired
-   private RabbitTemplate rabbitTemplate;
-
    /**
     * 成为好友
     * @param vo
@@ -73,7 +70,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
       friend.setCreateDate(LocalDateTime.now());
       friend.setFromId(vo.getFromId());
       friend.setToId(vo.getToId());
-
+      //成为好友  添加到数据库
       int insert = baseMapper.insert(friend);
 
       if (insert <= 0) {
@@ -85,7 +82,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
       friend.setStatus(0);
       friend.setFromId(vo.getToId());
       friend.setToId(vo.getFromId());
-
+      //添加到他的好友列表
       int i = baseMapper.insert(friend);
 
       if (i <= 0) {
@@ -117,7 +114,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
       LambdaQueryWrapper<Friend> lambdaQueryWrapper = new LambdaQueryWrapper<Friend>()
             .eq(Friend::getFromId,toId)
             .eq(Friend::getToId,user.getId());
-
+      //删除我列表里的好友信息
       int delete1 = baseMapper.delete(lambdaQueryWrapper);
 
       if (delete1 <= 0) {
@@ -136,11 +133,12 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
     */
    @Override
    public List<FriendAllListVo> listAllFriend() {
+      //用户信息
       UserLoginQuery user = localUser.getUser();
 
       LambdaQueryWrapper<Friend> wrapper = new LambdaQueryWrapper<Friend>()
             .eq(Friend::getFromId,user.getId());
-
+      //展示我所有的好友信息
       List<Friend> friendList = baseMapper.selectList(wrapper);
 
       if (null == friendList || friendList.size() == 0) {
@@ -148,6 +146,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
       }
 
       List<IdVo> list = new ArrayList<>();
+      //装配好友的用户id的集合
       for (Friend friend : friendList) {
          IdVo vo = new IdVo();
          vo.setFromId(friend.getToId());
@@ -166,7 +165,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend> impleme
 
       LambdaQueryWrapper<Friend> wrapper = new LambdaQueryWrapper<Friend>()
             .eq(Friend::getFromId,user.getId());
-
+      //查询我的所有好友
       List<Friend> friendList = baseMapper.selectList(wrapper);
 
       if (null == friendList || friendList.size() == 0) {

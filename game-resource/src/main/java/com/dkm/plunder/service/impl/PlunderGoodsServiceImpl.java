@@ -40,7 +40,7 @@ public class PlunderGoodsServiceImpl extends ServiceImpl<PlunderGoodsMapper, Plu
    public void insertPlunderGoods(PlunderGoodsVo vo) {
       PlunderGoods plunderGoods = new PlunderGoods();
       BeanUtils.copyProperties(vo,plunderGoods);
-
+      //添加掠夺数据
       int insert = baseMapper.insert(plunderGoods);
 
       if (insert <= 0) {

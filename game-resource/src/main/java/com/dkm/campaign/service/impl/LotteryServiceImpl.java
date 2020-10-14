@@ -88,34 +88,43 @@ public class LotteryServiceImpl implements ILotteryService {
 
     @Override
     public void refresh() {
+        //查询到数据
         val localDateTime = DateUtils.parseDateTime(optionsDao.selectNextUpdateDateStr());
+        //定义装配的集合
         List<LotteryItemEntity> all = lotteryItemDao.selectAllFull();
         if (!all.isEmpty()) {
+            //得到id的集合
             List<Long> fullLotteryArr = all.stream().map(LotteryItemEntity::getGoodsId).collect(Collectors.toList());
             val userEntities = lotteryUserDao.selectList(null);
             val map = new HashMap<Long, Map<Long, Long>>();
+            //对Id循环
             for (Long aLong : fullLotteryArr) {
                 val m2 = new HashMap<Long, Long>();
                 map.put(aLong, m2);
+                //添加进map
                 userEntities.stream().filter(t -> Objects.equals(t.getTbLotteryId(), aLong)).forEach(t -> {
                     m2.put(t.getUserId(), m2.getOrDefault(t.getUserId(), 1L));
                 });
             }
+            //便利map
             map.forEach((t1,u1)->{
                 u1.forEach((t2,u2)->{
                     val addGoodsInfo = new AddGoodsInfo();
                     addGoodsInfo.setUserId(t2);
                     addGoodsInfo.setGoodId(t1);
                     addGoodsInfo.setNumber(u2.intValue());
+                    //添加进数据库
                     backpackService.addBackpackGoods(addGoodsInfo);
                 });
             });
 
+            //循环遍历删除
             fullLotteryArr.forEach(it -> lotteryUserDao.deleteByLotteryId(it));
         }
         val now = LocalDateTime.now();
         if (localDateTime.isBefore(now)) {
             log.info("刷新了开奖时间");
+            //修改信息
             optionsDao.updateNextUpdateDate(DateUtils.formatDateTime(now
                     .plusSeconds(Integer.parseInt(optionsDao.selectRefreshDateStr()))));
             // 查询所有没满的ID
@@ -131,14 +140,17 @@ public class LotteryServiceImpl implements ILotteryService {
         IncreaseUserInfoBO increaseUserInfoBO = new IncreaseUserInfoBO();
         increaseUserInfoBO.setUserId(userId);
         increaseUserInfoBO.setUserInfoDiamonds(size);
+        //调用用户服务进行操作
         val data = userFeignClient.cutUserInfo(increaseUserInfoBO);
         if (data.getCode() == 1006) {
             return new LotteryBuyResultVo(false, "钻石余额不足！");
         }
+        //根据id进行查询
         int remainingSize = lotteryUserDao.selectRemainingSize(lotteryId);
         if (remainingSize < size) {
             return new LotteryBuyResultVo(false, "奖池已满！");
         }
+        //装配实体类
         LotteryUserEntity lotteryUserEntity = new LotteryUserEntity();
         lotteryUserEntity.setTbLotteryId(lotteryId);
         lotteryUserEntity.setUserId(userId);
@@ -146,6 +158,7 @@ public class LotteryServiceImpl implements ILotteryService {
         Arrays.fill(array, lotteryUserEntity);
         val integer = lotteryUserDao.insertAll(array);
         log.debug("用户 {} 购买了 {} 个礼包 .", userId, integer);
+        //将数据添加进行返回
         return new LotteryBuyResultVo(true, "购买成功");
     }
 
@@ -154,11 +167,13 @@ public class LotteryServiceImpl implements ILotteryService {
 
     @Override
     public List<LotteryLastVo> getLotteryLastVo() {
+        //查询所有信息
         List<LotteryHistoryEntity> list = lotteryHistoryDao.selectTenList();
         if (list == null || list.isEmpty()) {
             return Collections.emptyList();
         }
         ArrayList<LotteryLastVo> result = new ArrayList<>();
+        //得到用户信息
         val listResult = userFeignClient.queryUserName(list.stream()
                 .map(LotteryHistoryEntity::getUserId).collect(Collectors.toList()));
         if (listResult.getCode() != CodeType.SUCCESS.getCode()) {
@@ -169,6 +184,7 @@ public class LotteryServiceImpl implements ILotteryService {
         }
         for (int i = 0; i < list.size(); i++) {
             val lotteryLastVo = new LotteryLastVo();
+            //将查询到的用户信息进行装配返回给前端
             UserNameVo userNameVo = listResult.getData().get(i);
             LotteryHistoryEntity lotteryHistoryEntity = list.get(i);
             lotteryLastVo.setUserId(userNameVo.getUserId());
@@ -177,6 +193,7 @@ public class LotteryServiceImpl implements ILotteryService {
             lotteryLastVo.setUserName(userNameVo.getWeChatNickName());
             result.add(lotteryLastVo);
         }
+        //返回
         return result;
     }
 }

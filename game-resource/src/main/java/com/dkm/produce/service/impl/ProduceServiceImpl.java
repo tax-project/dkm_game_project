@@ -89,17 +89,17 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
         //查询时间有没有过期
         LocalDateTime now = LocalDateTime.now();
-
+        //用户跟班信息
         AttendantUser attUser = attendantUserService.queryAttUser(attUserId);
 
         if (attUser == null) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "attUserId传错了..大哥");
         }
 
-
+        //得到结束时间
         String endDate = attUser.getEndDate();
         LocalDateTime time = DateUtils.parseDateTime(endDate);
-
+        //时间差
         long until = now.until(time, ChronoUnit.SECONDS);
 
         if (until <= 0) {
@@ -109,16 +109,15 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         //随机返回物品
         Goods goods = goodsService.queryRandomGoods();
 
-
+        //产出对象
         Produce produce = new Produce();
         Long produceId = idGenerator.getNumberId();
-
-
         produce.setId(produceId);
-
         if (1L == attendantId || 2L == attendantId || 3L == attendantId) {
+            //系统跟班
             produce.setAttendantId(attendantId);
         } else {
+            //用户跟班
             produce.setAttendantId(0L);
         }
 
@@ -127,10 +126,8 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         int number;
         //算出随机生成的数量
         if (GOOD_NAME.equals(goods.getName())) {
-
             //随机生成1000-2000的金币
             number = (int) (Math.random() * (2000 - 1000 + 1)) + 1000;
-
         } else {
             //随机生成2-6的随机数
             number = (int) (Math.random() * (6 - 2 + 2)) + 2;
@@ -138,7 +135,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
          produce.setNumber(number);
 
         produce.setGoodId(goods.getId());
-
         //默认0
         produce.setStatus(0);
 
@@ -150,15 +146,13 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
         UserProduce userProduce = new UserProduce();
         userProduce.setUserId(user.getId());
         userProduce.setProduceId(produceId);
-
+        //添加用户产出
         userProduceService.insertProduce(userProduce);
-
 
         //增加产出次数
         attendantService.updateMuch(attUserId, 0);
 
         //返回随机生成的物品给前端
-
         Map<String, Object> map = new HashMap<>(2);
 
         map.put("goods", goods);
@@ -208,7 +202,6 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
                 attendantImg.add(attendantImgVo);
             }
-
 
                 //等于0就是用户跟班
                 if(attendantGoods.get(i).getAttendantId()==0){
@@ -268,7 +261,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
       if (integer <= 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "删除出错");
       }
-
+      //删除产出
       Integer integer1 = baseMapper.deleteProduceUser(list);
 
 
@@ -300,12 +293,13 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
             if (attendantUser.getAttMuch() == null) {
                 attendantUser.setAttMuch(0);
             }
-
+            //跟班的最后时间
             LocalDateTime time = DateUtils.parseDateTime(attendantUser.getEndDate());
 
             int until = (int)now.until(time, ChronoUnit.HOURS);
 
             if (attendantUser.getAttMuch() == much) {
+                //次数够了直接返回
                 return;
             }
 
@@ -323,6 +317,7 @@ public class ProduceServiceImpl extends ServiceImpl<ProduceMapper, Produce> impl
 
             if (until > 0) {
                 for (int i = 0; i < much - attendantUser.getAttMuch() - until; i++) {
+                    //产出
                     ProducePutBO putBO = put(user.getId(), attendantUser.getAttendantId(), attendantUser.getAtuId());
                     Produce produce = putBO.getProduce();
                     UserProduce userProduce = putBO.getUserProduce();

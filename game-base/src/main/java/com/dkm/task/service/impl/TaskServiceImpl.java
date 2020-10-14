@@ -51,11 +51,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskUserDetailVo> selectUserTask(Long userId, Integer type) {
+        //得到当前时间
         LocalDate today = LocalDate.now();
+        //根据类型和用户id查询所有数据
         List<TaskUserDetailVo> taskUserDetailVos = taskMapper.selectUserTask(type, userId);
-        Map<Long, String> collect = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>().ne(GoodsEntity::getGoodType, 1))
-                .stream().collect(Collectors.toMap(GoodsEntity::getId, GoodsEntity::getUrl));
+        //查询信息
+        Map<Long, String> collect = goodsDao.selectList(new LambdaQueryWrapper<GoodsEntity>()
+              .ne(GoodsEntity::getGoodType, 1))
+              .stream().collect(Collectors.toMap(GoodsEntity::getId, GoodsEntity::getUrl));
+        //对taskUserDetailVos循环
         taskUserDetailVos.forEach(taskUserDetailVo -> {
+            //摔选出日常的数据
             if(taskUserDetailVo.getTime()!=null&&!today.isEqual(taskUserDetailVo.getTime())&&taskUserDetailVo.getTaskType()==1){
                 taskUserDetailVo.setComplete(0);
                 taskUserDetailVo.setTuProcess(0);
@@ -66,10 +72,12 @@ public class TaskServiceImpl implements TaskService {
                 GoodListImg goodImg = new GoodListImg();
                 goodImg.setUrl(collect.get(goodList.getGoodId()));
                 goodImg.setNumber(goodList.getNumber());
+                //装配集合
                 goodListImg.add(goodImg);
             });
             taskUserDetailVo.setGoodListImg(goodListImg);
         });
+        //返回数据
         return taskUserDetailVos;
     }
 
@@ -80,6 +88,7 @@ public class TaskServiceImpl implements TaskService {
         if(taskEntity==null){
             throw new ApplicationException(CodeType.RESOURCES_NOT_FIND,"不存在该任务");
         }
+        //根据用户id和任务Id查询到一条数据
         TaskUserEntity taskUserEntity = taskUserMapper.selectOne(new LambdaQueryWrapper<TaskUserEntity>()
                 .eq(TaskUserEntity::getTaskId, taskId)
                 .eq(TaskUserEntity::getUserId, userId));
@@ -89,10 +98,15 @@ public class TaskServiceImpl implements TaskService {
         if(taskUserEntity.getComplete()==1){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"已领取过奖励");
         }
+        //json转换
         List<GoodList> goodLists = JSON.parseArray(taskEntity.getGoodList(), GoodList.class);
+        //将集合转换成map
         Map<Long, Integer> taskGoE = goodLists.stream().collect(Collectors.toMap(GoodList::getGoodId, GoodList::getNumber));
+        //得到集合信息
         List<Long> collect = goodLists.stream().mapToLong(GoodList::getGoodId).boxed().collect(Collectors.toList());
+        //根据得到的集合信息进行查询数据库
         List<GoodsEntity> goodsEntities = goodsDao.selectBatchIds(collect);
+        //过滤掉金币和经验的数据进行装配
         Map<String, Long> goodGoE = goodsEntities.stream()
                 .filter(goodsEntity -> "金币".equals(goodsEntity.getName()) || "经验".equals(goodsEntity.getName()))
                 .collect(Collectors.toMap(GoodsEntity::getName, GoodsEntity::getId));
@@ -118,10 +132,13 @@ public class TaskServiceImpl implements TaskService {
             goodLists.forEach(a->{
                 addGoodsInfo.setGoodId(a.getGoodId());
                 addGoodsInfo.setNumber(a.getNumber());
+                //添加进物品信息
+                //通过feign
                 resourceFeignClient.addBackpackGoods(addGoodsInfo);
             });
         }
         taskUserEntity.setComplete(1);
+        //修改任务
         if(taskUserMapper.updateById(taskUserEntity)<=0){
             throw  new ApplicationException(CodeType.SERVICE_ERROR);
         };
@@ -132,14 +149,18 @@ public class TaskServiceImpl implements TaskService {
         //获取任务信息
         TaskEntity taskEntity = taskMapper.selectById(taskId);
         if(taskEntity!=null){
+            //得到当前时间
             LocalDate today = LocalDate.now();
+            //根据用户和任务Id查询到数据库信息
             TaskUserEntity taskUserEntity = taskUserMapper.selectOne(new LambdaQueryWrapper<TaskUserEntity>()
                     .eq(TaskUserEntity::getTaskId, taskId)
                     .eq(TaskUserEntity::getUserId, userId));
             if(taskUserEntity!=null){
                 if(taskUserEntity.getComplete()!=1&&taskEntity.getTaskType()!=1){
+                    //如果没有完成任务
                     taskUserEntity.setTuProcess(taskUserEntity.getTuProcess()+1);
                 }else if(taskEntity.getTaskType()==1){
+                    //如果已经完成任务
                     if(today.isAfter(taskUserEntity.getTime())){
                         taskUserEntity.setTuProcess(1);
                         taskUserEntity.setTime(today);
@@ -148,6 +169,7 @@ public class TaskServiceImpl implements TaskService {
                         taskUserEntity.setTuProcess(taskUserEntity.getTuProcess()+1);
                     }
                 }
+                //修改任务
                 taskUserMapper.updateById(taskUserEntity);
             }else {
                 TaskUserEntity taskUserEntity1 = new TaskUserEntity();
@@ -157,6 +179,7 @@ public class TaskServiceImpl implements TaskService {
                 taskUserEntity1.setUserId(userId);
                 taskUserEntity1.setTuId(idGenerator.getNumberId());
                 taskUserEntity1.setComplete(0);
+                //添加任务
                 taskUserMapper.insert(taskUserEntity1);
             }
 

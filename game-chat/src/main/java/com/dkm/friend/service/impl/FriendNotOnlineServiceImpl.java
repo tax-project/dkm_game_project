@@ -45,12 +45,12 @@ public class FriendNotOnlineServiceImpl extends ServiceImpl<FriendNotOnlineMappe
             .eq(FriendNotOnline::getToId,userId)
             .eq(FriendNotOnline::getIsLook,0);
 
+      //查询未查看的信息
       List<FriendNotOnline> list = baseMapper.selectList(wrapper);
-
 
       if (null != list && list.size() != 0) {
          List<FriendNotOnlineVo> result = new ArrayList<>();
-
+         //装配未在线消息
          for (FriendNotOnline online : list) {
             FriendNotOnlineVo vo = new FriendNotOnlineVo();
             vo.setFromId(online.getFromId());

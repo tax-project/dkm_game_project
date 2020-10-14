@@ -71,6 +71,7 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper,Problem> imple
          vo.setId(idGenerator.getNumberId());
       }
 
+      //批量增加
       Integer integer = baseMapper.insertAllProblem(list);
 
       if (integer <= 0) {
@@ -121,6 +122,7 @@ public class ProblemServiceImpl extends ServiceImpl<ProblemMapper,Problem> imple
                throw new ApplicationException(CodeType.SERVICE_ERROR, "您今日抢红包次数已达上限,您可以通过发红包或者明日再来");
             }
 
+            //修改次数
             Integer integer = baseMapper.updateMuch(null, user.getId());
 
             if (integer <= 0) {

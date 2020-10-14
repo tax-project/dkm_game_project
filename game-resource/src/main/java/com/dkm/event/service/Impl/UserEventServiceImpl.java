@@ -47,10 +47,12 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
      */
     @Override
     public List<UserEventVo> queryAllEvent() {
+        //查询到所有事件信息
         List<UserEventVo> userEventVos = baseMapper.queryAllEvent(localUser.getUser().getId());
         for (int i = 0; i < userEventVos.size(); i++) {
             List<UserEventContentVo> userEvents = baseMapper.queryUserIsExistence(localUser.getUser().getId(),userEventVos.get(i).getHeUserId());
             for (int j = 0; j < userEvents.size(); j++) {
+                //装配信息返回
                 userEvents.get(j).setTime(DateUtils.formatDateTime(userEvents.get(j).getEventTime()));
                 userEventVos.get(i).setList(userEvents);
             }
@@ -68,7 +70,7 @@ public class UserEventServiceImpl extends ServiceImpl<UserEventMapper, UserEvent
         userEvent.setEventTime(LocalDateTime.now());
         userEvent.setUserId(localUser.getUser().getId());
         userEvent.setToRobContent(addUserEventVo.getToRobContent());
-
+        //添加事件
         int insert = baseMapper.insert(userEvent);
         if(insert<=0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"添加事件失败");

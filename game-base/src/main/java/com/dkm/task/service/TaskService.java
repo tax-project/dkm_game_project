@@ -12,9 +12,19 @@ import java.util.List;
  **/
 public interface TaskService {
 
-
+    /**
+     * 获取任务列表
+     * @param userId
+     * @param type
+     * @return
+     */
     List<TaskUserDetailVo> selectUserTask(Long userId,Integer type);
 
+    /**
+     * 领取任务奖励
+     * @param userId
+     * @param taskId
+     */
     void getTaskReward(Long userId,Long taskId);
 
     void setTaskProcess(Long userId,Long taskId);

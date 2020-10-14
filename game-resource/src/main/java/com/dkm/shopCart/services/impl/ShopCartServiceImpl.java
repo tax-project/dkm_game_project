@@ -34,6 +34,7 @@ public class ShopCartServiceImpl implements IShopCartService {
         for (ShopCartItemVo item : items) {
             item.setItemId(idGenerator.getNumberId());
         }
+        //批量添加
         return shopCartMapper.addAll(userId, items) > 0;
     }
 

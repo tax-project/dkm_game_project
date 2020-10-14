@@ -72,13 +72,16 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
          throw new ApplicationException(CodeType.SERVICE_ERROR, "传的moneyId有误");
       }
 
+      //算出总钻石
       Double single = Double.valueOf(score * money.getOneDiamonds());
 
+      //得到金钱
       Double price = single / 10;
 
       ScoreVo vo = new ScoreVo();
       vo.setPrice(price);
 
+      //装配对象
       Score score1 = new Score();
       score1.setId(idGenerator.getNumberId());
       score1.setCreateDate(LocalDateTime.now());
@@ -88,6 +91,7 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
       score1.setUserId(user.getId());
 
+      //添加
       int insert = baseMapper.insert(score1);
 
       if (insert <= 0) {
@@ -99,14 +103,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
          moneyService.updateMoney(moneyId);
       }
 
-
+      //调用户服务得到用户信息
       Result<UserInfoQueryBo> result = userFeignClient.queryUser(money.getUserId());
 
       if (result.getCode() != 0) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "调用有误");
       }
 
-
+      //装配vo返回前端
       vo.setHeadUrl(result.getData().getWeChatHeadImgUrl());
       vo.setNickName(result.getData().getWeChatNickName());
 
@@ -125,12 +129,14 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
 
       List<ScoreListVo> list = listVoPage.getRecords();
 
-      Map<String, Object> map = new HashMap<>(3);
+      Map<String, Object> map = new HashMap<>(4);
+      //分页数据
       map.put("page",listVoPage);
+      //总题目
       map.put("allNumber",list.size());
 
       Money money = moneyService.queryNumber(moneyId);
-
+      //红包金额
       map.put("RedEnvelopes",money.getInNumber());
 
       return map;
@@ -155,17 +161,19 @@ public class ScoreServiceImpl extends ServiceImpl<ScoreMapper, Score> implements
       }
 
       //当前时间
-
       String startTime = DateUtils.formatDate(LocalDate.now()) + " 23:59:59";
 
       //一周前的时间
       LocalDate start = (LocalDate.now()).minusDays(7);
 
       String endTime = DateUtils.formatDate(start) + " 00:00:00";
-
+      //得到开始时间
       LocalDateTime startDate = DateUtils.parseDateTime(endTime);
+      //得到结束时间
       LocalDateTime endDate = DateUtils.parseDateTime(startTime);
 
+      //返回
+      //统计收红包的金额或者答题达人
       return baseMapper.countListMax(page,status,type,startDate,endDate);
    }
 }

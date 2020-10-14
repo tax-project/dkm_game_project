@@ -281,13 +281,14 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
      */
     @Override
     public void updateUserData(UserDataBO userDataBO) {
-
+        //查询用户信息
         UserLoginQuery userLoginQuery = localUser.getUser();
-
+        //装配用户对象
         User user = new User();
 
         user.setUserId(userLoginQuery.getId());
         user.setUserAge(DateUtils.parseDate(userDataBO.getUserAge()));
+        //不为空则修改
         if (userDataBO.getUserSex() != 1 && userDataBO.getUserSex() != 2) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "修改的性别参数有误");
         }
@@ -302,7 +303,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         if (StringUtils.isNotBlank(userDataBO.getUserExplain())) {
             user.setUserExplain(userDataBO.getUserExplain());
         }
-
+        //修改用户信息
         int updateById = baseMapper.updateById(user);
 
         if (updateById <= 0) {
@@ -325,7 +326,7 @@ public class WeChatServiceImpl extends ServiceImpl<UserMapper,User> implements I
         UserLoginQuery user = localUser.getUser();
 
         User user1 = baseMapper.selectById(user.getId());
-
+        //装配对象返回
         UserChatInfoVo vo = new UserChatInfoVo();
         BeanUtils.copyProperties(user1, vo);
 

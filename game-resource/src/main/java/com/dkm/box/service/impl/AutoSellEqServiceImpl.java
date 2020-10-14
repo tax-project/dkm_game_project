@@ -38,25 +38,33 @@ public class AutoSellEqServiceImpl implements IAutoSellEqService {
 
     @Override
     public void setAutoSell(Long userId,String sellInfo) {
-        AutoSellEntity autoSellEntity = autoSellMapper.selectOne(new LambdaQueryWrapper<AutoSellEntity>().eq(AutoSellEntity::getUserId, userId));
+        //查询自动出售的信息
+        //根据用户id
+        AutoSellEntity autoSellEntity = autoSellMapper.selectOne(new LambdaQueryWrapper<AutoSellEntity>()
+              .eq(AutoSellEntity::getUserId, userId));
         if(autoSellEntity==null){
             AutoSellEntity autoSellEntity1 = new AutoSellEntity();
             autoSellEntity1.setAutoSellOrder(sellInfo);
             autoSellEntity1.setUserId(userId);
+            //添加自动出售信息
             if(autoSellMapper.insert(autoSellEntity1)<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
         }else {
             autoSellEntity.setAutoSellOrder(sellInfo);
+            //有  修改自动出售信息
             if(autoSellMapper.updateById(autoSellEntity)<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
         }
+        //根据用户Id查询信息
         List<AutoSellEqIdInfo> autoSell = equipmentMapper.getAutoSell(userId);
         if(autoSell!=null&&autoSell.size()!=0){
             List<Long> ids = new ArrayList<>();
+            //装配背包id集合
             autoSell.forEach(a->{
                 if(sellInfo.contains(a.getNeedGrade()/5+1+"")){
                     ids.add(a.getBackpackId());
                 }
             });
             if(ids!=null&&ids.size()!=0){
+                //根据id集合进行批量删除背包和小黑屋的信息
                 int i = equipmentMapper.deleteBatchIds(ids);
                 int i1 = backpackMapper.deleteBatchIds(ids);
                 if(i<=0||i1<=0||i!=i1){throw new ApplicationException(CodeType.SERVICE_ERROR,"出现了一点问题");}
@@ -66,7 +74,9 @@ public class AutoSellEqServiceImpl implements IAutoSellEqService {
 
     @Override
     public List<Integer> getAutoSellInfo(Long userId) {
-        AutoSellEntity autoSellEntity = autoSellMapper.selectOne(new LambdaQueryWrapper<AutoSellEntity>().eq(AutoSellEntity::getUserId, userId));
+        //根据用户id查询一条数据
+        AutoSellEntity autoSellEntity = autoSellMapper.selectOne(new LambdaQueryWrapper<AutoSellEntity>()
+              .eq(AutoSellEntity::getUserId, userId));
         return autoSellEntity==null?null:JSON.parseArray(autoSellEntity.getAutoSellOrder(), Integer.class);
     }
 

@@ -135,9 +135,11 @@ public class AttendantServiceImpl implements IAttendantService {
         List<UserInfoAttVo> data = listResult.getData();
         Map<String, Object> map = new HashMap<>(2);
         if (null != data && data.size() > 0) {
+            //流化  得到map集合
             Map<Long, UserInfoAttVo> userInfoAttVoMap = data.stream().
                   collect(Collectors.toMap(UserInfoAttVo::getUserId,
                         userInfoAttVo -> userInfoAttVo));
+            //转集合
             List<AttUserAllInfoVo> collect = list.stream().map(attUserAllInfoVo -> {
                 if (userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()) != null) {
                     attUserAllInfoVo.setAtImg(userInfoAttVoMap.get(attUserAllInfoVo.getCaughtPeopleId()).getHeardUrl());
@@ -146,6 +148,7 @@ public class AttendantServiceImpl implements IAttendantService {
                 return attUserAllInfoVo;
             }).collect(Collectors.toList());
 
+            //跟班数据
             map.put("att",collect);
         }
         if (null == data || data.size() == 0) {

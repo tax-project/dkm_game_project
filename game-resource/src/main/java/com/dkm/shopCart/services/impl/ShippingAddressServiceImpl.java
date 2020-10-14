@@ -22,6 +22,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
 
     @Override
     public List<ShippingAddressInfoVo> getAllAddress(Long userId) {
+        //返回用户id的信息
         return shippingAddressMapper.selectList(
                 new QueryWrapper<ShippingAddressInfoVo>()
                         .lambda().eq(ShippingAddressInfoVo::getUserId, userId));
@@ -29,7 +30,9 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
 
     @Override
     public Boolean addAShippingAddress(Long userId, ShippingAddressVo item) {
-        val len = shippingAddressMapper.selectCount(new QueryWrapper<ShippingAddressInfoVo>().lambda().eq(ShippingAddressInfoVo::getUserId, userId));
+        val len = shippingAddressMapper.selectCount(new QueryWrapper<ShippingAddressInfoVo>()
+              .lambda().eq(ShippingAddressInfoVo::getUserId, userId));
+        //根据用户ID查询信息
         val entity = item.cloneToEntityItem(idGenerator.getNumberId(), userId);
         if (len == 0) {
             entity.setIsDefaultAddress(true);
@@ -47,8 +50,9 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
     @Override
     public Boolean delete(Long userId, Long itemId) {
         val deleted = shippingAddressMapper.selectById(itemId);
-
-        shippingAddressMapper.delete(new QueryWrapper<ShippingAddressInfoVo>().lambda().eq(ShippingAddressInfoVo::getUserId, userId)
+        //根据用户id和id删除信息
+        shippingAddressMapper.delete(new QueryWrapper<ShippingAddressInfoVo>()
+              .lambda().eq(ShippingAddressInfoVo::getUserId, userId)
                 .eq(ShippingAddressInfoVo::getId, itemId));
         if (deleted.getIsDefaultAddress()) {
             val allAddress = getAllAddress(userId);

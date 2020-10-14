@@ -29,15 +29,12 @@ public class PirateServiceImpl extends ServiceImpl<PirateMapper, Pirate> impleme
     @Autowired
     private IdGenerator idGenerator;
 
-    @Autowired
-    private LocalUser localUser;
-
     @Override
     public int addPirate(Pirate pirate) {
         pirate.setPirateId(idGenerator.getNumberId());
         //被盗时间
         pirate.setPirateLossTime(LocalDateTime.now());
-
+        //添加
         int insert = baseMapper.insert(pirate);
 
         if(insert<=0){

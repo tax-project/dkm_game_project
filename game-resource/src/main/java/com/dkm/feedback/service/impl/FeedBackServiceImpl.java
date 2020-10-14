@@ -41,17 +41,12 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
      */
     @Override
     public int insertFeedBack(FeedBackVo feedBackVo) {
-
+        //装配信息添加
         FeedBack feedBack=new FeedBack();
-
         feedBack.setFContent(feedBackVo.getFContent());
-
         feedBack.setFStatus(feedBackVo.getFStatus());
-
         feedBack.setUserId(localUser.getUser().getId());
-
         feedBack.setReplyStatus(0);
-
         feedBack.setId(idGenerator.getNumberId());
 
         //添加反馈信息
@@ -76,7 +71,7 @@ public class FeedBackServiceImpl extends ServiceImpl<FeedBackMapper, FeedBack> i
         if(feedBacks.size()==0){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"无反馈信息");
         }
-
+        //返回
         return feedBacks;
     }
 }

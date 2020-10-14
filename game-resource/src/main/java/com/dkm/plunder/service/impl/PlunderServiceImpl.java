@@ -69,16 +69,16 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
    @Override
    public void insertPlunder(PlunderVo vo) {
-
+      //用户信息
       UserLoginQuery user = localUser.getUser();
-
+      //装配掠夺对象
       Plunder plunder = new Plunder();
       Long plunderId = idGenerator.getNumberId();
 
       plunder.setId(plunderId);
       plunder.setFromId(user.getId());
       plunder.setToId(vo.getUserId());
-
+      //添加掠夺信息
       int insert = baseMapper.insert(plunder);
 
       if (insert <= 0) {
@@ -95,7 +95,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          goodsVo.setId(idGenerator.getNumberId());
          goodsVo.setGoodId(goods.getGoodId());
          goodsVo.setPlunderId(plunderId);
-
+         //将物品添加进掠夺信息里面
          plunderGoodsService.insertPlunderGoods(goodsVo);
       }
 
@@ -118,9 +118,9 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
    @Override
    public Map<String, Object> queryPlunderList() {
-
+      //用户信息
       UserLoginQuery user = localUser.getUser();
-
+      //用户掠夺信息
       Result<List<UserPlunderBo>> result = userFeignClient.listUserPlunder();
 
       if (result.getCode() != 0) {
@@ -169,7 +169,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
          List<GoodQueryVo> goodQueryVos = goodMap.get(vo.getUserId());
          goodQueryVos.add(vo);
       }
-
+      //得到掠夺集合的数据
       List<PlunderUserGoodVo> resultList = plunderBoList.stream().map(userPlunderBo -> {
          PlunderUserGoodVo vo = new PlunderUserGoodVo();
          BeanUtils.copyProperties(userPlunderBo, vo);
@@ -202,15 +202,15 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
 
       map.put("currentStrength",userData.getUserInfoStrength());
       map.put("allStrength",userData.getUserInfoAllStrength());
-
+      //返回给前端
       return map;
    }
 
    @Override
    public PlunderBO getGoodByUserId(Long userId) {
-
+      //当前用户信息
       UserLoginQuery user = localUser.getUser();
-
+      //查询当前用户的所有物品信息
       List<GoodQueryVo> goodList = goodsService.getGoodList(userId);
 
       for (GoodQueryVo vo : goodList) {
@@ -226,7 +226,7 @@ public class PlunderServiceImpl extends ServiceImpl<PlunderMapper, Plunder> impl
             vo.setNumber(number);
          }
       }
-
+      //装配掠夺信息
       PlunderBO bo = new PlunderBO();
       bo.setList(goodList);
 

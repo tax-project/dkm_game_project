@@ -72,7 +72,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       userInfo.setUserInfoEnvelopeMuch(0);
       userInfo.setUserInfoAllEnvelopeMuch(15);
       userInfo.setUserInfoSkillStatus(0);
-
+      //添加用户详细信息
       int insert = baseMapper.insert(userInfo);
 
       if (insert <= 0) {
@@ -91,7 +91,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
       LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<UserInfo>()
             .eq(UserInfo::getUserId,userId);
-
+      //查询用户详细信息
       UserInfo userInfo = baseMapper.selectOne(wrapper);
 
       if (userInfo == null) {
@@ -102,7 +102,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
       userInfo1.setUserInfoAllEnvelopeMuch(userInfo.getUserInfoAllEnvelopeMuch() + much);
       userInfo1.setUserInfoDiamonds(userInfo.getUserInfoDiamonds() - userInfoDiamonds);
-
+      //修改红包次数和钻石
       int update = baseMapper.update(userInfo1, wrapper);
 
       if (update <= 0) {
@@ -171,9 +171,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
    @Override
    public WeChatUserInfoVo queryWeChatUserInfo() {
+      //得到用户信息
       UserLoginQuery user = localUser.getUser();
       UserInfoQueryBo bo = weChatService.queryUser(user.getId());
-
+      //装配数据返回
       WeChatUserInfoVo result = new WeChatUserInfoVo();
       BeanUtils.copyProperties(bo,result);
       return result;
@@ -185,6 +186,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       if (null == list || list.size() == 0) {
          return null;
       }
+      //根据id集合查询返回数据
       return baseMapper.queryUserInfoAtt (list);
    }
 
@@ -203,25 +205,30 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
       UserInfo userInfo = new UserInfo();
 
       if (seedCollectVo.getUserGold() != null) {
+         //金币不为空则修改
          userInfo.setUserInfoGold (seedCollectVo.getUserGold());
       }
 
       if (seedCollectVo.getUserInfoPacketBalance() != null) {
+         //红包不为空则修改
          userInfo.setUserInfoPacketBalance (seedCollectVo.getUserInfoPacketBalance());
       }
 
       if (seedCollectVo.getUserInfoNowExperience() != null) {
+         //当前经验不为空则修改
          userInfo.setUserInfoNowExperience (seedCollectVo.getUserInfoNowExperience());
       }
 
       if (seedCollectVo.getUserInfoNextExperience() != null) {
+         //下一级需要经验不为空则修改
          userInfo.setUserInfoNextExperience (seedCollectVo.getUserInfoNextExperience());
       }
 
       if (seedCollectVo.getGrade() != null) {
+         //等级不为空则修改
          userInfo.setUserInfoGrade(seedCollectVo.getGrade());
       }
-
+      //修改信息
       int update = baseMapper.update(userInfo, wrapper);
 
       if (update <= 0) {

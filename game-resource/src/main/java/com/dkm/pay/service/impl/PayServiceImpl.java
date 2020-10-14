@@ -65,7 +65,7 @@ public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayS
 
          PayInfoVo vo = new PayInfoVo();
          BeanUtils.copyProperties(pay,vo);
-
+         //装配VO
          vo.setOrderStatus(map.get(pay.getOrderNo()).getOrderStatus());
          vo.setOrderType(map.get(pay.getOrderNo()).getOrderType());
          vo.setUserId(map.get(pay.getOrderNo()).getUserId());
@@ -98,7 +98,7 @@ public class PayServiceImpl extends ServiceImpl<PayMapper, Pay> implements IPayS
       pay.setPayTime(payVo.getPayTime());
       pay.setPayType(payVo.getPayType());
       pay.setPayNo(payVo.getPayNo());
-
+      //修改支付记录
       int update = baseMapper.update(pay, wrapper);
 
       if (update <= 0) {

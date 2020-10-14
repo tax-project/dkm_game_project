@@ -74,13 +74,13 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
     @Override
     public Map<String, Object> getOpponentInfo() {
-
+        //用户信息
         UserLoginQuery user = localUser.getUser();
 
         LambdaQueryWrapper<Opponent> wrapper = new LambdaQueryWrapper<Opponent>()
               .eq(Opponent::getUserId, user.getId())
               .last("ORDER BY RAND() limit 20");
-
+        //查询对手随机20条数据
         List<Opponent> opponents = baseMapper.selectList(wrapper);
 
         if (null == opponents || opponents.size() == 0) {
@@ -97,12 +97,12 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
             IdVo idVo = new IdVo();
             idVo.setUserId(opponent.getOpponentId());
             list.add(idVo);
-
+            //添加对手的id集合
             idList.add(opponent.getOpponentId());
         }
 
         listVo.setList(list);
-
+        //查询对手的用户信息集合
         Result<List<com.dkm.entity.vo.OpponentVo>> listResult = userFeignClient.listOpponent(listVo);
 
         if (listResult.getCode() != 0) {
@@ -123,7 +123,7 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
             List<GoodQueryVo> arrayList = map.get(vo.getUserId());
             arrayList.add(vo);
         }
-
+        //返回对手信息
         List<OpponentResultVo> result = userInfo.stream().map(opponentInfo -> {
             OpponentResultVo vo = new OpponentResultVo();
             BeanUtils.copyProperties(opponentInfo, vo);
@@ -147,7 +147,7 @@ public class OpponentServiceImpl extends ServiceImpl<OpponentMapper, Opponent> i
 
         resultMap.put("currentStrength",userData.getUserInfoStrength());
         resultMap.put("allStrength",userData.getUserInfoAllStrength());
-
+        //返回
         return resultMap;
     }
 }

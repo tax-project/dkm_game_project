@@ -34,7 +34,8 @@ public class VipServiceImpl implements VipService {
         a.setVipName("VIP");
         a.setUserId(userId);
         if(vipMapper.insert(a)==0||vipMapper.userAddVip(userId)==0){
-                throw new ApplicationException(CodeType.SERVICE_ERROR);
+            //开通vip操作失败
+            throw new ApplicationException(CodeType.SERVICE_ERROR);
         }
 
     }

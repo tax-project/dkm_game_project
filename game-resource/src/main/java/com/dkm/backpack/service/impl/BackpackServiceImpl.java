@@ -52,25 +52,30 @@ public class BackpackServiceImpl implements IBackpackService {
 
     @Override
     public List<UserBackpackGoodsVo> getUserBackpackGoods(Long userId) {
+        //查询到背包的信息
         List<UserBackpackGoodsVo> backpackGoods = backpackMapper.getBackpackGoods(userId);
         int number = backpackGoods==null?30:(30-backpackGoods.size());
         for (int i = 0; i < number; i++) {
             backpackGoods.add(null);
         }
+        //返回
         return backpackGoods;
     }
 
     @Override
     public void addBackpackGoods(AddGoodsInfo addGoodsInfo) {
+        //根据物品id查询物品信息
         GoodsEntity goodsEntity = goodsMapper.selectById(addGoodsInfo.getGoodId());
         if(goodsEntity==null||goodsEntity.getGoodType()==1){
             throw new ApplicationException(CodeType.PARAMETER_ERROR,"找不到该物品");}
+        //根据用户id和物品id进行查询
         BackPackEntity backPackEntity = backpackMapper.
               selectOne(new LambdaQueryWrapper<BackPackEntity>()
                             .eq(BackPackEntity::getUserId, addGoodsInfo.getUserId())
                             .eq(BackPackEntity::getGoodId, addGoodsInfo.getGoodId()));
         int success = 0;
         if(backPackEntity!=null){
+            //得到数量
             int i = backPackEntity.getNumber() + addGoodsInfo.getNumber();
             if(i<0){
                 throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
@@ -80,6 +85,7 @@ public class BackpackServiceImpl implements IBackpackService {
             }
             else {
                 backPackEntity.setNumber(i);
+                //修改背包信息
                 success = backpackMapper.updateById(backPackEntity);
             }
         }else {
@@ -87,6 +93,7 @@ public class BackpackServiceImpl implements IBackpackService {
                 throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
             }
             else {
+                //判断背包空间是否足够
                 if(backpackMapper.getBackpackNumber(addGoodsInfo.getUserId())>=30){
                     throw new ApplicationException(CodeType.SERVICE_ERROR,"背包空间不足");
                 }
@@ -95,6 +102,7 @@ public class BackpackServiceImpl implements IBackpackService {
                 addBackpack.setGoodId(addGoodsInfo.getGoodId());
                 addBackpack.setBackpackId(idGenerator.getNumberId());
                 addBackpack.setNumber(addGoodsInfo.getNumber());
+                //添加背包
                 success = backpackMapper.insert(addBackpack);
             }
         }
@@ -105,20 +113,26 @@ public class BackpackServiceImpl implements IBackpackService {
 
     @Override
     public void sellBackpackGoods(SellGoodsInfo sellGoodsInfo) {
+        //根据背包Id查询背包信息
         BackPackEntity backPackEntity = backpackMapper.selectById(sellGoodsInfo.getBackpackId());
         if(backPackEntity==null){throw new ApplicationException(CodeType.PARAMETER_ERROR,"背包没有该物品");}
+        //根据物品id查询物品信息
         GoodsEntity goodsEntity = goodsMapper.selectById(backPackEntity.getGoodId());
         if(goodsEntity.getGoodType()==1){
+            //判断出售的信息
             int i = backpackMapper.deleteById(backPackEntity.getBackpackId());
             i += equipmentMapper.deleteById(backPackEntity.getBackpackId());
             if(i!=2){throw new ApplicationException(CodeType.SERVICE_ERROR,"出售时出现一点意外");}
         }else {
+            //判断背包的数量
             int i = backPackEntity.getNumber() - sellGoodsInfo.getNumber();
             if(i<0){throw new ApplicationException(CodeType.SERVICE_ERROR,"背包没有这么多数量");}
             else if(i==0){
+                //进行出售
                 int i1 = backpackMapper.deleteById(sellGoodsInfo.getBackpackId());
                 if(i1<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"出售失败");}
             }else{
+                //进行出售
                 backPackEntity.setNumber(i);
                 int i1 = backpackMapper.updateById(backPackEntity);
                 if(i1<=0){throw new ApplicationException(CodeType.SERVICE_ERROR,"出售失败");}
@@ -127,6 +141,7 @@ public class BackpackServiceImpl implements IBackpackService {
         IncreaseUserInfoBO userInfoBO = new IncreaseUserInfoBO();
         userInfoBO.setUserId(sellGoodsInfo.getUserId());
         userInfoBO.setUserInfoGold(goodsEntity.getGoodType()==1?50:sellGoodsInfo.getNumber()*50);
+        //增加用户信息
         userFeignClient.increaseUserInfo(userInfoBO);
     }
 
@@ -147,16 +162,20 @@ public class BackpackServiceImpl implements IBackpackService {
 
     @Override
     public void updateNumberByBackpackId(Long userId, Long backpackId) {
+        //根据id查询背包信息
         BackPackEntity backPackEntity = backpackMapper.selectById(backpackId);
         if(backPackEntity==null|| !backPackEntity.getUserId().equals(userId)){
             throw new ApplicationException(CodeType.SERVICE_ERROR,"数量不足");
         }
         int i = 0;
         if(backPackEntity.getNumber()>1){
+            //如果数量>1
             backPackEntity.setNumber(backPackEntity.getNumber()-1);
+            //修改
             i = backpackMapper.updateById(backPackEntity);
             if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
         }else {
+            //删除
             i = backpackMapper.deleteById(backpackId);
         }
         if(i<=0){throw new ApplicationException(CodeType.SERVICE_ERROR);}
@@ -168,6 +187,7 @@ public class BackpackServiceImpl implements IBackpackService {
         }else  if(backpackId==722958015550165460L){
             add = 50;
         }
+        //进行修改
         backpackMapper.updateUserStrength(add,userId);
     }
 }

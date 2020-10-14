@@ -58,27 +58,25 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
 
    @Override
    public void friendRequest(FriendRequestVo vo) {
-
+      //得到用户信息
       UserLoginQuery user = localUser.getUser();
-
       if (vo.getToId().equals(user.getId())) {
          throw new ApplicationException(CodeType.SERVICE_ERROR, "你不能添加自己..");
       }
-
       try {
+         //拿到分布式锁
          Boolean aBoolean = redisConfig.redisLock(redisLock);
-
          if (!aBoolean) {
             throw new ApplicationException(CodeType.SERVICE_ERROR, "网络忙,请稍后再试");
          }
-
          LambdaQueryWrapper<FriendRequest> wrapper = new LambdaQueryWrapper<FriendRequest>()
                .eq(FriendRequest::getFromId, user.getId())
                .eq(FriendRequest::getToId,vo.getToId());
-
+         //查询登录用户的所有好友
          FriendRequest request = baseMapper.selectOne(wrapper);
 
          if (request == null) {
+            //如果没有好友
             FriendRequest friendRequest = new FriendRequest();
             friendRequest.setId(idGenerator.getNumberId());
 
@@ -98,7 +96,10 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
                throw new ApplicationException(CodeType.SERVICE_ERROR, "申请失败");
             }
          } else {
+            //已经是好友了
+            //重复添加好友
             if (StringUtils.isNotBlank(vo.getRequestRemark())) {
+               //修改备注信息就好了
                if (!request.getRequestRemark().equals(vo.getRequestRemark())) {
 
                   FriendRequest friendRequest = new FriendRequest();
@@ -140,15 +141,16 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
     */
    @Override
    public List<FriendRequestInfoVo> listAllRequestFriend() {
-
+      //用户信息
       UserLoginQuery user = localUser.getUser();
 
       LambdaQueryWrapper<FriendRequest> wrapper = new LambdaQueryWrapper<FriendRequest>()
             .eq(FriendRequest::getToId,user.getId());
-
+      //查询到所有加我的好友申请记录
       List<FriendRequest> list = baseMapper.selectList(wrapper);
 
       if (null == list || list.size() == 0) {
+         //没有人加我，返回空
          return null;
       }
 
@@ -159,7 +161,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
          voList.add(vo);
       }
       Long userId = user.getId();
-
+      //返回所有加我的好友信息
       return baseMapper.listAllRequestFriend(voList, userId);
    }
 
@@ -171,7 +173,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
     */
    @Override
    public void operationFriendRequest(Long id, Long fromId, Integer type) {
-
+      //用户信息
       UserLoginQuery user = localUser.getUser();
 
       if (type != 0 && type != 1) {
@@ -194,7 +196,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
          FriendVo vo = new FriendVo();
          vo.setFromId(fromId);
          vo.setToId(user.getId());
-
+         //添加好友
          friendService.insertFriend(vo);
          return;
       }
@@ -203,7 +205,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
       //不同意
       request.setId(id);
       request.setStatus(2);
-
+      //根据id修改
       int i = baseMapper.updateById(request);
 
       if (i <= 0) {
@@ -223,7 +225,7 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestMapper, F
       LambdaQueryWrapper<FriendRequest> wrapper = new LambdaQueryWrapper<FriendRequest>()
             .eq(FriendRequest::getFromId,fromId)
             .eq(FriendRequest::getToId,toId);
-
+      //删除我的好友信息
       baseMapper.delete(wrapper);
 
       LambdaQueryWrapper<FriendRequest> lambdaQueryWrapper = new LambdaQueryWrapper<FriendRequest>()

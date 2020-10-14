@@ -80,7 +80,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    public void initSkill(Long userId) {
 
       LambdaQueryWrapper<Skill> queryWrapper = new LambdaQueryWrapper<>();
-
+      //查询所有
       List<Skill> landSeedList = baseMapper.selectList(queryWrapper);
 
       List<UserSkill> list=new ArrayList<>();
@@ -89,7 +89,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
        * 根据用户id查询所有技能
        * 如果没有则初始化
        */
-
+      //根据用户id查询所有技能
       List<SkillUserSkillVo> skillUserSkillVos = baseMapper.queryAllSkillByUserId(userId);
       if(skillUserSkillVos.size()==0){
 
@@ -103,9 +103,10 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
             userSkill.setSkAddPrestige(100);
             userSkill.setSkDegreeProficiency(0);
             userSkill.setSkAllConsume(1);
+            //添加用户技能
             list.add(userSkill);
          }
-
+         //批量添加技能
          int init = iUserSkillService.addUserSkill(list);
          if(init<=0){
             log.info("初始化技能error");
@@ -125,7 +126,7 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
    @Override
    public Map<String,Object> queryAllSkillByUserId() {
 
-      Map<String,Object> map=new HashMap<>(16);
+      Map<String,Object> map=new HashMap<>();
 
       UserLoginQuery user = localUser.getUser();
 
@@ -348,25 +349,30 @@ public class SkillServiceImpl extends ServiceImpl<SkillMapper, Skill> implements
 
       //等级加一
       userSkill.setSkGrade(userSkill.getSkGrade()+1);
-
+      //技能等级在2-10之间
       if (userSkill.getSkGrade() >= 2 && userSkill.getSkGrade() < 10) {
+         //成功在百分之65
          userSkill.setSkCurrentSuccessRate(65);
+         //技能等级在10-20之间
       } else if (userSkill.getSkGrade() >= 10 && userSkill.getSkGrade() < 20) {
+         //成功在百分之45
          userSkill.setSkCurrentSuccessRate(45);
          userSkill.setSkAllConsume(6);
+         ////技能等级在20-30之间
       } else if (userSkill.getSkGrade() >= 20 && userSkill.getSkGrade() < 30) {
+         //成功在百分之22
          userSkill.setSkCurrentSuccessRate(22);
          userSkill.setSkAllConsume(8);
+         //技能等级在30-40之间
       } else if (userSkill.getSkGrade() >= 30 && userSkill.getSkGrade() < 40) {
+         //成功在百分之15
          userSkill.setSkCurrentSuccessRate(15);
          userSkill.setSkAllConsume(12);
       } else {
+         //成功在百分之10
          userSkill.setSkCurrentSuccessRate(10);
          userSkill.setSkAllConsume(15);
       }
-
-
-
       //升级成功 当前用户拥有的数量 减去 需要消耗的一个数量
       //修改用户金星星数量
       AddGoodsInfo addGoodsInfo = new AddGoodsInfo();

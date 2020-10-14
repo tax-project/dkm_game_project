@@ -74,7 +74,7 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
         attendantUser.setAtuId(id);
         attendantUser.setEndDate(endDate);
         attendantUser.setAttMuch(0);
-
+        //修改
         int updateById = baseMapper.updateById(attendantUser);
 
         if (updateById <= 0) {
@@ -112,7 +112,7 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
         }
 
         UserInfoQueryBo data = userInfoQueryBoResult.getData();
-
+        //装配数据
         BeanUtils.copyProperties(data, result);
 
         result.setStatus(1);
@@ -140,7 +140,7 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
 
             LambdaQueryWrapper<AttendantUser> wrapper = new LambdaQueryWrapper<AttendantUser>()
                   .eq(AttendantUser::getAtuId, bo.getAttId());
-
+            //修改
             int updateById = baseMapper.update(attendantUser, wrapper);
 
             if (updateById <= 0) {
@@ -151,6 +151,7 @@ public class AttendantUserServiceImpl extends ServiceImpl<AttendantUserMapper, A
 
     @Override
     public List<AttendantUser> queryAllSysAttInfo(Long userId, Long caUserId) {
+        //查询所有系统跟班信息
         return baseMapper.selectList(new LambdaQueryWrapper<AttendantUser>()
                                     .eq(AttendantUser::getUserId, userId)
                                     .eq(AttendantUser::getCaughtPeopleId, caUserId));

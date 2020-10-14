@@ -31,6 +31,7 @@ public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserP
    @Override
    public void insertProduce(UserProduce userProduce) {
       userProduce.setId(idGenerator.getNumberId());
+      //增加产出
       int insert = baseMapper.insert(userProduce);
 
       if (insert <= 0) {
@@ -40,6 +41,7 @@ public class UserProduceServiceImpl extends ServiceImpl<UserProduceMapper, UserP
 
    @Override
    public void allInsertUserProduce(List<UserProduce> list) {
+      //添加用户产出信息
       Integer integer = baseMapper.allInsertUserProduce(list);
 
       if (integer <= 0) {

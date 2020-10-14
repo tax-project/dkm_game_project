@@ -176,6 +176,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
             .eq(Money::getStatus,1)
             .orderByDesc(Money::getCreateDate);
 
+      //查询还未结束的红包
       List<Money> list = baseMapper.selectList(wrapper);
 
       if (null == list || list.size() == 0) {
@@ -186,9 +187,11 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
       int peopleNumber = 0;
       for (Money money : list) {
+         //将正在开始的红包算出来
          if (money.getStatus() == 1) {
             peopleNumber += 1;
          }
+         //添加进所有抢红包的用户
          longList.add(money.getUserId());
       }
       ParamBo bo = new ParamBo();
@@ -207,6 +210,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
             .collect(Collectors.toMap(UserHeardUrlBo::getUserId, userHeardUrlBo -> userHeardUrlBo
             ));
 
+      //装配返回给前端的分页数据
       List<MoneyBo> resultList = list.stream().map(money -> {
          MoneyBo moneyBo = new MoneyBo();
          BeanUtils.copyProperties(money, moneyBo);
@@ -228,12 +232,17 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       }
 
       RedBagVo redBagVo = new RedBagVo();
+      //该用户今日已抢次数
       redBagVo.setRedEnvelopesNumber(result.getData().getUserInfoEnvelopeMuch());
+      //今日上限次数
       redBagVo.setAllRedEnvelopesNumber(result.getData().getUserInfoAllEnvelopeMuch());
 
       UserLoginInfoVo loginUserInfo = new UserLoginInfoVo();
+      //用户id
       loginUserInfo.setUserId(result.getData().getUserId());
+      //登录人昵称
       loginUserInfo.setNickName(result.getData().getWeChatNickName());
+      //头像
       loginUserInfo.setHeardUrl(result.getData().getWeChatHeadImgUrl());
 
       map.put("redMuch",redBagVo);
@@ -304,6 +313,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
       LocalDateTime startDate = DateUtils.parseDateTime(endTime);
       LocalDateTime endDate = DateUtils.parseDateTime(startTime);
 
+      //返回统计发红包的数据
       return baseMapper.countHandOutRedEnvelopes(page,status,startDate,endDate);
    }
 
@@ -315,6 +325,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
             .or()
             .eq(Money::getStatus,1);
 
+      //查询还未结束的红包
       List<Money> list = baseMapper.selectList(wrapper);
 
       if (null == list || list.size() == 0) {
@@ -332,6 +343,7 @@ public class MoneyServiceImpl extends ServiceImpl<MoneyMapper, Money> implements
 
       Money money = list.get(index);
 
+      //装配数据返回给前端
       MoneyRandomBo bo = new MoneyRandomBo();
       bo.setId(money.getId());
       bo.setDiamonds(money.getDiamonds());

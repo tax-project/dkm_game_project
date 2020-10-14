@@ -33,6 +33,7 @@ public class TurntableCouponServiceImpl implements ITurntableCouponService {
         //查询用户券信息
         TurntableCouponEntity turntableCouponEntity = turntableCouponDao.selectOne(new LambdaQueryWrapper<TurntableCouponEntity>()
                 .eq(TurntableCouponEntity::getUserId, userId));
+        //得到当前时间
         LocalDateTime now = LocalDateTime.now();
         Map<String,Object> map = new HashMap<>();
         if(turntableCouponEntity==null){

@@ -37,7 +37,6 @@ public class DropStatusServiceImpl extends ServiceImpl<DropStatusMapper, DropSta
             log.info("增加失败");
          }
       }
-
       //修改
       int updateById = baseMapper.updateById(dropStatus);
 
