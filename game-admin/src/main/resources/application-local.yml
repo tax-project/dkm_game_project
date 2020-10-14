@@ -5,7 +5,7 @@ spring:
     password: kgdatj1110
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 192.168.10.133
+    host: 192.168.10.254
     timeout: 2000
     jedis:
       pool:
