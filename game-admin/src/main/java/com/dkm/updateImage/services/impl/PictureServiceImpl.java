@@ -21,6 +21,12 @@ public class PictureServiceImpl implements IPictureService {
    @Resource
    private AnotherFileFeignClient anotherFileFeignClient;
 
+   /**
+    *  生成自己名片的二维码并上传服务器
+    * @param multipartFile 文件
+    * @param token token
+    * @return
+    */
    @NotNull
    @Override
    public ImageUpdateResultVo update(@NotNull MultipartFile multipartFile, @NotNull String token) {

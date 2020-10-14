@@ -29,6 +29,10 @@ public class GoodServiceImpl implements IGoodService {
     @Resource
     private IdGenerator idGenerator;
 
+    /**
+     * 得到所有的物品
+     * @return
+     */
     @Override
     @NotNull
     public List<GoodsVo> getAllGoods() {
@@ -42,6 +46,11 @@ public class GoodServiceImpl implements IGoodService {
         return result;
     }
 
+    /**
+     * 添加物品
+     * @param goods
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo addGoodsItem(@NotNull GoodsVo goods) {
@@ -51,6 +60,12 @@ public class GoodServiceImpl implements IGoodService {
         return new ResultVo(true, id);
     }
 
+    /**
+     * 修改物品
+     * @param id
+     * @param goods
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo updateItemById(long id, @NotNull GoodsVo goods) {
@@ -61,26 +76,32 @@ public class GoodServiceImpl implements IGoodService {
             //根据前端传来的参数进行修改
             //如不修改  则传null
             if (goods.getName() != null) {
+                //该参数不为空  则添加进GoodsEntity进行修改
                 var5.setName(goods.getName());
             }
 
             if (goods.getUrl() != null) {
+                //该参数不为空  则添加进GoodsEntity进行修改
                 var5.setUrl(goods.getUrl());
             }
 
             if (goods.getGoodType() >= 0) {
+                //该参数类型大于等于0 则添加进GoodsEntity进行修改
                 var5.setGoodType(goods.getGoodType());
             }
 
             if (goods.getGoodContent() != null) {
+                //该参数不为空  则添加进GoodsEntity进行修改
                 var5.setGoodContent(goods.getGoodContent());
             }
 
             if (goods.getGoodMoney() >= 0) {
+                //该参数金额大于等于0 则添加进GoodsEntity进行修改
                 var5.setGoodMoney(goods.getGoodMoney());
             }
 
             if (goods.getTabUrl() != null) {
+                //该参数不为空  则添加进GoodsEntity进行修改
                 var5.setTabUrl(goods.getTabUrl());
             }
             //根据id修改
@@ -91,6 +112,11 @@ public class GoodServiceImpl implements IGoodService {
         }
     }
 
+    /**
+     * 删除物品
+     * @param id
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo deleteItemById(@NotNull String id) {

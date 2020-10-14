@@ -26,6 +26,10 @@ public class SkillServiceImpl implements ISkillService {
     @Resource
     private IdGenerator idGenerator;
 
+    /**
+     * 查询所有技能
+     * @return
+     */
     @NotNull
     public List<SkillVo> getAll() {
         //查询所有数据
@@ -38,6 +42,11 @@ public class SkillServiceImpl implements ISkillService {
         return result;
     }
 
+    /**
+     * 增加技能
+     * @param skillVo 技能的参数
+     * @return
+     */
     @NotNull
     public ResultVo insert(@NotNull SkillVo skillVo) {
         long newId = idGenerator.getNumberId();
@@ -46,6 +55,12 @@ public class SkillServiceImpl implements ISkillService {
         return new ResultVo(true, newId);
     }
 
+    /**
+     * 修改技能
+     * @param id id
+     * @param skillVo 技能的参数
+     * @return
+     */
     @NotNull
     public ResultVo update(long id, @NotNull SkillVo skillVo) {
         SkillEntity entity = new SkillEntity(id, skillVo.getSkinName(), skillVo.getFirstSkinEffect(), skillVo.getSecondSkinEffect());
@@ -54,6 +69,11 @@ public class SkillServiceImpl implements ISkillService {
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getId());
     }
 
+    /**
+     * 删除技能
+     * @param id id
+     * @return
+     */
     @NotNull
     public ResultVo delete(long id) {
         //删除数据

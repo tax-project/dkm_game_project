@@ -27,6 +27,13 @@ public class UserLoginServiceImpl implements IAdminUserLoginService {
     @Resource
     private AdminUserMapper adminUserMapper;
 
+
+    /**
+     *
+     * 管理员登录
+     * @param loginVo
+     * @return
+     */
     @Override
     public UserLoginResultVo login(UserLoginVo loginVo) {
         val result = new UserLoginResultVo();
@@ -44,6 +51,11 @@ public class UserLoginServiceImpl implements IAdminUserLoginService {
         return result;
     }
 
+    /**
+     * 检查token认证
+     * @param token
+     * @return
+     */
     @Override
     public boolean checkToken(String token) {
         try {

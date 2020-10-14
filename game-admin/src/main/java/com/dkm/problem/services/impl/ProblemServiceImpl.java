@@ -28,6 +28,10 @@ public class ProblemServiceImpl implements IProblemService {
     @Resource
     private IdGenerator idGenerator;
 
+    /**
+     *  得到所有问题
+     * @return
+     */
     @Override
     @NotNull
     public List<ProblemVo> getAllProblems() {
@@ -42,6 +46,11 @@ public class ProblemServiceImpl implements IProblemService {
         return result;
     }
 
+    /**
+     *  增加问题
+     * @param problemVo
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo insert(@NotNull ProblemVo problemVo) {
@@ -51,15 +60,27 @@ public class ProblemServiceImpl implements IProblemService {
         return new ResultVo(true, newId);
     }
 
+    /**
+     * 修改问题
+     * @param id
+     * @param problemVo
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo update(long id, @NotNull ProblemVo problemVo) {
+        //装配问题的所有参数
         ProblemEntity entity = new ProblemEntity(id, problemVo.getProblemSubject(), problemVo.getProblemAnswerA(), problemVo.getProblemAnswerB(), problemVo.getProblemAnswerC(), problemVo.getProblemAnswerD(), problemVo.getProblemAnswer());
         //修改问题
         int res = problemMapper.updateById(entity);
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getId());
     }
 
+    /**
+     * 删除问题
+     * @param id
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo delete(long id) {

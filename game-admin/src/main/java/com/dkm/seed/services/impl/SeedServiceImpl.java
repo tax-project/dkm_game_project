@@ -30,6 +30,10 @@ public class SeedServiceImpl implements ISeedService {
     @Resource
     private IdGenerator idGenerator;
 
+    /**
+     *  查询数据库的所有种子
+     * @return
+     */
     @Override
     @NotNull
     public List<SeedVo> getAll() {
@@ -43,6 +47,11 @@ public class SeedServiceImpl implements ISeedService {
         return result;
     }
 
+    /**
+     *  添加种子
+     * @param seedVo 种子的信息
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo insert(@NotNull SeedVo seedVo) {
@@ -52,6 +61,12 @@ public class SeedServiceImpl implements ISeedService {
         return new ResultVo(true, newId);
     }
 
+    /**
+     * 修改种子
+     * @param id
+     * @param seedVo 修改种子的实体类
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo update(long id, @NotNull SeedVo seedVo) {
@@ -61,6 +76,11 @@ public class SeedServiceImpl implements ISeedService {
         return res == 0 ? new ResultVo(false, "数据行不存在") : new ResultVo(true, entity.getSeedId());
     }
 
+    /**
+     * 删除种子
+     * @param id id
+     * @return
+     */
     @Override
     @NotNull
     public ResultVo delete(long id) {
